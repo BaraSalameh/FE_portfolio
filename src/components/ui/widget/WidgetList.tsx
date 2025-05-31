@@ -39,24 +39,18 @@ export const WidgetList = ({ items, list, onItemClick, className, sort }: Widget
             const listItem = (
                 <li
                     key={item.id ?? idx}
-                    className={`${item?.isRead && 'opacity-50'} ${cn(widgetList({ clickable: sort?.sortable ? false : onItemClick ? true : false }), className)}`}
+                    className={`${cn(widgetList({ opacity: item?.isRead, clickable: sort?.sortable ? false : onItemClick ? true : false }), className)}`}
                     onClick={() => onItemClick?.(item)}
                 >
                     {list.map((cfg, index) => {
                         const leftRaw = cfg.leftKey ? extractValue(item, cfg.leftKey) : undefined;
                         const rightRaw = cfg.rightKey ? extractValue(item, cfg.rightKey) : undefined;
 
-                        const leftVal = cfg.isTime
-                            ? dayjs(leftRaw).format('MMM YYYY')
-                            : leftRaw;
+                        const leftVal = cfg.isTime ? dayjs(leftRaw).format('MMM YYYY') : leftRaw;
 
                         const rightVal = cfg.isTime
-                            ?   rightRaw
-                                    ? dayjs(rightRaw).format('MMM YYYY')
-                                    : 'Present'
-                            : cfg.rightKey
-                                ?   rightRaw
-                                :   '';
+                            ?   rightRaw ? dayjs(rightRaw).format('MMM YYYY') : 'Present'
+                            :   cfg.rightKey ? rightRaw : '';
 
                         return (
                             <Paragraph key={index} size={cfg.size}>

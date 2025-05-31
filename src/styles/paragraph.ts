@@ -1,7 +1,7 @@
 import { cva, VariantProps } from 'class-variance-authority';
 
 export const paragraph = cva(
-    'flex items-center font-[family-name:var(--font-geist-mono)]',
+    'flex items-center whitespace-pre-line font-[family-name:var(--font-geist-mono)]',
     {
         variants: {
             intent: {

@@ -2,7 +2,7 @@ import { CUDModal, BlurBackground, ResponsiveIcon, List } from '..';
 import { X } from 'lucide-react';
 import { cn } from '@/components/utils';
 import { widgetCard } from '@/styles';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Header, Main } from '@/components/shared';
 import { WidgetList } from './WidgetList';
 import { WidgetModalProps } from './types';
@@ -10,7 +10,10 @@ import { WidgetModalProps } from './types';
 export const WidgetModal = ({ isLoading, isOpen, onClose, onAction, item, update, del, details, className }: WidgetModalProps) => {
     if (!isOpen) return null;
 
-    onAction?.(item?.id);
+    useEffect(() => {
+            console.log(item?.id);
+            onAction?.(item?.id);
+    }, []);
     
     return (
         <BlurBackground intent='sm' className='p-5'>

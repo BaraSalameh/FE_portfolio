@@ -23,6 +23,10 @@ export const widgetList = cva(
             clickable : {
                 true: 'cursor-pointer',
                 false: null
+            },
+            opacity: {
+                true: 'opacity-40',
+                false: null
             }
         },
         defaultVariants: {

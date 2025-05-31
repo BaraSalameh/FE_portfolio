@@ -11,7 +11,22 @@ import { ArrowUpDown, GripVertical } from 'lucide-react';
 import { WidgetCardProps } from './types';
 import { Loading, Main, Header } from '@/components/shared';
 
-export const WidgetCard = ({ isLoading, header, items, list, pie, bar, radar, create, update, del, details, onModalAction, onSort, className }: WidgetCardProps) => {
+export const WidgetCard = ({
+    isLoading,
+    header,
+    items,
+    list,
+    pie,
+    bar,
+    radar,
+    create,
+    update,
+    del,
+    details,
+    onModalAction,
+    onSort,
+    className
+}: WidgetCardProps) => {
 
     var isInitialWidgetCard: boolean = false;
 
@@ -92,6 +107,7 @@ export const WidgetCard = ({ isLoading, header, items, list, pie, bar, radar, cr
             </section>
 
             <WidgetModal
+                key={item?.id}
                 isLoading={isLoading}
                 isOpen={openModal}
                 onClose={() => setOpenModal(false)}

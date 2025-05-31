@@ -1,7 +1,7 @@
 import { Header } from '@/components/shared/Header';
 import Image from 'next/image';
 import React from 'react';
-import { Paragraph, CUDModal, ResponsiveIcon, ControlledWidget } from '..';
+import { Paragraph, CUDModal, ResponsiveIcon } from '..';
 import { useParams } from 'next/navigation';
 import ProfileForm from '@/app/[role]/[username]/forms/profileForm';
 import { Button } from '../form/Button';
@@ -9,7 +9,6 @@ import { Copy, Link, MessageCircle, MessageSquare } from 'lucide-react';
 import { getClientLink } from '@/lib/utils/appFunctions';
 import { ProfileProps } from './types';
 import ContactMessageForm from '@/app/[role]/[username]/forms/contactMessageForm';
-import { useContactMessageWidget } from '@/app/[role]/[username]/dashboard/hooks';
 import { ContactMessagePage } from '@/app/[role]/[username]/dashboard/ContactMessagePage';
 
 export const Profile = ({ 
@@ -100,11 +99,11 @@ export const Profile = ({
             {(user?.bio) && 
                 <hr className='pb-3' />
             }
-                {user?.bio?.split('\n').map((line, index) => (
-                    <Paragraph key={index} className="italic">
-                        {line}
-                    </Paragraph>
-                ))}
+            {
+                <Paragraph>
+                    {user?.bio}
+                </Paragraph>
+            }
         </div>
     </Header>
   );

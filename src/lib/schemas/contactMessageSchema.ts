@@ -3,6 +3,16 @@ import { z } from 'zod';
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const contactMessageSchema = z.object({
+    id: z
+        .string()
+        .optional()
+        .nullable(),
+
+    isRead: z
+        .boolean()
+        .optional()
+        .nullable(),
+
     emailTo: z
         .string()
         .min(1, "Receiver's email is required")

@@ -1,5 +1,5 @@
 import { contactMessageListQuery, deleteEducation, deleteExperience, deleteMessage, deleteProject, educationListQuery, experienceListQuery, projectTechnologyListQuery, signMessage, sortEducation, sortExperience, sortProject, userByUsernameQuery, userFullInfoQuery, userLanguageListQuery } from "@/lib/apis";
-import { useAppDispatch } from "@/lib/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import debounce from "lodash.debounce";
 import { useCallback, useEffect } from "react";
 
@@ -73,16 +73,19 @@ export const useHandleMessageDelete = () => {
 };
 
 export const useHandleSignMessage = () => {
-  const dispatch = useAppDispatch();
+    const dispatch = useAppDispatch();
+    const { lstMessages } = useAppSelector(state => state.contactMessage);
 
-  return async (id: string) => {
-        try {
-            await dispatch(signMessage(id));
-            // await dispatch(contactMessageListQuery());
-        } catch (err) {
-            console.error('Failed to delete:', err);
+    return async (id: string) => {
+        const currentMessage = lstMessages.find(msg => msg?.id === id);
+        if(!currentMessage?.isRead)
+            try {
+                await dispatch(signMessage(id));
+                await dispatch(contactMessageListQuery());
+            } catch (err) {
+                console.error('Failed to delete:', err);
+            }
         }
-    }
 };
 
 export const useDebouncedSortProject = () => {

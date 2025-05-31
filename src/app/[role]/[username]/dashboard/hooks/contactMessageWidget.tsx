@@ -2,7 +2,6 @@ import { WidgetCardProps } from "@/components/ui/widget/types";
 import { useAppSelector } from "@/lib/store/hooks";
 import {  MessageCircleHeart, User, SubtitlesIcon, Mail } from "lucide-react";
 import { useHandleMessageDelete, useHandleSignMessage } from "../handlers";
-import { ContactMessagePage } from "../ContactMessagePage";
 
 export const useContactMessageWidget = (): WidgetCardProps => {
 
