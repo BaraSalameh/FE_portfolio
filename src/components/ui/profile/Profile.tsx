@@ -13,6 +13,7 @@ import { ContactMessagePage } from '@/app/[role]/[username]/dashboard/ContactMes
 
 export const Profile = ({ 
     user,
+    unreadContactMessageCount = 0,
     className
 } : ProfileProps) => {
 
@@ -37,9 +38,23 @@ export const Profile = ({
             {/* Right side actions */}
             <div className="absolute right-7 sm:right-10 lg:right-15 bottom-[-2rem] sm:bottom-[-2.5rem] lg:bottom-[-3.5rem] flex gap-5 items-center">
                 {role === 'owner' &&
-                    <CUDModal subTitle='Messages' icon={MessageSquare} >
-                        <ContactMessagePage />
-                    </CUDModal>
+                    <div className='relative'>
+                        <CUDModal subTitle='Messages' icon={MessageSquare}>
+                            <ContactMessagePage />
+                        </CUDModal>
+                        {
+                            (unreadContactMessageCount && unreadContactMessageCount > 0)
+                                ?    <div className='absolute -bottom-4 -right-6.5 w-8.5 h-6 rounded-full bg-green-700 flex justify-center items-center'>
+                                        <Paragraph>
+                                            {unreadContactMessageCount < 100
+                                                ? unreadContactMessageCount
+                                                : '99+'
+                                            }
+                                        </Paragraph>
+                                    </div>
+                                : null
+                        }
+                    </div>
                 }
             </div>
             {/* Profile and Info */}

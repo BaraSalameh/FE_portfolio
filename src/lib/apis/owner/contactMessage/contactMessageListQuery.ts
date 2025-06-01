@@ -14,7 +14,7 @@ export const contactMessageListQuery = createAsyncThunk(
 
             if (response.status === 204) return [];
 
-            return [...response.data.items];
+            return response.data;
 
         } catch (error: any) {
             return thunkAPI.rejectWithValue(error.message);

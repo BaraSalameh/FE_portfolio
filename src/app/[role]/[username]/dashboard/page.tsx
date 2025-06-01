@@ -12,6 +12,7 @@ export default function OwnerDashboardPage() {
 
     const { loading: ownerInfoLoading, user: owner } = useAppSelector(state => state.owner);
     const { loading: clientInfoLoading, user: client } = useAppSelector(state => state.client);
+    const { unreadContactMessageCount } = useAppSelector(state => state.contactMessage);
 
     const { role, username } = useParams<{role: 'owner' | 'client' | 'admin', username: string }>();
     const currentUser = useMemo(() => ({
@@ -25,7 +26,7 @@ export default function OwnerDashboardPage() {
     return (
         <>
         <Loading isLoading={!currentUser.user || currentUser.isLoading} />
-        <Profile user={currentUser.user as ProfileFormData} />
+        <Profile user={currentUser.user as ProfileFormData} unreadContactMessageCount={unreadContactMessageCount} />
         <WithSkeleton isLoading={!currentUser.user || currentUser.isLoading} skeleton={<StaticBackground />}>
             <Main>
                 <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-3 w-full">

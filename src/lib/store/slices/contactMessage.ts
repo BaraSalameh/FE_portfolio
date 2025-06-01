@@ -1,15 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ContactMessageFormData } from '@/lib/schemas';
-import { contactMessageListQuery, deleteMessage, signMessage } from '@/lib/apis';
+import { contactMessageListQuery, deleteMessage, signMessage, userFullInfoQuery } from '@/lib/apis';
 
 interface ContactMessageState {
     lstMessages: ContactMessageFormData[];
+    unreadContactMessageCount: number;
     loading: boolean;
     error: string | null;
 }
 
 const initialState : ContactMessageState = {
     lstMessages: [],
+    unreadContactMessageCount: 0,
     loading: false,
     error: null as string | null
 }
@@ -20,13 +22,19 @@ const contactMessageSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+
+        .addCase(userFullInfoQuery.fulfilled, (state, action) => {
+            state.unreadContactMessageCount = action.payload.unreadContactMessageCount;
+        })
+
         .addCase(contactMessageListQuery.pending, (state) => {
             state.loading = true;
             state.error = null;
         })
         .addCase(contactMessageListQuery.fulfilled, (state, action) => {
             state.loading = false;
-            state.lstMessages = action.payload;
+            state.lstMessages = action.payload.items;
+            state.unreadContactMessageCount = action.payload.unreadContactMessageCount;
         })
         .addCase(contactMessageListQuery.rejected, (state, action) => {
             state.loading = false;
