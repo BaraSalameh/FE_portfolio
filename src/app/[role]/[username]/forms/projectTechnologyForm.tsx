@@ -12,6 +12,8 @@ const ProjectTechnologyForm = ({id, onClose} : ProjectTechnologyProps) => {
 
     const dispatch = useAppDispatch();
     const { loading, error, lstProjectTechnologies, lstTechnologies } = useAppSelector((state) => state.projectTechnology);
+    const { lstEducations } = useAppSelector(state => state.education);
+    const { lstExperiences } = useAppSelector(state => state.experience);
     const projectTechnologyToHandle = lstProjectTechnologies.find(pt => pt.id === id);
 
     const indicator = id ? {when: 'Update', while: 'Updating...'} : {when: 'Create', while: 'creating...'};
@@ -19,6 +21,14 @@ const ProjectTechnologyForm = ({id, onClose} : ProjectTechnologyProps) => {
     const technologyOptions = useMemo(() =>
         lstTechnologies.map(i => ({ label: i.name, value: i.id }))
     , [lstTechnologies]);
+
+    const educationOptions = useMemo(() =>
+        lstEducations.map((i: any) => ({ label: `${i.institution.name} (${i.degree.abbreviation})`, value: i.id }))
+    , [lstEducations]);
+
+    const experienceOptions = useMemo(() =>
+        lstExperiences.map(i => ({ label: i.companyName, value: i.id }))
+    , [lstEducations]);
 
     const onSubmit = async (data: ProjectTechnologyFormData) => {
         const resultAction = await dispatch(addEditDeleteProjectTechnology(data));
@@ -39,6 +49,8 @@ const ProjectTechnologyForm = ({id, onClose} : ProjectTechnologyProps) => {
             onSubmit={onSubmit}
             items={[
                 {as: 'DropdownMulti', name: 'lstTechnologies', options: technologyOptions, label: 'Technologies'},
+                {as: 'Dropdown', name: 'EducationID', options: educationOptions, label: 'Corresponding education'},
+                {as: 'Dropdown', name: 'ExperienceID', options: experienceOptions, label: 'Corresponding experience'},
                 {as: 'Input', name: 'title', label: 'Title', placeholder: 'Protfolio'},
                 {as: 'Input', name: 'liveLink', label: 'Live link', placeholder: 'https://MyProject'},
                 {as: 'Input', name: 'sourceCode', label: 'Source code', placeholder: 'https://LinkedIn'},

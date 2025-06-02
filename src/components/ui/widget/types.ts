@@ -3,12 +3,12 @@ import { LucideIcon } from "lucide-react";
 
 export type PieChartProps = {
     title?: string;
-    groupBy: string | Record<string, string | string[]>;
+    groupBy: string | string[];
 } 
 
 export type BarChartProps = {
     title?: string;
-    groupBy?: string | Record<string, string | string[]>;
+    groupBy?: string | string[];
     durationKeys?: {
         start?: string;
         end?: string;
@@ -18,7 +18,7 @@ export type BarChartProps = {
 
 export type RadarChartProps = {
     title?: string;
-    groupBy?: string | Record<string, string | string[]>;
+    groupBy?: string | string[];
     customData?: CahrtEntry[];
 }
 
@@ -65,9 +65,9 @@ export interface WidgetChartsProps {
 
 export interface ListItemConfig {
     icon?: any;
-    leftKey?: string | Record<string, string | string[]>;
+    leftKey?: string | string[];
     between?: string;
-    rightKey?: string | Record<string, string | string[]>;
+    rightKey?: string | string[];
     size?: 'lg' | 'md' | 'sm' | null;
     isTime?: boolean;
 }

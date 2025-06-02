@@ -25,6 +25,16 @@ export const projectTechnologySchema = z.object({
     isFeatured: z
         .boolean()
         .optional(),
+
+    EducationID: z
+        .string()
+        .optional()
+        .nullable(),
+    
+    ExperienceID: z
+        .string()
+        .optional()
+        .nullable(),
     
     lstTechnologies: z
         .array(z.string())

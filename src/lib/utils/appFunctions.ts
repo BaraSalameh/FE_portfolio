@@ -22,12 +22,12 @@ const normalizeFieldValue = (value: any): string[] => {
 
 export const generatePieData = <T extends Record<string, any>>(
     list: T[],
-    key: string | Record<string, string | string[]>
+    key: string | string[]
 ) => {
     const counts = new Map<string, number>();
 
     list.forEach(item => {
-        const names = normalizeFieldValue(extractValue(item, key));
+        const names = normalizeFieldValue(extractPathValue(item, key));
 
         names.forEach(name => {
             counts.set(name, (counts.get(name) ?? 0) + 1);
@@ -41,7 +41,7 @@ export const generatePieData = <T extends Record<string, any>>(
 
 export const generateDurationData = <T extends Record<string, any>>(
     list: T[],
-    nameKey?: string | Record<string, string | string[]>,
+    nameKey?: string | string[],
     startDateKey: keyof T = 'startDate',
     endDateKey: keyof T = 'endDate',
     unit: dayjs.ManipulateType = 'month'
@@ -53,7 +53,7 @@ export const generateDurationData = <T extends Record<string, any>>(
         const end = item[endDateKey] ? dayjs(item[endDateKey]) : dayjs();
         const value = start ? end.diff(start, unit) : null;
 
-        const names = normalizeFieldValue(extractValue(item, nameKey ?? '')) || ['Unknown'];
+        const names = normalizeFieldValue(extractPathValue(item, nameKey ?? '')) || ['Unknown'];
 
         names.forEach(name => {
             const total = durations.get(name) ?? 0;
@@ -75,40 +75,36 @@ export const generateColorMap = (
     }, {} as Record<string, string>);
 };
 
-export const extractValue = (
+export const extractPathValue = (
     item: any,
-    key: string | Record<string, string | string[]>
+    path: string | string[]
 ): any => {
-    if (typeof key === 'string') {
-        return item?.[key];
-    }
+    const paths = Array.isArray(path) ? path : [path];
 
-    const [parentKey, nestedKeys] = Object.entries(key)[0];
-    const parent = item?.[parentKey];
+    for (const singlePath of paths) {
+        const keys = singlePath.split('.');
+        let current = item;
 
-    if (!parent) return undefined;
+        for (let i = 0; i < keys.length; i++) {
+            if (Array.isArray(current)) {
+                const restPath = keys.slice(i).join('.');
+                const arrayResult = current
+                    .map(child => extractPathValue(child, restPath))
+                    .filter(Boolean);
+                if (arrayResult) return arrayResult;
+                return undefined; // no need to continue this path
+            }
 
-    // Case: parent is an array and nestedKeys is a string
-    if (Array.isArray(parent) && typeof nestedKeys === 'string') {
-        return parent.map(child => child?.[nestedKeys]).filter(Boolean);
-    }
+            current = current?.[keys[i]];
+        }
 
-    // Case: parent is an object and nestedKeys is a string
-    if (typeof nestedKeys === 'string') {
-        return parent?.[nestedKeys];
-    }
-
-    // Case: parent is an object and nestedKeys is an array
-    if (Array.isArray(nestedKeys)) {
-        return nestedKeys
-            .map(k => parent?.[k])
-            .filter(Boolean)
-            .join(' | ');
+        if (current !== undefined && current !== null && current !== '') {
+            return current;
+        }
     }
 
     return undefined;
 };
-
 
 export const mapEducationToForm = (educationFromDb: any): EducationFormData => {
     const result = educationFromDb
@@ -138,6 +134,8 @@ export const mapProjectTechnologyToForm = (projectTechnologyFromDb: any): Educat
     const result = projectTechnologyFromDb
         ?   {
                 ...projectTechnologyFromDb,
+                EducationID: projectTechnologyFromDb?.education?.id,
+                ExperienceID: projectTechnologyFromDb?.experience?.id,
                 lstTechnologies: projectTechnologyFromDb.lstTechnologies?.map(
                     (pt: any) => pt.id
                 ) ?? []

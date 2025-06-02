@@ -26,8 +26,8 @@ export const useLanguageWidget = (): WidgetCardProps => {
         header: { title: 'Language', icon: Languages },
         radar: { title: 'Language proficiency overview (100%)', customData: customBarData },
         list: [
-            { leftKey: {language: 'name'}, size: 'lg' },
-            { leftKey: {languageProficiency: 'level'}, icon: BadgePercent }
+            { leftKey: 'language.name', size: 'lg' },
+            { leftKey: 'languageProficiency.level', icon: BadgePercent }
         ],
         create: { subTitle: 'Modify Languages', form: <UserLanguageForm />, icon: ListPlusIcon},
     }

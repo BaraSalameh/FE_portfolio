@@ -11,7 +11,6 @@ export const WidgetModal = ({ isLoading, isOpen, onClose, onAction, item, update
     if (!isOpen) return null;
 
     useEffect(() => {
-            console.log(item?.id);
             onAction?.(item?.id);
     }, []);
     

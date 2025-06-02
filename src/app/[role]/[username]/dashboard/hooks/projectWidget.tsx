@@ -14,10 +14,10 @@ export const useProjectWidget = (): WidgetCardProps => {
         isLoading: projectTechnologyLoading,
         items: lstProjectTechnologies,
         header: { title: 'Project', icon: Folder },
-        radar: { title: 'Technology proficiency overview (count)', groupBy: { lstTechnologies: 'name' } },
+        radar: { title: 'Technology proficiency overview (count)', groupBy: 'lstTechnologies.name' },
         pie: { title: 'Projects Overview', groupBy: 'title' },
         list: [
-            { leftKey: 'title', size: 'lg' },
+            { leftKey: 'title', between: '-', rightKey: ['experience.companyName', 'education.institution.name'], size: 'lg' },
             { leftKey: 'isFeatured' }
         ],
         create: { subTitle: 'Add Project & technologis', form: <ProjectTechnologyForm /> },
@@ -27,7 +27,7 @@ export const useProjectWidget = (): WidgetCardProps => {
             { leftKey: 'title', size: 'lg' },
             { leftKey: 'liveLink', icon: Link },
             { leftKey: 'sourceCode', icon: SearchCodeIcon },
-            { leftKey: { lstTechnologies: 'name' }, icon: WandSparklesIcon },
+            { leftKey: 'lstTechnologies.name', icon: WandSparklesIcon },
             { leftKey: 'description', size: 'sm' }
         ],
         onSort: debouncedSortProject

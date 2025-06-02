@@ -6,7 +6,7 @@ import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from 
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { SortableItem } from './SortableItem';
 import { WidgetListProps } from './types';
-import { extractValue } from '@/lib/utils/appFunctions';
+import { extractPathValue } from '@/lib/utils/appFunctions';
 import { ResponsiveIcon, Paragraph } from '..';
 
 export const WidgetList = ({ items, list, onItemClick, className, sort }: WidgetListProps) => {
@@ -43,8 +43,8 @@ export const WidgetList = ({ items, list, onItemClick, className, sort }: Widget
                     onClick={() => onItemClick?.(item)}
                 >
                     {list.map((cfg, index) => {
-                        const leftRaw = cfg.leftKey ? extractValue(item, cfg.leftKey) : undefined;
-                        const rightRaw = cfg.rightKey ? extractValue(item, cfg.rightKey) : undefined;
+                        const leftRaw = cfg.leftKey ? extractPathValue(item, cfg.leftKey as string) : undefined;
+                        const rightRaw = cfg.rightKey ? extractPathValue(item, cfg.rightKey as string) : undefined;
 
                         const leftVal = cfg.isTime ? dayjs(leftRaw).format('MMM YYYY') : leftRaw;
 
@@ -70,7 +70,7 @@ export const WidgetList = ({ items, list, onItemClick, className, sort }: Widget
                                             :   leftVal
                                                 
                                 }
-                                {cfg.between && ` ${cfg.between} `}
+                                {cfg.between && rightVal && ` ${cfg.between} `}
 
                                 {rightVal}
                             </Paragraph>
