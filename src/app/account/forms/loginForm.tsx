@@ -20,7 +20,7 @@ const LoginForm = () => {
             schema={loginSchema}
             onSubmit={onSubmit}
             items={[
-                {as: 'Input', name: 'email', label: 'Email', placeholder: 'john.Doe@example.com'},
+                {as: 'Input', name: 'email', label: 'Email', placeholder: 'john.doe@example.com'},
                 {as: 'Input', name: 'password', label: 'Password', placeholder: '* * * * * * * *', type: 'Password'},
                 {as: 'Checkbox', name: 'rememberMe', label: 'Remember me'},
             ]}
