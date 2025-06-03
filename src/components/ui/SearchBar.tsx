@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Search as SearchIcon } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import { userListQuery } from '@/lib/apis/client/userListQuery';
@@ -8,42 +8,36 @@ import debounce from 'lodash.debounce';
 import { Paragraph } from '.';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useInView } from 'react-intersection-observer'
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 export const SearchBar = () => {
-    const { userList, rowCount, loading, error } = useAppSelector(state => state.search);
+    const { userList, rowCount, error } = useAppSelector(state => state.search);
 
-    const { ref, inView } = useInView();
     const dispatch = useAppDispatch();
     const router = useRouter();
 
     const [query, setQuery] = useState('');
     const [page, setPage] = useState(0);
     const hasMore = userList.length < rowCount;
-    
-    const debouncedSearch = useCallback(
-        debounce((value: string, page = 0) => {
-            if (value.trim().length > 0) {
-                dispatch(userListQuery({query: value, page}))
-            }
-        }, 1000),
-        [dispatch]
-    );
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setQuery(value);
-        setPage(0);
-        debouncedSearch(value);
-    };
 
     useEffect(() => {
-        if (inView && hasMore && !loading) {
-            const nextPage = page + 1;
-            setPage(nextPage);
-            debouncedSearch(query, nextPage);
+        if (query.trim().length > 0) {
+            setPage(0);
+            dispatch(userListQuery({ query, page: 0 }));
         }
-    }, [inView, hasMore, loading]);
+    }, [query, dispatch]);
+
+    const handleNext = () => {
+        const nextPage = page + 1;
+        setPage(nextPage);
+        dispatch(userListQuery({ query, page: nextPage }));
+    };
+
+    const debouncedHandleChange = useCallback(
+        debounce((e: React.ChangeEvent<HTMLInputElement>) => {
+            setQuery(e.target.value);
+        }, 500) , []
+    );
 
     const handleSelect = (username: string) => {
         router.push(`/client/${username}/dashboard`);
@@ -54,23 +48,17 @@ export const SearchBar = () => {
             return <Paragraph intent="danger" size="sm" className="p-3">{error}</Paragraph>;
         }
 
-        if (loading) {
-            return <Paragraph size="sm" className="p-3">Loading...</Paragraph>;
-        }
-
-        if (userList?.length === 0) {
+        if (userList.length === 0) {
             return <Paragraph size="sm" className="p-3">No Result</Paragraph>;
         }
 
-        return userList?.map((user: any, id: number) => {
-            const isLast = id === userList.length - 1;
+        return userList?.map((user: any) => {
             const profilePicture = user?.profilePicture ?? (
                 user?.gender === 0 ? '/Default-Female.svg' : '/Default-Male.svg'
             );
 
             return (
                 <div
-                    ref={isLast ? ref : null}
                     key={user.username}
                     onClick={() => handleSelect(user.username)}
                     className="flex gap-3 p-3 hover:bg-gray-100 dark:hover:bg-zinc-800 cursor-pointer"
@@ -105,8 +93,7 @@ export const SearchBar = () => {
                 <SearchIcon className="text-gray-500 w-5 h-5 mr-2" />
                 <input
                     type="text"
-                    value={query}
-                    onChange={handleChange}
+                    onChange={debouncedHandleChange}
                     placeholder="Search for a user"
                     className="flex-grow bg-transparent outline-none text-sm text-black dark:text-white"
                 />
@@ -114,7 +101,6 @@ export const SearchBar = () => {
 
             {query && (
                 <div
-                    key={'Fixed'}
                     className="
                         absolute w-full mt-1 z-10
                         bg-white dark:bg-zinc-900
@@ -122,8 +108,17 @@ export const SearchBar = () => {
                         rounded-md shadow-lg
                         max-h-60 overflow-y-auto scrollbar-hide
                     "
+                    id="scrollableDiv"
                 >
-                    {renderUserList()}
+                    <InfiniteScroll
+                        dataLength={userList.length}
+                        next={handleNext}
+                        hasMore={hasMore}
+                        loader={<Paragraph size="sm" className="p-3" >Loading...</Paragraph>}
+                        scrollableTarget="scrollableDiv"
+                    >
+                        {renderUserList()}
+                    </InfiniteScroll>
                 </div>
             )}
         </div>
