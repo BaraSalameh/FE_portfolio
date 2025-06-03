@@ -12,11 +12,16 @@ export const blurBackground = cva(
                 sm: 'bg-black/25 backdrop-blur-sm bg-opacity-25',
                 md: 'bg-black/50 backdrop-blur-md bg-opacity-50',
                 lg: 'bg-black/75 backdrop-blur-lg bg-opacity-75'
+            },
+            clickable: {
+                true: 'cursor-pointer',
+                false: null
             }
         },
         defaultVariants: {
             fullScreen: true,
-            intent: 'md'
+            intent: 'md',
+            clickable: false
         },
     }
 );

@@ -5,7 +5,7 @@ import { Search as SearchIcon } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import { userListQuery } from '@/lib/apis/client/userListQuery';
 import debounce from 'lodash.debounce';
-import { Paragraph } from '.';
+import { Paragraph, ResponsiveIcon } from '.';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -83,30 +83,23 @@ export const SearchBar = () => {
     return (
         <div className="relative max-w-md mx-auto">
             <form
-                className="
-                    flex items-center bg-green-900 dark:bg-zinc-900
-                    border border-zinc-300 dark:border-green-900
-                    rounded-full px-4 py-2 shadow-sm
-                "
+                className="flex items-center border border-green-900 rounded-full px-4 py-2 gap-2"
                 onSubmit={e => e.preventDefault()}
             >
-                <SearchIcon className="text-gray-500 w-5 h-5 mr-2" />
+                <ResponsiveIcon icon={SearchIcon}/>
                 <input
                     type="text"
                     onChange={debouncedHandleChange}
                     placeholder="Search for a user"
-                    className="flex-grow bg-transparent outline-none text-sm text-black dark:text-white"
+                    className="outline-none text-sm"
                 />
             </form>
 
             {query && (
                 <div
                     className="
-                        absolute w-full mt-1 z-10
-                        bg-white dark:bg-zinc-900
-                        border border-gray-300 dark:border-zinc-700
-                        rounded-md shadow-lg
-                        max-h-60 overflow-y-auto scrollbar-hide
+                        absolute w-full mt-1 bg-zinc-900 border border-zinc-700
+                        rounded-2xl  max-h-60 overflow-y-auto scrollbar-hide
                     "
                     id="scrollableDiv"
                 >

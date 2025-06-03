@@ -25,14 +25,7 @@ export default function Home() {
     return (
         <>
            {searchOpen && (
-                <BlurBackground intent='sm'>
-                    {/* Backdrop */}
-                    <div
-                        className="absolute inset-0 bg-black/30 backdrop-blur-sm cursor-pointer"
-                        onClick={handleClose}
-                    />
-
-                    {/* SearchBar */}
+                <BlurBackground intent='sm' onClick={handleClose}>
                     <div
                         onClick={(e) => e.stopPropagation()}
                         className="z-10 sm:w-full max-w-md"
