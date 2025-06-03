@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Search as SearchIcon } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import { userListQuery } from '@/lib/apis/client/userListQuery';
@@ -8,17 +8,23 @@ import debounce from 'lodash.debounce';
 import { Paragraph } from '.';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { useInView } from 'react-intersection-observer'
 
 export const SearchBar = () => {
-    const [query, setQuery] = useState('');
+    const { userList, rowCount, loading, error } = useAppSelector(state => state.search);
+
+    const { ref, inView } = useInView();
     const dispatch = useAppDispatch();
     const router = useRouter();
-    const { userList, loading, error } = useAppSelector(state => state.search);
 
+    const [query, setQuery] = useState('');
+    const [page, setPage] = useState(0);
+    const hasMore = userList.length < rowCount;
+    
     const debouncedSearch = useCallback(
-        debounce((value: string) => {
+        debounce((value: string, page = 0) => {
             if (value.trim().length > 0) {
-                dispatch(userListQuery(value));
+                dispatch(userListQuery({query: value, page}))
             }
         }, 300),
         [dispatch]
@@ -27,8 +33,17 @@ export const SearchBar = () => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setQuery(value);
+        setPage(0);
         debouncedSearch(value);
     };
+
+    useEffect(() => {
+        if (inView && hasMore && !loading) {
+            const nextPage = page + 1;
+            setPage(nextPage);
+            debouncedSearch(query, nextPage);
+        }
+    }, [inView, hasMore, loading]);
 
     const handleSelect = (username: string) => {
         router.push(`/client/${username}/dashboard`);
@@ -48,12 +63,14 @@ export const SearchBar = () => {
         }
 
         return userList?.map((user: any, id: number) => {
+            const isLast = id === userList.length - 1;
             const profilePicture = user?.profilePicture ?? (
                 user?.gender === 0 ? '/Default-Female.svg' : '/Default-Male.svg'
             );
 
             return (
                 <div
+                    ref={isLast ? ref : null}
                     key={id}
                     onClick={() => handleSelect(user.username)}
                     className="flex gap-3 p-3 hover:bg-gray-100 dark:hover:bg-zinc-800 cursor-pointer"
