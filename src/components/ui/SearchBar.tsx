@@ -26,7 +26,7 @@ export const SearchBar = () => {
             if (value.trim().length > 0) {
                 dispatch(userListQuery({query: value, page}))
             }
-        }, 300),
+        }, 1000),
         [dispatch]
     );
 
@@ -71,7 +71,7 @@ export const SearchBar = () => {
             return (
                 <div
                     ref={isLast ? ref : null}
-                    key={id}
+                    key={user.username}
                     onClick={() => handleSelect(user.username)}
                     className="flex gap-3 p-3 hover:bg-gray-100 dark:hover:bg-zinc-800 cursor-pointer"
                 >
@@ -114,6 +114,7 @@ export const SearchBar = () => {
 
             {query && (
                 <div
+                    key={'Fixed'}
                     className="
                         absolute w-full mt-1 z-10
                         bg-white dark:bg-zinc-900

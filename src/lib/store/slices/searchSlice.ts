@@ -31,7 +31,6 @@ const searchSlice = createSlice({
             if (page === 0) {
                 state.userList = lstUsers;
             } else {
-
                 state.userList =  [...state.userList, ...lstUsers];
             }
             state.loading = false;
