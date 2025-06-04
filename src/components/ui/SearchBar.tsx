@@ -1,14 +1,15 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { Search as SearchIcon } from 'lucide-react';
+import { Search as SearchIcon, X } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import { userListQuery } from '@/lib/apis/client/userListQuery';
 import debounce from 'lodash.debounce';
 import { Paragraph, ResponsiveIcon } from '.';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import InfiniteScroll from 'react-infinite-scroll-component';
+import { ControlledInfiniteScroll } from './ControlledInfiniteScroll';
+import { clearSearch } from '@/lib/store/slices/searchSlice';
 
 export const SearchBar = () => {
     const { userList, rowCount, error } = useAppSelector(state => state.search);
@@ -17,31 +18,37 @@ export const SearchBar = () => {
     const router = useRouter();
 
     const [query, setQuery] = useState('');
-    const [page, setPage] = useState(0);
-    const hasMore = userList.length < rowCount;
 
-    useEffect(() => {
-        if (query.trim().length > 0) {
-            setPage(0);
-            dispatch(userListQuery({ query, page: 0 }));
-        }
-    }, [query, dispatch]);
-
-    const handleNext = () => {
-        const nextPage = page + 1;
-        setPage(nextPage);
-        dispatch(userListQuery({ query, page: nextPage }));
-    };
-
-    const debouncedHandleChange = useCallback(
-        debounce((e: React.ChangeEvent<HTMLInputElement>) => {
-            setQuery(e.target.value);
-        }, 500) , []
+    const debouncedSearch = useCallback(
+        debounce((value: string) => {
+            value.trim().length > 0 
+            &&  dispatch(userListQuery({ query: value, page: 0 }));
+        }, 500),
+        [dispatch]
     );
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setQuery(value);
+        debouncedSearch(value);
+    };
 
     const handleSelect = (username: string) => {
         router.push(`/client/${username}/dashboard`);
     };
+
+    useEffect(() => {
+        return () => {
+            dispatch(clearSearch());
+            debouncedSearch.cancel();
+        };
+    }, [debouncedSearch]);
+
+    const handleClear = () => {
+        debouncedSearch.cancel();
+        setQuery('');
+        dispatch(clearSearch());
+    }
 
     const renderUserList = () => {
         if (error) {
@@ -89,30 +96,24 @@ export const SearchBar = () => {
                 <ResponsiveIcon icon={SearchIcon}/>
                 <input
                     type="text"
-                    onChange={debouncedHandleChange}
+                    value={query}
+                    onChange={handleChange}
+                    aria-label='Search users'
                     placeholder="Search for a user"
-                    className="outline-none text-sm"
+                    className="outline-none text-sm w-full"
                 />
+                {query && <ResponsiveIcon icon={X} onClick={handleClear}/>}
             </form>
 
             {query && (
-                <div
-                    className="
-                        absolute w-full mt-1 bg-zinc-900 border border-zinc-700
-                        rounded-2xl  max-h-60 overflow-y-auto scrollbar-hide
-                    "
-                    id="scrollableDiv"
+                <ControlledInfiniteScroll
+                    items={userList}
+                    maxLength={rowCount}
+                    query={query}
+                    fetchAction={userListQuery}
                 >
-                    <InfiniteScroll
-                        dataLength={userList.length}
-                        next={handleNext}
-                        hasMore={hasMore}
-                        loader={<Paragraph size="sm" className="p-3" >Loading...</Paragraph>}
-                        scrollableTarget="scrollableDiv"
-                    >
-                        {renderUserList()}
-                    </InfiniteScroll>
-                </div>
+                    {renderUserList()}
+                </ControlledInfiniteScroll>
             )}
         </div>
     );

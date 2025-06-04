@@ -1,4 +1,6 @@
+import { RootState } from "@/lib/store/store";
 import { ListVariantProps, BlurBackgroundVariantProps, ParagraphVariantProps } from "@/styles";
+import { Action, ThunkAction } from "@reduxjs/toolkit";
 import { LucideIcon } from "lucide-react";
 import { InputHTMLAttributes } from "react";
 
@@ -38,4 +40,17 @@ export interface ResponsiveIconProps {
     icon?: LucideIcon;
     className?: string;
     onClick?: () => void;
+}
+
+type FetchAction = {
+    query: string;
+    page: number;
+}
+
+export interface ControlledInfiniteScrollProps {
+    items: Record<string, any>[];
+    maxLength: number;
+    fetchAction: (params: FetchAction) => ThunkAction<any, RootState, unknown, Action>;
+    query: string;
+    children: React.ReactNode;
 }

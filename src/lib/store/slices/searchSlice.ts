@@ -18,7 +18,14 @@ const initialState : SearchState = {
 const searchSlice = createSlice({
     name: 'search',
     initialState,
-    reducers: {},
+    reducers: {
+        clearSearch: (state) => {
+            state.userList = [];
+            state.rowCount = 0;
+            state.loading = false;
+            state.error = null;
+        }
+    },
     extraReducers: (builder) => {
         builder
         .addCase(userListQuery.pending, (state) => {
@@ -43,4 +50,5 @@ const searchSlice = createSlice({
     },
 });
 
+export const { clearSearch } = searchSlice.actions;
 export default searchSlice.reducer;
