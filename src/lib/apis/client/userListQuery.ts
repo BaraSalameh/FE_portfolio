@@ -6,12 +6,11 @@ export const userListQuery = createAsyncThunk(
 
         const res = await fetch(`https://localhost:7206/api/Client/UserList?Search=${query}&PageNumber=${page}&PageSize=${pageSize}`);
 
-        if (res.status === 204) return {lstUsers: [], rowCount: 0, page};
+        if (res.status === 204) return {items: [], rowCount: 0, page};
         
         const result = await res.json();
         return {
-            lstUsers: result.items,
-            rowCount: result.rowCount,
+            ...result,
             page,
         }
     }

@@ -33,12 +33,12 @@ const searchSlice = createSlice({
             state.error = null;
         })
         .addCase(userListQuery.fulfilled, (state, action) => {
-            const { lstUsers, rowCount, page } = action.payload;
+            const { items, rowCount, page } = action.payload;
 
             if (page === 0) {
-                state.userList = lstUsers;
+                state.userList = items;
             } else {
-                state.userList =  [...state.userList, ...lstUsers];
+                state.userList =  [...state.userList, ...items];
             }
             state.loading = false;
             state.rowCount = rowCount;
