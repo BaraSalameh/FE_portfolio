@@ -7,7 +7,7 @@ import clientSlice from "./slices/clientSlice";
 import experienceSlice from "./slices/experienceSlice";
 import projectTechnologySlice from "./slices/projectTechnologySlice";
 import userLanguageSlice from "./slices/userLanguageSlice";
-import contactMessageSlice from './slices/contactMessage';
+import contactMessageSlice from './slices/contactMessageSlice';
 
 const rootReducer = combineReducers({
     auth: authSlice,

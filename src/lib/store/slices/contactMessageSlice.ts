@@ -5,6 +5,7 @@ import { contactMessageListQuery, deleteMessage, signMessage, userFullInfoQuery 
 interface ContactMessageState {
     lstMessages: ContactMessageFormData[];
     unreadContactMessageCount: number;
+    rowCount: number;
     loading: boolean;
     error: string | null;
 }
@@ -12,6 +13,7 @@ interface ContactMessageState {
 const initialState : ContactMessageState = {
     lstMessages: [],
     unreadContactMessageCount: 0,
+    rowCount: 0,
     loading: false,
     error: null as string | null
 }
@@ -19,7 +21,23 @@ const initialState : ContactMessageState = {
 const contactMessageSlice = createSlice({
     name: 'contactMessage',
     initialState,
-    reducers: {},
+    reducers: {
+        removeMessage: (state, action) => {
+            const id = action.payload;
+            state.lstMessages = state.lstMessages.filter(msg => msg.id !== id);
+            state.rowCount = state.rowCount - 1;
+        },
+
+        markMessage: (state, action) => {
+            const id = action.payload;
+            const message = state.lstMessages.find(msg => msg.id === id);
+
+            if (message && !message.isRead) {
+                message.isRead = true;
+                state.unreadContactMessageCount -= 1;
+            }
+        }
+    },
     extraReducers: (builder) => {
         builder
 
@@ -32,9 +50,16 @@ const contactMessageSlice = createSlice({
             state.error = null;
         })
         .addCase(contactMessageListQuery.fulfilled, (state, action) => {
+            const { unreadContactMessageCount, items, rowCount, page } = action.payload;
+
+            if (page === 0) {
+                state.lstMessages = items;
+            } else {
+                state.lstMessages =  [...state.lstMessages, ...items];
+            }
             state.loading = false;
-            state.lstMessages = action.payload.items;
-            state.unreadContactMessageCount = action.payload.unreadContactMessageCount;
+            state.unreadContactMessageCount = unreadContactMessageCount;
+            state.rowCount = rowCount;
         })
         .addCase(contactMessageListQuery.rejected, (state, action) => {
             state.loading = false;
@@ -67,4 +92,5 @@ const contactMessageSlice = createSlice({
     },
 });
 
+export const { removeMessage, markMessage } = contactMessageSlice.actions; 
 export default contactMessageSlice.reducer;

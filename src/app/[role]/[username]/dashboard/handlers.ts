@@ -1,5 +1,6 @@
 import { contactMessageListQuery, deleteEducation, deleteExperience, deleteMessage, deleteProject, educationListQuery, experienceListQuery, projectTechnologyListQuery, signMessage, sortEducation, sortExperience, sortProject, userByUsernameQuery, userFullInfoQuery, userLanguageListQuery } from "@/lib/apis";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import { markMessage, removeMessage } from "@/lib/store/slices/contactMessageSlice";
 import debounce from "lodash.debounce";
 import { useCallback, useEffect } from "react";
 
@@ -65,7 +66,7 @@ export const useHandleMessageDelete = () => {
   return async (id: string) => {
         try {
             await dispatch(deleteMessage(id));
-            await dispatch(contactMessageListQuery());
+            dispatch(removeMessage(id));
         } catch (err) {
             console.error('Failed to delete:', err);
         }
@@ -81,7 +82,7 @@ export const useHandleSignMessage = () => {
         if(!currentMessage?.isRead)
             try {
                 await dispatch(signMessage(id));
-                await dispatch(contactMessageListQuery());
+                dispatch(markMessage(id));
             } catch (err) {
                 console.error('Failed to delete:', err);
             }
@@ -134,6 +135,6 @@ export const useLoadContactMessageData = (messages: any) => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        !(Array.isArray(messages) && messages.length > 0) && dispatch(contactMessageListQuery());
+        !(Array.isArray(messages) && messages.length > 0) && dispatch(contactMessageListQuery({query: '', page: 0}));
     }, []);
 };

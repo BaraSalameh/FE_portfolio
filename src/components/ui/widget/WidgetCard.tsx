@@ -25,6 +25,7 @@ export const WidgetCard = ({
     details,
     onModalAction,
     onSort,
+    pagination,
     className
 }: WidgetCardProps) => {
 
@@ -55,7 +56,12 @@ export const WidgetCard = ({
                         {header?.icon && <ResponsiveIcon icon={header.icon} />}
                         {header?.title}
                     </Paragraph>
-                        <CUDModal isLoading={isLoading} title={create?.title} subTitle={create?.subTitle} icon={create?.icon}>
+                        <CUDModal
+                            isLoading={isLoading}
+                            title={create?.title}
+                            subTitle={create?.subTitle}
+                            icon={create?.icon}
+                        >
                             {create?.form}
                         </CUDModal>
                             
@@ -82,7 +88,12 @@ export const WidgetCard = ({
                                         />
                                 }
                                 {create && (
-                                    <CUDModal isLoading={isLoading} title={create.title} subTitle={create.subTitle} icon={create?.icon}>
+                                    <CUDModal
+                                        isLoading={isLoading}
+                                        title={create.title}
+                                        subTitle={create.subTitle}
+                                        icon={create?.icon}
+                                    >
                                         {create.form}
                                     </CUDModal>
                                 )}
@@ -100,7 +111,13 @@ export const WidgetCard = ({
                 {list && (
                     <Main paddingX="none" paddingY="none">
                         <List size="md" as="none" className="w-full">
-                            <WidgetList items={items} list={list} onItemClick={clickable} sort={{sortable, onSort}} />
+                            <WidgetList
+                                items={items}
+                                list={list}
+                                onItemClick={clickable}
+                                sort={{sortable, onSort}}
+                                pagination={pagination}
+                            />
                         </List>
                     </Main>
                 )}

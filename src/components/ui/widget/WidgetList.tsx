@@ -8,8 +8,16 @@ import { SortableItem } from './SortableItem';
 import { WidgetListProps } from './types';
 import { extractPathValue } from '@/lib/utils/appFunctions';
 import { ResponsiveIcon, Paragraph } from '..';
+import { ControlledInfiniteScroll } from '../ControlledInfiniteScroll';
 
-export const WidgetList = ({ items, list, onItemClick, className, sort }: WidgetListProps) => {
+export const WidgetList = ({
+    items,
+    list,
+    onItemClick,
+    sort,
+    pagination,
+    className
+}: WidgetListProps) => {
 
     const [rows, setRows] = useState<Record<string, any>[]>(items);
     const sensors = useSensors(useSensor(PointerSensor));
@@ -39,7 +47,10 @@ export const WidgetList = ({ items, list, onItemClick, className, sort }: Widget
             const listItem = (
                 <li
                     key={item.id ?? idx}
-                    className={`${cn(widgetList({ opacity: item?.isRead, clickable: sort?.sortable ? false : onItemClick ? true : false }), className)}`}
+                    className={`${cn(widgetList({
+                        opacity: item?.isRead,
+                        clickable: sort?.sortable ? false : onItemClick ? true : false
+                    }), className)}`}
                     onClick={() => onItemClick?.(item)}
                 >
                     {list.map((cfg, index) => {
@@ -101,7 +112,15 @@ export const WidgetList = ({ items, list, onItemClick, className, sort }: Widget
                     {renderList()}
                 </SortableContext>
             </DndContext>
-        ) : (
+        ) : pagination ? (
+            <ControlledInfiniteScroll
+                items={items}
+                {...pagination}
+            >
+                {renderList()}
+            </ControlledInfiniteScroll>
+        )
+        : (
             <React.Fragment>{renderList()}</React.Fragment>
         );
 };

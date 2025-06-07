@@ -2,10 +2,11 @@ import { WidgetCardProps } from "@/components/ui/widget/types";
 import { useAppSelector } from "@/lib/store/hooks";
 import {  MessageCircleHeart, User, SubtitlesIcon, Mail } from "lucide-react";
 import { useHandleMessageDelete, useHandleSignMessage } from "../handlers";
+import { contactMessageListQuery } from "@/lib/apis";
 
 export const useContactMessageWidget = (): WidgetCardProps => {
 
-    const { loading, lstMessages } = useAppSelector(state => state.contactMessage);
+    const { loading, lstMessages, rowCount } = useAppSelector(state => state.contactMessage);
 
     const handleMessageDelete = useHandleMessageDelete();
     const handleSignMessage = useHandleSignMessage();
@@ -25,6 +26,15 @@ export const useContactMessageWidget = (): WidgetCardProps => {
             { leftKey: 'message', icon: MessageCircleHeart },
         ],
         del: { subTitle: 'Delete Message', message: 'Are you sure?', onDelete: handleMessageDelete },
+        pagination: {
+            query: '',
+            maxLength: rowCount,
+            fetchAction: contactMessageListQuery,
+            styles: {
+                size: 'xl',
+                space: 'md'
+            }
+        },
         onModalAction: handleSignMessage
     }
 }

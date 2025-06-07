@@ -5,13 +5,17 @@ import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Paragraph } from "./Paragraph";
 import { ControlledInfiniteScrollProps } from "./types";
+import { cn } from "../utils";
+import { infiniteScroll } from "@/styles/infiniteScroll";
 
 export const ControlledInfiniteScroll = ({
     items,
     maxLength,
     fetchAction,
     query,
-    children
+    children,
+    className,
+    styles
 }: ControlledInfiniteScrollProps) => {
 
     const dispatch = useAppDispatch();
@@ -30,19 +34,14 @@ export const ControlledInfiniteScroll = ({
     }, [query]);
     
     return (
-        <div
-            className="
-                absolute w-full mt-1 bg-zinc-900 border border-zinc-700
-                rounded-2xl  max-h-60 overflow-y-auto scrollbar-hide
-            "
-            id="scrollableDiv"
-        >
+        <div id="scrollableDiv" className={cn(infiniteScroll({ ...styles }), className)}>
             <InfiniteScroll
                 dataLength={items.length}
                 next={handleNext}
                 hasMore={hasMore}
                 loader={<Paragraph size="sm" className="p-3" >Loading...</Paragraph>}
                 scrollableTarget="scrollableDiv"
+                className={cn(infiniteScroll({ space: styles?.space }), className)}
             >
                 {children}
             </InfiniteScroll>

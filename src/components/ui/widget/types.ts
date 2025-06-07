@@ -1,4 +1,8 @@
+import { Size } from "@/components/types";
+import { RootState } from "@/lib/store/store";
+import { InfiniteScrollVariantProps } from "@/styles/infiniteScroll";
 import { WidgetCardVariantProps, WidgetListVariantProps } from "@/styles/widget";
+import { Action, ThunkAction } from "@reduxjs/toolkit";
 import { LucideIcon } from "lucide-react";
 
 export type PieChartProps = {
@@ -52,6 +56,7 @@ export interface WidgetCardProps extends WidgetCardVariantProps {
     };
     details?: ListItemConfig[];
     onSort?: (lstIds: string[]) => any;
+    pagination?: Pagination
     onModalAction?: (id: string) => any;
     className?: string;
 }
@@ -72,6 +77,20 @@ export interface ListItemConfig {
     isTime?: boolean;
 }
 
+type FetchAction = {
+    query: string;
+    page: number;
+}
+
+interface Pagination {
+    maxLength: number;
+    fetchAction: (params: FetchAction) => ThunkAction<any, RootState, unknown, Action>;
+    query: string;
+    children?: React.ReactNode; 
+    className?: string;
+    styles?: InfiniteScrollVariantProps
+}
+
 export interface WidgetListProps extends WidgetListVariantProps {
     items: Record<string, any>[];
     list: ListItemConfig[];
@@ -81,6 +100,7 @@ export interface WidgetListProps extends WidgetListVariantProps {
         sortable: boolean;
         onSort?: (lstIds: string[]) => any;
     }
+    pagination?: Pagination
 }
 
 export interface WidgetModalProps {

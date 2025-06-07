@@ -3,6 +3,7 @@ import { ListVariantProps, BlurBackgroundVariantProps, ParagraphVariantProps } f
 import { Action, ThunkAction } from "@reduxjs/toolkit";
 import { LucideIcon } from "lucide-react";
 import { InputHTMLAttributes } from "react";
+import { InfiniteScrollVariantProps } from "@/styles/infiniteScroll";
 
 export interface BlurBackgroundProps extends BlurBackgroundVariantProps {
     children: React.ReactNode;
@@ -36,7 +37,6 @@ export interface ParagraphProps extends ParagraphVariantProps {
 }
 
 export interface ResponsiveIconProps {
-    // icon?: React.ElementType;
     icon?: LucideIcon;
     className?: string;
     onClick?: () => void;
@@ -53,4 +53,6 @@ export interface ControlledInfiniteScrollProps {
     fetchAction: (params: FetchAction) => ThunkAction<any, RootState, unknown, Action>;
     query: string;
     children: React.ReactNode;
+    className?: string;
+    styles?: InfiniteScrollVariantProps;
 }

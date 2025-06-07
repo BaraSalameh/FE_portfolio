@@ -111,6 +111,8 @@ export const SearchBar = () => {
                     maxLength={rowCount}
                     query={query}
                     fetchAction={userListQuery}
+                    styles={{background: true, border: true}}
+                    className='mt-2'
                 >
                     {renderUserList()}
                 </ControlledInfiniteScroll>
