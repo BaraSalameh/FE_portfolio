@@ -46,7 +46,7 @@ const contactMessageSlice = createSlice({
         })
 
         .addCase(contactMessageListQuery.pending, (state) => {
-            state.loading = true;
+            state.loading = false;
             state.error = null;
         })
         .addCase(contactMessageListQuery.fulfilled, (state, action) => {

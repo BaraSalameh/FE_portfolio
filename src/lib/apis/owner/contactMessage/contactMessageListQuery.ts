@@ -1,9 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { dynamicApi } from '../../apiClient';
+import { FetchAction } from '@/components/types';
 
 export const contactMessageListQuery = createAsyncThunk(
     'contactMessage/contactMessageListQuery',
-    async ({query, page = 0, pageSize = 5} : {query: string, page: number, pageSize?: number}, thunkAPI)  => {
+    async ({page = 0, pageSize = 5} : FetchAction, thunkAPI)  => {
         try {
 
             const response = await dynamicApi({

@@ -4,6 +4,7 @@ import { Action, ThunkAction } from "@reduxjs/toolkit";
 import { LucideIcon } from "lucide-react";
 import { InputHTMLAttributes } from "react";
 import { InfiniteScrollVariantProps } from "@/styles/infiniteScroll";
+import { FetchAction } from "../types";
 
 export interface BlurBackgroundProps extends BlurBackgroundVariantProps {
     children: React.ReactNode;
@@ -42,16 +43,11 @@ export interface ResponsiveIconProps {
     onClick?: () => void;
 }
 
-type FetchAction = {
-    query: string;
-    page: number;
-}
-
 export interface ControlledInfiniteScrollProps {
     items: Record<string, any>[];
     maxLength: number;
     fetchAction: (params: FetchAction) => ThunkAction<any, RootState, unknown, Action>;
-    query: string;
+    query?: string;
     children: React.ReactNode;
     className?: string;
     styles?: InfiniteScrollVariantProps;

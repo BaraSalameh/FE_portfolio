@@ -41,7 +41,6 @@ export const ControlledInfiniteScroll = ({
                 hasMore={hasMore}
                 loader={<Paragraph size="sm" className="p-3" >Loading...</Paragraph>}
                 scrollableTarget="scrollableDiv"
-                className={cn(infiniteScroll({ space: styles?.space }), className)}
             >
                 {children}
             </InfiniteScroll>

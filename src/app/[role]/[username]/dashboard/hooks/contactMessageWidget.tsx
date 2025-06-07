@@ -27,7 +27,6 @@ export const useContactMessageWidget = (): WidgetCardProps => {
         ],
         del: { subTitle: 'Delete Message', message: 'Are you sure?', onDelete: handleMessageDelete },
         pagination: {
-            query: '',
             maxLength: rowCount,
             fetchAction: contactMessageListQuery,
             styles: {

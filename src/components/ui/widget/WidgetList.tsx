@@ -42,85 +42,84 @@ export const WidgetList = ({
         setRows(items);
     }, [items]);
 
-    const renderList = () =>
-        rows.map((item, idx) => {
-            const listItem = (
-                <li
-                    key={item.id ?? idx}
-                    className={`${cn(widgetList({
-                        opacity: item?.isRead,
-                        clickable: sort?.sortable ? false : onItemClick ? true : false
-                    }), className)}`}
-                    onClick={() => onItemClick?.(item)}
-                >
-                    {list.map((cfg, index) => {
-                        const leftRaw = cfg.leftKey ? extractPathValue(item, cfg.leftKey as string) : undefined;
-                        const rightRaw = cfg.rightKey ? extractPathValue(item, cfg.rightKey as string) : undefined;
-
-                        const leftVal = cfg.isTime ? dayjs(leftRaw).format('MMM YYYY') : leftRaw;
-
-                        const rightVal = cfg.isTime
-                            ?   rightRaw ? dayjs(rightRaw).format('MMM YYYY') : 'Present'
-                            :   cfg.rightKey ? rightRaw : '';
-
-                        return (
-                            <Paragraph key={index} size={cfg.size}>
-                                {cfg.icon && <ResponsiveIcon icon={cfg.icon} />}
-
-                                {Array.isArray(leftVal)
-                                    ?   leftVal.length > 0
-                                            ?   leftVal.map((val, idx) => (
-                                                    <code key={idx}>
-                                                        {val}
-                                                        {idx !== leftVal.length - 1 && ' | '}
-                                                    </code>
-                                                ))
-                                            :   'Empty'  
-                                    :   typeof leftVal === 'boolean'
-                                            ?   `${cfg.leftKey}: ${leftVal}`
-                                            :   leftVal
-                                                
-                                }
-                                {cfg.between && rightVal && ` ${cfg.between} `}
-
-                                {rightVal}
-                            </Paragraph>
-                        );
-                    })}
-                </li>
-            );
-
-            return sort?.sortable
-                ?   (
-                        <SortableItem key={item.id} id={item.id} children={listItem} />
-                    )
-                :   (
-                        <div key={idx}>{listItem}</div>
-                    );
-        });
-
-        return sort?.sortable ? (
-            <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
+    const renderList = () => rows.map((item, idx) => {
+        const listItem = (
+            <li
+                key={item.id ?? idx}
+                className={`${cn(widgetList({
+                    opacity: item?.isRead,
+                    clickable: sort?.sortable ? false : onItemClick ? true : false
+                }), className)}`}
+                onClick={() => onItemClick?.(item)}
             >
-                <SortableContext
-                    items={rows.map((i) => i.id)}
-                    strategy={verticalListSortingStrategy}
-                >
-                    {renderList()}
-                </SortableContext>
-            </DndContext>
-        ) : pagination ? (
-            <ControlledInfiniteScroll
-                items={items}
-                {...pagination}
+                {list.map((cfg, index) => {
+                    const leftRaw = cfg.leftKey ? extractPathValue(item, cfg.leftKey as string) : undefined;
+                    const rightRaw = cfg.rightKey ? extractPathValue(item, cfg.rightKey as string) : undefined;
+
+                    const leftVal = cfg.isTime ? dayjs(leftRaw).format('MMM YYYY') : leftRaw;
+
+                    const rightVal = cfg.isTime
+                        ?   rightRaw ? dayjs(rightRaw).format('MMM YYYY') : 'Present'
+                        :   cfg.rightKey ? rightRaw : '';
+
+                    return (
+                        <Paragraph key={index} size={cfg.size}>
+                            {cfg.icon && <ResponsiveIcon icon={cfg.icon} />}
+
+                            {Array.isArray(leftVal)
+                                ?   leftVal.length > 0
+                                        ?   leftVal.map((val, idx) => (
+                                                <code key={idx}>
+                                                    {val}
+                                                    {idx !== leftVal.length - 1 && ' | '}
+                                                </code>
+                                            ))
+                                        :   'Empty'  
+                                :   typeof leftVal === 'boolean'
+                                        ?   `${cfg.leftKey}: ${leftVal}`
+                                        :   leftVal
+                                            
+                            }
+                            {cfg.between && rightVal && ` ${cfg.between} `}
+
+                            {rightVal}
+                        </Paragraph>
+                    );
+                })}
+            </li>
+        );
+
+        return sort?.sortable
+            ?   (
+                    <SortableItem key={item.id} id={item.id} children={listItem} />
+                )
+            :   (
+                    <div key={idx}>{listItem}</div>
+                );
+    });
+
+    return sort?.sortable ? (
+        <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+        >
+            <SortableContext
+                items={rows.map((i) => i.id)}
+                strategy={verticalListSortingStrategy}
             >
                 {renderList()}
-            </ControlledInfiniteScroll>
-        )
-        : (
-            <React.Fragment>{renderList()}</React.Fragment>
-        );
+            </SortableContext>
+        </DndContext>
+    ) : pagination ? (
+        <ControlledInfiniteScroll
+            items={items}
+            {...pagination}
+        >
+            {renderList()}
+        </ControlledInfiniteScroll>
+    )
+    : (
+        <React.Fragment>{renderList()}</React.Fragment>
+    );
 };

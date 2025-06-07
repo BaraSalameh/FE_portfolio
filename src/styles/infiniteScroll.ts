@@ -35,11 +35,11 @@ export const infiniteScroll = cva(
                 false: null
             },
             space: {
-                xs: 'space-y-1',
-                sm: 'space-y-2',
-                md: 'space-y-3',
-                lg: 'space-y-4',
-                xl: 'space-y-5',
+                xs: '[&_.infinite-scroll-component]:space-y-1',
+                sm: '[&_.infinite-scroll-component]:space-y-2',
+                md: '[&_.infinite-scroll-component]:space-y-3',
+                lg: '[&_.infinite-scroll-component]:space-y-4',
+                xl: '[&_.infinite-scroll-component]:space-y-5',
                 full: null,
                 none: null
             }

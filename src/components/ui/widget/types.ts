@@ -1,4 +1,4 @@
-import { Size } from "@/components/types";
+import { FetchAction } from "@/components/types";
 import { RootState } from "@/lib/store/store";
 import { InfiniteScrollVariantProps } from "@/styles/infiniteScroll";
 import { WidgetCardVariantProps, WidgetListVariantProps } from "@/styles/widget";
@@ -77,15 +77,10 @@ export interface ListItemConfig {
     isTime?: boolean;
 }
 
-type FetchAction = {
-    query: string;
-    page: number;
-}
-
 interface Pagination {
     maxLength: number;
     fetchAction: (params: FetchAction) => ThunkAction<any, RootState, unknown, Action>;
-    query: string;
+    query?: string;
     children?: React.ReactNode; 
     className?: string;
     styles?: InfiniteScrollVariantProps

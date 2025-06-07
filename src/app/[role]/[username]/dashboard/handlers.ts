@@ -135,6 +135,6 @@ export const useLoadContactMessageData = (messages: any) => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        !(Array.isArray(messages) && messages.length > 0) && dispatch(contactMessageListQuery({query: '', page: 0}));
+        !(Array.isArray(messages) && messages.length > 0) && dispatch(contactMessageListQuery({page: 0}));
     }, []);
 };
