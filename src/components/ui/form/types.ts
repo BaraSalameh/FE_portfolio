@@ -1,3 +1,4 @@
+import { PaginatiedAction, Pagination } from "@/components/types";
 import { AnchorVariantProps } from "@/styles/anchor";
 import { ButtonVariantProps } from "@/styles/button";
 import React, { InputHTMLAttributes } from "react";
@@ -32,6 +33,7 @@ export interface ControlledFormProps<T extends z.ZodTypeAny> {
             options: Option[];
         }[];
         config?: Config[];
+        pagination?: Pagination;
     }[];
     error?: string | string[] | null;
     loading?: boolean;
@@ -78,6 +80,16 @@ export interface ControlledDropdownProps<T extends FieldValues>  {
     label: string;
     options: Option[];
     isMulti?: boolean;
+}
+
+export interface ControlledInfiniteDropdownProps<T extends FieldValues>  {
+    name: FieldPath<T>;
+    control: Control<T>;
+    label?: string;
+    options: Option[];
+    maxLength: number;
+    isMulti?: boolean;
+    fetchAction: PaginatiedAction;
 }
 
 export interface FormCheckboxProps extends InputHTMLAttributes<HTMLInputElement> {

@@ -3,7 +3,7 @@
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { EducationFormData, educationSchema } from "@/lib/schemas";
 import { useEffect, useMemo } from "react";
-import { institutionListQuery, degreeListQuery, fieldOfStudyListQuery, addEditEducation, educationListQuery } from "@/lib/apis/owner/education";
+import { institutionListQuery, degreeListQuery, fieldOfStudyListQuery, addEditEducation, educationListQuery } from "@/lib/apis";
 import { mapEducationToForm } from "@/lib/utils/appFunctions";
 import { EducationProps } from "../types";
 import { ControlledForm } from "@/components/ui/form";
@@ -11,7 +11,7 @@ import { ControlledForm } from "@/components/ui/form";
 const EducationForm = ({id, onClose} : EducationProps) => {
 
     const dispatch = useAppDispatch();
-    const { loading, error, lstEducations, lstInstitutions, lstDegrees, lstFields } = useAppSelector((state) => state.education);
+    const { loading, error, lstEducations, lstInstitutions, institutionRowCount, lstDegrees, lstFields } = useAppSelector((state) => state.education);
     const educationToHandle = lstEducations.find(ed => ed.id === id);
 
     const indicator = id ? {when: 'Update', while: 'Updating...'} : {when: 'Create', while: 'creating...'};
@@ -38,7 +38,7 @@ const EducationForm = ({id, onClose} : EducationProps) => {
     };
 
     useEffect(() => {
-        lstInstitutions.length === 0 && dispatch(institutionListQuery());
+        // lstInstitutions.length === 0 && dispatch(institutionListQuery({query: '', page: 0}));
         lstDegrees.length === 0 && dispatch(degreeListQuery());
         lstFields.length === 0 && dispatch(fieldOfStudyListQuery());
     }, []);
@@ -48,7 +48,20 @@ const EducationForm = ({id, onClose} : EducationProps) => {
             schema={educationSchema}
             onSubmit={onSubmit}
             items={[
-                {as: 'Dropdown', name: 'LKP_InstitutionID', options: institutionOptions, label: 'Institution'},
+                {
+                    as: 'Dropdown',
+                    name: 'LKP_InstitutionID',
+                    options: institutionOptions,
+                    label: 'Institution',
+                    pagination: {
+                        maxLength: institutionRowCount,
+                        fetchAction: institutionListQuery,
+                        styles: {
+                            size: 'xs'
+                        }
+                    }
+                },
+                // {as: 'Dropdown', name: 'LKP_InstitutionID', options: institutionOptions, label: 'Institution'},
                 {as: 'Dropdown', name: 'LKP_DegreeID', options: degreeOptions, label: 'Degree'},
                 {as: 'Dropdown', name: 'LKP_FieldOfStudyID', options: fieldOptions, label: 'Field of study'},
                 {as: 'Input', name: 'startDate', label: 'Start date', type: 'Date'},

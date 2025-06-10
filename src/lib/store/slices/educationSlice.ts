@@ -7,6 +7,7 @@ import { userByUsernameQuery } from '@/lib/apis/client';
 interface EducationState {
     lstEducations: EducationFormData[];
     lstInstitutions: Record<string, any>[];
+    institutionRowCount: number;
     lstDegrees: Record<string, any>[];
     lstFields: Record<string, any>[];
     loading: boolean;
@@ -16,6 +17,7 @@ interface EducationState {
 const initialState : EducationState = {
     lstEducations: [],
     lstInstitutions: [],
+    institutionRowCount: 0,
     lstDegrees: [],
     lstFields: [],
     loading: false,
@@ -54,8 +56,15 @@ const educationSlice = createSlice({
             state.error = null;
         })
         .addCase(institutionListQuery.fulfilled, (state, action) => {
+            const { items, rowCount, page } = action.payload;
+
+            if (page === 0) {
+                state.lstInstitutions = items;
+            } else {
+                state.lstInstitutions =  [...state.lstInstitutions, ...items];
+            }
             state.loading = false;
-            state.lstInstitutions = action.payload;
+            state.institutionRowCount = rowCount;
         })
         .addCase(institutionListQuery.rejected, (state, action) => {
             state.loading = false;

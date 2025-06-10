@@ -7,13 +7,14 @@ import { Paragraph } from "../Paragraph";
 import { Button } from "./Button";
 import Image from "next/image";
 import { List } from "../List";
-import { z } from "zod";
+import { any, z } from "zod";
 import { FormInput } from "./FormInput";
 import { FormCheckbox } from "./FormCheckbox";
 import { ControlledDropdown } from "./ControlledDropdown";
 import { useEffect } from "react";
 import { CUDModal, FieldArray } from "..";
 import React from "react";
+import { ControlledInfiniteDropdown } from "./ControlledInfiniteDropdown";
 
 export const ControlledForm = <T extends z.ZodTypeAny> ({ 
     schema,
@@ -89,14 +90,23 @@ export const ControlledForm = <T extends z.ZodTypeAny> ({
                         case 'Dropdown':
                         case 'DropdownMulti':
                             return (
-                                <ControlledDropdown
-                                    key={index}
-                                    control={control}
-                                    name={item.name}
-                                    label={item.label || 'Select'}
-                                    options={item.options || []}
-                                    isMulti={item.as === 'DropdownMulti'}
-                                />
+                                item.pagination
+                                ?   <ControlledInfiniteDropdown
+                                        key={index}
+                                        control={control}
+                                        name={item.name}
+                                        label={item.label || 'Select'}
+                                        options={item.options || []}
+                                        {...item.pagination}
+                                    />
+                                :   <ControlledDropdown
+                                        key={index}
+                                        control={control}
+                                        name={item.name}
+                                        label={item.label || 'Select'}
+                                        options={item.options || []}
+                                        isMulti={item.as === 'DropdownMulti'}
+                                    />
                             )
                         case 'Modal':
                             return (
@@ -119,7 +129,7 @@ export const ControlledForm = <T extends z.ZodTypeAny> ({
                                     errors={errors}
                                     fields={item.fields}
                                 />
-                            );
+                            )
                         default: return null;
                     }
                 })
