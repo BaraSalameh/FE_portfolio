@@ -3,6 +3,9 @@
 import Select from 'react-select';
 import { FormDropdownProps } from './types';
 import { Paragraph } from '../Paragraph';
+import { useAppDispatch } from '@/lib/store/hooks';
+import { useCallback, useState } from 'react';
+import debounce from 'lodash.debounce';
 
 export const FormDropdown = ({
     label,
@@ -15,7 +18,8 @@ export const FormDropdown = ({
     isClearable = true,
     isMulti = false,
     placeholder = 'Select...',
-    isLoading
+    isLoading,
+    pagination,
 }: FormDropdownProps) => {
     const customStyles = {
         control: (provided: any, state: any) => ({
@@ -100,6 +104,39 @@ export const FormDropdown = ({
         }),
     };
 
+    const dispatch = useAppDispatch();
+    const [ page, setPage ] = useState(0);
+    const [ query, setQuery ] = useState('');
+
+    const handleNext = () => {
+        if (!pagination) return null;
+
+        const { fetchAction, maxLength } = pagination;
+        const hasMore = options.length < maxLength;
+        const nextPage = page + 1;
+        setPage(nextPage);
+
+        hasMore && fetchAction && dispatch(fetchAction({query: query, page: nextPage}));
+    }
+
+    const debouncedSearch = useCallback(
+        debounce((value: string) => {
+            if (!pagination) return null;
+            const { fetchAction } = pagination;
+
+            fetchAction
+            &&  value.trim().length > 0
+            &&  dispatch(fetchAction({ query: value, page: 0 }));
+        }, 500),
+        [dispatch]
+    );
+
+    const handleChange = (input: string) => {
+        setPage(0);
+        setQuery(input);
+        debouncedSearch(input);
+    };
+
     return (
         <div className="space-y-1">
             {label && (
@@ -110,11 +147,13 @@ export const FormDropdown = ({
             <Select
                 options={options}
                 value={value}
+                onInputChange={handleChange}
                 onChange={onChange}
                 styles={customStyles}
                 isSearchable={isSearchable}
                 isClearable={isClearable}
                 isMulti={isMulti}
+                onMenuScrollToBottom={handleNext}
                 placeholder={placeholder}
                 onBlur={onBlur}
                 isLoading={isLoading}

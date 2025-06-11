@@ -80,16 +80,7 @@ export interface ControlledDropdownProps<T extends FieldValues>  {
     label: string;
     options: Option[];
     isMulti?: boolean;
-}
-
-export interface ControlledInfiniteDropdownProps<T extends FieldValues>  {
-    name: FieldPath<T>;
-    control: Control<T>;
-    label?: string;
-    options: Option[];
-    maxLength: number;
-    isMulti?: boolean;
-    fetchAction: PaginatiedAction;
+    pagination?: Pagination;
 }
 
 export interface FormCheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -110,6 +101,7 @@ export interface FormDropdownProps {
     isMulti?: boolean;
     placeholder?: string;
     isLoading?: boolean;
+    pagination?: Pagination;
 }
 
 export interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {

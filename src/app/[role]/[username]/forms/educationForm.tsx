@@ -2,7 +2,7 @@
 
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { EducationFormData, educationSchema } from "@/lib/schemas";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { institutionListQuery, degreeListQuery, fieldOfStudyListQuery, addEditEducation, educationListQuery } from "@/lib/apis";
 import { mapEducationToForm } from "@/lib/utils/appFunctions";
 import { EducationProps } from "../types";
@@ -28,6 +28,17 @@ const EducationForm = ({id, onClose} : EducationProps) => {
         lstFields.map(i => ({ label: i.name, value: i.id }))
     , [lstFields]);
 
+    // const [ institutionPage, setInstitutionPage ] = useState(0);
+    // const handleInstitutionScroll = async () => {
+    //     const nextPage = institutionPage + 1;
+    //     const hasMore = lstInstitutions.length < institutionRowCount;
+
+    //     if (hasMore) {
+    //         await dispatch(institutionListQuery({ query: '', page: nextPage }));
+    //         setInstitutionPage(nextPage);
+    //     }
+    // };
+    
     const onSubmit = async (data: EducationFormData) => {
         const resultAction = await dispatch(addEditEducation(data));
 
@@ -38,7 +49,7 @@ const EducationForm = ({id, onClose} : EducationProps) => {
     };
 
     useEffect(() => {
-        // lstInstitutions.length === 0 && dispatch(institutionListQuery({query: '', page: 0}));
+        lstInstitutions.length === 0 && dispatch(institutionListQuery({query: '', page: 0}));
         lstDegrees.length === 0 && dispatch(degreeListQuery());
         lstFields.length === 0 && dispatch(fieldOfStudyListQuery());
     }, []);
