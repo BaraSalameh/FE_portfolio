@@ -1,6 +1,7 @@
 import { PaginatiedAction, Pagination } from "@/components/types";
 import { AnchorVariantProps } from "@/styles/anchor";
 import { ButtonVariantProps } from "@/styles/button";
+import { ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
 import React, { InputHTMLAttributes } from "react";
 import { Control, FieldError, FieldPath, FieldValues, Path, UseFormRegisterReturn } from "react-hook-form";
 import { ActionMeta, MultiValue, SingleValue } from "react-select";
@@ -33,7 +34,8 @@ export interface ControlledFormProps<T extends z.ZodTypeAny> {
             options: Option[];
         }[];
         config?: Config[];
-        pagination?: Pagination;
+        fetchAction?: PaginatiedAction;
+        isLoading?: boolean;
     }[];
     error?: string | string[] | null;
     loading?: boolean;
@@ -80,7 +82,8 @@ export interface ControlledDropdownProps<T extends FieldValues>  {
     label: string;
     options: Option[];
     isMulti?: boolean;
-    pagination?: Pagination;
+    fetchAction?: PaginatiedAction;
+    isLoading?: boolean;
 }
 
 export interface FormCheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -98,10 +101,10 @@ export interface FormDropdownProps {
     error?: FieldError;
     isSearchable?: boolean;
     isClearable?: boolean;
+    isLoading?: boolean;
     isMulti?: boolean;
     placeholder?: string;
-    isLoading?: boolean;
-    pagination?: Pagination;
+    fetchAction?: PaginatiedAction;
 }
 
 export interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {

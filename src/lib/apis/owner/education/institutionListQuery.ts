@@ -4,7 +4,7 @@ import { FetchAction } from '@/components/types';
 
 export const institutionListQuery = createAsyncThunk(
     'education/institutionListQuery',
-    async ({query, page = 0, pageSize = 1} : FetchAction, thunkAPI)  => {
+    async ({query, page = 0, pageSize = 5} : FetchAction, thunkAPI)  => {
         try {
 
             const response = await dynamicApi({

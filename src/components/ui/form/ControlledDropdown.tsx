@@ -9,7 +9,8 @@ export const ControlledDropdown = <T extends FieldValues>({
     label,
     options,
     isMulti = false,
-    pagination
+    fetchAction,
+    isLoading
 }: ControlledDropdownProps<T>) => (
     <Controller
         name={name}
@@ -32,9 +33,9 @@ export const ControlledDropdown = <T extends FieldValues>({
                     }}
                     onBlur={field.onBlur}
                     error={fieldState.error}
-                    isLoading={options.length === 0}
                     isMulti={isMulti}
-                    pagination={pagination}
+                    fetchAction={fetchAction}
+                    isLoading={isLoading ?? options.length === 0}
                 />
             );
         }}

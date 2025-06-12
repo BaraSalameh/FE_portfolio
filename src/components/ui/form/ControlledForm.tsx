@@ -7,7 +7,7 @@ import { Paragraph } from "../Paragraph";
 import { Button } from "./Button";
 import Image from "next/image";
 import { List } from "../List";
-import { any, z } from "zod";
+import { z } from "zod";
 import { FormInput } from "./FormInput";
 import { FormCheckbox } from "./FormCheckbox";
 import { ControlledDropdown } from "./ControlledDropdown";
@@ -96,7 +96,8 @@ export const ControlledForm = <T extends z.ZodTypeAny> ({
                                     label={item.label || 'Select'}
                                     options={item.options || []}
                                     isMulti={item.as === 'DropdownMulti'}
-                                    pagination={item.pagination}
+                                    fetchAction={item.fetchAction}
+                                    isLoading={item.isLoading}
                                 />
                             )
                         case 'Modal':

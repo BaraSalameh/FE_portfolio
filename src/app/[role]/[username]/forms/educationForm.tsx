@@ -27,17 +27,6 @@ const EducationForm = ({id, onClose} : EducationProps) => {
     const fieldOptions = useMemo(() =>
         lstFields.map(i => ({ label: i.name, value: i.id }))
     , [lstFields]);
-
-    // const [ institutionPage, setInstitutionPage ] = useState(0);
-    // const handleInstitutionScroll = async () => {
-    //     const nextPage = institutionPage + 1;
-    //     const hasMore = lstInstitutions.length < institutionRowCount;
-
-    //     if (hasMore) {
-    //         await dispatch(institutionListQuery({ query: '', page: nextPage }));
-    //         setInstitutionPage(nextPage);
-    //     }
-    // };
     
     const onSubmit = async (data: EducationFormData) => {
         const resultAction = await dispatch(addEditEducation(data));
@@ -49,7 +38,6 @@ const EducationForm = ({id, onClose} : EducationProps) => {
     };
 
     useEffect(() => {
-        lstInstitutions.length === 0 && dispatch(institutionListQuery({query: '', page: 0}));
         lstDegrees.length === 0 && dispatch(degreeListQuery());
         lstFields.length === 0 && dispatch(fieldOfStudyListQuery());
     }, []);
@@ -64,13 +52,8 @@ const EducationForm = ({id, onClose} : EducationProps) => {
                     name: 'LKP_InstitutionID',
                     options: institutionOptions,
                     label: 'Institution',
-                    pagination: {
-                        maxLength: institutionRowCount,
-                        fetchAction: institutionListQuery,
-                        styles: {
-                            size: 'xs'
-                        }
-                    }
+                    fetchAction: institutionListQuery,
+                    isLoading: loading
                 },
                 // {as: 'Dropdown', name: 'LKP_InstitutionID', options: institutionOptions, label: 'Institution'},
                 {as: 'Dropdown', name: 'LKP_DegreeID', options: degreeOptions, label: 'Degree'},
