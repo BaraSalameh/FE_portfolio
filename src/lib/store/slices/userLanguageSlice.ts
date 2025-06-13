@@ -5,6 +5,7 @@ import { userByUsernameQuery, userFullInfoQuery, editDeleteUserLanguage, languag
 interface UserLanguageState {
     lstUserLanguages: UserLanguageFormData[],
     lstLanguages: Record<string, any>[];
+    languagesRowCount: number;
     lstLanguageProficiencies: Record<string, any>[];
     loading: boolean;
     error: string | null;
@@ -13,6 +14,7 @@ interface UserLanguageState {
 const initialState : UserLanguageState = {
     lstUserLanguages: [],
     lstLanguages: [],
+    languagesRowCount: 0,
     lstLanguageProficiencies: [],
     loading: false,
     error: null as string | null
@@ -50,8 +52,15 @@ const userLanguageSlice = createSlice({
             state.error = null;
         })
         .addCase(languageListQuery.fulfilled, (state, action) => {
+            const { items, rowCount, page } = action.payload;
+
+            if (page === 0) {
+                state.lstLanguages = items;
+            } else {
+                state.lstLanguages =  [...state.lstLanguages, ...items];
+            }
             state.loading = false;
-            state.lstLanguages = action.payload;
+            state.languagesRowCount = rowCount;
         })
         .addCase(languageListQuery.rejected, (state, action) => {
             state.loading = false;

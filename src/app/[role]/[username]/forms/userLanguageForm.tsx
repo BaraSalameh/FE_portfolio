@@ -1,21 +1,18 @@
 'use client';
 
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { UserLanguageProps } from "../types";
 import { ControlledForm } from "@/components/ui/form";
 import { UserLanguageFormData, userLanguageSchema } from "@/lib/schemas";
 import { userLanguageListQuery, languageListQuery, languageProficiencyListQuery, editDeleteUserLanguage } from "@/lib/apis";
-import { mapUserLanguageToForm } from "@/lib/utils/appFunctions";
+import { mapUserLanguageToForm, mergeOptions } from "@/lib/utils/appFunctions";
+import { Option } from "@/components/ui/form/types";
 
 const UserLanguageForm = ({id, onClose} : UserLanguageProps) => {
 
     const dispatch = useAppDispatch();
     const { loading, error, lstUserLanguages, lstLanguages, lstLanguageProficiencies } = useAppSelector((state) => state.userLanguage);
-
-    const languageOptions = useMemo(() =>
-        lstLanguages.map(i => ({ label: i.name, value: i.id }))
-    , [lstLanguages]);
 
     const languageProficiencyOptions = useMemo(() =>
         lstLanguageProficiencies.map(i => ({ label: i.level, value: i.id }))
@@ -31,27 +28,35 @@ const UserLanguageForm = ({id, onClose} : UserLanguageProps) => {
     };
 
     useEffect(() => {
-        lstLanguages.length === 0 && dispatch(languageListQuery());
         lstLanguageProficiencies.length === 0 && dispatch(languageProficiencyListQuery());
     }, []);
+
+    const [ languageOptions, setLanguageOptions ] = useState<Option[]>([]);
+    
+    useEffect(() => {
+        const languagesFromEdit = lstUserLanguages ? lstUserLanguages.map((ul: any) => ({ label: ul.language.name, value: ul.language.id })) : [];
+        const languagesStore = lstLanguages?.map((i: any) => ({ label: i.name, value: i.id }));
+        setLanguageOptions(mergeOptions(languagesFromEdit, languagesStore));
+        
+    }, [lstUserLanguages, lstLanguages]);
+
+    const fieldConfigs = useMemo(() => [
+        {label: 'Language', name: 'lkP_LanguageID', options: languageOptions, fetchAction: languageListQuery, isLoading: loading},
+        {label: 'Proficiency', name: 'lkP_LanguageProficiencyID', options: languageProficiencyOptions}
+    ], [languageOptions, languageProficiencyOptions, loading]);
+
+    const resetItems = useMemo(
+        () => mapUserLanguageToForm(lstUserLanguages),
+    [lstUserLanguages]);
     
     return (
         <ControlledForm
             schema={userLanguageSchema}
             onSubmit={onSubmit}
-            items={[
-                {
-                    as: 'FieldArray',
-                    name: 'lstLanguages',
-                    fields: [
-                        {label: 'Language', name: 'lkP_LanguageID', options: languageOptions},
-                        {label: 'Proficiency', name: 'lkP_LanguageProficiencyID', options: languageProficiencyOptions}
-                    ]
-                }
-            ]}
+            items={[{as: 'FieldArray',name: 'lstLanguages',fields: fieldConfigs}]}
             error={error}
             loading={loading}
-            resetItems={mapUserLanguageToForm(lstUserLanguages) as any}
+            resetItems={resetItems as any}
             indicator={{when: 'Update', while: 'Updating...'}}
         />
     );

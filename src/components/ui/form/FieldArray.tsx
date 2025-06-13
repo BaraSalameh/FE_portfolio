@@ -1,9 +1,9 @@
-import { useFieldArray, Controller } from "react-hook-form";
+import { useFieldArray } from "react-hook-form";
 import { ControlledDropdown } from "./ControlledDropdown";
 import { Button } from "./Button";
 import { ResponsiveIcon } from "../ResponsiveIcon";
 import { Trash2 } from "lucide-react";
-import { Header, Main } from "@/components/shared";
+import { Header } from "@/components/shared";
 
 export const FieldArray = ({
     name,
@@ -11,7 +11,7 @@ export const FieldArray = ({
     control,
     fields: fieldConfigs
 }: any) => {
-
+    
     const { fields, append, remove } = useFieldArray({
         control,
         name,
@@ -21,22 +21,24 @@ export const FieldArray = ({
         <div className="space-y-2">
             <h3 className="text-white text-sm font-medium">{label}</h3>
             <div className="space-y-3">
-                {fields.map((field, i) => (
+                {fields.map((field, i) => 
                     <div key={field.id} className="border p-5 rounded-2xl space-y-3">
                         <Header paddingX='none' paddingY='none' itemsX='end'>
                             <ResponsiveIcon icon={Trash2} onClick={() => remove(i)} className="cursor-pointer" />
                         </Header>
-                        {fieldConfigs.map((config: any, j: number) => (
+                        {fieldConfigs.map((config: any) => (
                             <ControlledDropdown
-                                key={j}
+                                key={config.name}
                                 name={`${name}[${i}].${config.name}`}
                                 control={control}
                                 label={config.label}
                                 options={config.options || []}
+                                fetchAction={config.fetchAction}
+                                isLoading={config.isLoading}
                             />
                         ))}
                     </div>
-                ))}
+                )}
             </div>
             <Button
                 type="button"

@@ -52,7 +52,9 @@ export const ControlledForm = <T extends z.ZodTypeAny> ({
     : null;
 
     useEffect(() => {
-        reset(resetItems);
+        if(resetItems) {
+            reset(resetItems);
+        }
     }, [resetItems]);
 
     return (

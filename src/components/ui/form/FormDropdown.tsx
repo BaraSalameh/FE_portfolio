@@ -105,13 +105,13 @@ export const FormDropdown = ({
     };
 
     const dispatch = useAppDispatch();
-
+    
     const debouncedSearch = useCallback(
         debounce((value: string) => {
             value.trim().length > 0 
             &&  fetchAction
             &&  dispatch(fetchAction({ query: value, page: 0 }));
-        }, 500),
+        }, 1000),
         [dispatch]
     );
 
@@ -133,7 +133,7 @@ export const FormDropdown = ({
                 isMulti={isMulti}
                 placeholder={fetchAction ? 'Search ...' : placeholder}
                 onBlur={onBlur}
-                closeMenuOnSelect={isMulti ? false : true}
+                closeMenuOnSelect={!isMulti}
                 isLoading={isLoading}
                 loadingMessage={() => 'Loading ...'}
                 noOptionsMessage={() => 'No option found.'}

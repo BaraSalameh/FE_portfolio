@@ -2,7 +2,7 @@
 
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { EducationFormData, educationSchema } from "@/lib/schemas";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { institutionListQuery, degreeListQuery, fieldOfStudyListQuery, addEditEducation, educationListQuery } from "@/lib/apis";
 import { mapEducationToForm, mergeOptions } from "@/lib/utils/appFunctions";
 import { EducationProps } from "../types";
@@ -45,18 +45,24 @@ const EducationForm = ({id, onClose} : EducationProps) => {
         setFieldOfStudyOptions(mergeOptions(fieldOfStudyFromEdit, fieldOfStudyFromStore));
     }, [educationToHandle, lstInstitutions, lstDegrees, lstFields]);
 
+    const items = useMemo(() => [
+        {as: 'Dropdown', name: 'LKP_InstitutionID', options: institutionOptions, label: 'Institution', fetchAction: institutionListQuery, isLoading: loading},
+        {as: 'Dropdown', name: 'LKP_DegreeID', options: degreeOptions, label: 'Degree', fetchAction: degreeListQuery, isLoading: loading},
+        {as: 'Dropdown', name: 'LKP_FieldOfStudyID', options: fieldOfStudyOptions, label: 'Field of study', fetchAction: fieldOfStudyListQuery, isLoading: loading},
+        {as: 'Input', name: 'startDate', label: 'Start date', type: 'Date'},
+        {as: 'Input', name: 'endDate', label: 'End date', type: 'Date'},
+        {as: 'Checkbox', name: 'isStudying', label: 'Still studying?'}
+    ], [institutionOptions, degreeOptions, fieldOfStudyOptions, loading]);
+    
+    const resetItems = useMemo(
+        () => mapEducationToForm(educationToHandle),
+    [educationToHandle]);
+
     return (
         <ControlledForm
             schema={educationSchema}
             onSubmit={onSubmit}
-            items={[
-                {as: 'Dropdown', name: 'LKP_InstitutionID', options: institutionOptions, label: 'Institution', fetchAction: institutionListQuery, isLoading: loading},
-                {as: 'Dropdown', name: 'LKP_DegreeID', options: degreeOptions, label: 'Degree', fetchAction: degreeListQuery, isLoading: loading},
-                {as: 'Dropdown', name: 'LKP_FieldOfStudyID', options: fieldOfStudyOptions, label: 'Field of study', fetchAction: fieldOfStudyListQuery, isLoading: loading},
-                {as: 'Input', name: 'startDate', label: 'Start date', type: 'Date'},
-                {as: 'Input', name: 'endDate', label: 'End date', type: 'Date'},
-                {as: 'Checkbox', name: 'isStudying', label: 'Still studying?'},
-            ]}
+            items={items as any}
             error={error}
             loading={loading}
             defaultValues={{isStudying: false}}
@@ -65,7 +71,7 @@ const EducationForm = ({id, onClose} : EducationProps) => {
                 defaultValue: false,
                 watched: 'endDate'
             }}
-            resetItems={mapEducationToForm(educationToHandle) as any}
+            resetItems={resetItems as any}
             indicator={indicator}
         />
     );

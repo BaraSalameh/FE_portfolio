@@ -31,6 +31,8 @@ export interface ControlledFormProps<T extends z.ZodTypeAny> {
             name: string;
             label: string;
             options: Option[];
+            fetchAction?: PaginatiedAction;
+            isLoading?: boolean;
         }[];
         config?: Config[];
         fetchAction?: PaginatiedAction;
