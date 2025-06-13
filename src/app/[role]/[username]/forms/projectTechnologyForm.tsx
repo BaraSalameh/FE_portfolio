@@ -1,12 +1,13 @@
 'use client';
 
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ProjectTechnologyProps } from "../types";
 import { ProjectTechnologyFormData, projectTechnologySchema } from "@/lib/schemas";
 import { projectTechnologyListQuery, technologyListQuery, addEditDeleteProjectTechnology } from "@/lib/apis/owner/projectTechnology";
-import { mapProjectTechnologyToForm } from "@/lib/utils/appFunctions";
+import { mapProjectTechnologyToForm, mergeOptions } from "@/lib/utils/appFunctions";
 import { ControlledForm } from "@/components/ui/form";
+import { Option } from "@/components/ui/form/types";
 
 const ProjectTechnologyForm = ({id, onClose} : ProjectTechnologyProps) => {
 
@@ -15,12 +16,9 @@ const ProjectTechnologyForm = ({id, onClose} : ProjectTechnologyProps) => {
     const { lstEducations } = useAppSelector(state => state.education);
     const { lstExperiences } = useAppSelector(state => state.experience);
     const projectTechnologyToHandle = lstProjectTechnologies.find(pt => pt.id === id);
-
     const indicator = id ? {when: 'Update', while: 'Updating...'} : {when: 'Create', while: 'creating...'};
-
-    const technologyOptions = useMemo(() =>
-        lstTechnologies.map(i => ({ label: i.name, value: i.id }))
-    , [lstTechnologies]);
+    
+    const [ technologyOptions, setTechnologyOptions ] = useState<Option[]>([]);
 
     const educationOptions = useMemo(() =>
         lstEducations.map((i: any) => ({ label: `${i.institution.name} (${i.degree.abbreviation})`, value: i.id }))
@@ -40,15 +38,19 @@ const ProjectTechnologyForm = ({id, onClose} : ProjectTechnologyProps) => {
     };
 
     useEffect(() => {
-        lstTechnologies.length === 0 && dispatch(technologyListQuery());
-    }, []);
- 
+        const { lstTechnologies: ltfe } = projectTechnologyToHandle ?? {};
+        const technologiesFromEdit = ltfe ? ltfe.map((t: any) => ({ label: t.name, value: t.id })) : [];
+        const technologiesStore = lstTechnologies?.map((i: any) => ({ label: i.name, value: i.id }));
+        setTechnologyOptions(mergeOptions(technologiesFromEdit, technologiesStore));
+        
+    }, [projectTechnologyToHandle, lstTechnologies]);
+
     return (
         <ControlledForm
             schema={projectTechnologySchema}
             onSubmit={onSubmit}
             items={[
-                {as: 'DropdownMulti', name: 'lstTechnologies', options: technologyOptions, label: 'Technologies'},
+                {as: 'DropdownMulti', name: 'lstTechnologies', options: technologyOptions, label: 'Technologies', fetchAction: technologyListQuery, isLoading: loading},
                 {as: 'Dropdown', name: 'EducationID', options: educationOptions, label: 'Corresponding education'},
                 {as: 'Dropdown', name: 'ExperienceID', options: experienceOptions, label: 'Corresponding experience'},
                 {as: 'Input', name: 'title', label: 'Title', placeholder: 'Protfolio'},

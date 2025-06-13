@@ -7,6 +7,7 @@ import { userByUsernameQuery } from '@/lib/apis/client';
 interface ProjectTechnologyState {
     lstProjectTechnologies: ProjectTechnologyFormData[],
     lstTechnologies: TechnologyFormData[];
+    technologiesRowCount: number;
     loading: boolean;
     error: string | null;
 }
@@ -14,6 +15,7 @@ interface ProjectTechnologyState {
 const initialState : ProjectTechnologyState = {
     lstProjectTechnologies: [],
     lstTechnologies: [],
+    technologiesRowCount: 0,
     loading: false,
     error: null as string | null
 }
@@ -50,8 +52,15 @@ const projectTechnologySlice = createSlice({
             state.error = null;
         })
         .addCase(technologyListQuery.fulfilled, (state, action) => {
+            const { items, rowCount, page } = action.payload;
+
+            if (page === 0) {
+                state.lstTechnologies = items;
+            } else {
+                state.lstTechnologies =  [...state.lstTechnologies, ...items];
+            }
             state.loading = false;
-            state.lstTechnologies = action.payload;
+            state.technologiesRowCount = rowCount;
         })
         .addCase(technologyListQuery.rejected, (state, action) => {
             state.loading = false;
