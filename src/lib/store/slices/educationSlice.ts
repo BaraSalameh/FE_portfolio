@@ -8,6 +8,8 @@ interface EducationState {
     lstEducations: EducationFormData[];
     lstInstitutions: Record<string, any>[];
     institutionRowCount: number;
+    degreeRowCount: number;
+    fieldRowCount: number;
     lstDegrees: Record<string, any>[];
     lstFields: Record<string, any>[];
     loading: boolean;
@@ -18,6 +20,8 @@ const initialState : EducationState = {
     lstEducations: [],
     lstInstitutions: [],
     institutionRowCount: 0,
+    degreeRowCount: 0,
+    fieldRowCount: 0,
     lstDegrees: [],
     lstFields: [],
     loading: false,
@@ -76,8 +80,15 @@ const educationSlice = createSlice({
             state.error = null;
         })
         .addCase(degreeListQuery.fulfilled, (state, action) => {
+            const { items, rowCount, page } = action.payload;
+
+            if (page === 0) {
+                state.lstDegrees = items;
+            } else {
+                state.lstDegrees =  [...state.lstDegrees, ...items];
+            }
             state.loading = false;
-            state.lstDegrees = action.payload;
+            state.degreeRowCount = rowCount;
         })
         .addCase(degreeListQuery.rejected, (state, action) => {
             state.loading = false;
@@ -89,8 +100,15 @@ const educationSlice = createSlice({
             state.error = null;
         })
         .addCase(fieldOfStudyListQuery.fulfilled, (state, action) => {
+            const { items, rowCount, page } = action.payload;
+
+            if (page === 0) {
+                state.lstFields = items;
+            } else {
+                state.lstFields =  [...state.lstFields, ...items];
+            }
             state.loading = false;
-            state.lstFields = action.payload;
+            state.fieldRowCount = rowCount;
         })
         .addCase(fieldOfStudyListQuery.rejected, (state, action) => {
             state.loading = false;

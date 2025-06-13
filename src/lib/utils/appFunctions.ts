@@ -194,3 +194,17 @@ export const getClientLink = (): string | null => {
     const modifiedPath = parts.join('/');
     return `${origin}${modifiedPath}`;
 };
+
+type Option = {
+    label: string;
+    value: string
+}
+
+export const mergeOptions = (fromEdit?: Option[], fromStore?: Option[]): Option[] => {
+    const seen = new Set<string>();
+    return [...(fromEdit ?? []), ...(fromStore ?? [])].filter(opt => {
+        if (seen.has(opt.value)) return false;
+        seen.add(opt.value);
+        return true;
+    });
+};
