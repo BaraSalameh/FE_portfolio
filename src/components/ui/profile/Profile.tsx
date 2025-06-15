@@ -10,6 +10,7 @@ import { getClientLink } from '@/lib/utils/appFunctions';
 import { ProfileProps } from './types';
 import ContactMessageForm from '@/app/[role]/[username]/forms/contactMessageForm';
 import { ContactMessagePage } from '@/app/[role]/[username]/dashboard/ContactMessagePage';
+import { ThemeToggle } from '../ThemeToggle';
 
 export const Profile = ({ 
     user,
@@ -37,6 +38,7 @@ export const Profile = ({
             />
             {/* Right side actions */}
             <div className="absolute right-7 sm:right-10 lg:right-15 bottom-[-2rem] sm:bottom-[-2.5rem] lg:bottom-[-3.5rem] flex gap-5 items-center">
+                <ThemeToggle />
                 {role === 'owner' &&
                     <div className='relative'>
                         <CUDModal subTitle='Messages' icon={MessageSquare}>
