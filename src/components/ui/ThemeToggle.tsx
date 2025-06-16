@@ -16,7 +16,7 @@ export const ThemeToggle = () => {
     return (
         <button
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="p-2 rounded bg-gray-200 dark:bg-gray-800 cursor-pointer"
+            className="p-2 rounded bg-white dark:bg-black cursor-pointer"
         >
             Toggle Theme ({theme})
         </button>
