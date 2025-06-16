@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: Readonly<{children: React.ReactNode;}>) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <body className={`${geistSans.variable} ${geistMono.variable} flex flex-col min-h-screen`}>
+            <body className={`bg-l-background text-neutral-900 dark:bg-d-background dark:text-neutral-100 ${geistSans.variable} ${geistMono.variable} flex flex-col min-h-screen`}>
                 <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
                     <ReduxProvider>
                         <main className="flex-grow">{children}</main>

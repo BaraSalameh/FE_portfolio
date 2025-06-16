@@ -1,7 +1,7 @@
 import { cva, VariantProps } from 'class-variance-authority';
 
 export const widgetCard = cva(
-    'relative dark:bg-green-900 p-4 rounded-2xl',
+    'relative bg-l-component dark:bg-d-component p-4 rounded-2xl',
     {
         variants: {
             scroll: {

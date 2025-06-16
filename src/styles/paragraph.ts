@@ -12,7 +12,7 @@ export const paragraph = cva(
                 danger:
                     'text-red-700 dark:text-red-400',
                 standard:
-                    '',
+                    'dark:text-gray-400',
             },
             size: {
                 xs: 'text-xs',
