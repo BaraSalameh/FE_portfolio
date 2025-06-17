@@ -8,7 +8,6 @@ import { ButtonProps } from './types';
 
 export const Button = ({
     children,
-    intent,
     size,
     rounded,
     className,
@@ -29,7 +28,7 @@ export const Button = ({
 
         <button
             type={type}
-            className={cn(button({ intent, size, rounded }), className)}
+            className={cn(button({ size, rounded }), className)}
             onClick={handleClick}
             disabled={disabled}
         >
@@ -39,7 +38,7 @@ export const Button = ({
 
     if (url) {
         return (
-            <button onClick={() => router.push(url)} className={cn(button({ intent, size }), className)}>
+            <button onClick={() => router.push(url)} className={cn(button({ size }), className)}>
                 {children}
             </button>
         );

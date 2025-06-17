@@ -6,13 +6,13 @@ export const paragraph = cva(
         variants: {
             intent: {
                 primary:
-                    'text-green-900 dark:text-green-900',
+                    'text-light-primary dark:text-dark-primary',
                 secondary:
                     'text-gray-900 dark:text-gray-100',
+                success:
+                    'text-green-900 dark:text-green-900',
                 danger:
-                    'text-red-700 dark:text-red-400',
-                standard:
-                    'dark:text-gray-400',
+                    'text-danger',
             },
             size: {
                 xs: 'text-xs',
@@ -38,7 +38,7 @@ export const paragraph = cva(
             },
         },
         defaultVariants: {
-            intent: 'standard',
+            intent: 'primary',
             size: 'md',
             text: 'standard',
             position: 'start',

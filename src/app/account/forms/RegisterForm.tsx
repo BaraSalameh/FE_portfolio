@@ -30,6 +30,7 @@ const RegisterForm = () => {
             error={error}
             loading={loading}
             defaultValues={{rememberMe: false}}
+            indicator={{when: 'Register', while: 'Registering...'}}
         >
             <Paragraph size="xl" className="py-3">
                 Register

@@ -1,6 +1,6 @@
 'use client';
 
-import { Edit, LucideTrash2, X } from 'lucide-react';
+import { Edit, LucideTrash2, Trash2, X } from 'lucide-react';
 import React, { useState } from 'react';
 import { Button } from './form';
 import Image from "next/image";
@@ -71,20 +71,13 @@ export const CUDModal = ({
                                             
                                         }
                                     }}
-                                    intent="standard"
                                     rounded="full"
                                     size="lg"
                                     type="submit"
                                     disabled={isLoading}
                                 >
-                                    <Image
-                                        className="dark:invert"
-                                        src="/vercel.svg"
-                                        alt="Vercel logomark"
-                                        width={20}
-                                        height={20}
-                                    />
-                                        {isLoading ? 'Deleting...' : 'Delete'}
+                                    <ResponsiveIcon icon={Trash2} />
+                                    <Paragraph>{isLoading ? 'Deleting...' : 'Delete'}</Paragraph>
                                 </Button>
                                 </>
                             }

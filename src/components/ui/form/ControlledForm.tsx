@@ -5,15 +5,15 @@ import { ControlledFormProps } from "./types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Paragraph } from "../Paragraph";
 import { Button } from "./Button";
-import Image from "next/image";
 import { List } from "../List";
 import { z } from "zod";
 import { FormInput } from "./FormInput";
 import { FormCheckbox } from "./FormCheckbox";
 import { ControlledDropdown } from "./ControlledDropdown";
 import { useEffect } from "react";
-import { CUDModal, FieldArray } from "..";
+import { CUDModal, FieldArray, ResponsiveIcon } from "..";
 import React from "react";
+import { Upload } from "lucide-react";
 
 export const ControlledForm = <T extends z.ZodTypeAny> ({ 
     schema,
@@ -139,15 +139,11 @@ export const ControlledForm = <T extends z.ZodTypeAny> ({
                 error && <Paragraph intent="danger" size="sm">{error}</Paragraph>
             )}
 
-            <Button intent="standard" rounded="full" size="lg" type="submit" disabled={loading}>
-                <Image
-                    className="dark:invert"
-                    src="/vercel.svg"
-                    alt="Vercel logomark"
-                    width={20}
-                    height={20}
-                />
-                {loading ? indicator?.while || 'Submitting...' : indicator?.when || 'Submit'}
+            <Button rounded="full" size="lg" type="submit" disabled={loading}>
+                <ResponsiveIcon icon={Upload} />
+                <Paragraph>
+                    {loading ? indicator?.while || 'Submitting...' : indicator?.when || 'Submit'}
+                </Paragraph>
             </Button>
         </form>
         </FormProvider>

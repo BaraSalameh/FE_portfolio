@@ -1,6 +1,6 @@
 'use client'
 import { Button, Anchor } from "@/components/ui/form";
-import { SearchBar } from "@/components/ui";
+import { ResponsiveIcon, SearchBar } from "@/components/ui";
 import Image from "next/image";
 import { useState } from 'react';
 import { abstractParagraph, listParagraphOne, listParagrapTwo } from "@/lib/constants";
@@ -10,6 +10,7 @@ import { Header } from "@/components/shared/Header";
 import { Main } from "@/components/shared/Main";
 import { SubFooter } from "@/components/shared/SubFooter";
 import { BlurBackground } from "@/components/ui";
+import { Search } from "lucide-react";
 
 export default function Home() {
     const [searchOpen, setSearchOpen] = useState(false);
@@ -58,18 +59,16 @@ export default function Home() {
                         </li>
                     </List>
                     <div className="flex gap-4 items-center flex-col sm:flex-row">
-                        <Button intent="standard" size="lg" rounded="full" onClick={handleFocus}>
-                            <Image
-                                className="dark:invert"
-                                src="/vercel.svg"
-                                alt="Vercel logomark"
-                                width={20}
-                                height={20}
-                            />
-                            Start searching
+                        <Button size="lg" rounded="full" onClick={handleFocus}>
+                            <ResponsiveIcon icon={Search} />
+                            <Paragraph>Start searching</Paragraph>
                         </Button>
-                        <Button url="/account/login" size="lg" rounded="full">Login</Button>
-                        <Button url="/account/register" size="lg" rounded="full">Register</Button>
+                        <Button url="/account/login" size="lg" rounded="full">
+                            <Paragraph>Login</Paragraph>
+                        </Button>
+                        <Button url="/account/register" size="lg" rounded="full">
+                            <Paragraph>Register</Paragraph>
+                        </Button>
                     </div>
                 </Main>
                 <SubFooter>

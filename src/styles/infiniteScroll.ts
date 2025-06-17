@@ -27,11 +27,11 @@ export const infiniteScroll = cva(
                 absolute: 'absolute'
             },
             border: {
-                true: 'border border-zinc-700',
+                true: 'border border-light-border-hover dark:border-dark-border-hover',
                 false: null
             },
             background: {
-                true: 'bg-zinc-900',
+                true: 'bg-light-component dark:bg-dark-component',
                 false: null
             },
             space: {

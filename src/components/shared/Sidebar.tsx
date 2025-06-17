@@ -32,7 +32,7 @@ export const Sidebar = () => {
                 initial={{ x: 0 }}
                 animate={{ x: 0 }}
                 transition={{ type: 'tween', duration: 0.3 }}
-                className={`sticky inset-0 flex flex-col justify-center bg-green-900 p-2 duration-100 min-h-screen`}
+                className={`sticky inset-0 flex flex-col justify-center bg-light-component dark:bg-dark-component p-2 duration-100 min-h-screen`}
             >
                 {/* Burger Button INSIDE sidebar */}
                 <button

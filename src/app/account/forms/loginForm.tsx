@@ -27,6 +27,7 @@ const LoginForm = () => {
             error={error}
             loading={loading}
             defaultValues={{rememberMe: false}}
+            indicator={{when: 'Login', while: 'Loging in...'}}
         >
             <Paragraph size="xl" className="py-3">
                 Login

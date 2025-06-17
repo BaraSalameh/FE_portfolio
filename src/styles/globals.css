@@ -1,11 +1,32 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
+
 @theme {
-  --color-d-background: oklch(14.1% 0.005 285.823);
-  --color-l-background: oklch(96.7% 0.001 286.375);
-  --color-d-component: oklch(27.8% 0.033 256.848);
-  --color-l-component: oklch(87.1% 0.15 154.449);
+  --color-dark-background: oklch(13% 0.028 261.692); 
+  --color-light-background: oklch(98.5% 0 0);
+
+  --color-dark-component: oklch(21% 0.034 264.665);
+  --color-light-component: oklch(97% 0 0);
+
+  --color-dark-sub-component: oklch(27.8% 0.033 256.848);
+  --color-light-sub-component: oklch(92.2% 0 0);
+
+  --color-dark-primary: oklch(96.7% 0.003 264.542);
+  --color-light-primary: oklch(20.5% 0 0);
+
+  --color-dark-secondary: oklch(70.7% 0.022 261.325);
+  --color-light-Secondary: oklch(43.9% 0 0);
+
+  --color-success: oklch(62.7% 0.194 149.214);
+  
+  --color-danger: oklch(58.6% 0.253 17.585);
+
+  --color-dark-bg-hover: oklch(37.3% 0.034 259.733);
+  --color-light-bg-hover: oklch(92.2% 0 0);
+
+  --color-dark-border-hover: oklch(27.8% 0.033 256.848);
+  --color-light-border-hover: oklch(87% 0 0);
 }
 
 body {

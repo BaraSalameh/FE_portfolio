@@ -68,7 +68,7 @@ export const SearchBar = () => {
                 <div
                     key={user.username}
                     onClick={() => handleSelect(user.username)}
-                    className="flex gap-3 p-3 hover:bg-gray-100 dark:hover:bg-zinc-800 cursor-pointer"
+                    className="flex gap-3 p-3 hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover cursor-pointer"
                 >
                     <div className="relative min-w-8 h-8 sm:w-14 sm:h-14 rounded-full border-2 border-white overflow-hidden">
                         <Image

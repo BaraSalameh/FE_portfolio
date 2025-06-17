@@ -46,7 +46,7 @@ export const Profile = ({
                         </CUDModal>
                         {
                             (unreadContactMessageCount && unreadContactMessageCount > 0)
-                                ?    <div className='absolute -bottom-4 -right-6.5 w-8.5 h-6 rounded-full bg-green-700 flex justify-center items-center'>
+                                ?    <div className='absolute -bottom-4 -right-6.5 w-8.5 h-6 rounded-full bg-green-300 flex justify-center items-center'>
                                         <Paragraph>
                                             {unreadContactMessageCount < 100
                                                 ? unreadContactMessageCount
@@ -84,7 +84,7 @@ export const Profile = ({
                 </div>
                 <div className='absolute bottom-0 left-0'>
                     <CUDModal subTitle='Copy link' icon={Link}>
-                        <Button intent='standard' rounded='full' onClick={() => navigator.clipboard.writeText(clientLink)}>
+                        <Button rounded='full' onClick={() => navigator.clipboard.writeText(clientLink)}>
                             <Paragraph>
                                 <ResponsiveIcon icon={Copy} />
                                 {clientLink}
