@@ -25,7 +25,6 @@ export default function OwnerDashboardPage() {
 
     return (
         <>
-        <Loading isLoading={!currentUser.user || currentUser.isLoading} />
         <Profile user={currentUser.user as ProfileFormData} unreadContactMessageCount={unreadContactMessageCount} />
         <WithSkeleton isLoading={!currentUser.user || currentUser.isLoading} skeleton={<StaticBackground />}>
             <Main>

@@ -127,7 +127,7 @@ export const FormDropdown = ({
                 value={value}
                 onInputChange={debouncedSearch}
                 onChange={onChange}
-                styles={customStyles}
+                // styles={customStyles}
                 isSearchable={isSearchable}
                 isClearable={isClearable}
                 isMulti={isMulti}
@@ -137,6 +137,47 @@ export const FormDropdown = ({
                 isLoading={isLoading}
                 loadingMessage={() => 'Loading ...'}
                 noOptionsMessage={() => 'No option found.'}
+                classNames={{
+                    control: ({ isFocused }) =>
+                        `w-full px-4 py-2 mt-1 border ${
+                            error ? 'border-red-500' : 'border-gray-500'
+                        } rounded-lg bg-transparent outline-none ring-2 ring-offset-0 transition ${
+                        isFocused
+                        ? error
+                            ? 'ring-red-500'
+                            : 'ring-gray-500'
+                        : 'ring-transparent'
+                    }`,
+
+                    menu: () => `z-10 rounded-lg bg-red-500 dark:bg-red-500`,
+
+                    input: () => `text-inherit cursor-text`,
+
+                    placeholder: () => `text-light-Secondary dark:text-dark-Secondary`,
+
+                    singleValue: () => `text-inherit`,
+
+                    option: ({ isFocused, isSelected }) =>
+                        `cursor-pointer px-3 py-2 rounded ${
+                            isSelected || isFocused
+                            ? 'bg-green-500 text-white'
+                            : 'bg-light-sub-component dark:bg-dark-sub-component text-inherit'
+                        }`,
+
+                    multiValue: () => `bg-green-500 text-white rounded-md px-1.5 py-0.5`,
+
+                    multiValueLabel: () => `text-white`,
+
+                    multiValueRemove: () =>
+                        `text-white hover:bg-green-700 hover:text-white cursor-pointer rounded`,
+
+                    clearIndicator: () => `text-white cursor-pointer`,
+
+                    dropdownIndicator: ({ selectProps }) =>
+                        `text-white cursor-pointer transition-transform duration-200 ${
+                            selectProps.menuIsOpen ? 'rotate-180' : 'rotate-0'
+                        }`,
+                }}
             />
             {error && <Paragraph intent="danger" size="sm">{error.message}</Paragraph>}
         </div>

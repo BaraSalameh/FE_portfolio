@@ -2,10 +2,10 @@ import { Header } from '@/components/shared/Header';
 import Image from 'next/image';
 import React from 'react';
 import { Paragraph, CUDModal, ResponsiveIcon } from '..';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import ProfileForm from '@/app/[role]/[username]/forms/profileForm';
 import { Button } from '../form/Button';
-import { Copy, Link, MessageCircle, MessageSquare } from 'lucide-react';
+import { Copy, Home, Link, LogOut, MessageCircle, MessageSquare, Settings } from 'lucide-react';
 import { getClientLink } from '@/lib/utils/appFunctions';
 import { ProfileProps } from './types';
 import ContactMessageForm from '@/app/[role]/[username]/forms/contactMessageForm';
@@ -18,12 +18,13 @@ export const Profile = ({
     className
 } : ProfileProps) => {
 
-    const { role } = useParams<{role: 'owner' | 'client' | 'admin' }>();
+    const { role, username } = useParams<{role: 'owner' | 'client' | 'admin', username: string }>();
     const clientLink = getClientLink() as string;
     const profilePicture =
         user?.profilePicture ??
         (user?.gender === '0' ? '/Default-Female.svg' : '/Default-Male.svg');
     const coverPhoto = user?.coverPhoto ?? '/Default-CoverPhoto.svg';
+    const router = useRouter();
     
   return (
     <Header space='lg' paddingY='sm' itemsY='start' className={`grid grid-cols-1 ${className}`}>
@@ -38,6 +39,8 @@ export const Profile = ({
             />
             {/* Right side actions */}
             <div className="absolute right-7 sm:right-10 lg:right-15 bottom-[-2rem] sm:bottom-[-2.5rem] lg:bottom-[-3.5rem] flex gap-5 items-center">
+                <ResponsiveIcon icon={Home} onClick={() => router.push('/')} className='cursor-pointer' />
+                <ResponsiveIcon icon={Settings} className='cursor-pointer' />
                 <ThemeToggle />
                 {role === 'owner' &&
                     <div className='relative'>
@@ -46,7 +49,7 @@ export const Profile = ({
                         </CUDModal>
                         {
                             (unreadContactMessageCount && unreadContactMessageCount > 0)
-                                ?    <div className='absolute -bottom-4 -right-6.5 w-8.5 h-6 rounded-full bg-green-300 flex justify-center items-center'>
+                                ?    <div className='absolute -bottom-3 -right-3 w-5 h-5 rounded-full bg-green-300 flex justify-center items-center'>
                                         <Paragraph>
                                             {unreadContactMessageCount < 100
                                                 ? unreadContactMessageCount
@@ -58,6 +61,7 @@ export const Profile = ({
                         }
                     </div>
                 }
+                <ResponsiveIcon icon={LogOut} onClick={() => router.push(`/${role}/${username}/logout`)} className='cursor-pointer' />
             </div>
             {/* Profile and Info */}
             <div className="absolute left-7 sm:left-10 lg:left-15 bottom-[-2rem] sm:bottom-[-2.5rem] lg:bottom-[-3.5rem] flex flex-col items-center">

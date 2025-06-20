@@ -1,7 +1,6 @@
 'use client'
 
 import { Container } from "@/components/shared/Container";
-import Sidebar from "@/components/shared/Sidebar";
 import { useAppSelector } from "@/lib/store/hooks";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -19,11 +18,8 @@ export default function OwnerLayout({children}: Readonly<{children: React.ReactN
     }, [owner?.username]);
 
     return (
-        <div className='flex'>
-            <Sidebar />
-            <Container>
-                {children}
-            </Container>
-        </div>
+        <Container>
+            {children}
+        </Container>
     );
 };
