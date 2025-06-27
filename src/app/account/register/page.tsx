@@ -17,7 +17,8 @@ const RegisterPage = () => {
     const { loading, username, isConfirmed } = useAppSelector((state) => state.auth);
 
     useEffect(() => {
-        username && isConfirmed === false && router.push(`/account/register/confirm-email`);
+        // username && isConfirmed === false && router.push(`/account/register/confirm-email`);
+        username && router.push(`/owner/${username}/dashboard`);
     }, [username])
 
     return (
