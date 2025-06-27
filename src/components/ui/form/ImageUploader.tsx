@@ -78,7 +78,6 @@ export const ImageUploader = ({ preset, onAction, onClose }: ImageUploaderProps)
             {imageSrc && (
                 <Button
                     onClick={handleUpload}
-                    intent="standard"
                     rounded="full"
                     size="lg"
                     type="button"
