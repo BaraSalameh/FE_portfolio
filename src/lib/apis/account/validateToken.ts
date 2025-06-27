@@ -4,7 +4,7 @@ export const validateToken = createAsyncThunk(
     'auth/validateToken',
     async (_, thunkAPI) => {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/Account/ValidateToken`,{
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Account/ValidateToken`,{
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',

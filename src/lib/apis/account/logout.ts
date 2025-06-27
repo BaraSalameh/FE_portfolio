@@ -4,7 +4,7 @@ export const logout = createAsyncThunk(
     'auth/logout',
     async (_, thunkAPI) => {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/Account/Logout`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Account/Logout`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({}),

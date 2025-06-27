@@ -4,7 +4,7 @@ export const register = createAsyncThunk(
     'auth/register',
     async (payload: { firstname: string, lastname: string, email: string; password: string, rememberMe: boolean }, thunkAPI) => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/Account/Register`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Account/Register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),

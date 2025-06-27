@@ -5,7 +5,7 @@ export const sendEmail = createAsyncThunk(
     'client/sendEmail',
     async (payload: ContactMessageFormData, thunkAPI) => {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/Client/sendEmail`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Client/sendEmail`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),

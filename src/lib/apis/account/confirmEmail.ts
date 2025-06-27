@@ -9,7 +9,7 @@ export const confirmEmail = createAsyncThunk(
                 token: payload.token
             }).toString();
     
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/Account/ConfirmEmail?${query}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Account/ConfirmEmail?${query}`, {
                 method: 'GET',
                 credentials: 'include'
             });
