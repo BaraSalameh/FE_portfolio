@@ -1,25 +1,23 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { dynamicApi } from '../apiClient';
 
 export const validateToken = createAsyncThunk(
     'auth/validateToken',
     async (_, thunkAPI) => {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Account/ValidateToken`,{
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({}),
+            const response = await dynamicApi({
+                method: "POST",
+                url: '/Account/ValidateToken',
+                data: {},
+                retryOn401: false
             });
-    
-            if (res.status === 401){
-                const error = await res.json();
-                return thunkAPI.rejectWithValue(error);
-            }
-    
-            const data = await res.json();
-            return data;
             
-        } catch (error) {
+            return response.data;
+            
+        } catch (error: any) {
+            if(error.status === 401){
+                return thunkAPI.rejectWithValue(error.response.data);
+            }
             return thunkAPI.rejectWithValue(['Unexpected error occurred.']);
         }
     }

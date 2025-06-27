@@ -1,4 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { dynamicApi } from "../apiClient";
 
 export const resendEmail = createAsyncThunk(
     'auth/resendEmail',
@@ -7,20 +8,16 @@ export const resendEmail = createAsyncThunk(
             const query = new URLSearchParams({
                 email: payload.email
             }).toString();
-    
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Account/ResendConfirmEmail?${query}`, {
-                method: 'GET',
+
+            const response = await dynamicApi({
+                method: "GET",
+                url: `/Account/ResendConfirmEmail?${query}`
             });
 
-            if (res.status === 204) return;
-        
-            if (!res.ok){
-                const error = await res.json();
-                return thunkAPI.rejectWithValue(error)
-            }
+            if (response.status === 204) return;
 
-        } catch (error) {
-            return thunkAPI.rejectWithValue(['Unexpected error occurred']);
+        } catch (error: any) {
+            return thunkAPI.rejectWithValue(error.response.data ?? ['Unexpected error occurred']);
         }
     }
 );

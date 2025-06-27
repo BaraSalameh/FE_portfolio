@@ -1,26 +1,20 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { dynamicApi } from "../apiClient";
 
 export const register = createAsyncThunk(
     'auth/register',
     async (payload: { firstname: string, lastname: string, email: string; password: string, rememberMe: boolean }, thunkAPI) => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Account/Register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
-                credentials: 'include'
+            const response = await dynamicApi({
+                method: "POST",
+                url: '/Account/Register',
+                data: payload,
             });
 
-            if(!response.ok){
-                const error = await response.json();
-                return thunkAPI.rejectWithValue(error);
-            }
+            return {...response.data, isConfirmed: false};
 
-            const data = await response.json();
-            return {...data, isConfirmed: false};
-
-        } catch (error) {
-            return thunkAPI.rejectWithValue(['Unexpected error occurred.']);
+        } catch (error: any) {
+            return thunkAPI.rejectWithValue(error.response.data ??['Unexpected error occurred.']);
         }
     }
 );

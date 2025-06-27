@@ -1,19 +1,17 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { dynamicApi } from "../apiClient";
 
 export const logout = createAsyncThunk(
     'auth/logout',
     async (_, thunkAPI) => {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Account/Logout`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({}),
-                credentials: "include"
+            const response = await dynamicApi({
+                method: "POST",
+                url: '/Account/Logout',
+                data: {}
             });
 
-            if (res.status === 204){
-                return;
-            }
+            if (response.status === 204) return;
 
         } catch (error) {
             return thunkAPI.rejectWithValue(['Unexpected error occurred.']);
