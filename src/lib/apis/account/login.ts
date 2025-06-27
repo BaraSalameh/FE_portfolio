@@ -8,8 +8,7 @@ export const login = createAsyncThunk(
             const response = await dynamicApi({
                 method: "POST",
                 url: '/Account/Login',
-                sendCredentials: false,
-                data: payload
+                data: JSON.stringify(payload),
             })
 
             if (response.status === 404) {
