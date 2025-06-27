@@ -1,7 +1,8 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 const api = axios.create({
-    baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api`,
+    // baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api`,
+    baseURL: `/api`,
     withCredentials: true, 
 });
 
