@@ -4,7 +4,7 @@ export const userByUsernameQuery = createAsyncThunk(
     'client/userByUsernameQuery',
     async (username: string, thunkAPI) => {
         try {
-            const response = await fetch(`https://localhost:7206/api/Client/UserByUsername?Username=${username}`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/Client/UserByUsername?Username=${username}`);
 
             if(response.status === 204) return [];
 

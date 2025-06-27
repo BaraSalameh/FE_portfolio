@@ -4,7 +4,7 @@ export const login = createAsyncThunk(
     'auth/login',
     async (payload: { email: string; password: string, rememberMe: boolean }, thunkAPI) => {
         try {
-            const res = await fetch('https://localhost:7206/api/Account/Login', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/Account/Login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),

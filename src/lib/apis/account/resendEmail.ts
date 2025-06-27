@@ -8,7 +8,7 @@ export const resendEmail = createAsyncThunk(
                 email: payload.email
             }).toString();
     
-            const res = await fetch(`https://localhost:7206/api/Account/ResendConfirmEmail?${query}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/Account/ResendConfirmEmail?${query}`, {
                 method: 'GET',
             });
 
