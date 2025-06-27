@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 const api = axios.create({
     baseURL: process.env.NODE_ENV === 'development'
-        ?   process.env.NEXT_PUBLIC_API_URL
+        ?   `${process.env.NEXT_PUBLIC_API_URL}/api`
         :   '',
     headers: {
         'Content-Type': 'application/json',
