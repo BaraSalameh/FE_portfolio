@@ -8,20 +8,18 @@ export const login = createAsyncThunk(
             const response = await dynamicApi({
                 method: "POST",
                 url: '/Account/Login',
-                data: JSON.stringify(payload),
-            })
+                data: payload,
+            });
 
-            if (response.status === 404) {
-                return thunkAPI.rejectWithValue(response);
-            }
-
-            if (response.status === 403) {
-                return thunkAPI.rejectWithValue({error: response, isConfirmed: false});
-            }
-
-            return response;
+            return response.data;
 
         } catch (error: any) {
+            if(error.status === 404) {
+                return thunkAPI.rejectWithValue(error.response.data);
+            }
+            if (error.status === 403) {
+                return thunkAPI.rejectWithValue({error: error.response.data, isConfirmed: false});
+            }
             return thunkAPI.rejectWithValue(error.message);
         }
     }
