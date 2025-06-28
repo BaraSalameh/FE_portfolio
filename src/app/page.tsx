@@ -11,6 +11,7 @@ import { Main } from "@/components/shared/Main";
 import { SubFooter } from "@/components/shared/SubFooter";
 import { BlurBackground } from "@/components/ui";
 import { Search } from "lucide-react";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 export default function Home() {
     const [searchOpen, setSearchOpen] = useState(false);
@@ -37,7 +38,7 @@ export default function Home() {
             )}
             {/* Main content */}
             <Container>
-                <Header>
+                <Header className="relative">
                     <Image
                         src='/portfolio-logo.svg'
                         alt="portfolio logo"
@@ -45,8 +46,11 @@ export default function Home() {
                         height={40}
                         priority
                     />
+                    <div className="absolute right-7 sm:right-10 lg:right-15 bottom-[-2rem] flex gap-5 items-center">
+                        <ThemeToggle />
+                    </div>
                 </Header>
-                <Main className='sm:items-start items-center'>
+                <Main paddingY='lg' className='sm:items-start items-center'>
                     <Paragraph size="md" text='justify'>
                         {abstractParagraph}
                     </Paragraph>
