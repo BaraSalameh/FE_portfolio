@@ -1,8 +1,11 @@
 import { z } from 'zod';
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
+
 export const loginSchema = z.object({
-    email: z.string().min(1, 'Email is required'), // Accepts any non-empty string
-    password: z.string().min(2, '2 Character at least'),
+    email: z.string().min(1, 'Email is required').regex(emailRegex, 'Not valid email'),
+    password: z.string().min(8, "Password must be at least 8 characters long").regex(passwordRegex, "Password must include uppercase, lowercase, number, and symbol"),
     rememberMe: z.boolean()
 });
 
