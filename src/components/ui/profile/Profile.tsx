@@ -5,7 +5,7 @@ import { Paragraph, CUDModal, ResponsiveIcon } from '..';
 import { useParams, useRouter } from 'next/navigation';
 import ProfileForm from '@/app/[role]/[username]/forms/profileForm';
 import { Button } from '../form/Button';
-import { Copy, Home, Link, LogOut, MessageCircle, MessageSquare, Settings } from 'lucide-react';
+import { Copy, EqualApproximatelyIcon, Home, Link, LogOut, Mail, MailIcon, MessageCircle, MessageSquare, Phone, Settings } from 'lucide-react';
 import { getClientLink } from '@/lib/utils/appFunctions';
 import { ProfileProps } from './types';
 import ContactMessageForm from '@/app/[role]/[username]/forms/contactMessageForm';
@@ -27,7 +27,7 @@ export const Profile = ({
     const router = useRouter();
     
   return (
-    <Header space='lg' paddingY='sm' itemsY='start' className={`grid grid-cols-1 ${className}`}>
+    <Header space='lg' paddingY='sm' className={`grid grid-cols-1 ${className}`}>
         <div className="relative h-35 sm:h-50 lg:h-60">
             {/* Cover Photo */}
             <Image
@@ -63,8 +63,6 @@ export const Profile = ({
                     </div>
                 }
                 {role === 'owner' && <ResponsiveIcon icon={LogOut} onClick={() => router.push(`/${role}/${username}/logout`)} className='cursor-pointer' />}
-                
-                
             </div>
             {/* Profile and Info */}
             <div className="absolute left-7 sm:left-10 lg:left-15 bottom-[-2rem] sm:bottom-[-2.5rem] lg:bottom-[-3.5rem] flex flex-col items-center">
@@ -102,32 +100,44 @@ export const Profile = ({
             
             </div>
         </div>
-        
-        <div className='px-7 sm:px-10 lg:px-15 pt-3 space-y-1'>
-            <Paragraph position='start' size='lg'>
-                {user?.firstname} {user?.lastname}
+        <div>
+            <div className='sm:flex space-y-3 gap-10 px-3 sm:px-10 lg:px-15 pt-3'>
+                <div className='space-y-2'>
+                    <Paragraph position='start' size='lg'>
+                        {user?.firstname} {user?.lastname}
+                    </Paragraph>
+                    <Paragraph position='start' className="italic">
+                        {user?.title}
+                    </Paragraph>
+                    {(user?.gender === '0' || user?.gender === '1' || user?.birthDate) && (
+                        <Paragraph position="start">
+                            {user?.gender?.toString() === '1'
+                            ? 'Male'
+                            : user?.gender?.toString() === '0'
+                            ? 'Female'
+                            : ''}
+                            {user?.birthDate ? ` (${user.birthDate})` : ''}
+                        </Paragraph>
+                    )}
+                </div>
+                <div className='space-y-3'>
+                    <Paragraph>
+                        <ResponsiveIcon icon={Mail} />
+                        {user?.email}
+                        <ResponsiveIcon icon={Copy} onClick={() => navigator.clipboard.writeText(user.email as string)} className='cursor-pointer' />
+                    </Paragraph>
+                    {user?.phone &&
+                        <Paragraph>
+                            <ResponsiveIcon icon={Phone} />
+                            {user.phone}
+                            <ResponsiveIcon icon={Copy} onClick={() => navigator.clipboard.writeText(user?.phone as string)} className='cursor-pointer' />
+                        </Paragraph>
+                    }
+                </div>
+            </div>
+            <Paragraph className={`${user?.bio && 'border-t-1 pt-2 mt-4'} `}>
+                {user?.bio}
             </Paragraph>
-            <Paragraph position='start' className="italic">
-                {user?.title}
-            </Paragraph>
-            {(user?.gender === '0' || user?.gender === '1' || user?.birthDate) && (
-                <Paragraph position="start">
-                    {user?.gender?.toString() === '1'
-                    ? 'Male'
-                    : user?.gender?.toString() === '0'
-                    ? 'Female'
-                    : ''}
-                    {user?.birthDate ? ` (${user.birthDate})` : ''}
-                </Paragraph>
-            )}
-            {(user?.bio) && 
-                <hr className='pb-3' />
-            }
-            {
-                <Paragraph>
-                    {user?.bio}
-                </Paragraph>
-            }
         </div>
     </Header>
   );
