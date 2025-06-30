@@ -12,10 +12,10 @@ export const useWidgets = () => {
 
     const renderWidgets = useMemo((): JSX.Element[] => {
         const widgets: WidgetCardProps[] = [
-            languageData,
-            projectData,
             educationData,
+            projectData,
             experienceData,
+            languageData,
         ];
 
         return widgets.map((widget, index) => (
