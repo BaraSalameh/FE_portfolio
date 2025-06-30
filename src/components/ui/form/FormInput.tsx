@@ -37,6 +37,7 @@ export const FormInput = ({
                     {...(registration as any)}
                     {...rest}
                     className={`${inputClasses} overflow-auto scrollbar-hide`}
+                    rows={8}
                 />
             ) : (
                 <input
