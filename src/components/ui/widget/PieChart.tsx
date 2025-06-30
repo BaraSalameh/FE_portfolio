@@ -2,13 +2,17 @@ import { CustomTooltip } from "@/components/utils";
 import { generateColorMap } from "@/lib/utils/appFunctions";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { ChartWidgetProps } from "./types";
+import { useMediaQuery } from 'react-responsive';
 
 export const PieChartWidget = ({
     data,
     colorMap
 }: ChartWidgetProps) => {
     const internalColorMap = colorMap ?? generateColorMap(data);
-  
+    const isSmall = useMediaQuery({ maxWidth: 640 });
+    const isMedium = useMediaQuery({ minWidth: 641, maxWidth: 768 });
+    const outerRadius = isSmall ? 35 : isMedium ? 40 : 50;
+
     return (
         <ResponsiveContainer width="100%" height={300}>
             <PieChart>
@@ -18,7 +22,7 @@ export const PieChartWidget = ({
                     nameKey="name"
                     cx="50%"
                     cy="50%"
-                    outerRadius={50}
+                    outerRadius={outerRadius}
                     label
                 >
                     {data.map((entry, index) => (
