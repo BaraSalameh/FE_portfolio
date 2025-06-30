@@ -32,7 +32,7 @@ export const paragraph = cva(
             space: {
                 none: 'gap-0',
                 xs: 'gap-3',
-                sm: 'gap-5',
+                sm: 'gap-2 sm:gap-3',
                 md: 'gap-10',
                 lg: 'gap-15'
             },

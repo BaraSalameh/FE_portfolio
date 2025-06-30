@@ -19,6 +19,7 @@ const refreshAccessToken = async () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                withCredentials: true
             }); 
         } finally {
             isRefreshing = false;
