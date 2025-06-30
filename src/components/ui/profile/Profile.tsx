@@ -34,11 +34,11 @@ export const Profile = ({
                 src={coverPhoto}
                 alt="Cover photo"
                 fill
-                className="object-fill rounded-3xl "
+                className="object-fill rounded-md "
                 priority
             />
             {/* Right side actions */}
-            <div className="absolute right-7 sm:right-10 lg:right-15 bottom-[-2rem] sm:bottom-[-2.5rem] lg:bottom-[-3.5rem] flex gap-5 items-center">
+            <div className="absolute right-7 sm:right-10 lg:right-15 bottom-[-2rem] sm:bottom-[-2.5rem] lg:bottom-[-3.5rem] flex gap-2.5 sm:gap-5 items-center">
                 <ResponsiveIcon icon={Home} onClick={() => router.push('/')} className='cursor-pointer' />
                 {role === 'owner' && <ResponsiveIcon icon={Settings} className='cursor-pointer' />}
                 
@@ -50,7 +50,7 @@ export const Profile = ({
                         </CUDModal>
                         {
                             (unreadContactMessageCount && unreadContactMessageCount > 0)
-                                ?    <div className='absolute -bottom-3 -right-3 w-5 h-5 rounded-full bg-green-300 flex justify-center items-center'>
+                                ?    <div className='absolute -bottom-1.5 -right-1.5 sm:-bottom-2.5 sm:-right-2.5 w-3 h-3 sm:w-4.5 sm:h-4.5 rounded-full bg-green-300 flex justify-center items-center'>
                                         <Paragraph>
                                             {unreadContactMessageCount < 100
                                                 ? unreadContactMessageCount
@@ -76,7 +76,7 @@ export const Profile = ({
                     />
                 </div>
                 {/* Left side actions */}
-                <div className='absolute right-0 bottom-0'>
+                <div className='absolute -right-1 -bottom-1'>
                     {role === 'owner'
                     ?   <CUDModal as='update' subTitle='Update profile' >
                             <ProfileForm />
@@ -87,7 +87,7 @@ export const Profile = ({
                         </CUDModal>
                     }
                 </div>
-                <div className='absolute bottom-0 left-0'>
+                <div className='absolute -bottom-1 -left-1'>
                     <CUDModal subTitle='Copy link' icon={Link}>
                         <Button rounded='full' onClick={() => navigator.clipboard.writeText(clientLink)}>
                             <Paragraph>
@@ -101,9 +101,9 @@ export const Profile = ({
             </div>
         </div>
         <div>
-            <div className='sm:flex space-y-3 gap-10 px-3 sm:px-10 lg:px-15 pt-3'>
+            <div className='sm:flex space-y-3 md:px-3 lg:px-7 gap-10 pt-2'>
                 <div className='space-y-2'>
-                    <Paragraph position='start' size='lg'>
+                    <Paragraph position='start' size='lg' className='font-bold'>
                         {user?.firstname} {user?.lastname}
                     </Paragraph>
                     <Paragraph position='start' className="italic">
