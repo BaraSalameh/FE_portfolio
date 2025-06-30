@@ -12,7 +12,7 @@ import { ControlledInfiniteScroll } from './ControlledInfiniteScroll';
 import { clearSearch } from '@/lib/store/slices/searchSlice';
 
 export const SearchBar = () => {
-    const { userList, rowCount, error } = useAppSelector(state => state.search);
+    const { userList, rowCount, error, loading } = useAppSelector(state => state.search);
 
     const dispatch = useAppDispatch();
     const router = useRouter();
@@ -55,8 +55,12 @@ export const SearchBar = () => {
             return <Paragraph intent="danger" size="sm" className="p-3">{error}</Paragraph>;
         }
 
-        if (userList.length === 0) {
-            return <Paragraph size="sm" className="p-3">No Result</Paragraph>;
+        if (loading && userList.length === 0) {
+            return <Paragraph size="sm" className="p-3">Searching...</Paragraph>;
+        }
+
+        if (!loading && userList.length === 0) {
+            return <Paragraph size="sm" className="p-3">No result</Paragraph>;
         }
 
         return userList?.map((user: any) => {
