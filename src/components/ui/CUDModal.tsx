@@ -3,7 +3,6 @@
 import { Edit, LucideTrash2, Trash2, X } from 'lucide-react';
 import React, { useState } from 'react';
 import { Button } from './form';
-import Image from "next/image";
 import { Header, Main } from '../shared';
 import { cn } from '../utils';
 import { widgetCard } from '@/styles/widget';
@@ -38,7 +37,7 @@ export const CUDModal = ({
     return (
         <>
         <div
-            className="flex gap-2 cursor-pointer"
+            className="flex gap-2 cursor-pointer hover:text-light-bg-hover dark:hover:text-dark-bg-hover"
             onClick={() => setOpenModal(true)}
         >
             {currentIcon}

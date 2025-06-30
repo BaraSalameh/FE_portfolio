@@ -56,15 +56,14 @@ export const WidgetCard = ({
                         {header?.icon && <ResponsiveIcon icon={header.icon} />}
                         {header?.title}
                     </Paragraph>
-                        <CUDModal
-                            isLoading={isLoading}
-                            title={create?.title}
-                            subTitle={create?.subTitle}
-                            icon={create?.icon}
-                        >
-                            {create?.form}
-                        </CUDModal>
-                            
+                    <CUDModal
+                        isLoading={isLoading}
+                        title={create?.title}
+                        subTitle={create?.subTitle}
+                        icon={create?.icon}
+                    >
+                        {create?.form}
+                    </CUDModal>
                 </Header>
             </section>
         </React.Fragment>
