@@ -181,7 +181,7 @@ export const getNavLinks = (username?: string | undefined, role?: 'owner' | 'cli
     return [{ href: '/', label: 'Home', icon: Home }];
 }
 
-export const getClientLink = (): string | null => {
+export const getClientLink = (): Record<string, string> | null => {
     if (typeof window === 'undefined') return null;
 
     const { origin, pathname } = window.location;
@@ -192,7 +192,11 @@ export const getClientLink = (): string | null => {
     }
 
     const modifiedPath = parts.join('/');
-    return `${origin}${modifiedPath}`;
+    return {
+        fullPath: `${origin}${modifiedPath}`,
+        shortPath: modifiedPath
+    }
+    // return `${origin}${modifiedPath}`;
 };
 
 type Option = {

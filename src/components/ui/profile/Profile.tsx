@@ -19,7 +19,7 @@ export const Profile = ({
 } : ProfileProps) => {
 
     const { role, username } = useParams<{role: 'owner' | 'client' | 'admin', username: string }>();
-    const clientLink = getClientLink() as string;
+    const clientLink = getClientLink() as Record<string, string>;
     const profilePicture =
         user?.profilePicture ??
         (user?.gender === '0' ? '/Default-Female.svg' : '/Default-Male.svg');
@@ -89,10 +89,10 @@ export const Profile = ({
                 </div>
                 <div className='absolute -bottom-1 -left-1'>
                     <CUDModal subTitle='Copy link' icon={Link}>
-                        <Button rounded='full' onClick={() => navigator.clipboard.writeText(clientLink)}>
+                        <Button rounded='full' onClick={() => navigator.clipboard.writeText(clientLink?.fullPath)}>
                             <Paragraph>
                                 <ResponsiveIcon icon={Copy} />
-                                {clientLink}
+                                {clientLink?.shortPath}
                             </Paragraph>
                         </Button>
                     </CUDModal>
