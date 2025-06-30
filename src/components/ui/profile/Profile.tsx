@@ -5,7 +5,7 @@ import { Paragraph, CUDModal, ResponsiveIcon } from '..';
 import { useParams, useRouter } from 'next/navigation';
 import ProfileForm from '@/app/[role]/[username]/forms/profileForm';
 import { Button } from '../form/Button';
-import { Copy, EqualApproximatelyIcon, Home, Link, LogOut, Mail, MailIcon, MessageCircle, MessageSquare, Phone, Settings } from 'lucide-react';
+import { Copy, Home, Link, LogOut, Mail, MessageCircle, MessageSquare, Phone, Settings } from 'lucide-react';
 import { getClientLink } from '@/lib/utils/appFunctions';
 import { ProfileProps } from './types';
 import ContactMessageForm from '@/app/[role]/[username]/forms/contactMessageForm';
@@ -27,7 +27,7 @@ export const Profile = ({
     const router = useRouter();
     
   return (
-    <Header space='lg' paddingY='sm' className={`grid grid-cols-1 ${className}`}>
+    <Header space='lg' paddingY='sm' paddingX='xs' className={`grid grid-cols-1 ${className}`}>
         <div className="relative h-35 sm:h-50 lg:h-60">
             {/* Cover Photo */}
             <Image

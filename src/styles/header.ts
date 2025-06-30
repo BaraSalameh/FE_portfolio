@@ -22,10 +22,10 @@ export const header = cva(
             },
             paddingX: {
                 none: 'px-0',
-                xs: 'px-3',
-                sm: 'px-5',
-                md: 'px-10',
-                lg: 'px-15',
+                xs: 'px-3 sm:px-4 md:px-5 lg:px-6',
+                sm: 'px-5 sm:px-6 md:px-7 lg:px-8',
+                md: 'px-10 sm:px-11 md:px-12 lg:px-13',
+                lg: 'px-15 sm:px-16 md:px-17 lg:px-18',
             },
             paddingY: {
                 none: 'py-0',
