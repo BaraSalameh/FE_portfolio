@@ -5,7 +5,7 @@ import { Paragraph, CUDModal, ResponsiveIcon } from '..';
 import { useParams, useRouter } from 'next/navigation';
 import ProfileForm from '@/app/[role]/[username]/forms/profileForm';
 import { Button } from '../form/Button';
-import { Copy, Home, Link, LogOut, Mail, MessageCircle, MessageSquare, Phone, Settings } from 'lucide-react';
+import { Bell, Copy, Home, Link, LogOut, Mail, MessageCircle, MessageSquare, Phone, Settings } from 'lucide-react';
 import { getClientLink } from '@/lib/utils/appFunctions';
 import { ProfileProps } from './types';
 import ContactMessageForm from '@/app/[role]/[username]/forms/contactMessageForm';
@@ -45,20 +45,13 @@ export const Profile = ({
                 <ThemeToggle />
                 {role === 'owner' &&
                     <div className='relative'>
-                        <CUDModal subTitle='Messages' icon={MessageSquare}>
+                        <CUDModal subTitle='Messages' icon={MessageCircle}>
                             <ContactMessagePage />
                         </CUDModal>
                         {
                             (unreadContactMessageCount && unreadContactMessageCount > 0)
-                                ?    <div className='absolute -bottom-1.5 -right-1.5 sm:-bottom-2.5 sm:-right-2.5 w-3 h-3 sm:w-4.5 sm:h-4.5 rounded-full bg-green-300 flex justify-center items-center'>
-                                        <Paragraph>
-                                            {unreadContactMessageCount < 100
-                                                ? unreadContactMessageCount
-                                                : '99+'
-                                            }
-                                        </Paragraph>
-                                    </div>
-                                : null
+                                ?   <div className='absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 rounded-full bg-green-500' />
+                                :   null
                         }
                     </div>
                 }

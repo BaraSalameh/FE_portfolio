@@ -2,8 +2,7 @@ import { getSelectedOption } from "@/lib/utils/appFunctions";
 import { Controller, FieldValues } from "react-hook-form";
 import { FormDropdown } from "./FormDropdown";
 import { ControlledDropdownProps, Option } from "./types";
-import { useWatch } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export const ControlledDropdown = <T extends FieldValues>({
     name,
