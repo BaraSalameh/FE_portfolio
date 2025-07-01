@@ -2,6 +2,8 @@ import { getSelectedOption } from "@/lib/utils/appFunctions";
 import { Controller, FieldValues } from "react-hook-form";
 import { FormDropdown } from "./FormDropdown";
 import { ControlledDropdownProps, Option } from "./types";
+import { useWatch } from "react-hook-form";
+import { useEffect, useState } from "react";
 
 export const ControlledDropdown = <T extends FieldValues>({
     name,
@@ -11,33 +13,39 @@ export const ControlledDropdown = <T extends FieldValues>({
     isMulti = false,
     fetchAction,
     isLoading
-}: ControlledDropdownProps<T>) => (
-    <Controller
-        name={name}
-        control={control}
-        render={({ field, fieldState }) => {
-            const selectedValue = getSelectedOption(options, field.value);
+}: ControlledDropdownProps<T>) => {
 
-            return (
-                <FormDropdown
-                    label={label}
-                    options={options}
-                    value={selectedValue}
-                    onChange={(option) => {
-                        if (isMulti) {
-                            const selectedIds = (option as Option[])?.map(opt => opt.value) ?? [];
-                            field.onChange(selectedIds);
-                        } else {
-                            field.onChange((option as Option)?.value ?? null);
-                        }
-                    }}
-                    onBlur={field.onBlur}
-                    error={fieldState.error}
-                    isMulti={isMulti}
-                    fetchAction={fetchAction}
-                    isLoading={isLoading ?? options.length === 0}
-                />
-            );
-        }}
-    />
-);
+    const [values, setValues] = useState<Option[]>();
+
+    return (
+        <Controller
+            name={name}
+            control={control}
+            render={({ field, fieldState }) => {
+                const selectedValue = getSelectedOption(options, field.value);
+
+                return (
+                    <FormDropdown
+                        label={label}
+                        options={options}
+                        value={values ?? selectedValue}
+                        onChange={(option) => {
+                            if (isMulti) {
+                                setValues(option as Option[]);
+                                const selectedIds = (option as Option[])?.map(opt => opt.value) ?? [];
+                                field.onChange(selectedIds);
+                            } else {
+                                field.onChange((option as Option)?.value ?? null);
+                            }
+                        }}
+                        onBlur={field.onBlur}
+                        error={fieldState.error}
+                        isMulti={isMulti}
+                        fetchAction={fetchAction}
+                        isLoading={isLoading ?? options.length === 0}
+                    />
+                );
+            }}
+        />
+    );
+};

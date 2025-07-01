@@ -145,7 +145,7 @@ export const mapProjectTechnologyToForm = (projectTechnologyFromDb: any): Educat
 };
 
 export const getSelectedOption = (
-    options: { label: string; value: string }[],
+    options: Option[],
     value: string | string[] | undefined
 ) => {
     if (!value) return Array.isArray(value) ? [] : undefined;
