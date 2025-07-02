@@ -23,6 +23,7 @@ export const projectTechnologySchema = z.object({
 
     description: z.string()
         .max(1000, 'Description is too long')
+        .nullable()
         .or(z.literal('').transform(() => null)),
 
     isFeatured: z
