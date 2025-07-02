@@ -56,8 +56,12 @@ export const WidgetList = ({
                     const leftRaw = cfg.leftKey ? extractPathValue(item, cfg.leftKey as string) : undefined;
                     const rightRaw = cfg.rightKey ? extractPathValue(item, cfg.rightKey as string) : undefined;
 
-                    const leftVal = cfg.isTime ? dayjs(leftRaw).format('MMM YYYY') : leftRaw;
-
+                    const leftVal = cfg.isTime
+                        ? dayjs(leftRaw).format('MMM YYYY')
+                        : cfg.isLink
+                            ? <a href={leftRaw} target='_blank'>{leftRaw}</a>
+                            : leftRaw;
+                            
                     const rightVal = cfg.isTime
                         ?   rightRaw ? dayjs(rightRaw).format('MMM YYYY') : 'Present'
                         :   cfg.rightKey ? rightRaw : '';
@@ -77,7 +81,7 @@ export const WidgetList = ({
                                         :   'Empty'  
                                 :   typeof leftVal === 'boolean'
                                         ?   `${cfg.leftKey}: ${leftVal}`
-                                        :   leftVal
+                                        :   cfg.icon && !leftRaw ? 'Empty' : leftVal
                                             
                             }
                             {cfg.between && rightVal && ` ${cfg.between} `}

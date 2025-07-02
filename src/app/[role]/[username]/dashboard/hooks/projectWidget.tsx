@@ -25,8 +25,8 @@ export const useProjectWidget = (): WidgetCardProps => {
         del: { subTitle: 'Delete Project', message: 'Are you sure?', onDelete: handleProjectDelete },
         details: [
             { leftKey: 'title', size: 'lg' },
-            { leftKey: 'liveLink', icon: Link },
-            { leftKey: 'sourceCode', icon: SearchCodeIcon },
+            { leftKey: 'liveLink', icon: Link, isLink: true },
+            { leftKey: 'sourceCode', icon: SearchCodeIcon , isLink: true},
             { leftKey: 'lstTechnologies.name', icon: WandSparklesIcon },
             { leftKey: 'description', size: 'sm' }
         ],

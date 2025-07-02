@@ -72,6 +72,7 @@ export interface ListItemConfig {
     rightKey?: string | string[];
     size?: 'lg' | 'md' | 'sm' | null;
     isTime?: boolean;
+    isLink?: boolean;
 }
 
 
