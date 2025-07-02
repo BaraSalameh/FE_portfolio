@@ -1,5 +1,13 @@
 import { z } from 'zod';
 
+const URLRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
+
+const optionalUrl = z
+    .string()
+    .regex(URLRegex, 'Invalid URL')
+    .nullable()
+    .or(z.literal('').transform(() => null))
+
 export const projectTechnologySchema = z.object({
     id: z.string().optional(),
 
@@ -7,17 +15,11 @@ export const projectTechnologySchema = z.object({
         .string()
         .min(3, 'Title is too short'),
 
-    liveLink: z
-        .string()
-        .min(3, 'Live link is too short'),
+    liveLink: optionalUrl.optional(),
         
-    sourceCode: z
-        .string()
-        .min(3, 'Source code is too short'),
+    sourceCode: optionalUrl.optional(),
 
-    imageUrl: z
-        .string()
-        .max(1000, 'Image string is too long'),
+    imageUrl: optionalUrl.optional(),
 
     description: z.string()
         .max(1000, 'Description is too long'),

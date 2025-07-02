@@ -41,10 +41,10 @@ const ProjectTechnologyForm = ({id, onClose} : ProjectTechnologyProps) => {
         {as: 'DropdownMulti', name: 'lstTechnologies', options: technologyOptions, label: 'Technologies', fetchAction: technologyListQuery, isLoading: loading},
         {as: 'Dropdown', name: 'EducationID', options: educationOptions, label: 'Corresponding education'},
         {as: 'Dropdown', name: 'ExperienceID', options: experienceOptions, label: 'Corresponding experience'},
-        {as: 'Input', name: 'title', label: 'Title', placeholder: 'Protfolio'},
-        {as: 'Input', name: 'liveLink', label: 'Live link', placeholder: 'https://MyProject'},
-        {as: 'Input', name: 'sourceCode', label: 'Source code', placeholder: 'https://LinkedIn'},
-        {as: 'Input', name: 'imageUrl', label: 'Source code', placeholder: 'https://Image'},
+        {as: 'Input', name: 'title', label: 'Title', placeholder: 'MyProject'},
+        {as: 'Input', name: 'liveLink', label: 'Live link', placeholder: 'https://MyProject.com'},
+        {as: 'Input', name: 'sourceCode', label: 'Source code', placeholder: 'https://github.com/'},
+        {as: 'Input', name: 'imageUrl', label: 'Image URL', placeholder: 'https://Image'},
         {as: 'Checkbox', name: 'isFeatured', label: 'Is featured?'},
         {as: 'Input', name: 'description', label: 'Description', placeholder: 'Description', type: 'Textarea'}
     ], [technologyOptions, educationOptions, experienceOptions, loading]);

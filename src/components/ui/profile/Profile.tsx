@@ -50,7 +50,7 @@ export const Profile = ({
                         </CUDModal>
                         {
                             (unreadContactMessageCount && unreadContactMessageCount > 0)
-                                ?   <div className='absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 rounded-full bg-green-500' />
+                                ?   <div className='absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 rounded-full bg-success' />
                                 :   null
                         }
                     </div>
