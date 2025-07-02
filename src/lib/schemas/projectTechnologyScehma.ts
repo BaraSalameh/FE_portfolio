@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
-const URLRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
+const URLRegex = /^(https?:\/\/)?([\w\-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/;
+
 
 const optionalUrl = z
     .string()
