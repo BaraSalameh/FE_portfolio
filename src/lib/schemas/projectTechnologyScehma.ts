@@ -22,7 +22,8 @@ export const projectTechnologySchema = z.object({
     imageUrl: optionalUrl.optional(),
 
     description: z.string()
-        .max(1000, 'Description is too long'),
+        .max(1000, 'Description is too long')
+        .or(z.literal('').transform(() => null)),
 
     isFeatured: z
         .boolean()
