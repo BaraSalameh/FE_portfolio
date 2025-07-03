@@ -1,31 +1,31 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { institutionListQuery, degreeListQuery, fieldOfStudyListQuery, educationListQuery, addEditEducation, deleteEducation } from '@/lib/apis/owner/education';
 import { userFullInfoQuery } from '@/lib/apis/owner/user';
-import { EducationFormData } from '@/lib/schemas';
 import { userByUsernameQuery } from '@/lib/apis/client';
-
-interface EducationState {
-    lstEducations: EducationFormData[];
-    lstInstitutions: Record<string, any>[];
-    institutionRowCount: number;
-    degreeRowCount: number;
-    fieldRowCount: number;
-    lstDegrees: Record<string, any>[];
-    lstFields: Record<string, any>[];
-    loading: boolean;
-    error: string | null;
-}
+import { EducationState } from './types';
 
 const initialState : EducationState = {
     lstEducations: [],
-    lstInstitutions: [],
-    institutionRowCount: 0,
-    degreeRowCount: 0,
-    fieldRowCount: 0,
-    lstDegrees: [],
-    lstFields: [],
     loading: false,
-    error: null as string | null
+    error: null as string | null,
+    institution: {
+        lstInstitutions: [],
+        institutionRowCount: 0,
+        loading: false,
+        error: null as string | null,
+    },
+    degree: {
+        lstDegrees: [],
+        degreeRowCount: 0,
+        loading: false,
+        error: null as string | null,
+    },
+    fieldOfStudy: {
+        lstFields: [],
+        fieldRowCount: 0,
+        loading: false,
+        error: null as string | null,
+    }
 }
 
 const educationSlice = createSlice({
@@ -56,63 +56,63 @@ const educationSlice = createSlice({
         })
 
         .addCase(institutionListQuery.pending, (state) => {
-            state.loading = true;
-            state.error = null;
+            state.institution.loading = true;
+            state.institution.error = null;
         })
         .addCase(institutionListQuery.fulfilled, (state, action) => {
             const { items, rowCount, page } = action.payload;
 
             if (page === 0) {
-                state.lstInstitutions = items;
+                state.institution.lstInstitutions = items;
             } else {
-                state.lstInstitutions =  [...state.lstInstitutions, ...items];
+                state.institution.lstInstitutions =  [...state.institution.lstInstitutions, ...items];
             }
-            state.loading = false;
-            state.institutionRowCount = rowCount;
+            state.institution.loading = false;
+            state.institution.institutionRowCount = rowCount;
         })
         .addCase(institutionListQuery.rejected, (state, action) => {
-            state.loading = false;
+            state.institution.loading = false;
             state.error = action.payload as string;
         })
 
         .addCase(degreeListQuery.pending, (state) => {
-            state.loading = true;
-            state.error = null;
+            state.degree.loading = true;
+            state.degree.error = null;
         })
         .addCase(degreeListQuery.fulfilled, (state, action) => {
             const { items, rowCount, page } = action.payload;
 
             if (page === 0) {
-                state.lstDegrees = items;
+                state.degree.lstDegrees = items;
             } else {
-                state.lstDegrees =  [...state.lstDegrees, ...items];
+                state.degree.lstDegrees =  [...state.degree.lstDegrees, ...items];
             }
-            state.loading = false;
-            state.degreeRowCount = rowCount;
+            state.degree.loading = false;
+            state.degree.degreeRowCount = rowCount;
         })
         .addCase(degreeListQuery.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload as string;
+            state.degree.loading = false;
+            state.degree.error = action.payload as string;
         })
 
         .addCase(fieldOfStudyListQuery.pending, (state) => {
-            state.loading = true;
-            state.error = null;
+            state.fieldOfStudy.loading = true;
+            state.fieldOfStudy.error = null;
         })
         .addCase(fieldOfStudyListQuery.fulfilled, (state, action) => {
             const { items, rowCount, page } = action.payload;
 
             if (page === 0) {
-                state.lstFields = items;
+                state.fieldOfStudy.lstFields = items;
             } else {
-                state.lstFields =  [...state.lstFields, ...items];
+                state.fieldOfStudy.lstFields =  [...state.fieldOfStudy.lstFields, ...items];
             }
-            state.loading = false;
-            state.fieldRowCount = rowCount;
+            state.fieldOfStudy.loading = false;
+            state.fieldOfStudy.fieldRowCount = rowCount;
         })
         .addCase(fieldOfStudyListQuery.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload as string;
+            state.fieldOfStudy.loading = false;
+            state.fieldOfStudy.error = action.payload as string;
         })
 
         .addCase(addEditEducation.pending, (state) => {

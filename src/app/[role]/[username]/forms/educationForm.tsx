@@ -12,7 +12,10 @@ import { Option } from "@/components/ui/form/types";
 const EducationForm = ({id, onClose} : EducationProps) => {
 
     const dispatch = useAppDispatch();
-    const { loading, error, lstEducations, lstInstitutions, lstDegrees, lstFields } = useAppSelector((state) => state.education);
+    const { loading, error, lstEducations } = useAppSelector((state) => state.education);
+    const { loading: institutionLoading, error: institutionError, lstInstitutions } = useAppSelector((state) => state.education.institution);
+    const { loading: degreeLoading, error: degreeError, lstDegrees } = useAppSelector((state) => state.education.degree);
+    const { loading: fieldLoading, error: fieldError, lstFields } = useAppSelector((state) => state.education.fieldOfStudy);
     const educationToHandle: any = lstEducations.find(ed => ed.id === id);
 
     const indicator = id ? {when: 'Update', while: 'Updating...'} : {when: 'Create', while: 'creating...'};
@@ -46,13 +49,13 @@ const EducationForm = ({id, onClose} : EducationProps) => {
     }, [educationToHandle, lstInstitutions, lstDegrees, lstFields]);
 
     const items = useMemo(() => [
-        {as: 'Dropdown', name: 'LKP_InstitutionID', options: institutionOptions, label: 'Institution', fetchAction: institutionListQuery, isLoading: loading},
-        {as: 'Dropdown', name: 'LKP_DegreeID', options: degreeOptions, label: 'Degree', fetchAction: degreeListQuery, isLoading: loading},
-        {as: 'Dropdown', name: 'LKP_FieldOfStudyID', options: fieldOfStudyOptions, label: 'Field of study', fetchAction: fieldOfStudyListQuery, isLoading: loading},
+        {as: 'Dropdown', name: 'LKP_InstitutionID', options: institutionOptions, label: 'Institution', fetchAction: institutionListQuery, isLoading: institutionLoading},
+        {as: 'Dropdown', name: 'LKP_DegreeID', options: degreeOptions, label: 'Degree', fetchAction: degreeListQuery, isLoading: degreeLoading},
+        {as: 'Dropdown', name: 'LKP_FieldOfStudyID', options: fieldOfStudyOptions, label: 'Field of study', fetchAction: fieldOfStudyListQuery, isLoading: fieldLoading},
         {as: 'Input', name: 'startDate', label: 'Start date', type: 'Date'},
         {as: 'Input', name: 'endDate', label: 'End date', type: 'Date'},
         {as: 'Checkbox', name: 'isStudying', label: 'Still studying?'}
-    ], [institutionOptions, degreeOptions, fieldOfStudyOptions, loading]);
+    ], [institutionOptions, degreeOptions, fieldOfStudyOptions, institutionLoading, degreeLoading, fieldLoading]);
     
     const resetItems = useMemo(
         () => mapEducationToForm(educationToHandle),
