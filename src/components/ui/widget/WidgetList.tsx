@@ -73,10 +73,10 @@ export const WidgetList = ({
                             {Array.isArray(leftVal)
                                 ?   leftVal.length > 0
                                         ?   leftVal.map((val, idx) => (
-                                                <code key={idx}>
+                                                <React.Fragment key={idx}>
                                                     {val}
                                                     {idx !== leftVal.length - 1 && ' | '}
-                                                </code>
+                                                </React.Fragment>
                                             ))
                                         :   'Empty'  
                                 :   typeof leftVal === 'boolean'
