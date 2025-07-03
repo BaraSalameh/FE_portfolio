@@ -112,6 +112,11 @@ export const FormDropdown = ({
                 value={value}
                 onInputChange={debouncedSearch}
                 onChange={onChange}
+
+                blurInputOnSelect={false}
+                menuPlacement='auto'
+                menuPosition='fixed'
+                
                 styles={customStyles}
                 isSearchable={isSearchable}
                 isClearable={isClearable}

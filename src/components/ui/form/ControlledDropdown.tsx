@@ -2,7 +2,7 @@ import { getSelectedOption } from "@/lib/utils/appFunctions";
 import { Controller, FieldValues } from "react-hook-form";
 import { FormDropdown } from "./FormDropdown";
 import { ControlledDropdownProps, Option } from "./types";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 export const ControlledDropdown = <T extends FieldValues>({
     name,
@@ -22,12 +22,12 @@ export const ControlledDropdown = <T extends FieldValues>({
             control={control}
             render={({ field, fieldState }) => {
                 const selectedValue = getSelectedOption(options, field.value);
-                const finalResult = useMemo(() => values ?? selectedValue, [values]);
+
                 return (
                     <FormDropdown
                         label={label}
                         options={options}
-                        value={finalResult}
+                        value={values ?? selectedValue}
                         onChange={(option) => {
                             if (isMulti) {
                                 setValues(option as Option[]);
