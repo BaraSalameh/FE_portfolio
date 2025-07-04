@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ProjectTechnologyProps } from "../types";
 import { ProjectTechnologyFormData, projectTechnologySchema } from "@/lib/schemas";
 import { projectTechnologyListQuery, technologyListQuery, addEditDeleteProjectTechnology } from "@/lib/apis/owner/projectTechnology";
-import { mapProjectTechnologyToForm, mergeOptions } from "@/lib/utils/appFunctions";
+import { mapProjectTechnologyToForm, mergeOptions, OptionsCreator } from "@/lib/utils/appFunctions";
 import { ControlledForm } from "@/components/ui/form";
 import { Option } from "@/components/ui/form/types";
 
@@ -22,11 +22,12 @@ const ProjectTechnologyForm = ({id, onClose} : ProjectTechnologyProps) => {
     const [ technologyOptions, setTechnologyOptions ] = useState<Option[]>([]);
 
     const educationOptions = useMemo(() =>
-        lstEducations.map((i: any) => ({ label: `${i.institution.name} (${i.degree.abbreviation})`, value: i.id }))
+        // Didn't use OptionCreator because the label is a combination of paths
+        lstEducations.map((i: any) => ({ label: `${i.institution.name} (${i.degree.abbreviation})`, value: i.id, icon: i.icon }))
     , [lstEducations]);
 
     const experienceOptions = useMemo(() =>
-        lstExperiences.map(i => ({ label: i.companyName, value: i.id }))
+        OptionsCreator({list: lstExperiences, labelKey: 'companyName'})
     , [lstEducations]);
 
     const onSubmit = async (data: ProjectTechnologyFormData) => {
@@ -56,10 +57,10 @@ const ProjectTechnologyForm = ({id, onClose} : ProjectTechnologyProps) => {
 
     useEffect(() => {
         const { lstTechnologies: ltfe } = projectTechnologyToHandle ?? {};
-        const technologiesFromEdit = ltfe ? ltfe.map((t: any) => ({ label: t.name, value: t.id })) : [];
-        const technologiesStore = lstTechnologies?.map((i: any) => ({ label: i.name, value: i.id }));
+        const technologiesFromEdit = ltfe ? OptionsCreator({list: ltfe, iconKey: 'iconUrl'}) : [];
+        const technologiesStore = OptionsCreator({list: lstTechnologies, iconKey: 'iconUrl'});
         setTechnologyOptions(mergeOptions(technologiesFromEdit, technologiesStore));
-        
+
     }, [projectTechnologyToHandle, lstTechnologies]);
 
     return (

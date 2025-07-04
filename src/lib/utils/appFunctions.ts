@@ -196,7 +196,6 @@ export const getClientLink = (): Record<string, string> | null => {
         fullPath: `${origin}${modifiedPath}`,
         shortPath: modifiedPath
     }
-    // return `${origin}${modifiedPath}`;
 };
 
 type Option = {
@@ -212,3 +211,14 @@ export const mergeOptions = (fromEdit?: Option[], fromStore?: Option[]): Option[
         return true;
     });
 };
+
+export const OptionsCreator = ({list, labelKey = 'name', valueKey = 'id', iconKey}: {list: any; labelKey?: string | string[]; valueKey?: string; iconKey?: string}): Option[] => {
+    const current = Array.isArray(list) ? list : [list];
+    return list
+    ?   current?.map((i: any) => ({
+            label: extractPathValue(i, labelKey),
+            value: extractPathValue(i, valueKey),
+            icon: iconKey ? extractPathValue(i, iconKey) : undefined
+        }))
+    :   [];
+}

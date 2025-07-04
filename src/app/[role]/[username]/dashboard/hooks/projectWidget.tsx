@@ -27,7 +27,7 @@ export const useProjectWidget = (): WidgetCardProps => {
             { leftKey: 'title', size: 'lg' },
             { leftKey: 'liveLink', icon: Link, isLink: true },
             { leftKey: 'sourceCode', icon: SearchCodeIcon , isLink: true},
-            { leftKey: 'lstTechnologies.name', icon: WandSparklesIcon },
+            { leftKey: 'lstTechnologies.name', icon: WandSparklesIcon, itemIcon: 'lstTechnologies.iconUrl' },
             { leftKey: 'description', size: 'sm' }
         ],
         onSort: debouncedSortProject

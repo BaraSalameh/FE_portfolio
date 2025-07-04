@@ -6,7 +6,7 @@ import { UserLanguageProps } from "../types";
 import { ControlledForm } from "@/components/ui/form";
 import { UserLanguageFormData, userLanguageSchema } from "@/lib/schemas";
 import { userLanguageListQuery, languageListQuery, languageProficiencyListQuery, editDeleteUserLanguage } from "@/lib/apis";
-import { mapUserLanguageToForm, mergeOptions } from "@/lib/utils/appFunctions";
+import { mapUserLanguageToForm, mergeOptions, OptionsCreator } from "@/lib/utils/appFunctions";
 import { Option } from "@/components/ui/form/types";
 
 const UserLanguageForm = ({id, onClose} : UserLanguageProps) => {
@@ -17,7 +17,7 @@ const UserLanguageForm = ({id, onClose} : UserLanguageProps) => {
     const { loading: languageProficiencyLoading, lstLanguageProficiencies } = languageProficiency;
 
     const languageProficiencyOptions = useMemo(() =>
-        lstLanguageProficiencies.map(i => ({ label: i.level, value: i.id }))
+        OptionsCreator({list: lstLanguageProficiencies, labelKey: 'level'})
     , [lstLanguageProficiencies]);
 
     const onSubmit = async (data: UserLanguageFormData) => {
@@ -36,8 +36,8 @@ const UserLanguageForm = ({id, onClose} : UserLanguageProps) => {
     const [ languageOptions, setLanguageOptions ] = useState<Option[]>([]);
     
     useEffect(() => {
-        const languagesFromEdit = lstUserLanguages ? lstUserLanguages.map((ul: any) => ({ label: ul.language.name, value: ul.language.id })) : [];
-        const languagesStore = lstLanguages?.map((i: any) => ({ label: i.name, value: i.id }));
+        const languagesFromEdit = OptionsCreator({list: lstUserLanguages, labelKey: 'language.name', valueKey: 'language.id'});
+        const languagesStore = OptionsCreator({list: lstLanguages});
         setLanguageOptions(mergeOptions(languagesFromEdit, languagesStore));
         
     }, [lstUserLanguages, lstLanguages]);

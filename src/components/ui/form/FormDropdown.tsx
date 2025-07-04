@@ -6,6 +6,7 @@ import { Paragraph } from '../Paragraph';
 import { useAppDispatch } from '@/lib/store/hooks';
 import { useCallback } from 'react';
 import debounce from 'lodash.debounce';
+import { CustomMultiValue, CustomOption, CustomSingleValue } from './CustomOption';
 
 export const FormDropdown = ({
     label,
@@ -38,7 +39,7 @@ export const FormDropdown = ({
             return {
                 ...rest,
                 backgroundColor: state.isSelected
-                ? '#166534' // green-800
+                ? '#22c55e' // green-500
                 : ''
             }
         },
@@ -109,6 +110,7 @@ export const FormDropdown = ({
             )}
             <Select
                 options={options}
+                components={{ Option: CustomOption, MultiValue: CustomMultiValue, SingleValue: CustomSingleValue }}
                 value={value}
                 onInputChange={debouncedSearch}
                 onChange={onChange}

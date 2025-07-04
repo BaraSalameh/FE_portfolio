@@ -73,6 +73,7 @@ export interface ListItemConfig {
     size?: 'lg' | 'md' | 'sm' | null;
     isTime?: boolean;
     isLink?: boolean;
+    itemIcon?: string;
 }
 
 

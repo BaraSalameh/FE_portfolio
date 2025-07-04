@@ -53,8 +53,9 @@ export const WidgetList = ({
                 onClick={() => onItemClick?.(item)}
             >
                 {list.map((cfg, index) => {
-                    const leftRaw = cfg.leftKey ? extractPathValue(item, cfg.leftKey as string) : undefined;
-                    const rightRaw = cfg.rightKey ? extractPathValue(item, cfg.rightKey as string) : undefined;
+                    const leftRaw = cfg.leftKey ? extractPathValue(item, cfg.leftKey) : undefined;
+                    const rightRaw = cfg.rightKey ? extractPathValue(item, cfg.rightKey) : undefined;
+                    const iconUrl = cfg.itemIcon ? extractPathValue(item, cfg.itemIcon) : undefined;
 
                     const leftVal = cfg.isTime
                         ? dayjs(leftRaw).format('MMM YYYY')
@@ -74,6 +75,7 @@ export const WidgetList = ({
                                 ?   leftVal.length > 0
                                         ?   leftVal.map((val, idx) => (
                                                 <React.Fragment key={idx}>
+                                                    {iconUrl && <img src={iconUrl[idx]} className="h-4 w-4 rounded-full" />}
                                                     {val}
                                                     {idx !== leftVal.length - 1 && ' | '}
                                                 </React.Fragment>

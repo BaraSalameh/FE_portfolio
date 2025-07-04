@@ -4,7 +4,7 @@ import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { EducationFormData, educationSchema } from "@/lib/schemas";
 import { useEffect, useMemo, useState } from "react";
 import { institutionListQuery, degreeListQuery, fieldOfStudyListQuery, addEditEducation, educationListQuery } from "@/lib/apis";
-import { mapEducationToForm, mergeOptions } from "@/lib/utils/appFunctions";
+import { mapEducationToForm, mergeOptions, OptionsCreator } from "@/lib/utils/appFunctions";
 import { EducationProps } from "../types";
 import { ControlledForm } from "@/components/ui/form";
 import { Option } from "@/components/ui/form/types";
@@ -35,13 +35,13 @@ const EducationForm = ({id, onClose} : EducationProps) => {
 
     useEffect(() => {
         const { institution, degree, fieldOfStudy } = educationToHandle ?? {};
-        const institutionFromEdit = institution ? [{ label: institution.name, value: institution.id }] : [];
-        const degreeFromEdit = degree ? [{ label: degree.name, value: degree.id }] : [];
-        const fieldOfStudyFromEdit = fieldOfStudy ? [{ label: fieldOfStudy.name, value: fieldOfStudy.id }] : [];
+        const institutionFromEdit = OptionsCreator({list: institution });
+        const degreeFromEdit = OptionsCreator({list: degree});
+        const fieldOfStudyFromEdit = OptionsCreator({list: fieldOfStudy});
 
-        const institutionFromStore = lstInstitutions.map(i => ({ label: i.name, value: i.id }));
-        const degreeFromStore = lstDegrees.map(d => ({ label: d.name, value: d.id }));
-        const fieldOfStudyFromStore = lstFields.map(f => ({ label: f.name, value: f.id }));
+        const institutionFromStore = OptionsCreator({list: lstInstitutions});
+        const degreeFromStore = OptionsCreator({list: lstDegrees});
+        const fieldOfStudyFromStore = OptionsCreator({list: lstFields});
 
         setInstitutionOptions(mergeOptions(institutionFromEdit, institutionFromStore));
         setDegreeOptions(mergeOptions(degreeFromEdit, degreeFromStore));

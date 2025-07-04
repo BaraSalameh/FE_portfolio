@@ -11,7 +11,7 @@ const ExperienceForm = ({id, onClose} : ExperienceProps) => {
 
     const dispatch = useAppDispatch();
     const { loading, error, lstExperiences } = useAppSelector((state) => state.experience);
-    const experienceToHandle = useMemo(() => lstExperiences.find(ex => ex.id === id), [lstExperiences])
+    const experienceToHandle = useMemo(() => lstExperiences.find((ex: any) => ex.id === id), [lstExperiences])
     const indicator = id ? {when: 'Update', while: 'Updating...'} : {when: 'Create', while: 'creating...'};
 
     const onSubmit = async (data: ExperienceFormData) => {
