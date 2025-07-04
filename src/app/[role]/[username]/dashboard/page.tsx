@@ -20,7 +20,7 @@ export default function OwnerDashboardPage() {
         isLoading: role === 'owner' ? ownerInfoLoading : clientInfoLoading,
     }), [role, owner, client, ownerInfoLoading, clientInfoLoading]);
 
-    useLoadUserData(role, username, currentUser.user);
+    useLoadUserData(role, username);
     const widgets = useWidgets();
 
     return (

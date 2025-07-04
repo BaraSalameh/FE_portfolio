@@ -4,21 +4,19 @@ import { markMessage, removeMessage } from "@/lib/store/slices/contactMessageSli
 import debounce from "lodash.debounce";
 import { useCallback, useEffect } from "react";
 
-export const useLoadUserData = (role: 'owner' | 'client' | 'admin', username: string, user: any) => {
+export const useLoadUserData = (role: 'owner' | 'client' | 'admin', username: string) => {
     const dispatch = useAppDispatch();
     
     useEffect(() => {
-        if(!user) {
-            switch (role) {
-                case 'owner':
-                    dispatch(userFullInfoQuery());
-                    break;
-                case 'client':
-                    dispatch(userByUsernameQuery(username));
-                    break;
-            }
+        switch (role) {
+            case 'owner':
+                dispatch(userFullInfoQuery());
+                break;
+            case 'client':
+                dispatch(userByUsernameQuery(username));
+                break;
         }
-    }, [user, dispatch]);
+    }, [dispatch]);
 };
 
 export const useHandleEducationDelete = () => {
@@ -78,7 +76,7 @@ export const useHandleSignMessage = () => {
     const { lstMessages } = useAppSelector(state => state.contactMessage);
 
     return async (id: string) => {
-        const currentMessage = lstMessages.find(msg => msg?.id === id);
+        const currentMessage = lstMessages.find((msg: any) => msg?.id === id);
         if(!currentMessage?.isRead)
             try {
                 await dispatch(signMessage(id));
