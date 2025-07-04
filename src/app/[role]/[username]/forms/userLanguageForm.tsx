@@ -12,7 +12,9 @@ import { Option } from "@/components/ui/form/types";
 const UserLanguageForm = ({id, onClose} : UserLanguageProps) => {
 
     const dispatch = useAppDispatch();
-    const { loading, error, lstUserLanguages, lstLanguages, lstLanguageProficiencies } = useAppSelector((state) => state.userLanguage);
+    const { loading, error, lstUserLanguages, language, languageProficiency } = useAppSelector((state) => state.userLanguage);
+    const { loading: languageLoading, lstLanguages } = language;
+    const { loading: languageProficiencyLoading, lstLanguageProficiencies } = languageProficiency;
 
     const languageProficiencyOptions = useMemo(() =>
         lstLanguageProficiencies.map(i => ({ label: i.level, value: i.id }))
@@ -41,9 +43,9 @@ const UserLanguageForm = ({id, onClose} : UserLanguageProps) => {
     }, [lstUserLanguages, lstLanguages]);
 
     const fieldConfigs = useMemo(() => [
-        {label: 'Language', name: 'lkP_LanguageID', options: languageOptions, fetchAction: languageListQuery, isLoading: loading},
+        {label: 'Language', name: 'lkP_LanguageID', options: languageOptions, fetchAction: languageListQuery, isLoading: languageLoading},
         {label: 'Proficiency', name: 'lkP_LanguageProficiencyID', options: languageProficiencyOptions}
-    ], [languageOptions, languageProficiencyOptions, loading]);
+    ], [languageOptions, languageProficiencyOptions, languageLoading, languageProficiencyLoading]);
 
     const resetItems = useMemo(
         () => mapUserLanguageToForm(lstUserLanguages),

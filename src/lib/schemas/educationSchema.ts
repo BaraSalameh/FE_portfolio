@@ -85,4 +85,34 @@ export const educationSchema = z.object({
     }
 });
 
+export const institutionSchema = z.object({
+    id: z.string(),
+    name: z
+        .string()
+        .min(3, 'Name is too short'),
+    logo: z
+        .string()
+        .max(1000, 'logo is too long'),
+});
+
+export const degreeSchema = z.object({
+    id: z.string(),
+    name: z
+        .string()
+        .min(3, 'Name is too short'),
+    abbreviation: z
+        .string()
+        .max(3, 'Abbreviation is too long'),
+});
+
+export const fieldOfStudySchema = z.object({
+    id: z.string(),
+    name: z
+        .string()
+        .min(3, 'Name is too short'),
+});
+
 export type EducationFormData = z.infer<typeof educationSchema>;
+export type InstitutionFormData = z.infer<typeof institutionSchema>;
+export type DegreeFormData = z.infer<typeof degreeSchema>;
+export type FieldOfStudyFormData = z.infer<typeof fieldOfStudySchema>;

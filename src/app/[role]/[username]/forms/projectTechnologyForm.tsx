@@ -12,7 +12,8 @@ import { Option } from "@/components/ui/form/types";
 const ProjectTechnologyForm = ({id, onClose} : ProjectTechnologyProps) => {
 
     const dispatch = useAppDispatch();
-    const { loading, error, lstProjectTechnologies, lstTechnologies } = useAppSelector((state) => state.projectTechnology);
+    const { loading, error, lstProjectTechnologies, technology } = useAppSelector((state) => state.projectTechnology);
+    const { loading: technologyLoading, lstTechnologies } = technology;
     const { lstEducations } = useAppSelector(state => state.education);
     const { lstExperiences } = useAppSelector(state => state.experience);
     const projectTechnologyToHandle = lstProjectTechnologies.find(pt => pt.id === id);
@@ -38,7 +39,7 @@ const ProjectTechnologyForm = ({id, onClose} : ProjectTechnologyProps) => {
     };
 
     const items = useMemo(() => [
-        {as: 'DropdownMulti', name: 'lstTechnologies', options: technologyOptions, label: 'Technologies', fetchAction: technologyListQuery, isLoading: loading},
+        {as: 'DropdownMulti', name: 'lstTechnologies', options: technologyOptions, label: 'Technologies', fetchAction: technologyListQuery, isLoading: technologyLoading},
         {as: 'Dropdown', name: 'EducationID', options: educationOptions, label: 'Corresponding education'},
         {as: 'Dropdown', name: 'ExperienceID', options: experienceOptions, label: 'Corresponding experience'},
         {as: 'Input', name: 'title', label: 'Title', placeholder: 'MyProject'},
@@ -47,7 +48,7 @@ const ProjectTechnologyForm = ({id, onClose} : ProjectTechnologyProps) => {
         {as: 'Input', name: 'imageUrl', label: 'Image URL', placeholder: 'https://Image'},
         {as: 'Checkbox', name: 'isFeatured', label: 'Is featured?'},
         {as: 'Input', name: 'description', label: 'Description', placeholder: 'Description', type: 'Textarea'}
-    ], [technologyOptions, educationOptions, experienceOptions, loading]);
+    ], [technologyOptions, educationOptions, experienceOptions, technologyLoading]);
     
     const resetItems = useMemo(
         () => mapProjectTechnologyToForm(projectTechnologyToHandle),

@@ -1,21 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ProjectTechnologyFormData, TechnologyFormData } from '@/lib/schemas';
 import { deleteProject, addEditDeleteProjectTechnology, technologyListQuery, projectTechnologyListQuery } from '@/lib/apis/owner/projectTechnology';
 import { userFullInfoQuery } from '@/lib/apis/owner/user';
 import { userByUsernameQuery } from '@/lib/apis/client';
+import { ProjectTechnologyState } from './types';
 
-interface ProjectTechnologyState {
-    lstProjectTechnologies: ProjectTechnologyFormData[],
-    lstTechnologies: TechnologyFormData[];
-    technologiesRowCount: number;
-    loading: boolean;
-    error: string | null;
-}
+
 
 const initialState : ProjectTechnologyState = {
     lstProjectTechnologies: [],
-    lstTechnologies: [],
-    technologiesRowCount: 0,
+    technology: {
+        lstTechnologies: [],
+        technologiesRowCount: 0,
+        loading: false,
+        error: null as string | null
+    },
     loading: false,
     error: null as string | null
 }
@@ -48,23 +46,23 @@ const projectTechnologySlice = createSlice({
         })
         
         .addCase(technologyListQuery.pending, (state) => {
-            state.loading = true;
-            state.error = null;
+            state.technology.loading = true;
+            state.technology.error = null;
         })
         .addCase(technologyListQuery.fulfilled, (state, action) => {
             const { items, rowCount, page } = action.payload;
 
             if (page === 0) {
-                state.lstTechnologies = items;
+                state.technology.lstTechnologies = items;
             } else {
-                state.lstTechnologies =  [...state.lstTechnologies, ...items];
+                state.technology.lstTechnologies =  [...state.technology.lstTechnologies, ...items];
             }
-            state.loading = false;
-            state.technologiesRowCount = rowCount;
+            state.technology.loading = false;
+            state.technology.technologiesRowCount = rowCount;
         })
         .addCase(technologyListQuery.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload as string;
+            state.technology.loading = false;
+            state.technology.error = action.payload as string;
         })
         
         .addCase(addEditDeleteProjectTechnology.pending, (state) => {

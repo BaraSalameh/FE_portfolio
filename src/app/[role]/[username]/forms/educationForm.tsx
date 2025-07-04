@@ -12,10 +12,10 @@ import { Option } from "@/components/ui/form/types";
 const EducationForm = ({id, onClose} : EducationProps) => {
 
     const dispatch = useAppDispatch();
-    const { loading, error, lstEducations } = useAppSelector((state) => state.education);
-    const { loading: institutionLoading, error: institutionError, lstInstitutions } = useAppSelector((state) => state.education.institution);
-    const { loading: degreeLoading, error: degreeError, lstDegrees } = useAppSelector((state) => state.education.degree);
-    const { loading: fieldLoading, error: fieldError, lstFields } = useAppSelector((state) => state.education.fieldOfStudy);
+    const { loading, error, lstEducations, institution, degree, fieldOfStudy } = useAppSelector((state) => state.education);
+    const { loading: institutionLoading, lstInstitutions } = institution;
+    const { loading: degreeLoading, lstDegrees } = degree;
+    const { loading: fieldLoading, lstFields } = fieldOfStudy;
     const educationToHandle: any = lstEducations.find(ed => ed.id === id);
 
     const indicator = id ? {when: 'Update', while: 'Updating...'} : {when: 'Create', while: 'creating...'};

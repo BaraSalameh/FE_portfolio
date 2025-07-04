@@ -1,14 +1,8 @@
 import { userByUsernameQuery } from '@/lib/apis/client';
 import { addEditExperience, deleteExperience, experienceListQuery } from '@/lib/apis/owner/experience';
 import { userFullInfoQuery } from '@/lib/apis/owner/user';
-import { ExperienceFormData } from '@/lib/schemas';
 import { createSlice } from '@reduxjs/toolkit';
-
-interface ExperienceState {
-    lstExperiences: ExperienceFormData[];
-    loading: boolean;
-    error: string | null;
-}
+import { ExperienceState } from './types';
 
 const initialState : ExperienceState = {
     lstExperiences: [],

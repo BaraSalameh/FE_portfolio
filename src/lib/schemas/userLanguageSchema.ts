@@ -17,4 +17,20 @@ export const userLanguageSchema = z.object({
   ),
 });
 
+export const languageSchema = z.object({
+    id: z.string(),
+    name: z
+        .string()
+        .min(3, 'Name is too short'),
+});
+
+export const languageProficiencySchema = z.object({
+    id: z.string(),
+    level: z
+        .string()
+        .min(3, 'Name is too short'),
+});
+
 export type UserLanguageFormData = z.infer<typeof userLanguageSchema>;
+export type LanguageFormData = z.infer<typeof languageSchema>;
+export type LanguageProficiencyFormData = z.infer<typeof languageProficiencySchema>;
