@@ -3,7 +3,7 @@ import { Button, Anchor } from "@/components/ui/form";
 import { ResponsiveIcon, SearchBar } from "@/components/ui";
 import Image from "next/image";
 import { useState } from 'react';
-import { abstractParagraph, listParagraphOne, listParagrapTwo } from "@/lib/constants";
+import { main } from "@/lib/constants";
 import { Paragraph, List } from "@/components/ui";
 import { Container } from "@/components/shared/Container";
 import { Header } from "@/components/shared/Header";
@@ -52,15 +52,10 @@ export default function Home() {
                 </Header>
                 <Main paddingY='lg' className='sm:items-start items-center'>
                     <Paragraph size="md" text='justify'>
-                        {abstractParagraph}
+                        {main.introduction}
                     </Paragraph>
                     <List size="sm">
-                        <li>
-                            {listParagraphOne}
-                        </li>
-                        <li>
-                            {listParagrapTwo}
-                        </li>
+                        {main.list.map((p, idx) => <li key={idx}>{p}</li>)}
                     </List>
                     <div className="flex gap-4 items-center flex-col sm:flex-row">
                         <Button size="lg" rounded="full" onClick={handleFocus}>
@@ -76,7 +71,7 @@ export default function Home() {
                     </div>
                 </Main>
                 <SubFooter>
-                    <Anchor size="xs" url="#">
+                    <Anchor size="xs" url="/more-details">
                         <Image src="/file.svg" alt="File icon" width={16} height={16} />
                         More details
                     </Anchor>
