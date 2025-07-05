@@ -15,6 +15,7 @@ export const list = cva(
                     '',
             },
             size: {
+                xs: 'text-xs',
                 sm: 'text-sm/6',
                 md: 'text-md/6',
                 lg: 'text-lg/6'

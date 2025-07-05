@@ -16,7 +16,7 @@ export const paragraph = cva(
             },
             size: {
                 xs: 'text-xs',
-                sm: 'text-xs sm:text-xs md: text-sm',
+                sm: 'text-xs sm:text-xs md:text-sm',
                 md: 'text-xs sm:text-md md:text-md',
                 lg: 'text-sm sm:text-md md:text-lg',
                 xl: 'text-md sm:text-lg md:text-xl'
