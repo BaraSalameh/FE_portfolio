@@ -3,14 +3,14 @@ import { Button, Anchor } from "@/components/ui/form";
 import { ResponsiveIcon, SearchBar } from "@/components/ui";
 import Image from "next/image";
 import { useState } from 'react';
-import { main } from "@/lib/constants";
+import { home } from "@/lib/constants";
 import { Paragraph, List } from "@/components/ui";
 import { Container } from "@/components/shared/Container";
 import { Header } from "@/components/shared/Header";
 import { Main } from "@/components/shared/Main";
 import { SubFooter } from "@/components/shared/SubFooter";
 import { BlurBackground } from "@/components/ui";
-import { Search } from "lucide-react";
+import { Contact, File, MoreHorizontal, Search } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 export default function Home() {
@@ -46,17 +46,24 @@ export default function Home() {
                         height={40}
                         priority
                     />
-                    <div className="absolute right-7 sm:right-10 lg:right-15 bottom-[-2rem] flex gap-5 items-center">
+                    <div className="absolute right-7 sm:right-10 lg:right-15 bottom-0">
                         <ThemeToggle />
                     </div>
                 </Header>
-                <Main paddingY='lg' className='sm:items-start items-center'>
-                    <Paragraph size="md" text='justify'>
-                        {main.introduction}
+                <Main  className='sm:items-start items-center'>
+                    <Paragraph size="xl" position='center' className="w-full">
+                        {home.introduction}
                     </Paragraph>
-                    <List size="sm">
-                        {main.list.map((p, idx) => <li key={idx}>{p}</li>)}
+                    <Paragraph size='lg'>
+                        {home.subtext}
+                    </Paragraph>
+                    <List>
+                        How it works:
+                        {home.list.map((p, idx) => <li key={idx}>{p}</li>)}
                     </List>
+                    <Paragraph>
+                        {home.abstract}
+                    </Paragraph>
                     <div className="flex gap-4 items-center flex-col sm:flex-row">
                         <Button size="lg" rounded="full" onClick={handleFocus}>
                             <ResponsiveIcon icon={Search} />
@@ -72,17 +79,17 @@ export default function Home() {
                 </Main>
                 <SubFooter>
                     <Anchor size="xs" url="/more-details">
-                        <Image src="/file.svg" alt="File icon" width={16} height={16} />
+                        <ResponsiveIcon icon={MoreHorizontal} />
                         More details
                     </Anchor>
-                    <Anchor size="xs" url="#">
-                        <Image src="/window.svg" alt="Window icon" width={16} height={16} />
+                    {/* <Anchor size="xs" url="#">
+                        <ResponsiveIcon icon={File} />
                         Examples
                     </Anchor>
                     <Anchor size="xs" url="#">
-                        <Image src="/globe.svg" alt="Globe icon" width={16} height={16} />
+                        <ResponsiveIcon icon={Contact} />
                         Contact us →
-                    </Anchor>
+                    </Anchor> */}
                 </SubFooter>
             </Container>
         </>

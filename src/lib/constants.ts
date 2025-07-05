@@ -1,9 +1,12 @@
-export const main = {
-    introduction: "The Portfolio App is a modern, responsive web application designed to showcase personal or professional achievements, skills, and projects in a sleek, user-friendly interface. Built with Next.js and styled using Tailwind CSS, the app delivers fast performance, seamless navigation, and a clean design aesthetic. It supports dynamic routing, API integration, and a modular component structure, allowing easy customization and scalability. Whether you're a developer, designer, or digital creator, the Portfolio App provides a polished and professional platform to present your work and make a strong impression online.",
+export const home = {
+    introduction: "Create Your Professional Portfolio in Minutes",
+    subtext: "A modern, customizable platform for whoever want to showcase their work with style.",
     list: [
-        "Looking for a specific user? Start searching!",
-        "Do you want to build your own portfolio? Go ahead and REGISTER."
-    ]
+        "Register",
+        "Add ypur info and projects.",
+        "Publish and share your link"
+    ],
+    abstract: "Looking for a specific user? Go ahead start searching!"
 }
 
 export const more_details = {

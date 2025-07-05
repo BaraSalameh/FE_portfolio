@@ -40,7 +40,7 @@ export const Profile = ({
             {/* Right side actions */}
             <div className="absolute right-7 sm:right-10 lg:right-15 bottom-[-2rem] sm:bottom-[-2.5rem] lg:bottom-[-3.5rem] flex gap-2.5 sm:gap-5 items-center">
                 <ResponsiveIcon icon={Home} onClick={() => router.push('/')} className='cursor-pointer' />
-                {role === 'owner' && <ResponsiveIcon icon={Settings} className='cursor-pointer' />}
+                {/* {role === 'owner' && <ResponsiveIcon icon={Settings} className='cursor-pointer' />} */}
                 
                 <ThemeToggle />
                 {role === 'owner' &&
