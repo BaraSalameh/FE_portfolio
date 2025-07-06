@@ -19,5 +19,6 @@ export const more_details = {
         "Form validation using libraries like React Hook Form and Zod",
         "Email integration for contact or newsletter sign-up using services like Mailjet"
     ],
-    abstract: "Whether you're a doctor, developer, UI/UX designer, writer, or digital creator, the Portfolio App offers a robust and extensible platform to showcase your talent, connect with potential clients or employers, and make a lasting impression online."
+    abstract: "Whether you're a doctor, developer, UI/UX designer, writer, or digital creator, the Portfolio App offers a robust and extensible platform to showcase your talent, connect with potential clients or employers, and make a lasting impression online.",
+    slider: ['/home/1.png', '/home/2.png', '/home/3.jpg', '/home/4.png', '/home/5.png']
 }

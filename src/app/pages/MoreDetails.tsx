@@ -1,35 +1,29 @@
 'use client'
-import { Anchor, Container, Header, List, Main, Paragraph, ResponsiveIcon, SubFooter } from "@/components";
+import { Anchor, Container, Header, ImageSlider, List, Main, Paragraph, ResponsiveIcon, SubFooter } from "@/components";
 import { more_details } from "@/lib/constants";
 import { Home, LogIn, FileEditIcon } from "lucide-react";
-import Image from "next/image";
 
 const MoreDetails = () => {
     return (
         <Container>
-            <Header className="relative">
-                <Image
-                    src='/portfolio-logo.svg'
-                    alt="portfolio logo"
-                    width={300}
-                    height={40}
-                    priority
-                />
-            </Header>
+            <div id="more-details" />
             <Main className='items-center sm:items-start'>
-                <Paragraph text='justify'>
+                <Paragraph size='lg' text='justify'>
                     {more_details.introduction}
                 </Paragraph>
-                <List size="sm" as='ul'>
-                    {more_details.list_label}
-                    {more_details.list.map((p, idx) => <li key={idx}>{p}</li>)}
-                </List>
-                <Paragraph text='justify'>
+                <div className="md:flex w-full gap-5 space-y-5">
+                    <List as='ul'>
+                        {more_details.list_label}
+                        {more_details.list.map((p, idx) => <li key={idx}>{p}</li>)}
+                    </List>
+                    <ImageSlider imageList={more_details.slider} />
+                </div>
+                <Paragraph size='lg' text='justify'>
                     {more_details.abstract}
                 </Paragraph>
             </Main>
             <SubFooter>
-                <Anchor size="xs" url="/">
+                <Anchor size="xs" url="#">
                     <ResponsiveIcon icon={Home} />
                     Go Home
                 </Anchor>

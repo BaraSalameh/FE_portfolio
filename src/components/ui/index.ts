@@ -5,6 +5,7 @@ export { Paragraph } from './Paragraph';
 export { ResponsiveIcon } from './ResponsiveIcon';
 export { SearchBar } from './SearchBar';
 export { StaticBackground } from './StaticBackground';
+export { ImageSlider } from './ImageSlider';
 export * from './widget';
 export * from './profile';
 export * from './form';

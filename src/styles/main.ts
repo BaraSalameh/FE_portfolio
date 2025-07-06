@@ -4,36 +4,36 @@ export const main = cva(
     'row-start-2 flex',
     {
         variants: {
-        direction: {
-            row: 'flex-row',
-            col: 'flex-col',
-            wrap: 'flex-wrap'
-        },
-        itemsX: {
-            center: '',
-            start: '',
-        },
-        itemsY: {
-            center: '',
-            start: '',
-        },
-        space: {
-            sm: 'gap-5',
-            md: 'gap-10',
-            lg: 'gap-15',
-        },
-        paddingX: {
-            none: 'px-0',
-            sm: 'px-5',
-            md: 'px-10',
-            lg: 'px-15',
-        },
-        paddingY: {
-            none: 'py-0',
-            sm: 'py-5',
-            md: 'py-10',
-            lg: 'py-15',
-        },
+            direction: {
+                row: 'flex-row',
+                col: 'flex-col',
+                wrap: 'flex-wrap'
+            },
+            itemsX: {
+                center: '',
+                start: '',
+            },
+            itemsY: {
+                center: '',
+                start: '',
+            },
+            space: {
+                sm: 'gap-5',
+                md: 'gap-10',
+                lg: 'gap-15',
+            },
+            paddingX: {
+                none: 'px-0',
+                sm: 'px-5',
+                md: 'px-10',
+                lg: 'px-15',
+            },
+            paddingY: {
+                none: 'py-0',
+                sm: 'py-5',
+                md: 'py-10',
+                lg: 'py-15',
+            },
         },
         compoundVariants: [
             // Row direction
