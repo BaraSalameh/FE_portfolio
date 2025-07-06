@@ -23,6 +23,8 @@ export const ImageSlider = ({imageList}: {imageList: string[]}) => {
                 ))}
             </div>
 
+            {imageList.length > 1 &&
+            <>
             {/* Navigation Buttons */}
             <button
                 className="absolute top-1/2 left-4 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black cursor-pointer"
@@ -47,6 +49,8 @@ export const ImageSlider = ({imageList}: {imageList: string[]}) => {
                     />
                 ))}
             </div>
+            </>
+            }
         </div>
     );
 }

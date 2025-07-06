@@ -1,6 +1,6 @@
 'use client'
 import { Button, Anchor } from "@/components/ui/form";
-import { ResponsiveIcon, SearchBar } from "@/components/ui";
+import { ImageSlider, ResponsiveIcon, SearchBar } from "@/components/ui";
 import Image from "next/image";
 import { useState } from 'react';
 import { home } from "@/lib/constants";
@@ -54,13 +54,14 @@ const Home = () => {
                     <Paragraph size="xl" position='center' className="w-full">
                         {home.introduction}
                     </Paragraph>
+                    <ImageSlider imageList={home.slider} />
                     <Paragraph size='lg'>
                         {home.subtext}
                     </Paragraph>
-                    <List>
-                        How it works:
-                        {home.list.map((p, idx) => <li key={idx}>{p}</li>)}
-                    </List>
+                        <List>
+                            How it works:
+                            {home.list.map((p, idx) => <li key={idx}>{p}</li>)}
+                        </List>
                     <Paragraph>
                         {home.abstract}
                     </Paragraph>
