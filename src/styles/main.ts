@@ -48,7 +48,7 @@ export const main = cva(
             { direction: 'col', itemsY: 'center', className: 'justify-center' },
             { direction: 'col', itemsY: 'start',  className: 'justify-start' },
         ],
-            defaultVariants: {
+        defaultVariants: {
             direction: 'col',
             itemsX: 'center',
             itemsY: 'center',

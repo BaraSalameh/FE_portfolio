@@ -51,10 +51,10 @@ const Home = () => {
                     </div>
                 </Header>
                 <Main itemsX='start'>
-                    <Paragraph size="xl" position='center' className="w-full">
+                    <ImageSlider imageList={home.slider} />
+                    <Paragraph size="xl" className="w-full">
                         {home.introduction}
                     </Paragraph>
-                    <ImageSlider imageList={home.slider} />
                     <Paragraph size='lg'>
                         {home.subtext}
                     </Paragraph>

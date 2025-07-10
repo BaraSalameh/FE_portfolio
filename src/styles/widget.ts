@@ -1,16 +1,55 @@
 import { cva, VariantProps } from 'class-variance-authority';
 
 export const widgetCard = cva(
-    'relative bg-light-component dark:bg-dark-component p-4 rounded-2xl',
+    'relative bg-light-component dark:bg-dark-component rounded-2xl',
     {
         variants: {
             scroll: {
-                true: 'max-h-[70vh] overflow-auto scrollbar-hide',
+                true: 'overflow-auto scrollbar-hide',
                 false: null
+            },
+            paddingX: {
+                xs: 'px-2',
+                sm: 'px-4',
+                md: 'px-6',
+                lg: 'px-8',
+                xl: 'px-10',
+                none: null
+            },
+            paddingY: {
+                xs: 'py-2',
+                sm: 'py-4',
+                md: 'py-6',
+                lg: 'py-8',
+                xl: 'py-10',
+                none: null
+            },
+            minHeight: {
+                xs: 'min-h-[10vh]',
+                sm: 'min-h-[25vh]',
+                md: 'min-h-[40vh]',
+                lg: 'min-h-[55vh]',
+                xl: 'min-h-[70vh]',
+                none: null
+            },
+            maxHeight: {
+                xs: 'max-h-[25vh]',
+                sm: 'max-h-[40vh]',
+                md: 'max-h-[55vh]',
+                lg: 'max-h-[70vh]',
+                xl: 'max-h-[85vh]',
+                none: null
             }
         },
+        compoundVariants: [
+            { scroll: true, className: 'max-h-[70vh]' },
+        ],
         defaultVariants: {
-            scroll: false
+            scroll: false,
+            paddingX: 'sm',
+            paddingY: 'sm',
+            minHeight: 'none',
+            maxHeight: 'none'
         }
     }
     
