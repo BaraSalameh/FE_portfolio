@@ -4,9 +4,10 @@ import { useAppSelector } from "@/lib/store/hooks";
 import React, { useMemo } from "react";
 import { ProfileFormData } from "@/lib/schemas";
 import { useParams } from "next/navigation";
-import { WithSkeleton, Main, StaticBackground, Profile } from "@/components";
+import { WithSkeleton, Main, StaticBackground, ControlledWidget, ProfileV2, ProfileV1 } from "@/components";
 import { useLoadUserData } from "./handlers";
-import { useWidgets } from "./hooks";
+import { useOverviewWidget, useWidgets } from "./hooks";
+import { StaticBackgroundV2 } from "@/components/ui/StaticBackground";
 
 export default function OwnerDashboardPage() {
 
@@ -22,11 +23,19 @@ export default function OwnerDashboardPage() {
 
     useLoadUserData(role, username);
     const widgets = useWidgets();
+    const overviewData = useOverviewWidget();
 
     return (
         <>
-        <Profile user={currentUser.user as ProfileFormData} unreadContactMessageCount={unreadContactMessageCount} />
-        <WithSkeleton isLoading={!currentUser.user || currentUser.isLoading} skeleton={<StaticBackground />}>
+        {/* <ProfileV1 user={currentUser.user as ProfileFormData} unreadContactMessageCount={unreadContactMessageCount} /> */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-10 pt-5">
+            <ProfileV2 user={currentUser.user as ProfileFormData} unreadContactMessageCount={unreadContactMessageCount} className="col-span-2" />
+            <ControlledWidget
+                {...overviewData}
+            />
+        </div>
+        {/* <WithSkeleton isLoading={!currentUser.user || currentUser.isLoading} skeleton={<StaticBackground />}> */}
+        <WithSkeleton isLoading={!currentUser.user || currentUser.isLoading} skeleton={<StaticBackgroundV2 />}>
             <Main>
                 <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-3 w-full">
                     {widgets}

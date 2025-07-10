@@ -1,9 +1,8 @@
-import { Header } from '@/components/shared/Header';
 import Image from 'next/image';
 import React from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import ProfileForm from '@/app/[role]/[username]/forms/profileForm';
-import { Bell, Briefcase, Copy, Folder, GraduationCap, Home, Languages, Link, LogOut, Mail, MessageCircle, MessageSquare, Phone, Settings } from 'lucide-react';
+import { Copy, Home, Link, LogOut, Mail, MessageCircle, Phone, Settings } from 'lucide-react';
 import { getClientLink } from '@/lib/utils/appFunctions';
 import ContactMessageForm from '@/app/[role]/[username]/forms/contactMessageForm';
 import { ContactMessagePage } from '@/app/[role]/[username]/dashboard/ContactMessagePage';
@@ -11,10 +10,9 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { ProfileProps } from '@/components/ui/profile/types';
 import { Button, cn, CUDModal, Paragraph, ResponsiveIcon } from '@/components';
 import dayjs from 'dayjs';
-import { useAppSelector } from '@/lib/store/hooks';
 import { widgetCard } from '@/styles';
 
-export const TestProfile = ({ 
+export const ProfileV2 = ({ 
     user,
     unreadContactMessageCount = 0,
     className
@@ -27,15 +25,9 @@ export const TestProfile = ({
         (user?.gender === '0' ? '/Default-Female.svg' : '/Default-Male.svg');
     const coverPhoto = user?.coverPhoto ?? '/Default-CoverPhoto.svg';
     const router = useRouter();
-
-    const { lstEducations} = useAppSelector(state => state.education);
-    const { lstProjectTechnologies} = useAppSelector(state => state.projectTechnology);
-    const { lstUserLanguages} = useAppSelector(state => state.userLanguage);
-    const { lstExperiences} = useAppSelector(state => state.experience);
     
     return (
-    <>
-        <section className={cn(widgetCard({ scroll: true , paddingY: 'none', paddingX: 'none'}))}>
+        <section className={cn(widgetCard({ scroll: true , paddingY: 'none', paddingX: 'none'}), className)}>
             <div className='relative flex justify-center w-full'>
                 <div className='absolute h-20 sm:h-40 w-full rounded-b-4xl overflow-hidden'>
                     <Image
@@ -45,6 +37,28 @@ export const TestProfile = ({
                         className="object-fill rounded-md"
                         priority
                     />
+                </div>
+                {/* Right side actions */}
+                <div className='absolute right-7 sm:right-10 lg:right-15 bottom-[-1.5rem] sm:bottom-[-2rem] lg:bottom-[-3rem] flex gap-2.5 sm:gap-5 items-center'>
+                    <ResponsiveIcon icon={Home} onClick={() => router.push('/')} className='cursor-pointer' />
+                    <ThemeToggle />
+                    {role === 'owner' && <ResponsiveIcon icon={LogOut} onClick={() => router.push(`/${role}/${username}/logout`)} className='cursor-pointer' />}
+                </div>
+                {/* Left side actions */}
+                <div className='absolute left-7 sm:left-10 lg:left-15  bottom-[-1.5rem] sm:bottom-[-2rem] lg:bottom-[-3rem] flex gap-2.5 sm:gap-5 items-center'>
+                    {role === 'owner' && <ResponsiveIcon icon={Settings} className='cursor-pointer' />}
+                    {role === 'owner' &&
+                        <div className='relative'>
+                            <CUDModal subTitle='Messages' icon={MessageCircle}>
+                                <ContactMessagePage />
+                            </CUDModal>
+                            {
+                                (unreadContactMessageCount && unreadContactMessageCount > 0)
+                                    ?   <div className='absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 rounded-full bg-success' />
+                                    :   null
+                            }
+                        </div>
+                    }
                 </div>
                 <div className='relative w-20 h-20 sm:w-30 sm:h-30 lg:w-40 lg:h-40 top-10 sm:top-20'>
                     <div className="w-20 h-20 sm:w-30 sm:h-30 lg:w-40 lg:h-40 rounded-full border-4 border-white bg-black/25 backdrop-blur-sm overflow-hidden">
@@ -121,58 +135,5 @@ export const TestProfile = ({
                 }
             </div>
         </section>
-        {/* <div className='flex-col space-y-5 w-full col-span-2'>
-            {user?.bio &&
-                <div className={cn(widgetCard())}>
-                    <Paragraph size="lg">
-                        Bio
-                    </Paragraph>
-                    <Paragraph text='justify'>
-                        {user.bio} 
-                    </Paragraph>
-                </div>
-            }
-            <div className='flex h-20 gap-5'>
-                <div className={cn(widgetCard(), 'w-full')}>
-                    <Paragraph size="lg" space="xs">
-                        <ResponsiveIcon icon={GraduationCap} />
-                        Education
-                    </Paragraph>
-                    <Paragraph>
-                        {`Total count:  ${lstEducations.length}`}
-                    </Paragraph>
-                </div>
-                <div className={cn(widgetCard(), 'w-full')}>
-                    <Paragraph size="lg" space="xs">
-                        <ResponsiveIcon icon={Briefcase} />
-                        Experience
-                    </Paragraph>
-                    <Paragraph>
-                        {`Total count:  ${lstExperiences.length}`}
-                    </Paragraph>
-                </div>
-            </div>
-            <div className='flex h-20 gap-5'>
-                <div className={cn(widgetCard(), 'w-full')}>
-                    <Paragraph size="lg" space="xs">
-                        <ResponsiveIcon icon={Languages} />
-                        Language
-                    </Paragraph>
-                    <Paragraph>
-                        {`Total count: ${lstUserLanguages.length}`}
-                    </Paragraph>
-                </div>
-                <div className={cn(widgetCard(), 'w-full')}>
-                    <Paragraph size="lg" space="xs">
-                        <ResponsiveIcon icon={Folder} />
-                        Project
-                    </Paragraph>
-                    <Paragraph>
-                        {`Total count:  ${lstProjectTechnologies.length}`}
-                    </Paragraph>
-                </div>
-            </div>
-        </div> */}
-    </>
-  );
+    );
 };

@@ -12,7 +12,7 @@ import ContactMessageForm from '@/app/[role]/[username]/forms/contactMessageForm
 import { ContactMessagePage } from '@/app/[role]/[username]/dashboard/ContactMessagePage';
 import { ThemeToggle } from '../ThemeToggle';
 
-export const Profile = ({ 
+export const ProfileV1 = ({ 
     user,
     unreadContactMessageCount = 0,
     className

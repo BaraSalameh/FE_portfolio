@@ -16,7 +16,8 @@ export const WidgetCharts = ({ items, pie, bar, radar }: WidgetChartsProps) => {
         () => radar ? radar.customData ?? generateDurationData(items ?? [], radar?.groupBy) : [],
         [items, radar]
     );
-    const colorMap = useMemo(() => generateColorMap(pieData ?? barData), [pieData, barData]);
+    const barColorMap = useMemo(() => generateColorMap(barData), [barData]);
+    const pieColorMap = useMemo(() => generateColorMap(pieData), [pieData]);
     
     return (
         <div
@@ -43,7 +44,7 @@ export const WidgetCharts = ({ items, pie, bar, radar }: WidgetChartsProps) => {
                     }`}
                 >
                     <Paragraph size="md" position="center">{pie?.title ?? 'Distribution'}</Paragraph>
-                    <PieChartWidget data={pieData} colorMap={colorMap} />
+                    <PieChartWidget data={pieData} colorMap={pieColorMap} />
                 </div>
             )}
 
@@ -60,7 +61,7 @@ export const WidgetCharts = ({ items, pie, bar, radar }: WidgetChartsProps) => {
                     }`}
                 >
                     <Paragraph size="md" position="center">{bar?.title ?? 'Duration (in months)'}</Paragraph>
-                    <BarChartWidget data={barData} colorMap={colorMap} />
+                    <BarChartWidget data={barData} colorMap={barColorMap} />
                 </div>
             )}
 
@@ -75,29 +76,8 @@ export const WidgetCharts = ({ items, pie, bar, radar }: WidgetChartsProps) => {
                     }`}
                 >
                     <Paragraph size="md" position="center">{radar?.title ?? 'Distribution'}</Paragraph>
-                    <RadarChartWidget data={radarData} colorMap={colorMap} />
+                    <RadarChartWidget data={radarData} />
                 </div>
             )}
         </div>
-
-        // <div className={`w-full grid grid-cols-1 ${pieData && barData.length > 0 ? 'sm:grid-cols-3' : ''}`}>
-        //     {pieData?.length > 0 && (
-        //         <div className="h-64">
-        //             <Paragraph size="md" position="center">{pieTitle ?? 'Distribution'}</Paragraph>
-        //             <PieChartWidget data={pieData} colorMap={colorMap} />
-        //         </div>
-        //     )}
-        //     {barData?.length > 0 && (
-        //         <div className="h-64 col-span-2 space-y-3">
-        //             <Paragraph size="md" position="center">{barTitle ?? 'Duration (in months)'}</Paragraph>
-        //             <BarChartWidget data={barData} colorMap={colorMap} />
-        //         </div>
-        //     )}
-        //     {radarData?.length > 0 && (
-        //         <div className={`h-64 col-span-2 space-y-3`}>
-        //             <Paragraph size="md" position="center">{radarTitle ?? 'Distribution'}</Paragraph>
-        //             <RadarChartWidget data={radarData} colorMap={colorMap} />
-        //         </div>
-        //     )}
-        // </div>
 )};

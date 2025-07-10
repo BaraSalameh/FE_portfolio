@@ -35,3 +35,21 @@ export const StaticBackground = () => {
         </React.Fragment>
     );
 };
+
+export const StaticBackgroundV2 = () => {
+    return ( 
+        <Main>
+            <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-3 w-full">
+                <div className="break-inside-avoid animate-pulse bg-light-component dark:bg-dark-component w-full h-90 rounded" />
+                <div className="break-inside-avoid animate-pulse bg-light-component dark:bg-dark-component w-full h-90 rounded" />
+                <div className="break-inside-avoid animate-pulse bg-light-component dark:bg-dark-component w-full h-90 rounded" />
+                <div className="break-inside-avoid animate-pulse bg-light-component dark:bg-dark-component w-full h-90 rounded" />
+                <div className="break-inside-avoid animate-pulse bg-light-component dark:bg-dark-component w-full h-90 rounded" />
+                <div className="break-inside-avoid animate-pulse bg-light-component dark:bg-dark-component w-full h-90 rounded" />
+                <div className="break-inside-avoid animate-pulse bg-light-component dark:bg-dark-component w-full h-90 rounded" />
+                <div className="break-inside-avoid animate-pulse bg-light-component dark:bg-dark-component w-full h-90 rounded" />
+                <div className="break-inside-avoid animate-pulse bg-light-component dark:bg-dark-component w-full h-90 rounded" />
+            </div>
+        </Main>
+    );
+};
