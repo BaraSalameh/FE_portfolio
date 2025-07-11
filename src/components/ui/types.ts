@@ -5,6 +5,7 @@ import { LucideIcon } from "lucide-react";
 import { InputHTMLAttributes } from "react";
 import { InfiniteScrollVariantProps } from "@/styles/infiniteScroll";
 import { FetchAction } from "../types";
+import { ContentContainerVariantProps } from "@/styles/contentContainer";
 
 export interface BlurBackgroundProps extends BlurBackgroundVariantProps {
     children: React.ReactNode;
@@ -32,9 +33,16 @@ export interface ListProps extends ListVariantProps {
     className?: string;
 }
 
+export interface ContentContainerProps extends ContentContainerVariantProps {
+    title?: string;
+    children: React.ReactNode;
+    className?: string;
+}
+
 export interface ParagraphProps extends ParagraphVariantProps {
     children: React.ReactNode;
     className?: string;
+    onClick?: () => void;
 }
 
 export interface ResponsiveIconProps {

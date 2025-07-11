@@ -36,13 +36,18 @@ export const paragraph = cva(
                 md: 'gap-10',
                 lg: 'gap-15'
             },
+            clickable: {
+                true: 'cursor-pointer hover:text-light-bg-hover dark:hover:text-dark-bg-hover',
+                false: null
+            }
         },
         defaultVariants: {
             intent: 'primary',
             size: 'md',
             text: 'standard',
             position: 'start',
-            space: 'sm'
+            space: 'sm',
+            clickable: false
         },
     }
 );

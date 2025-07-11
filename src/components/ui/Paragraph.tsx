@@ -12,10 +12,11 @@ export const Paragraph = ({
     text,
     position,
     space,
-    className
+    className,
+    onClick
 }: ParagraphProps) => {
     return (
-        <p className={cn(paragraph({ intent, size, text, position, space }), className)}>
+        <p className={cn(paragraph({ intent, size, text, position, space, clickable: onClick ? true : false }), className)} onClick={onClick}>
             {children}
         </p>
     );

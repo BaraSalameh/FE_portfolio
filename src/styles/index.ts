@@ -19,3 +19,5 @@ export type { SubFooterVariantProps } from './subFooter';
 export { widgetCard, widgetList } from './widget';
 export type { WidgetCardVariantProps } from './widget';
 export type { WidgetListVariantProps } from './widget';
+export { contentContainer, contentContainerLabel } from './contentContainer';
+export type { ContentContainerVariantProps, ContentContainerLabelVariantProps } from './contentContainer';

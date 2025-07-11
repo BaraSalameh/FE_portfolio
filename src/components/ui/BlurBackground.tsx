@@ -8,7 +8,6 @@ import { BlurBackgroundProps } from './types';
 export const BlurBackground = ({
     children,
     fullScreen,
-    clickable,
     intent,
     className,
     onClick,

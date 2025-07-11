@@ -11,6 +11,7 @@ import { ProfileProps } from '@/components/ui/profile/types';
 import { Button, cn, CUDModal, Paragraph, ResponsiveIcon } from '@/components';
 import dayjs from 'dayjs';
 import { widgetCard } from '@/styles';
+import SettingsPage from '@/app/pages/profile/Settings'
 
 export const ProfileV2 = ({ 
     user,
@@ -46,7 +47,11 @@ export const ProfileV2 = ({
                 </div>
                 {/* Left side actions */}
                 <div className='absolute left-7 sm:left-10 lg:left-15  bottom-[-1.5rem] sm:bottom-[-2rem] lg:bottom-[-3rem] flex gap-2.5 sm:gap-5 items-center'>
-                    {role === 'owner' && <ResponsiveIcon icon={Settings} className='cursor-pointer' />}
+                    {/* {role === 'owner' &&
+                        <CUDModal subTitle='Settings' icon={Settings}>
+                            <SettingsPage />
+                        </CUDModal>
+                    } */}
                     {role === 'owner' &&
                         <div className='relative'>
                             <CUDModal subTitle='Messages' icon={MessageCircle}>
