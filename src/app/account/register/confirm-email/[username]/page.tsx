@@ -6,21 +6,26 @@ import { Main } from "@/components/shared/Main";
 import { SubFooter } from "@/components/shared/SubFooter";
 import { Paragraph } from "@/components/ui/Paragraph";
 import React from "react";
-import { List, ResponsiveIcon } from "@/components";
+import { cn, List, ResponsiveIcon } from "@/components";
 import { Home, Send } from "lucide-react";
+import { useParams } from "next/navigation";
+import { widgetCard } from "@/styles";
 
 export default function ConfirmEmailPage() {
+
+    const { username } = useParams<{username: string }>();
+
     return (
         <React.Fragment>
             <Main>
-                <div className="bg-light-component dark:bg-dark-component rounded-2xl p-6">
+                <div className={cn(widgetCard())}>
                     <Paragraph size='lg'>
                         We've sent a confirmation link to your email address.{'\n'}
-                        Please check your inbox and click the confirm button to verify your email.
-
-                        {'\n\n'}If you don't see the email:{'\n\n'}
+                        Please check your inbox and click the confirm button to verify your email.{'\n\n'}
                     </Paragraph>
+
                     <List size="xs">
+                        <Paragraph size='lg'>If you don't see the email:</Paragraph>
                         <li>
                             Check your Spam or Junk folder.
                         </li>
@@ -28,7 +33,7 @@ export default function ConfirmEmailPage() {
                             Make sure you entered the correct email address.
                         </li>
                         <li>
-                            You can request a new confirmation email below.
+                            If you've been redirected from registration page, You can request a new confirmation email below.
                         </li>
                     </List>
                 </div>
@@ -38,7 +43,7 @@ export default function ConfirmEmailPage() {
                     <ResponsiveIcon icon={Home} />
                     Go home
                 </Anchor>
-                <Anchor size="xs" url="/account/register/confirm-email/resend">
+                <Anchor size="xs" url={`/account/register/confirm-email/${username}/resend`}>
                     <ResponsiveIcon icon={Send} />
                     Resend email
                 </Anchor>

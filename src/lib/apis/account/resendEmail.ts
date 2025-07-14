@@ -3,10 +3,10 @@ import { dynamicApi } from "../apiClient";
 
 export const resendEmail = createAsyncThunk(
     'auth/resendEmail',
-    async (payload: { email: string }, thunkAPI) => {
+    async (payload: { username: string }, thunkAPI) => {
         try {
             const query = new URLSearchParams({
-                email: payload.email
+                username: payload.username
             }).toString();
 
             const response = await dynamicApi({

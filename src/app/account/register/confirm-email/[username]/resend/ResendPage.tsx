@@ -1,26 +1,25 @@
 'use client';
 
 import { useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { resendEmail } from "@/lib/apis/account/resendEmail";
 
 const ResendPage = () => {
 
-    const searchParams = useSearchParams();
-    const email = searchParams.get('email');
+    const { username } = useParams<{username: string }>();
     var router = useRouter();
     var dispatch = useAppDispatch();
     
     useEffect(() => {
-        if (!email) return;
+        if (!username) return;
     
         dispatch(resendEmail({
-            email,
+            username,
         }));
     
-        router.push(`/account/register/confirm-email`);
-    }, [email]);
+        router.push(`/account/register/confirm-email/${username}`);
+    }, [username]);
 
     return <></>;
 }
