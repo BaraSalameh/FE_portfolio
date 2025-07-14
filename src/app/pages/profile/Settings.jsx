@@ -1,49 +1,39 @@
 import React from 'react';
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { ContentContainer } from '@/components/ui/ContentContainer';
+import UserPreferenceForm from '@/app/[role]/[username]/forms/userPreferenceForm';
+import { CUDModal } from '@/components';
+import { Calendar, Mail, Mars, Phone, SunMoonIcon } from 'lucide-react';
+import { PREFERENCES } from '@/lib/constants';
 
 const SettingsPage = () => {
 
     return (
         <React.Fragment>
-            <ThemeToggle title="Current theme: " themeNameIncluded={true} className='w-full'/>
-            <ContentContainer title='Preferences'>
-                <ContentContainer title='Education charts'>
-                    <ThemeToggle title="Change current theme: " themeNameIncluded={true} />
+            <ContentContainer title='Preferences' space='lg'>
+                <CUDModal title='Change theme' icon={SunMoonIcon}>
+                    <ThemeToggle title="Click to change theme" />
+                </CUDModal>
+                <ContentContainer title='Profile'>
+                    <CUDModal title='Show/Hide gender' icon={Mars}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_GENDER} />
+                    </CUDModal>
+                    <CUDModal title='Show/Hide birthdate' icon={Calendar}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_BIRTHDATE} />
+                    </CUDModal>
+                    <CUDModal title='Show/Hide email address' icon={Mail}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_EMAIL_ADDRESS} />
+                    </CUDModal>
+                    <CUDModal title='Show/Hide phone number' icon={Phone}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_PHONE_NUMBER} />
+                    </CUDModal>
+                    {/* <CUDModal title='Profile' icon={ChartNoAxesGanttIcon}>
+                        <UserPreferenceForm
+                            preferenceKey={PREFERENCES.KEY.PROFILE_PICTURE_POSITION}
+                            preferenceValues={PREFERENCES.VALUE.CUSTOM.POSITION}
+                        />
+                    </CUDModal> */}
                 </ContentContainer>
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-            </ContentContainer>
-            <ContentContainer title='Education charts'>
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
-                <ThemeToggle title="Current theme: " themeNameIncluded={true} />
             </ContentContainer>
         </React.Fragment>
     )

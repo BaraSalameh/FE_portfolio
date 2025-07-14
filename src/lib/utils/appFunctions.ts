@@ -3,7 +3,9 @@ import {
     Home, LayoutDashboard, Book, Briefcase, Folder, BadgePercent,
     Languages, PenSquare, MessageSquare, Settings, LogOut
 } from 'lucide-react';
-import { UserLanguageFormData, EducationFormData } from '../schemas';
+import { UserLanguageFormData, EducationFormData, UserPreferenceFormData } from '../schemas';
+import { useAppSelector } from '../store/hooks';
+import { PREFERENCES } from '../constants';
 
 export function transformPayload<T extends object>(obj: T): T {
     return Object.fromEntries(
@@ -144,6 +146,22 @@ export const mapProjectTechnologyToForm = (projectTechnologyFromDb: any): Educat
     return result;
 };
 
+export const mapPreferenceToForm = (
+    oldUserPreferences: any[],
+    preferenceKey: string,
+    preferences: any[],
+    preferenceValue: Option[]
+): UserPreferenceFormData => {
+    const userOption = oldUserPreferences.find(item => item?.preference?.name === preferenceKey);
+    const defaultOption = preferences.find(opt => opt.name === preferenceKey);
+    const defaultValue = preferenceValue?.[0];
+
+    return {
+        LKP_PreferenceID: defaultOption?.id,
+        value: userOption?.value ?? defaultValue?.value
+    };
+}
+
 export const getSelectedOption = (
     options: Option[],
     value: string | string[] | undefined
@@ -221,4 +239,11 @@ export const OptionsCreator = ({list, labelKey = 'name', valueKey = 'id', iconKe
             icon: iconKey ? extractPathValue(i, iconKey) : undefined
         }))
     :   [];
+}
+
+export const CheckPreferences = (key: string, flag: string = PREFERENCES.VALUE.TOGGLE[0].value) => {
+    const { lstUserPreferences } = useAppSelector(state => state.userPreference);
+    const pref = lstUserPreferences.find((cfg: any) => cfg.preference.name === key);
+    
+    return !pref ? true : flag ? pref?.value === flag : pref.value;
 }

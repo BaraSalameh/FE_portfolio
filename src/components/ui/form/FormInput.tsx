@@ -27,11 +27,7 @@ export const FormInput = ({
 
     return (
         <div className="space-y-1">
-            {label &&
-                <label className="block text-sm font-medium text-white-700">
-                    <Paragraph>{label}</Paragraph>
-                </label>
-            }
+            <Paragraph>{label ? label : null}</Paragraph>
             {(rest.type === 'textarea' || rest.type === 'Textarea') ? (
                 <textarea
                     {...(registration as any)}

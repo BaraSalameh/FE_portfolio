@@ -6,9 +6,11 @@ import {
     InstitutionFormData,
     LanguageFormData,
     LanguageProficiencyFormData,
+    PreferenceFormData,
     ProjectTechnologyFormData,
     TechnologyFormData,
-    UserLanguageFormData
+    UserLanguageFormData,
+    UserPreferenceFormData
 } from "@/lib/schemas";
 
 //Education Slice
@@ -82,6 +84,20 @@ interface LanguageState {
 
 interface LanguageProficiencyState {
     lstLanguageProficiencies: LanguageProficiencyFormData[];
+    loading: boolean;
+    error: string | null;
+}
+
+// User Preference Slice
+export interface UserPreferenceState {
+    lstUserPreferences: UserPreferenceFormData[];
+    preference: PreferenceState;
+    loading: boolean;
+    error: string | null;
+}
+
+interface PreferenceState {
+    lstPreferences: PreferenceFormData[];
     loading: boolean;
     error: string | null;
 }

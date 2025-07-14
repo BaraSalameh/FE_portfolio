@@ -1,3 +1,5 @@
+import { Option } from "@/components/ui/form/types";
+
 export interface EducationProps {
     id?: string;
     onClose?: () => void;
@@ -16,4 +18,12 @@ export interface ProjectTechnologyProps {
 export interface UserLanguageProps {
     id?: string;
     onClose?: () => void;
+}
+
+type PreferenceValue = 'toggle' | Option[]
+export interface UserPreferenceProps {
+    id?: string;
+    onClose?: () => void;
+    preferenceKey: string;
+    preferenceValues?: PreferenceValue;
 }

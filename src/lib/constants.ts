@@ -23,3 +23,46 @@ export const more_details = {
     abstract: "Whether you're a doctor, developer, UI/UX designer, writer, or digital creator, the Portfolio App offers a robust and extensible platform to showcase your talent, connect with potential clients or employers, and make a lasting impression online.",
     slider: ['/home/1.png', '/home/2.png', '/home/3.jpg', '/home/4.png', '/home/5.png']
 }
+
+export const PREFERENCES = {
+    KEY: {
+        SHOW_LANGUAGE_BAR_CHART: 'show-language-bar-chart',
+        SHOW_PHONE_NUMBER: 'show-phone-number',
+        SHOW_EDUCATION_PIE_CHART: 'show-education-pie-chart',
+        SHOW_GENDER: 'show-gender',
+        SHOW_OVERVIEW_BAR_CHART: 'show-overview-bar-chart',
+        SHOW_EXPERIENCE_RADAR_CHART: 'show-experience-radar-chart',
+        SHOW_EMAIL_ADDRESS: 'show-email-address',
+        SHOW_EXPERIENCE_PIE_CHART: 'show-experience-pie-chart',
+        SHOW_PROJECT_RADAR_CHART: 'show-project-radar-chart',
+        SHOW_PROJECT_WIDGET: 'show-project-widget',
+        BIRTHDATE_FORMAT: 'birthdate-format',
+        SHOW_PROJECT_BAR_CHART: 'show-project-bar-chart',
+        SHOW_OVERVIEW_RADAR_CHART: 'show-overview-radar-chart',
+        SHOW_OVERVIEW_PIE_CHART: 'show-overview-pie-chart',
+        SHOW_LANGUAGE_PIE_CHART: 'show-language-pie-chart',
+        SHOW_OVERVIEW_WIDGET: 'show-overview-widget',
+        SHOW_LANGUAGE_RADAR_CHART: 'show-language-radar-chart',
+        PROFILE_WIDTH: 'profile-width',
+        PROFILE_PICTURE_POSITION: 'profile-picture-position',
+        SHOW_EDUCATION_BAR_CHART: 'show-education-bar-chart',
+        SHOW_EXPERIENCE_BAR_CHART: 'show-experience-bar-chart',
+        SHOW_EDUCATION_RADAR_CHART: 'show-education-radar-chart',
+        SHOW_BIRTHDATE: 'show-birthdate',
+        SHOW_PROJECT_PIE_CHART: 'show-project-pie-chart',
+    },
+    VALUE: {
+        TOGGLE: [
+            {label: 'Show', value: 'show'},
+            {label: 'Hide', value: 'hide'}
+        ],
+        CUSTOM: {
+            POSITION: [
+                {label: 'Center', value: 'center'},
+                {label: 'Right', value: 'right'},
+                {label: 'Left', value: 'left'}
+            ]
+        }
+    }
+};
+

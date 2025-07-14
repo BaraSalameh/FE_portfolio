@@ -3,7 +3,7 @@ import React from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import ProfileForm from '@/app/[role]/[username]/forms/profileForm';
 import { Copy, Home, Link, LogOut, Mail, MessageCircle, Phone, Settings } from 'lucide-react';
-import { getClientLink } from '@/lib/utils/appFunctions';
+import { CheckPreferences, getClientLink } from '@/lib/utils/appFunctions';
 import ContactMessageForm from '@/app/[role]/[username]/forms/contactMessageForm';
 import { ContactMessagePage } from '@/app/[role]/[username]/dashboard/ContactMessagePage';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
@@ -12,6 +12,7 @@ import { Button, cn, CUDModal, Paragraph, ResponsiveIcon } from '@/components';
 import dayjs from 'dayjs';
 import { widgetCard } from '@/styles';
 import SettingsPage from '@/app/pages/profile/Settings'
+import { PREFERENCES } from '@/lib/constants';
 
 export const ProfileV2 = ({ 
     user,
@@ -47,11 +48,11 @@ export const ProfileV2 = ({
                 </div>
                 {/* Left side actions */}
                 <div className='absolute left-7 sm:left-10 lg:left-15  bottom-[-1.5rem] sm:bottom-[-2rem] lg:bottom-[-3rem] flex gap-2.5 sm:gap-5 items-center'>
-                    {/* {role === 'owner' &&
+                    {role === 'owner' &&
                         <CUDModal subTitle='Settings' icon={Settings}>
                             <SettingsPage />
                         </CUDModal>
-                    } */}
+                    }
                     {role === 'owner' &&
                         <div className='relative'>
                             <CUDModal subTitle='Messages' icon={MessageCircle}>
@@ -104,26 +105,33 @@ export const ProfileV2 = ({
                         {user?.firstname} {user?.lastname}
                     </Paragraph>
                     <Paragraph position='center' className="italic">
-                        {user?.title}
+                        {user?.title} 
                     </Paragraph>
-                    {(user?.gender === '0' || user?.gender === '1' || user?.birthDate) && (
+                    {CheckPreferences(PREFERENCES.KEY.SHOW_GENDER) && user?.gender && 
                         <Paragraph position="center">
                             {user?.gender?.toString() === '1'
-                            ? 'Male'
-                            : user?.gender?.toString() === '0'
-                            ? 'Female'
-                            : ''}
+                                ? 'Male'
+                                : user?.gender?.toString() === '0'
+                                    ? 'Female'
+                                    : ''
+                            }
+                        </Paragraph>
+                    }
+                    {CheckPreferences(PREFERENCES.KEY.SHOW_BIRTHDATE) && user?.birthDate &&
+                        <Paragraph position="center">
                             {user?.birthDate ? ` (${ dayjs().diff(user.birthDate, 'year')} years old)` : ''}
                         </Paragraph>
-                    )}
+                    }
                 </div>
                 <div className='flex justify-between py-4 gap-5'>
-                    <Paragraph>
-                        <ResponsiveIcon icon={Mail} />
-                        {user?.email}
-                        <ResponsiveIcon icon={Copy} onClick={() => navigator.clipboard.writeText(user.email as string)} className='cursor-pointer' />
-                    </Paragraph>
-                    {user?.phone &&
+                    {CheckPreferences(PREFERENCES.KEY.SHOW_EMAIL_ADDRESS) &&
+                        <Paragraph>
+                            <ResponsiveIcon icon={Mail} />
+                            {user?.email}
+                            <ResponsiveIcon icon={Copy} onClick={() => navigator.clipboard.writeText(user.email as string)} className='cursor-pointer' />
+                        </Paragraph>
+                    }
+                    {CheckPreferences(PREFERENCES.KEY.SHOW_PHONE_NUMBER) && user?.phone &&
                         <Paragraph>
                             <ResponsiveIcon icon={Phone} />
                             {user.phone}

@@ -95,7 +95,7 @@ export const ControlledForm = <T extends z.ZodTypeAny> ({
                                     key={index}
                                     control={control}
                                     name={item.name}
-                                    label={item.label || 'Select'}
+                                    label={item.label}
                                     options={item.options || []}
                                     isMulti={item.as === 'DropdownMulti'}
                                     fetchAction={item.fetchAction}

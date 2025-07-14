@@ -36,14 +36,10 @@ export const CUDModal = ({
     
     return (
         <>
-        <div
-            className="flex gap-2 cursor-pointer hover:text-light-bg-hover dark:hover:text-dark-bg-hover"
-            onClick={() => setOpenModal(true)}
-        >
+        <Paragraph size='md' onClick={() => setOpenModal(true)}>
             {currentIcon}
-            {title && <Paragraph size='md'>{title}</Paragraph>}
-        </div>
-  
+            {title ? title : null}
+        </Paragraph>
   
         {openModal && (
             <BlurBackground intent='sm'>

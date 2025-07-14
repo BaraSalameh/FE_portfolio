@@ -80,7 +80,7 @@ export type Option = {
 export interface ControlledDropdownProps<T extends FieldValues>  {
     name: FieldPath<T>;
     control: Control<T>;
-    label: string;
+    label?: string;
     options: Option[];
     isMulti?: boolean;
     fetchAction?: PaginatiedAction;

@@ -21,3 +21,6 @@ export type { UserLanguageFormData, LanguageFormData, LanguageProficiencyFormDat
 
 export { contactMessageSchema } from './contactMessageSchema';
 export type { ContactMessageFormData } from './contactMessageSchema';
+
+export { userPreferenceSchema, preferenceSchema } from './userPreferenceSchema';
+export type { UserPreferenceFormData, PreferenceFormData } from './userPreferenceSchema';
