@@ -3,7 +3,7 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { ContentContainer } from '@/components/ui/ContentContainer';
 import UserPreferenceForm from '@/app/[role]/[username]/forms/userPreferenceForm';
 import { CUDModal, Paragraph, ResponsiveIcon } from '@/components';
-import { Calendar, LogOut, Mail, Mars, Phone, SunMoonIcon } from 'lucide-react';
+import { BarChart, Calendar, Component, LogOut, Mail, Mars, Phone, PieChart, Radar, SunMoonIcon } from 'lucide-react';
 import { PREFERENCES } from '@/lib/constants';
 import { getUrlParams } from '@/lib/utils/appFunctions';
 import { useRouter } from 'next/navigation';
@@ -38,6 +38,67 @@ const SettingsPage = () => {
                             preferenceValues={PREFERENCES.VALUE.CUSTOM.POSITION}
                         />
                     </CUDModal> */}
+                </ContentContainer>
+                <ContentContainer title='Overview'>
+                    <CUDModal title='Show/Hide widget' icon={Component}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_OVERVIEW_WIDGET} />
+                    </CUDModal>
+                    <CUDModal title='Show/Hide Bar chart' icon={BarChart}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_OVERVIEW_BAR_CHART} />
+                    </CUDModal>
+                    <CUDModal title='Show/Hide Pie chart' icon={PieChart}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_OVERVIEW_PIE_CHART} />
+                    </CUDModal>
+                    <CUDModal title='Show/Hide Radar chart' icon={Radar}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_OVERVIEW_RADAR_CHART} />
+                    </CUDModal>
+                </ContentContainer>
+                <ContentContainer title='Education'>
+                    <CUDModal title='Show/Hide Bar chart' icon={BarChart}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_EDUCATION_BAR_CHART} />
+                    </CUDModal>
+                    <CUDModal title='Show/Hide Pie chart' icon={PieChart}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_EDUCATION_PIE_CHART} />
+                    </CUDModal>
+                    <CUDModal title='Show/Hide Radar chart' icon={Radar}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_EDUCATION_RADAR_CHART} />
+                    </CUDModal>
+                </ContentContainer>
+                <ContentContainer title='Experience'>
+                    <CUDModal title='Show/Hide Bar chart' icon={BarChart}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_EXPERIENCE_BAR_CHART} />
+                    </CUDModal>
+                    <CUDModal title='Show/Hide Pie chart' icon={PieChart}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_EXPERIENCE_PIE_CHART} />
+                    </CUDModal>
+                    <CUDModal title='Show/Hide Radar chart' icon={Radar}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_EXPERIENCE_RADAR_CHART} />
+                    </CUDModal>
+                </ContentContainer>
+                <ContentContainer title='Project'>
+                    <CUDModal title='Show/Hide widget' icon={Component}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_PROJECT_WIDGET} />
+                    </CUDModal>
+                    <CUDModal title='Show/Hide Bar chart' icon={BarChart}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_PROJECT_BAR_CHART} />
+                    </CUDModal>
+                    <CUDModal title='Show/Hide Pie chart' icon={PieChart}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_PROJECT_PIE_CHART} />
+                    </CUDModal>
+                    <CUDModal title='Show/Hide Radar chart' icon={Radar}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_PROJECT_RADAR_CHART} />
+                    </CUDModal>
+                </ContentContainer>
+                <ContentContainer title='Language'>
+                    <CUDModal title='Show/Hide Bar chart' icon={BarChart}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_LANGUAGE_BAR_CHART} />
+                    </CUDModal>
+                    <CUDModal title='Show/Hide Pie chart' icon={PieChart}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_LANGUAGE_PIE_CHART} />
+                    </CUDModal>
+                    <CUDModal title='Show/Hide Radar chart' icon={Radar}>
+                        <UserPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_LANGUAGE_RADAR_CHART} />
+                    </CUDModal>
                 </ContentContainer>
             </ContentContainer>
             <ContentContainer title='General' space='lg'>

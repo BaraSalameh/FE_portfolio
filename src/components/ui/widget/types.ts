@@ -4,7 +4,8 @@ import { LucideIcon } from "lucide-react";
 
 export type PieChartProps = {
     title?: string;
-    groupBy: string | string[];
+    groupBy?: string | string[];
+    customData?: CahrtEntry[];
 } 
 
 export type BarChartProps = {

@@ -42,7 +42,7 @@ export const widgetCard = cva(
             }
         },
         compoundVariants: [
-            { scroll: true, className: 'max-h-[70vh]' },
+            { scroll: true, className: 'max-h-[40vh] sm:max-h-[100vh]' },
         ],
         defaultVariants: {
             scroll: false,

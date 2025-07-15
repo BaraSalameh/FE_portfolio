@@ -7,7 +7,7 @@ import { generateColorMap, generateDurationData, generatePieData } from '@/lib/u
 
 export const WidgetCharts = ({ items, pie, bar, radar }: WidgetChartsProps) => {
 
-    const pieData = useMemo(() => pie ? generatePieData(items ?? [], pie.groupBy) : [], [items, pie]);
+    const pieData = useMemo(() => pie ? pie.customData ?? generatePieData(items ?? [], pie?.groupBy) : [], [items, pie]);
     const barData = useMemo(
         () => bar ? bar.customData ?? generateDurationData(items ?? [], bar?.groupBy, bar.durationKeys?.start, bar.durationKeys?.end) : [],
         [items, bar]
@@ -21,12 +21,12 @@ export const WidgetCharts = ({ items, pie, bar, radar }: WidgetChartsProps) => {
     
     return (
         <div
-            className={`w-full grid gap-4 
+            className={`w-full sm:grid gap-4 
             ${pieData?.length && barData?.length && radarData?.length
                 ? 'grid-cols-3 auto-rows-min'
-                : pieData?.length && barData?.length
-                ? 'grid-cols-3'
                 : pieData?.length && radarData?.length
+                ? 'grid-cols-3'
+                : pieData?.length && barData?.length
                 ? 'grid-cols-3'
                 : barData?.length && radarData?.length
                 ? 'grid-cols-3'
@@ -48,11 +48,26 @@ export const WidgetCharts = ({ items, pie, bar, radar }: WidgetChartsProps) => {
                 </div>
             )}
 
+            {radarData?.length > 0 && (
+                <div
+                    className={`h-64 space-y-3
+                    ${pieData?.length && barData?.length
+                        ? 'col-span-2'
+                        : pieData?.length || barData?.length
+                        ? 'col-span-2'
+                        : 'col-span-1'
+                    }`}
+                >
+                    <Paragraph size="md" position="center">{radar?.title ?? 'Distribution'}</Paragraph>
+                    <RadarChartWidget data={radarData} />
+                </div>
+            )}
+
             {barData?.length > 0 && (
                 <div
                     className={`h-64 space-y-3
                     ${pieData?.length && radarData?.length
-                        ? 'col-span-2'
+                        ? 'col-span-3'
                         : pieData?.length
                         ? 'col-span-2'
                         : radarData?.length
@@ -62,21 +77,6 @@ export const WidgetCharts = ({ items, pie, bar, radar }: WidgetChartsProps) => {
                 >
                     <Paragraph size="md" position="center">{bar?.title ?? 'Duration (in months)'}</Paragraph>
                     <BarChartWidget data={barData} colorMap={barColorMap} />
-                </div>
-            )}
-
-            {radarData?.length > 0 && (
-                <div
-                    className={`h-64 space-y-3
-                    ${pieData?.length && barData?.length
-                        ? 'col-span-3'
-                        : pieData?.length || barData?.length
-                        ? 'col-span-2'
-                        : 'col-span-3'
-                    }`}
-                >
-                    <Paragraph size="md" position="center">{radar?.title ?? 'Distribution'}</Paragraph>
-                    <RadarChartWidget data={radarData} />
                 </div>
             )}
         </div>

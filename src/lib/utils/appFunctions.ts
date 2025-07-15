@@ -25,12 +25,12 @@ const normalizeFieldValue = (value: any): string[] => {
 
 export const generatePieData = <T extends Record<string, any>>(
     list: T[],
-    key: string | string[]
+    key?: string | string[]
 ) => {
     const counts = new Map<string, number>();
 
     list.forEach(item => {
-        const names = normalizeFieldValue(extractPathValue(item, key));
+        const names = normalizeFieldValue(extractPathValue(item, key ?? ''));
 
         names.forEach(name => {
             counts.set(name, (counts.get(name) ?? 0) + 1);

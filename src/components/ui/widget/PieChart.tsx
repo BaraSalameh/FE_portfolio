@@ -11,10 +11,10 @@ export const PieChartWidget = ({
     const internalColorMap = colorMap ?? generateColorMap(data);
     const isSmall = useMediaQuery({ maxWidth: 640 });
     const isMedium = useMediaQuery({ minWidth: 641, maxWidth: 768 });
-    const outerRadius = isSmall ? 35 : isMedium ? 40 : 50;
+    const outerRadius = isSmall ? '50%' : isMedium ? '50%' : '70%';
 
     return (
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height="100%">
             <PieChart>
                 <Pie
                     data={data}

@@ -1,5 +1,8 @@
 import { WidgetCardProps } from "@/components/ui/widget/types";
+import { PREFERENCES } from "@/lib/constants";
 import { useAppSelector } from "@/lib/store/hooks";
+import { CheckPreferences } from "@/lib/utils/appFunctions";
+import { BarChart3 } from "lucide-react";
 
 export const useOverviewWidget = (): WidgetCardProps => {
 
@@ -15,8 +18,23 @@ export const useOverviewWidget = (): WidgetCardProps => {
         {name: 'Experience', value: lstExperiences.length},
     ]
 
+    const barData = CheckPreferences(PREFERENCES.KEY.SHOW_OVERVIEW_BAR_CHART)
+    ?   { title: '', customData: customData}
+    :   {};
+
+    const pieData = CheckPreferences(PREFERENCES.KEY.SHOW_OVERVIEW_PIE_CHART)
+    ?   { title: '',customData: customData}
+    :   {};
+
+    const radarData = CheckPreferences(PREFERENCES.KEY.SHOW_OVERVIEW_RADAR_CHART)
+    ?   { title: '',customData: customData}
+    :   {};
+
     return {
+        header: { title: 'Overview', icon:  BarChart3},
         items: [{}],
-        bar: { title: 'Total (overview)', customData: customData},
+        bar: barData,
+        pie: pieData,
+        radar: radarData,
     }
 }

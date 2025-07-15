@@ -9,7 +9,7 @@ export const RadarChartWidget = ({
 
     const isSmall = useMediaQuery({ maxWidth: 640 });
     const isMedium = useMediaQuery({ minWidth: 641, maxWidth: 768 });
-    const outerRadius = isSmall ? '40%' : isMedium ? '50%' : '70%';
+    const outerRadius = isSmall ? '50%' : isMedium ? '50%' : '70%';
     
     return (
         <ResponsiveContainer width="100%" height="100%">
