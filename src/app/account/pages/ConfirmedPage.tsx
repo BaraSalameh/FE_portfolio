@@ -15,13 +15,13 @@ const ConfirmedPage = () => {
     
     useEffect(() => {
         if (!token || !email) return;
-    
-        dispatch(confirmEmail({
-            email,
-            token
-        }));
-    
-        router.push('/account/login');
+        
+        const confirm = async () => {
+            await dispatch(confirmEmail({ email, token }));
+            router.push('/account/login');
+        }
+        
+        confirm();
     }, [token, email]);
 
     return <></>;

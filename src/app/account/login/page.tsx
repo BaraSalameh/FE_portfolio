@@ -30,7 +30,7 @@ const LoginPage = () => {
 
     useEffect(() => {
         if(isConfirmed === false){
-            router.push(`/account/register/confirm-email/empty`);
+            router.push(`/account/register/confirm-email`);
             return;
         }
     }, [isConfirmed]);

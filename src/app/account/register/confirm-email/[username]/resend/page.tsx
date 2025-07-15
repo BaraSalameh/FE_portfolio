@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import ResendPage from "./ResendPage";
+import ResendPage from "@/app/account/pages/ResendPage";
 
 const ResendPageWrapper = () => {
     return (
