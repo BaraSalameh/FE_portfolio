@@ -1,7 +1,8 @@
 'use client';
 
+import { Loading } from "@/components";
 import { logout } from "@/lib/apis/account/logout";
-import { useAppDispatch } from "@/lib/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -9,6 +10,7 @@ export default function Logout() {
 
     const dispatch = useAppDispatch();
     const router = useRouter();
+    const { loading } = useAppSelector(state => state.auth);
 
     useEffect(() => {
         dispatch(logout());
@@ -16,8 +18,6 @@ export default function Logout() {
     }, []);
 
     return (
-        <div className="flex items-center justify-center">
-            <h1>Logging out........!</h1>
-        </div>
+        <Loading message="Logging out..." isLoading={loading} />
     );
 }

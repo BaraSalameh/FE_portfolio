@@ -6,6 +6,7 @@ import {
 import { UserLanguageFormData, EducationFormData, UserPreferenceFormData } from '../schemas';
 import { useAppSelector } from '../store/hooks';
 import { PREFERENCES } from '../constants';
+import { useParams } from 'next/navigation';
 
 export function transformPayload<T extends object>(obj: T): T {
     return Object.fromEntries(
@@ -246,4 +247,12 @@ export const CheckPreferences = (key: string, flag: string = PREFERENCES.VALUE.T
     const pref = lstUserPreferences.find((cfg: any) => cfg.preference.name === key);
     
     return !pref ? true : flag ? pref?.value === flag : pref.value;
+}
+
+export const getUrlParams = () => {
+    const { role, username } = useParams<{role: 'owner' | 'client' | 'admin', username: string }>();
+    return {
+        role,
+        username
+    };
 }

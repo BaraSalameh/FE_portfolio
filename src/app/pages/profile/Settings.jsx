@@ -2,11 +2,16 @@ import React from 'react';
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { ContentContainer } from '@/components/ui/ContentContainer';
 import UserPreferenceForm from '@/app/[role]/[username]/forms/userPreferenceForm';
-import { CUDModal } from '@/components';
-import { Calendar, Mail, Mars, Phone, SunMoonIcon } from 'lucide-react';
+import { CUDModal, Paragraph, ResponsiveIcon } from '@/components';
+import { Calendar, LogOut, Mail, Mars, Phone, SunMoonIcon } from 'lucide-react';
 import { PREFERENCES } from '@/lib/constants';
+import { getUrlParams } from '@/lib/utils/appFunctions';
+import { useRouter } from 'next/navigation';
 
 const SettingsPage = () => {
+
+    const router = useRouter();
+    const {role, username} = getUrlParams();
 
     return (
         <React.Fragment>
@@ -34,6 +39,14 @@ const SettingsPage = () => {
                         />
                     </CUDModal> */}
                 </ContentContainer>
+            </ContentContainer>
+            <ContentContainer title='General' space='lg'>
+                {role === 'owner' && username &&
+                    <Paragraph onClick={() => router.push(`/${role}/${username}/logout`)}>
+                        <ResponsiveIcon icon={LogOut} />
+                        Logout
+                    </Paragraph>
+                }
             </ContentContainer>
         </React.Fragment>
     )

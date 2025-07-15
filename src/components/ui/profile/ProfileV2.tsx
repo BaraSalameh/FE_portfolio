@@ -1,9 +1,9 @@
 import Image from 'next/image';
 import React from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import ProfileForm from '@/app/[role]/[username]/forms/profileForm';
 import { Copy, Home, Link, LogOut, Mail, MessageCircle, Phone, Settings } from 'lucide-react';
-import { CheckPreferences, getClientLink } from '@/lib/utils/appFunctions';
+import { CheckPreferences, getClientLink, getUrlParams } from '@/lib/utils/appFunctions';
 import ContactMessageForm from '@/app/[role]/[username]/forms/contactMessageForm';
 import { ContactMessagePage } from '@/app/[role]/[username]/dashboard/ContactMessagePage';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
@@ -20,7 +20,7 @@ export const ProfileV2 = ({
     className
 } : ProfileProps) => {
 
-    const { role, username } = useParams<{role: 'owner' | 'client' | 'admin', username: string }>();
+    const { role } = getUrlParams();
     const clientLink = getClientLink() as Record<string, string>;
     const profilePicture =
         user?.profilePicture ??
@@ -43,8 +43,8 @@ export const ProfileV2 = ({
                 {/* Right side actions */}
                 <div className='absolute right-7 sm:right-10 lg:right-15 bottom-[-1.5rem] sm:bottom-[-2rem] lg:bottom-[-3rem] flex gap-2.5 sm:gap-5 items-center'>
                     <ResponsiveIcon icon={Home} onClick={() => router.push('/')} className='cursor-pointer' />
-                    <ThemeToggle />
-                    {role === 'owner' && <ResponsiveIcon icon={LogOut} onClick={() => router.push(`/${role}/${username}/logout`)} className='cursor-pointer' />}
+                    {role === 'client' && <ThemeToggle />}
+                    
                 </div>
                 {/* Left side actions */}
                 <div className='absolute left-7 sm:left-10 lg:left-15  bottom-[-1.5rem] sm:bottom-[-2rem] lg:bottom-[-3rem] flex gap-2.5 sm:gap-5 items-center'>
@@ -123,7 +123,7 @@ export const ProfileV2 = ({
                         </Paragraph>
                     }
                 </div>
-                <div className='flex justify-between py-4 gap-5'>
+                <div className='sm:flex justify-around py-4 gap-5 space-y-2'>
                     {CheckPreferences(PREFERENCES.KEY.SHOW_EMAIL_ADDRESS) &&
                         <Paragraph>
                             <ResponsiveIcon icon={Mail} />
