@@ -30,12 +30,11 @@ export default function OwnerDashboardPage() {
 
     return (
         <>
-        {/* <ProfileV1 user={currentUser.user as ProfileFormData} unreadContactMessageCount={unreadContactMessageCount} /> */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-10 pt-5">
             <ProfileV2
                 user={currentUser.user as ProfileFormData}
                 unreadContactMessageCount={unreadContactMessageCount}
-                className={`col-span-3 sm:col-span-${showOverview ? '2' : '3'}`}
+                className={`col-span-3 ${showOverview ? 'sm:col-span-2' : 'sm:col-span-3'}`}
             />
             { showOverview &&
                 <ControlledWidget
@@ -44,7 +43,6 @@ export default function OwnerDashboardPage() {
                 />
             }
         </div>
-        {/* <WithSkeleton isLoading={!currentUser.user || currentUser.isLoading} skeleton={<StaticBackground />}> */}
         <WithSkeleton isLoading={!currentUser.user || currentUser.isLoading} skeleton={<StaticBackgroundV2 />}>
             <Main>
                 <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-3 w-full">

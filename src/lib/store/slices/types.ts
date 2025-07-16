@@ -1,4 +1,5 @@
 import {
+    ChartTypeFormData,
     DegreeFormData,
     EducationFormData,
     ExperienceFormData,
@@ -9,8 +10,10 @@ import {
     PreferenceFormData,
     ProjectTechnologyFormData,
     TechnologyFormData,
+    UserChartPreferenceFormData,
     UserLanguageFormData,
-    UserPreferenceFormData
+    UserPreferenceFormData,
+    WidgetFormData
 } from "@/lib/schemas";
 
 //Education Slice
@@ -98,6 +101,27 @@ export interface UserPreferenceState {
 
 interface PreferenceState {
     lstPreferences: PreferenceFormData[];
+    loading: boolean;
+    error: string | null;
+}
+
+// User Chart Preference Slice
+export interface UserChartPreferenceState {
+    lstUserChartPreferences: UserChartPreferenceFormData[];
+    widget: WidgetState;
+    chartType: ChartTypeState;
+    loading: boolean;
+    error: string | null;
+}
+
+interface WidgetState {
+    lstWidgets: WidgetFormData[];
+    loading: boolean;
+    error: string | null;
+}
+
+interface ChartTypeState {
+    lstChartTypes: ChartTypeFormData[];
     loading: boolean;
     error: string | null;
 }

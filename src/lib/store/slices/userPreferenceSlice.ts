@@ -1,9 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { userByUsernameQuery, userFullInfoQuery } from '@/lib/apis';
+import { editUserPreference, preferenceListQuery, userByUsernameQuery, userFullInfoQuery, userPreferenceListQuery } from '@/lib/apis';
 import { UserPreferenceState } from './types';
-import { userPreferenceListQuery } from '@/lib/apis/owner/userPreference/userPreferenceListQuery';
-import { preferenceListQuery } from '@/lib/apis/owner/userPreference/preferenceListQuery';
-import { editUserPreference } from '@/lib/apis/owner/userPreference/editUserPreference';
 
 const initialState : UserPreferenceState = {
     lstUserPreferences: [],

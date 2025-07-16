@@ -42,7 +42,7 @@ export const ProfileV2 = ({
                 </div>
                 {/* Right side actions */}
                 <div className='absolute right-7 sm:right-10 lg:right-15 bottom-[-1.5rem] sm:bottom-[-2rem] lg:bottom-[-3rem] flex gap-2.5 sm:gap-5 items-center'>
-                    <ResponsiveIcon icon={Home} onClick={() => router.push('/')} className='cursor-pointer' />
+                    <ResponsiveIcon icon={Home} onClick={() => router.push('/')} />
                     {role === 'client' && <ThemeToggle />}
                     
                 </div>

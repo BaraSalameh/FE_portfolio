@@ -9,6 +9,7 @@ import projectTechnologySlice from "./slices/projectTechnologySlice";
 import userLanguageSlice from "./slices/userLanguageSlice";
 import contactMessageSlice from './slices/contactMessageSlice';
 import userPreferenceSlice from "./slices/userPreferenceSlice";
+import userChartPreferenceSlice from "./slices/userChartPreferenceSlice";
 
 const rootReducer = combineReducers({
     auth: authSlice,
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
     projectTechnology: projectTechnologySlice,
     userLanguage: userLanguageSlice,
     contactMessage: contactMessageSlice,
-    userPreference: userPreferenceSlice
+    userPreference: userPreferenceSlice,
+    userChartPreference: userChartPreferenceSlice
 });
 
 export default rootReducer;
