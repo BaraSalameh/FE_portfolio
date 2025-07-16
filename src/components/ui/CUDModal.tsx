@@ -36,7 +36,7 @@ export const CUDModal = ({
     
     return (
         <>
-        <Paragraph size='md' onClick={() => setOpenModal(true)}>
+        <Paragraph onClick={() => setOpenModal(true)}>
             {currentIcon}
             {title ? title : null}
         </Paragraph>
@@ -46,7 +46,7 @@ export const CUDModal = ({
                 <div className={ cn(widgetCard({ scroll: true }), className) }>
                     <Header itemsX="between" paddingX="xs" paddingY="xs">
                         {subTitle && <Paragraph size="md">{subTitle}</Paragraph>}
-                        <ResponsiveIcon icon={X} onClick={() => setOpenModal(false)} className='cursor-pointer' />
+                        <ResponsiveIcon icon={X} onClick={() => setOpenModal(false)} />
                     </Header>
                     <hr />
                     <Main paddingX='sm' paddingY='sm' space='sm'>

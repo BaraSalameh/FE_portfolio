@@ -1,7 +1,7 @@
 import { cva, VariantProps } from 'class-variance-authority';
 
 export const contentContainer = cva(
-    'relative w-full',
+    'relative w-full min-w-50',
     {
         variants: {
             rounded: {

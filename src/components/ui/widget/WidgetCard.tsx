@@ -78,13 +78,12 @@ export const WidgetCard = ({
                             {header.title}
                         </Paragraph>
                         {(create || onSort) &&
-                            <div className='flex space-x-3'>
+                            <div className='flex gap-3'>
                                 {onSort &&
-                                        <ResponsiveIcon
-                                            className='cursor-pointer'
-                                            icon={sortable ? ArrowUpDown : GripVertical}
-                                            onClick={() => setSortable(!sortable)}
-                                        />
+                                    <Paragraph onClick={() => setSortable(!sortable)}>
+                                        <ResponsiveIcon icon={sortable ? ArrowUpDown : GripVertical} />
+                                    </Paragraph>
+                                        
                                 }
                                 {create && (
                                     <CUDModal
