@@ -35,10 +35,11 @@ export default function OwnerDashboardPage() {
             <ProfileV2
                 user={currentUser.user as ProfileFormData}
                 unreadContactMessageCount={unreadContactMessageCount}
-                className={`col-span-${showOverview ? '2' : '3'}`}
+                className={`col-span-3 sm:col-span-${showOverview ? '2' : '3'}`}
             />
             { showOverview &&
                 <ControlledWidget
+                    className="col-span-3 sm:col-span-1"
                     {...overviewData}
                 />
             }
