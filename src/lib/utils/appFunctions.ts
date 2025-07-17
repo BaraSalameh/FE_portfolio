@@ -3,10 +3,10 @@ import {
     Home, LayoutDashboard, Book, Briefcase, Folder, BadgePercent,
     Languages, PenSquare, MessageSquare, Settings, LogOut
 } from 'lucide-react';
-import { UserLanguageFormData, EducationFormData, UserPreferenceFormData } from '../schemas';
-import { useAppSelector } from '../store/hooks';
+import { UserLanguageFormData, EducationFormData, UserPreferenceFormData, UserChartPreferenceFormData, WidgetFormData, ChartTypeFormData } from '../schemas';
 import { PREFERENCES } from '../constants';
 import { useParams } from 'next/navigation';
+import { UserChartPreferenceKeys, UserChartPreferenceValues } from '@/app/[role]/[username]/types';
 
 export function transformPayload<T extends object>(obj: T): T {
     return Object.fromEntries(
@@ -163,6 +163,27 @@ export const mapPreferenceToForm = (
     };
 }
 
+export const mapChartPreferenceToForm = (
+    UserChartPreferences: any[],
+    Keys: UserChartPreferenceKeys,
+    widgets: WidgetFormData[],
+    chartTypes: ChartTypeFormData[],
+    Values: UserChartPreferenceValues
+): UserChartPreferenceFormData => {
+    const userOption = UserChartPreferences.find(item => item?.widget?.name === Keys.widget && item?.chartType?.name === Keys.chartType);
+    const defaultWidgetOption = widgets.find(opt => opt.name === Keys.widget);
+    const defaultChartTypeOption = chartTypes.find(opt => opt.name === Keys.chartType);
+    const defaultGroupByValue = Values.groupBy[0];
+    const defaultValueSourceValue = Values.valueSource[0];
+
+    return {
+        LKP_WidgetID: defaultWidgetOption?.id ?? '',
+        LKP_ChartTypeID: defaultChartTypeOption?.id ?? '',
+        groupBy: userOption?.groupBy ?? defaultGroupByValue?.value,
+        valueSource: userOption?.valueSource ?? defaultValueSourceValue?.value
+    };
+}
+
 export const getSelectedOption = (
     options: Option[],
     value: string | string[] | undefined
@@ -242,11 +263,16 @@ export const OptionsCreator = ({list, labelKey = 'name', valueKey = 'id', iconKe
     :   [];
 }
 
-export const CheckPreferences = (key: string, flag: string = PREFERENCES.VALUE.TOGGLE[0].value) => {
-    const { lstUserPreferences } = useAppSelector(state => state.userPreference);
-    const pref = lstUserPreferences.find((cfg: any) => cfg.preference.name === key);
+export const CheckPreferences = (list: UserPreferenceFormData[], key: string, flag: string = PREFERENCES.VALUE.TOGGLE[0].value) => {
+    const pref = list.find((cfg: any) => cfg.preference.name === key);
     
     return !pref ? true : flag ? pref?.value === flag : pref.value;
+}
+
+export const CheckChartPreferences = (list: UserChartPreferenceFormData[], keys: UserChartPreferenceKeys) => {
+    const pref = list.find((cfg: any) => cfg.widget.name === keys.widget && cfg.chartType.name === keys.chartType);
+    
+    return pref;
 }
 
 export const getUrlParams = () => {

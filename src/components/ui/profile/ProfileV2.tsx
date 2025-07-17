@@ -13,6 +13,7 @@ import dayjs from 'dayjs';
 import { widgetCard } from '@/styles';
 import SettingsPage from '@/app/pages/profile/Settings'
 import { PREFERENCES } from '@/lib/constants';
+import { useAppSelector } from '@/lib/store/hooks';
 
 export const ProfileV2 = ({ 
     user,
@@ -27,6 +28,7 @@ export const ProfileV2 = ({
         (user?.gender === '0' ? '/Default-Female.svg' : '/Default-Male.svg');
     const coverPhoto = user?.coverPhoto ?? '/Default-CoverPhoto.svg';
     const router = useRouter();
+    const { lstUserPreferences } = useAppSelector(state => state.userPreference);
     
     return (
         <section className={cn(widgetCard({ scroll: true , paddingY: 'none', paddingX: 'none'}), className)}>
@@ -107,7 +109,7 @@ export const ProfileV2 = ({
                     <Paragraph position='center' className="italic">
                         {user?.title} 
                     </Paragraph>
-                    {CheckPreferences(PREFERENCES.KEY.SHOW_GENDER) && user?.gender && 
+                    {CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_GENDER) && user?.gender && 
                         <Paragraph position="center">
                             {user?.gender?.toString() === '1'
                                 ? 'Male'
@@ -117,21 +119,21 @@ export const ProfileV2 = ({
                             }
                         </Paragraph>
                     }
-                    {CheckPreferences(PREFERENCES.KEY.SHOW_BIRTHDATE) && user?.birthDate &&
+                    {CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_BIRTHDATE) && user?.birthDate &&
                         <Paragraph position="center">
                             {user?.birthDate ? ` (${ dayjs().diff(user.birthDate, 'year')} years old)` : ''}
                         </Paragraph>
                     }
                 </div>
                 <div className='sm:flex justify-around py-4 gap-5 space-y-2'>
-                    {CheckPreferences(PREFERENCES.KEY.SHOW_EMAIL_ADDRESS) &&
+                    {CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_EMAIL_ADDRESS) &&
                         <Paragraph>
                             <ResponsiveIcon icon={Mail} />
                             {user?.email}
                             <ResponsiveIcon icon={Copy} onClick={() => navigator.clipboard.writeText(user.email as string)} className='cursor-pointer' />
                         </Paragraph>
                     }
-                    {CheckPreferences(PREFERENCES.KEY.SHOW_PHONE_NUMBER) && user?.phone &&
+                    {CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_PHONE_NUMBER) && user?.phone &&
                         <Paragraph>
                             <ResponsiveIcon icon={Phone} />
                             {user.phone}

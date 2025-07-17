@@ -4,15 +4,17 @@ import { ControlledWidget } from "@/components";
 import { useEducationWidget, useExperienceWidget, useLanguageWidget, useProjectWidget } from ".";
 import { CheckPreferences } from "@/lib/utils/appFunctions";
 import { PREFERENCES } from "@/lib/constants";
+import { useAppSelector } from "@/lib/store/hooks";
 
 export const useWidgets = () => {
 
+    const { lstUserPreferences } = useAppSelector(state => state.userPreference);
     const projectData = useProjectWidget();
     const educationData = useEducationWidget();
     const experienceData = useExperienceWidget();
     const languageData = useLanguageWidget();
 
-    const showProjectWidget = CheckPreferences(PREFERENCES.KEY.SHOW_PROJECT_WIDGET);
+    const showProjectWidget = CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_PROJECT_WIDGET);
 
     const renderWidgets = useMemo((): JSX.Element[] => {
         const widgets: WidgetCardProps[] = [

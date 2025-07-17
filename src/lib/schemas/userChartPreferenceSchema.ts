@@ -11,7 +11,7 @@ export const userChartPreferenceSchema = z.object({
         .string()
         .min(1, 'Widget ID is required')
         .regex(guidRegex, 'Preference ID must be a valid GUID'),
-    LKP_ChartType: z
+    LKP_ChartTypeID: z
         .string()
         .min(1, 'ChartType ID is required')
         .regex(guidRegex, 'Preference ID must be a valid GUID'),

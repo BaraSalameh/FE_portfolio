@@ -19,7 +19,7 @@ const initialState : UserChartPreferenceState = {
 }
 
 const userChartPreferenceSlice = createSlice({
-    name: 'userPreference',
+    name: 'userChartPreference',
     initialState,
     reducers: {},
     extraReducers: (builder) => {

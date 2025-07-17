@@ -27,3 +27,20 @@ export interface UserPreferenceProps {
     preferenceKey: string;
     preferenceValues?: PreferenceValue;
 }
+
+export type UserChartPreferenceKeys = {
+    widget: string,
+    chartType: string;
+}
+
+export type UserChartPreferenceValues = {
+    groupBy: Option[],
+    valueSource: Option[];
+}
+
+export interface UserChartPreferenceProps {
+    id?: string;
+    onClose?: () => void;
+    preferenceKeys: UserChartPreferenceKeys;
+    preferenceValues: UserChartPreferenceValues;
+}

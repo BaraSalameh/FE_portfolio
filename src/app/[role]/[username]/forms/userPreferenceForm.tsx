@@ -3,7 +3,7 @@
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { userPreferenceSchema, UserPreferenceFormData } from "@/lib/schemas";
 import { useEffect, useMemo } from "react";
-import { mapPreferenceToForm, OptionsCreator } from "@/lib/utils/appFunctions";
+import { mapPreferenceToForm } from "@/lib/utils/appFunctions";
 import { UserPreferenceProps } from "../types";
 import { ControlledForm } from "@/components/ui/form";
 import { userPreferenceListQuery } from "@/lib/apis/owner/userPreference/userPreferenceListQuery";

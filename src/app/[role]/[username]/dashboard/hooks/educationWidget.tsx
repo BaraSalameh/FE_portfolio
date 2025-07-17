@@ -3,25 +3,50 @@ import { useAppSelector } from "@/lib/store/hooks";
 import { Clock, GraduationCap } from "lucide-react";
 import { useDebouncedSortEducation, useHandleEducationDelete } from "../handlers";
 import EducationForm from "../../forms/educationForm";
-import { CheckPreferences } from "@/lib/utils/appFunctions";
-import { PREFERENCES } from "@/lib/constants";
+import { CheckChartPreferences, CheckPreferences } from "@/lib/utils/appFunctions";
+import { CHART_PREFERENCES, PREFERENCES } from "@/lib/constants";
 
 export const useEducationWidget = (): WidgetCardProps => {
-
+ 
     const { loading: educationLoading, lstEducations } = useAppSelector(state => state.education);
+    const { lstUserPreferences } = useAppSelector(state => state.userPreference);
+    const { lstUserChartPreferences } = useAppSelector(state => state.userChartPreference);
     const handleEducationDelete = useHandleEducationDelete();
     const debouncedSortEducation = useDebouncedSortEducation();
 
-    const barData = CheckPreferences(PREFERENCES.KEY.SHOW_EDUCATION_BAR_CHART)
-    ?   { groupBy: 'degree.abbreviation'}
+    const barData = CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_EDUCATION_BAR_CHART)
+    ?   { 
+            groupBy: CheckChartPreferences(
+                lstUserChartPreferences,
+                {
+                    widget: CHART_PREFERENCES.KEY.WIDGET.Education,
+                    chartType: CHART_PREFERENCES.KEY.CHART.Bar
+                }
+            )?.groupBy ?? CHART_PREFERENCES.VALUES.Education.BAR[0].value}
     :   {};
 
-    const pieData = CheckPreferences(PREFERENCES.KEY.SHOW_EDUCATION_PIE_CHART)
-    ?   { title: 'Degrees Overview', groupBy: 'degree.abbreviation' }
+    const pieData = CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_EDUCATION_PIE_CHART)
+    ?   { 
+            title: 'Degrees Overview',
+            groupBy: CheckChartPreferences(
+                lstUserChartPreferences,
+                {
+                    widget: CHART_PREFERENCES.KEY.WIDGET.Education,
+                    chartType: CHART_PREFERENCES.KEY.CHART.Pie
+                }
+            )?.groupBy ?? CHART_PREFERENCES.VALUES.Education.PIE[0].value }
     :   {};
 
-    const radarData = CheckPreferences(PREFERENCES.KEY.SHOW_EDUCATION_RADAR_CHART)
-    ?   { title: 'Degrees Duration Overview', groupBy: 'degree.abbreviation'}
+    const radarData = CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_EDUCATION_RADAR_CHART)
+    ?   { 
+            title: 'Degrees Duration Overview',
+            groupBy: CheckChartPreferences(
+                lstUserChartPreferences,
+                {
+                    widget: CHART_PREFERENCES.KEY.WIDGET.Education,
+                    chartType: CHART_PREFERENCES.KEY.CHART.Radar
+                }
+            )?.groupBy ?? CHART_PREFERENCES.VALUES.Education.RADAR[0].value}
     :   {};
     
     return {

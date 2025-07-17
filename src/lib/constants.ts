@@ -24,6 +24,80 @@ export const more_details = {
     slider: ['/home/1.png', '/home/2.png', '/home/3.jpg', '/home/4.png', '/home/5.png']
 }
 
+export const CHART_PREFERENCES = {
+    KEY: {
+        WIDGET: {
+            Education: 'Education',
+            Experience: 'Experience',
+            Project: 'Project',
+            Language: 'Language'
+        },
+        CHART: {
+            Bar: 'Bar',
+            Pie: 'Pie',
+            Radar: 'Radar'
+        }
+    },
+    VALUES: {
+        Education: {
+            BAR: [
+                {label: 'Degree name', value: 'degree.name'},
+                {label: 'Degree abbreviation', value: 'degree.abbreviation'},
+                {label: 'Field of study', value: 'fieldOfStudy.name'},
+            ],
+            PIE: [
+                {label: 'Degree name', value: 'degree.name'},
+                {label: 'Degree abbreviation', value: 'degree.abbreviation'},
+                {label: 'Field of study', value: 'fieldOfStudy.name'},
+            ],
+            RADAR: [
+                {label: 'Degree name', value: 'degree.name'},
+                {label: 'Degree abbreviation', value: 'degree.abbreviation'},
+                {label: 'Field of study', value: 'fieldOfStudy.name'},
+            ]
+        },
+        Experience: {
+            BAR: [
+                {label: 'Job title', value: 'jobTitle'},
+                {label: 'Company name', value: 'companyName'},
+                {label: 'Location', value: 'location'},
+            ],
+            PIE: [
+                {label: 'Job title', value: 'jobTitle'},
+                {label: 'Company name', value: 'companyName'},
+                {label: 'Location', value: 'location'},
+            ],
+            RADAR: [
+                {label: 'Job title', value: 'jobTitle'},
+                {label: 'Company name', value: 'companyName'},
+                {label: 'Location', value: 'location'}
+            ]
+        },
+        Project: {
+            BAR: [
+                {label: 'Title', value: 'title'},
+                {label: 'Featured?', value: 'isFeatured'},
+                {label: 'Experience', value: 'experience.companyName'},
+                {label: 'Education', value: 'education.institution.name'},
+                {label: 'Technologies', value: 'lstTechnologies.name'}
+            ],
+            PIE: [
+                {label: 'Title', value: 'title'},
+                {label: 'Featured?', value: 'isFeatured'},
+                {label: 'Experience', value: 'experience.companyName'},
+                {label: 'Education', value: 'education.institution.name'},
+                {label: 'Technologies', value: 'lstTechnologies.name'}
+            ],
+            RADAR: [
+                {label: 'Title', value: 'title'},
+                {label: 'Featured?', value: 'isFeatured'},
+                {label: 'Experience', value: 'experience.companyName'},
+                {label: 'Education', value: 'education.institution.name'},
+                {label: 'Technologies', value: 'lstTechnologies.name'}
+            ]
+        }
+    }
+}
 export const PREFERENCES = {
     KEY: {
         SHOW_LANGUAGE_BAR_CHART: 'show-language-bar-chart',

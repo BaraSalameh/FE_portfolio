@@ -8,6 +8,7 @@ import { PREFERENCES } from "@/lib/constants";
 export const useLanguageWidget = (): WidgetCardProps => {
 
     const { loading: languageLoading, lstUserLanguages } = useAppSelector(state => state.userLanguage);
+    const { lstUserPreferences } = useAppSelector(state => state.userPreference);
     
     const levelMap: Record<string, number> = {
         native: 100,
@@ -22,15 +23,15 @@ export const useLanguageWidget = (): WidgetCardProps => {
         value: levelMap[item.languageProficiency.level.toLowerCase()] ?? 0
     }));
 
-    const barData = CheckPreferences(PREFERENCES.KEY.SHOW_LANGUAGE_BAR_CHART)
+    const barData = CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_LANGUAGE_BAR_CHART)
     ?   { title: 'Language proficiency overview (100%)', customData: customBarData }
     :   {};
 
-    const pieData = CheckPreferences(PREFERENCES.KEY.SHOW_LANGUAGE_PIE_CHART)
-    ?   { title: 'Language overview', groupBy: 'language.name' }
+    const pieData = CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_LANGUAGE_PIE_CHART)
+    ?   { title: 'Language overview', customData: customBarData }
     :   {};
 
-    const radarData = CheckPreferences(PREFERENCES.KEY.SHOW_LANGUAGE_RADAR_CHART)
+    const radarData = CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_LANGUAGE_RADAR_CHART)
     ?   { title: 'proficiency overview', customData: customBarData }
     :   {};
 

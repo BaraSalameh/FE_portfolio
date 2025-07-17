@@ -16,6 +16,7 @@ export default function OwnerDashboardPage() {
     const { loading: ownerInfoLoading, user: owner } = useAppSelector(state => state.owner);
     const { loading: clientInfoLoading, user: client } = useAppSelector(state => state.client);
     const { unreadContactMessageCount } = useAppSelector(state => state.contactMessage);
+    const { lstUserPreferences } = useAppSelector(state => state.userPreference);
 
     const { role, username } = useParams<{role: 'owner' | 'client' | 'admin', username: string }>();
     const currentUser = useMemo(() => ({
@@ -26,7 +27,7 @@ export default function OwnerDashboardPage() {
     useLoadUserData(role, username);
     const widgets = useWidgets();
     const overviewData = useOverviewWidget();
-    const showOverview = CheckPreferences(PREFERENCES.KEY.SHOW_OVERVIEW_WIDGET);
+    const showOverview = CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_OVERVIEW_WIDGET);
 
     return (
         <>
