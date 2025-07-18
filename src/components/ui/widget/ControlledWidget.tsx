@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { WidgetCardProps } from "./types";
 import { useParams } from "next/navigation";

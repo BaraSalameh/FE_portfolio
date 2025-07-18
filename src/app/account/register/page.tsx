@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { Anchor } from "@/components/ui/form/Anchor";
-import RegisterForm from "../forms/RegisterForm";
 import { useAppSelector } from "@/lib/store/hooks";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -10,6 +9,7 @@ import { cn } from "@/components/utils/cn";
 import { widgetCard } from "@/styles/widget";
 import React from "react";
 import { Loading, Main, SubFooter } from "@/components/shared";
+import { RegisterForm } from "@/features";
 
 const RegisterPage = () => {
 

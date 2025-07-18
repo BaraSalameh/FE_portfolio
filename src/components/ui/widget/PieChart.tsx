@@ -1,3 +1,5 @@
+"use client";
+
 import { CustomTooltip } from "@/components/utils";
 import { generateColorMap } from "@/lib/utils/appFunctions";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";

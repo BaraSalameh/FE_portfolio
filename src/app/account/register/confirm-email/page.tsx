@@ -1,7 +1,7 @@
 'use client';
 
+import { ConfirmationPage } from "@/features";
 import React from "react";
-import ConfirmationPage from "../../pages/ConfirmaionPage";
 
 const ConfirmEmail = () => <ConfirmationPage />
 export default ConfirmEmail;

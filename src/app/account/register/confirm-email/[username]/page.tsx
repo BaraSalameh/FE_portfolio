@@ -1,6 +1,6 @@
 'use client';
 
-import ConfirmationPage from "@/app/account/pages/ConfirmaionPage";
+import { ConfirmationPage } from "@/features";
 import React from "react";
 
 const ConfirmEmailUsername = () => <ConfirmationPage />

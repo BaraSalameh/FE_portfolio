@@ -1,3 +1,5 @@
+"use client";
+
 import { components } from 'react-select';
 import { Paragraph } from '../Paragraph';
 

@@ -1,9 +1,6 @@
 'use client'
+import { ContactUs, Examples, Home, MoreDetails } from '@/features';
 import React from 'react';
-import Home from "./pages/Home";
-import MoreDetails from "./pages/MoreDetails";
-import Examples from './pages/Examples';
-import ContactUs from './pages/ContactUs';
 
 const Index = () => {
     return (

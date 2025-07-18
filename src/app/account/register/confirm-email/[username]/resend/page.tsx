@@ -1,5 +1,5 @@
+import { ResendPage } from "@/features";
 import { Suspense } from "react";
-import ResendPage from "@/app/account/pages/ResendPage";
 
 const ResendPageWrapper = () => {
     return (

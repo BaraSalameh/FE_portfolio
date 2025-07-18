@@ -1,5 +1,5 @@
+import { ConfirmedPage } from "@/features";
 import { Suspense } from "react";
-import ConfirmedPage from "@/app/account/pages/ConfirmedPage";
 
 const ConfirmPageWrapper = () => {
     return (

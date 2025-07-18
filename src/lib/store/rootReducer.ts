@@ -1,15 +1,14 @@
 import { combineReducers } from "redux";
-import authSlice from "./slices/authSlice";
-import searchSlice from "./slices/searchSlice";
-import educationSlice from "./slices/educationSlice";
-import ownerSlice from "./slices/ownerSlice";
-import clientSlice from "./slices/clientSlice";
-import experienceSlice from "./slices/experienceSlice";
-import projectTechnologySlice from "./slices/projectTechnologySlice";
-import userLanguageSlice from "./slices/userLanguageSlice";
-import contactMessageSlice from './slices/contactMessageSlice';
-import userPreferenceSlice from "./slices/userPreferenceSlice";
-import userChartPreferenceSlice from "./slices/userChartPreferenceSlice";
+import authSlice from "@/features/account/slice";
+import searchSlice from "@/features/home/search/slice";
+import educationSlice from "@/features/dashboard/widgets/education/slice";
+import { ownerSlice, clientSlice } from "@/features/dashboard/slices";
+import experienceSlice from "@/features/dashboard/widgets/experience/slice";
+import projectTechnologySlice from "@/features/dashboard/widgets/project/slice";
+import userLanguageSlice from "@/features/dashboard/widgets/language/slice";
+import contactMessageSlice from '@/features/dashboard/profile/contactMessage/slice';
+import userWidgetPreferenceSlice from "@/features/dashboard/profile/settings/widget-preferences/slice";
+import userChartPreferenceSlice from "@/features/dashboard/profile/settings/chart-preferences/slice";
 
 const rootReducer = combineReducers({
     auth: authSlice,
@@ -21,7 +20,7 @@ const rootReducer = combineReducers({
     projectTechnology: projectTechnologySlice,
     userLanguage: userLanguageSlice,
     contactMessage: contactMessageSlice,
-    userPreference: userPreferenceSlice,
+    userWidgetPreference: userWidgetPreferenceSlice,
     userChartPreference: userChartPreferenceSlice
 });
 

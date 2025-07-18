@@ -1,5 +1,7 @@
+"use client";
+
 import { CustomTooltip } from "@/components/utils";
-import { ResponsiveContainer, Tooltip, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend } from "recharts";
+import { ResponsiveContainer, Tooltip, RadarChart, PolarGrid, PolarAngleAxis, Radar } from "recharts";
 import { ChartWidgetProps } from "./types";
 import { useMediaQuery } from "react-responsive";
 

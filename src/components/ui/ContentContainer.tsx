@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from "react"
 import { Paragraph } from "./Paragraph";
 import { cn } from "../utils";

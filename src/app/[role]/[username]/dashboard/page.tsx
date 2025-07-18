@@ -2,21 +2,22 @@
 
 import { useAppSelector } from "@/lib/store/hooks";
 import React, { useMemo } from "react";
-import { ProfileFormData } from "@/lib/schemas";
 import { useParams } from "next/navigation";
-import { WithSkeleton, Main, StaticBackground, ControlledWidget, ProfileV2, ProfileV1 } from "@/components";
-import { useLoadUserData } from "./handlers";
-import { useOverviewWidget, useWidgets } from "./hooks";
+import { WithSkeleton, Main, ControlledWidget } from "@/components";
 import { StaticBackgroundV2 } from "@/components/ui/StaticBackground";
 import { CheckPreferences } from "@/lib/utils/appFunctions";
 import { PREFERENCES } from "@/lib/constants";
+import { ProfileFormData } from "@/features/dashboard/profile/schema";
+import { useWidgets } from "@/features/dashboard/widgets/useWidgets";
+import { useOverviewWidget } from "@/features/dashboard/widgets/overview/hooks";
+import { ProfilePage, useLoadUserData } from "@/features";
 
 export default function OwnerDashboardPage() {
 
     const { loading: ownerInfoLoading, user: owner } = useAppSelector(state => state.owner);
     const { loading: clientInfoLoading, user: client } = useAppSelector(state => state.client);
     const { unreadContactMessageCount } = useAppSelector(state => state.contactMessage);
-    const { lstUserPreferences } = useAppSelector(state => state.userPreference);
+    const { lstUserPreferences } = useAppSelector(state => state.userWidgetPreference);
 
     const { role, username } = useParams<{role: 'owner' | 'client' | 'admin', username: string }>();
     const currentUser = useMemo(() => ({
@@ -32,7 +33,7 @@ export default function OwnerDashboardPage() {
     return (
         <>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-10 pt-5">
-            <ProfileV2
+            <ProfilePage
                 user={currentUser.user as ProfileFormData}
                 unreadContactMessageCount={unreadContactMessageCount}
                 className={`col-span-3 ${showOverview ? 'sm:col-span-2' : 'sm:col-span-3'}`}

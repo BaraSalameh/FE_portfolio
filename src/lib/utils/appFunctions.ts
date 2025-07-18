@@ -1,12 +1,18 @@
+"use client";
+
 import dayjs from 'dayjs';
 import {
     Home, LayoutDashboard, Book, Briefcase, Folder, BadgePercent,
     Languages, PenSquare, MessageSquare, Settings, LogOut
 } from 'lucide-react';
-import { UserLanguageFormData, EducationFormData, UserPreferenceFormData, UserChartPreferenceFormData, WidgetFormData, ChartTypeFormData } from '../schemas';
 import { PREFERENCES } from '../constants';
 import { useParams } from 'next/navigation';
-import { UserChartPreferenceKeys, UserChartPreferenceValues } from '@/app/[role]/[username]/types';
+import { UserLanguageFormData } from '@/features/dashboard/widgets/language/schema';
+import { EducationFormData } from '@/features/dashboard/widgets/education/schema';
+import { Option } from '@/features/types'
+import { UserWidgetPreferenceFormData } from '@/features/dashboard/profile/settings/widget-preferences/schema';
+import { UserChartPreferenceKeys, UserChartPreferenceValues } from '@/features/dashboard/profile/settings/chart-preferences/types';
+import { ChartTypeFormData, UserChartPreferenceFormData, WidgetFormData } from '@/features/dashboard/profile/settings/chart-preferences/schema';
 
 export function transformPayload<T extends object>(obj: T): T {
     return Object.fromEntries(
@@ -152,7 +158,7 @@ export const mapPreferenceToForm = (
     preferenceKey: string,
     preferences: any[],
     preferenceValue: Option[]
-): UserPreferenceFormData => {
+): UserWidgetPreferenceFormData => {
     const userOption = oldUserPreferences.find(item => item?.preference?.name === preferenceKey);
     const defaultOption = preferences.find(opt => opt.name === preferenceKey);
     const defaultValue = preferenceValue?.[0];
@@ -238,11 +244,6 @@ export const getClientLink = (): Record<string, string> | null => {
     }
 };
 
-type Option = {
-    label: string;
-    value: string
-}
-
 export const mergeOptions = (fromEdit?: Option[], fromStore?: Option[]): Option[] => {
     const seen = new Set<string>();
     return [...(fromEdit ?? []), ...(fromStore ?? [])].filter(opt => {
@@ -263,7 +264,7 @@ export const OptionsCreator = ({list, labelKey = 'name', valueKey = 'id', iconKe
     :   [];
 }
 
-export const CheckPreferences = (list: UserPreferenceFormData[], key: string, flag: string = PREFERENCES.VALUE.TOGGLE[0].value) => {
+export const CheckPreferences = (list: UserWidgetPreferenceFormData[], key: string, flag: string = PREFERENCES.VALUE.TOGGLE[0].value) => {
     const pref = list.find((cfg: any) => cfg.preference.name === key);
     
     return !pref ? true : flag ? pref?.value === flag : pref.value;

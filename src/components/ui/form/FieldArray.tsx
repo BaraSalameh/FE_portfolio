@@ -1,3 +1,5 @@
+"use client";
+
 import { useFieldArray } from "react-hook-form";
 import { ControlledDropdown } from "./ControlledDropdown";
 import { Button } from "./Button";

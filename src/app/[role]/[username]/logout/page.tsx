@@ -1,7 +1,7 @@
 'use client';
 
 import { Loading } from "@/components";
-import { logout } from "@/lib/apis/account/logout";
+import { logout } from "@/features";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";

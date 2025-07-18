@@ -1,3 +1,5 @@
+"use client";
+
 import { CUDModal, BlurBackground, ResponsiveIcon, List } from '..';
 import { X } from 'lucide-react';
 import { cn } from '@/components/utils';

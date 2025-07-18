@@ -1,3 +1,5 @@
+"use client";
+
 import { getSelectedOption } from "@/lib/utils/appFunctions";
 import { Controller, FieldValues } from "react-hook-form";
 import { FormDropdown } from "./FormDropdown";
