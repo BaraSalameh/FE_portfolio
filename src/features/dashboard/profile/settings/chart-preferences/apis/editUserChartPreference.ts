@@ -1,7 +1,7 @@
 import { transformPayload } from "@/lib/utils/appFunctions";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { dynamicApi } from "../../../../../apiClient";
-import { UserChartPreferenceFormData } from "@/features/account/schemas";
+import { dynamicApi } from "@/features";
+import { UserChartPreferenceFormData } from "../schema";
 
 export const editUserChartPreference = createAsyncThunk(
     'userChartPreference/editUserChartPreference',
