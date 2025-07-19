@@ -9,7 +9,7 @@ import { editProfile, userInfoQuery } from "@/features";
 export const ProfileForm = ({ onClose } : { onClose?: () => void }) => {
 
     const dispatch = useAppDispatch();
-    const { loading, error, user } = useAppSelector((state) => state.owner);
+    const { loading, error, user } = useAppSelector((state) => state.profile);
     const genderOptions = [
         { label: 'Female', value: '0' },
         { label: 'Male', value: '1' }

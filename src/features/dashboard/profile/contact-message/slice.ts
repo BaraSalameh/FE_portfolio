@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {  userFullInfoQuery } from '@/features';
-import { ContactMessageState } from './types';
+import { ContactMessageState } from './types.contact-message';
 import { contactMessageListQuery, deleteMessage, signMessage } from './api';
 
 const initialState : ContactMessageState = {

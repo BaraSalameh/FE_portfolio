@@ -1,7 +1,7 @@
 import { userByUsernameQuery } from '@/features';
 import { addEditExperience, deleteExperience, experienceListQuery } from '@/features/dashboard/widgets/experience/apis';
 import { createSlice } from '@reduxjs/toolkit';
-import { ExperienceState } from './types';
+import { ExperienceState } from './types.experience';
 import { userFullInfoQuery } from '@/features';
 
 const initialState : ExperienceState = {

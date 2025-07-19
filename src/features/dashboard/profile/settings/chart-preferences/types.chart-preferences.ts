@@ -1,4 +1,4 @@
-import { Option } from "@/features/types";
+import { Option } from "@/features/types.features";
 import { ChartTypeFormData, UserChartPreferenceFormData, WidgetFormData } from "./schema";
 
 export type UserChartPreferenceKeys = {

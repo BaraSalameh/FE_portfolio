@@ -5,7 +5,7 @@ import { useEffect, useMemo } from "react";
 import { mapPreferenceToForm } from "@/lib/utils/appFunctions";
 import { ControlledForm } from "@/components/ui/form";
 import { PREFERENCES } from "@/lib/constants";
-import { UserPreferenceProps } from "../types";
+import { UserPreferenceProps } from "../types.widget-preferences";
 import { UserWidgetPreferenceFormData, userWidgetPreferenceSchema } from "../schema";
 import { editUserWidgetPreference, userWidgetPreferenceListQuery, widgetPreferenceListQuery } from "../apis";
 

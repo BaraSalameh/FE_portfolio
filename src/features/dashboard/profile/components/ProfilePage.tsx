@@ -11,7 +11,7 @@ import dayjs from 'dayjs';
 import { widgetCard } from '@/styles';
 import { PREFERENCES } from '@/lib/constants';
 import { useAppSelector } from '@/lib/store/hooks';
-import { ProfileProps } from '../types';
+import { ProfileProps } from '../types.profile';
 import { ContactMessageForm, ContactMessagePage, SettingsPage, ProfileForm } from '@/features';
  
 export const ProfilePage = ({ 

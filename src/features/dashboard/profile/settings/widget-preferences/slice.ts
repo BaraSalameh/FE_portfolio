@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { userByUsernameQuery, userFullInfoQuery } from '@/features';
 import { editUserWidgetPreference, userWidgetPreferenceListQuery, widgetPreferenceListQuery } from './apis';
-import { UserPreferenceState } from './types';
+import { UserPreferenceState } from './types.widget-preferences';
 
 const initialState : UserPreferenceState = {
     lstUserPreferences: [],

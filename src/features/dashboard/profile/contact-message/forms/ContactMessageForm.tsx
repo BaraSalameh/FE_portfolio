@@ -2,14 +2,14 @@
 
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { ControlledForm } from "@/components/ui/form";
-import { ContactMessageProps } from "../types";
+import { ContactMessageProps } from "../types.contact-message";
 import { ContactMessageFormData, contactMessageSchema } from "../schema";
 import { sendEmail } from "../api";
 
 export const ContactMessageForm = ({onClose} : ContactMessageProps) => {
 
     const dispatch = useAppDispatch();
-    const { loading, error, user } = useAppSelector((state) => state.client);
+    const { loading, error, user } = useAppSelector((state) => state.profile);
 
     const messagePlaceholder = `Dear ${user?.firstname} ${user?.lastname}...`;
 

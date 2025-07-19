@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { userByUsernameQuery, userFullInfoQuery } from '@/features';
-import { UserChartPreferenceState } from './types';
+import { UserChartPreferenceState } from './types.chart-preferences';
 import { chartTypeListQuery, editUserChartPreference, userChartPreferenceListQuery, widgetListQuery } from './apis';
 
 const initialState : UserChartPreferenceState = {

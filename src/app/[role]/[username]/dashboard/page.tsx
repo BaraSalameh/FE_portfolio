@@ -1,7 +1,7 @@
 'use client';
 
 import { useAppSelector } from "@/lib/store/hooks";
-import React, { useMemo } from "react";
+import React from "react";
 import { useParams } from "next/navigation";
 import { WithSkeleton, Main, ControlledWidget } from "@/components";
 import { StaticBackgroundV2 } from "@/components/ui/StaticBackground";
@@ -11,19 +11,15 @@ import { ProfileFormData } from "@/features/dashboard/profile/schema";
 import { useWidgets } from "@/features/dashboard/widgets/useWidgets";
 import { useOverviewWidget } from "@/features/dashboard/widgets/overview/hooks";
 import { ProfilePage, useLoadUserData } from "@/features";
+import { Role } from "@/features/types.features";
 
 export default function OwnerDashboardPage() {
 
-    const { loading: ownerInfoLoading, user: owner } = useAppSelector(state => state.owner);
-    const { loading: clientInfoLoading, user: client } = useAppSelector(state => state.client);
+    const { loading, user } = useAppSelector(state => state.profile);
     const { unreadContactMessageCount } = useAppSelector(state => state.contactMessage);
     const { lstUserPreferences } = useAppSelector(state => state.userWidgetPreference);
 
-    const { role, username } = useParams<{role: 'owner' | 'client' | 'admin', username: string }>();
-    const currentUser = useMemo(() => ({
-        user: role === 'owner' ? owner : client,
-        isLoading: role === 'owner' ? ownerInfoLoading : clientInfoLoading,
-    }), [role, owner, client, ownerInfoLoading, clientInfoLoading]);
+    const { role, username } = useParams<{role: Role, username: string }>();
 
     useLoadUserData(role, username);
     const widgets = useWidgets();
@@ -34,7 +30,7 @@ export default function OwnerDashboardPage() {
         <>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-10 pt-5">
             <ProfilePage
-                user={currentUser.user as ProfileFormData}
+                user={user as ProfileFormData}
                 unreadContactMessageCount={unreadContactMessageCount}
                 className={`col-span-3 ${showOverview ? 'sm:col-span-2' : 'sm:col-span-3'}`}
             />
@@ -45,7 +41,7 @@ export default function OwnerDashboardPage() {
                 />
             }
         </div>
-        <WithSkeleton isLoading={!currentUser.user || currentUser.isLoading} skeleton={<StaticBackgroundV2 />}>
+        <WithSkeleton isLoading={!user || loading} skeleton={<StaticBackgroundV2 />}>
             <Main>
                 <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-3 w-full">
                     {widgets}

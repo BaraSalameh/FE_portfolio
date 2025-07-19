@@ -1,7 +1,7 @@
 "use client";
 
 import { userByUsernameQuery, userFullInfoQuery } from "@/features";
-import { Role } from "@/features/types";
+import { Role } from "@/features/types.features";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { useEffect } from "react";
 

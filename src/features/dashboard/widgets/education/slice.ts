@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { institutionListQuery, degreeListQuery, fieldOfStudyListQuery, educationListQuery, addEditEducation, deleteEducation } from '@/features/dashboard/widgets/education/apis';
 import { userFullInfoQuery } from '@/features';
 import { userByUsernameQuery } from '@/features';
-import { EducationState } from './types';
+import { EducationState } from './types.education';
 
 const initialState : EducationState = {
     lstEducations: [],

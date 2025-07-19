@@ -1,4 +1,4 @@
-import { Option } from "@/features/types";
+import { Option } from "@/features/types.features";
 import { UserWidgetPreferenceFormData, WidgetPreferenceFormData } from "./schema";
 
 // User Widget Preference Slice

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { UserLanguageState } from './types';
+import { UserLanguageState } from './types.language';
 import { userByUsernameQuery, userFullInfoQuery } from '@/features';
 import { editDeleteUserLanguage, languageListQuery, languageProficiencyListQuery, userLanguageListQuery } from './apis';
 

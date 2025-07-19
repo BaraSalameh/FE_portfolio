@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ProjectTechnologyState } from './types';
+import { ProjectTechnologyState } from './types.project';
 import { addEditDeleteProjectTechnology, deleteProject, projectTechnologyListQuery, technologyListQuery } from './apis';
 import { userByUsernameQuery, userFullInfoQuery } from '@/features';
 

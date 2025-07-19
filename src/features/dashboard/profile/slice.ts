@@ -1,18 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { userFullInfoQuery } from "../apis";
+import { userByUsernameQuery, userFullInfoQuery } from "../apis";
 import { logout } from "@/features";
-import { ProfileState } from "../types";
 import { userInfoQuery } from "../profile/apis";
+import { ProfileState } from "./types.profile";
 
-const ownerInitialState: ProfileState = {
-    user: null,
+const initialState: ProfileState = {
+    user: null, 
     loading: false,
     error: null,
 };
 
-const owner = createSlice({
-    name: 'owner',
-    initialState: ownerInitialState,
+const profileSlice = createSlice({
+    name: 'profile',
+    initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
@@ -25,6 +25,19 @@ const owner = createSlice({
             state.user = action.payload.user;
         })
         .addCase(userFullInfoQuery.rejected, (state, action) => {
+            state.loading = false;
+            state.error = (action.payload as string);
+        })
+
+        .addCase(userByUsernameQuery.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        })
+        .addCase(userByUsernameQuery.fulfilled, (state, action) => {
+            state.loading = false;
+            state.user = action.payload.user;
+        })
+        .addCase(userByUsernameQuery.rejected, (state, action) => {
             state.loading = false;
             state.error = (action.payload as string);
         })
@@ -63,4 +76,4 @@ const owner = createSlice({
     },
 });
 
-export const ownerSlice = owner.reducer;
+export default profileSlice.reducer;

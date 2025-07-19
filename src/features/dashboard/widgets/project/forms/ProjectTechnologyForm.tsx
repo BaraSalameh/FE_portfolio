@@ -6,7 +6,7 @@ import { mapProjectTechnologyToForm, mergeOptions, OptionsCreator } from "@/lib/
 import { ControlledForm } from "@/components/ui/form";
 import { Option } from "@/components/ui/form/types";
 import { addEditDeleteProjectTechnology, projectTechnologyListQuery, technologyListQuery } from "../apis";
-import { ProjectTechnologyProps } from "../types";
+import { ProjectTechnologyProps } from "../types.project";
 import { ProjectTechnologyFormData, projectTechnologySchema } from "../schema";
 
 export const ProjectTechnologyForm = ({id, onClose} : ProjectTechnologyProps) => {

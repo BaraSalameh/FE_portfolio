@@ -9,9 +9,9 @@ import { PREFERENCES } from '../constants';
 import { useParams } from 'next/navigation';
 import { UserLanguageFormData } from '@/features/dashboard/widgets/language/schema';
 import { EducationFormData } from '@/features/dashboard/widgets/education/schema';
-import { Option } from '@/features/types'
+import { Option } from '@/features/types.features'
 import { UserWidgetPreferenceFormData } from '@/features/dashboard/profile/settings/widget-preferences/schema';
-import { UserChartPreferenceKeys, UserChartPreferenceValues } from '@/features/dashboard/profile/settings/chart-preferences/types';
+import { UserChartPreferenceKeys, UserChartPreferenceValues } from '@/features/dashboard/profile/settings/chart-preferences/types.chart-preferences';
 import { ChartTypeFormData, UserChartPreferenceFormData, WidgetFormData } from '@/features/dashboard/profile/settings/chart-preferences/schema';
 
 export function transformPayload<T extends object>(obj: T): T {

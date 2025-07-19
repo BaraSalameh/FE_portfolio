@@ -4,7 +4,7 @@ import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { addEditExperience, experienceListQuery } from "@/features/dashboard/widgets/experience/apis";
 import { ControlledForm } from "@/components/ui/form";
 import { useMemo } from "react";
-import { ExperienceProps } from "../types";
+import { ExperienceProps } from "../types.experience";
 import { ExperienceFormData, experienceSchema } from "../schema";
 
 export const ExperienceForm = ({id, onClose} : ExperienceProps) => {

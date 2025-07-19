@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { SearchState } from './types';
+import { SearchState } from './types.search';
 import { userListQuery } from './apis';
 
 const initialState : SearchState = {

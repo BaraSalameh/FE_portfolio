@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ControlledForm } from "@/components/ui/form";
 import { mapUserLanguageToForm, mergeOptions, OptionsCreator } from "@/lib/utils/appFunctions";
 import { Option } from "@/components/ui/form/types";
-import { UserLanguageProps } from "../types";
+import { UserLanguageProps } from "../types.language";
 import { UserLanguageFormData, userLanguageSchema } from "../schema";
 import { editDeleteUserLanguage, languageListQuery, languageProficiencyListQuery, userLanguageListQuery } from "../apis";
 
