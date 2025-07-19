@@ -1,5 +1,5 @@
+import { dynamicApi } from "@/features";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { dynamicApi } from "../../../../apiClient";
 
 export const deleteProject = createAsyncThunk(
     'projectTechnology/deleteProject',

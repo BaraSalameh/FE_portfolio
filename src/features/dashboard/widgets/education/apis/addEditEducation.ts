@@ -1,7 +1,8 @@
-import { EducationFormData } from "@/features/account/schemas";
+
 import { transformPayload } from "@/lib/utils/appFunctions";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { dynamicApi } from "../../../../apiClient";
+import { EducationFormData } from "../schema";
+import { dynamicApi } from "@/features";
 
 export const addEditEducation = createAsyncThunk(
     'education/addEditEducation',

@@ -1,7 +1,7 @@
+import { dynamicApi } from "@/features";
 import { transformPayload } from "@/lib/utils/appFunctions";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { dynamicApi } from "../../../../apiClient";
-import { UserLanguageFormData } from "@/features/account/schemas";
+import { UserLanguageFormData } from "../schema";
 
 export const editDeleteUserLanguage = createAsyncThunk(
     'userLanguage/editDeleteUserLanguage',
