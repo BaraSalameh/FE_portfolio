@@ -1,1 +1,1 @@
-export { EducationForm } from './educationForm';
+export { EducationForm } from './EducationForm';
