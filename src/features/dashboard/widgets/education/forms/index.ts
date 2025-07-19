@@ -1,1 +1,1 @@
-export { EducationForm } from './EducationForm';
+export { EducationForm } from './tempname';
