@@ -2,9 +2,9 @@
 
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { useEffect, useMemo, useState } from "react";
-import { ControlledForm } from "@/components/ui/form";
+import { ControlledForm } from "@/components/forms";
 import { mapUserLanguageToForm, mergeOptions, OptionsCreator } from "@/lib/utils/appFunctions";
-import { Option } from "@/components/ui/form/types";
+import { Option } from "@/features/types.features";
 import { UserLanguageProps } from "../types.language";
 import { UserLanguageFormData, userLanguageSchema } from "../schema";
 import { editDeleteUserLanguage, languageListQuery, languageProficiencyListQuery, userLanguageListQuery } from "../apis";

@@ -1,13 +1,8 @@
 'use client'
-import { Button, Anchor } from "@/components/ui/form";
-import { ImageSlider, ResponsiveIcon } from "@/components/ui";
+import { Button, Anchor } from "@/components/forms";
 import Image from "next/image";
 import { home } from "@/lib/constants";
-import { Paragraph, List } from "@/components/ui";
-import { Container } from "@/components/shared/Container";
-import { Header } from "@/components/shared/Header";
-import { Main } from "@/components/shared/Main";
-import { SubFooter } from "@/components/shared/SubFooter";
+import { Paragraph, List, ImageSlider, ResponsiveIcon, Container, Header, Main, SubFooter } from "@/components";
 import { Contact, File, MoreHorizontal } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { SearchBarPage } from "@/features";

@@ -1,8 +1,8 @@
 'use client';
 
 import React from "react";
-import { BlurBackground, Paragraph } from "../ui";
-import { LoadingProps } from "./types";
+import { LoadingProps } from "./types.shared";
+import { BlurBackground, Paragraph } from "@/components";
 
 export const Loading = ({ message = "Loading...", fullScreen = true, isLoading = false }: LoadingProps) => {
     return (

@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { dynamicApi } from '../../../../apiClient';
-import { FetchAction } from '@/components/types';
+import { FetchAction } from '@/components/types.components';
 
 export const degreeListQuery = createAsyncThunk(
     'education/degreeListQuery',

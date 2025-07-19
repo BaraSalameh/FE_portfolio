@@ -5,16 +5,14 @@ import { useEffect, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { ResponsiveIcon } from './ResponsiveIcon';
 import { Paragraph } from './Paragraph';
+import { ThemeToggleProps } from './types.ui';
 
 export const ThemeToggle = ({
     title,
     themeNameIncluded = false,
     className
-}: {
-    title?: string;
-    themeNameIncluded?: boolean;
-    className?: string;
-}) => {
+}: ThemeToggleProps) => {
+    
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
 

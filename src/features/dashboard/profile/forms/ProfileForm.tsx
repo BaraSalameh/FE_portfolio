@@ -1,7 +1,7 @@
 'use client';
 
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
-import { ControlledForm, ImageUploader } from "@/components/ui/form";
+import { ControlledForm, ImageUploader } from "@/components/forms";
 import { useMemo } from "react";
 import { ProfileFormData, profileSchema } from "../schema";
 import { editProfile, userInfoQuery } from "@/features";

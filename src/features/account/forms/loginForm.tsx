@@ -4,7 +4,7 @@ import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { Paragraph } from "@/components/ui/Paragraph";
 import { LoginFormData, loginSchema } from "@/features/account/schemas";
 import { login } from "@/features";
-import { ControlledForm } from "@/components/ui/form";
+import { ControlledForm } from "@/components/forms";
 
 export const LoginForm = () => {
 

@@ -1,4 +1,4 @@
-import { WidgetCardProps } from "@/components/ui/widget/types";
+import { WidgetCardProps } from "@/components/widgets/types.widgets";
 import { PREFERENCES } from "@/lib/constants";
 import { useAppSelector } from "@/lib/store/hooks";
 import { CheckPreferences } from "@/lib/utils/appFunctions";

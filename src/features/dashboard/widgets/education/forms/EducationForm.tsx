@@ -3,8 +3,8 @@
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { useEffect, useMemo, useState } from "react";
 import { mapEducationToForm, mergeOptions, OptionsCreator } from "@/lib/utils/appFunctions";
-import { ControlledForm } from "@/components/ui/form";
-import { Option } from "@/components/ui/form/types";
+import { ControlledForm } from "@/components/forms";
+import { Option } from "@/features/types.features";
 import { EducationProps } from "../types.education";
 import { EducationFormData, educationSchema } from "../schema";
 import { addEditEducation, degreeListQuery, educationListQuery, fieldOfStudyListQuery, institutionListQuery } from "../apis";

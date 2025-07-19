@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { ContentContainer } from '@/components/ui/ContentContainer';
+import { ContentContainer } from '@/components';
 import { CUDModal, Paragraph, ResponsiveIcon } from '@/components';
 import { BarChart, Calendar, Component, LogOut, Mail, Mars, Phone, PieChart, Radar, SunMoonIcon } from 'lucide-react';
 import { PREFERENCES, CHART_PREFERENCES } from '@/lib/constants';

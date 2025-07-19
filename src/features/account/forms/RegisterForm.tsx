@@ -4,7 +4,7 @@ import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { Paragraph } from "@/components/ui/Paragraph";
 import { register } from "@/features";
 import { RegisterFormData, registerSchema } from "@/features/account/schemas";
-import { ControlledForm } from "@/components/ui/form";
+import { ControlledForm } from "@/components/forms";
 
 export const RegisterForm = () => {
 

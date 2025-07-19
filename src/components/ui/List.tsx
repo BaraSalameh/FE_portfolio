@@ -3,7 +3,7 @@
 import React from 'react';
 import { cn } from '@/components/utils';
 import { list } from '@/styles';
-import { ListProps } from './types';
+import { ListProps } from './types.ui';
 
 export const List = ({
     children,

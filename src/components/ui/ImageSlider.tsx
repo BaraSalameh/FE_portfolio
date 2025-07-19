@@ -1,8 +1,9 @@
 'use client';
 import { useState } from 'react';
 import Image from 'next/image';
+import { ImageSliderProps } from './types.ui';
 
-export const ImageSlider = ({imageList}: {imageList: string[]}) => {
+export const ImageSlider = ({imageList}: ImageSliderProps) => {
     const [current, setCurrent] = useState(0);
 
     const prevSlide = () => {

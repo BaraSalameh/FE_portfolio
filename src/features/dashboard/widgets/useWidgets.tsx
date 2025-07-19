@@ -1,5 +1,5 @@
 import { JSX, useMemo } from "react";
-import { WidgetCardProps } from "@/components/ui/widget/types";
+import { WidgetCardProps } from "@/components/widgets/types.widgets";
 import { ControlledWidget } from "@/components";
 import { CheckPreferences } from "@/lib/utils/appFunctions";
 import { PREFERENCES } from "@/lib/constants";

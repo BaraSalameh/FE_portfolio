@@ -1,4 +1,4 @@
-import { FetchAction } from '@/components/types';
+import { FetchAction } from '@/components/types.components';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { dynamicApi } from '../../../apiClient';
 

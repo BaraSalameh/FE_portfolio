@@ -1,9 +1,6 @@
 'use client';
 
-import { Anchor } from "@/components/ui/form/Anchor";
-import { Main } from "@/components/shared/Main";
-import { SubFooter } from "@/components/shared/SubFooter";
-import { Paragraph } from "@/components/ui/Paragraph";
+import { Paragraph, SubFooter, Main, Anchor } from "@/components";
 import React, { useEffect } from "react";
 import { cn, List, ResponsiveIcon } from "@/components";
 import { Home, Send } from "lucide-react";

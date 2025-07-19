@@ -1,7 +1,7 @@
 'use client';
 
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
-import { ControlledForm } from "@/components/ui/form";
+import { ControlledForm } from "@/components/forms";
 import { ContactMessageProps } from "../types.contact-message";
 import { ContactMessageFormData, contactMessageSchema } from "../schema";
 import { sendEmail } from "../api";

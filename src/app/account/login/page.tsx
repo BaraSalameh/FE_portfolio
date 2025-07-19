@@ -3,12 +3,10 @@
 import {  useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { useEffect } from "react";
 import Image from "next/image";
-import { Anchor } from "@/components/ui/form/Anchor";
 import { useRouter } from "next/navigation";
-import { cn } from "@/components/utils/cn";
 import { widgetCard } from "@/styles/widget";
 import React from "react";
-import { Loading, Main, SubFooter } from "@/components/shared";
+import { Loading, Main, SubFooter, Anchor, cn } from "@/components";
 import { LoginForm, validateToken } from "@/features";
 
 const LoginPage = () => {

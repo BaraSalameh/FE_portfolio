@@ -4,7 +4,7 @@ import { useAppDispatch } from "@/lib/store/hooks";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Paragraph } from "./Paragraph";
-import { ControlledInfiniteScrollProps } from "./types";
+import { ControlledInfiniteScrollProps } from "./types.ui";
 import { cn } from "../utils";
 import { infiniteScroll } from "@/styles/infiniteScroll";
 

@@ -1,4 +1,4 @@
-import { WidgetCardProps } from "@/components/ui/widget/types";
+import { WidgetCardProps } from "@/components/widgets/types.widgets";
 import { useAppSelector } from "@/lib/store/hooks";
 import { Clock, GraduationCap } from "lucide-react";
 import { CheckChartPreferences, CheckPreferences } from "@/lib/utils/appFunctions";

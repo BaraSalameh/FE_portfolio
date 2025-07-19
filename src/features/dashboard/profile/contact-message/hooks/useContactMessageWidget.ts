@@ -1,4 +1,4 @@
-import { WidgetCardProps } from "@/components/ui/widget/types";
+import { WidgetCardProps } from "@/components/widgets/types.widgets";
 import { useAppSelector } from "@/lib/store/hooks";
 import {  MessageCircleHeart, User, SubtitlesIcon, Mail } from "lucide-react";
 import { useMessageDelete } from "./useMessageDelete";

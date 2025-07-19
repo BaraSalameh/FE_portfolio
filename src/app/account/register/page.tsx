@@ -1,14 +1,12 @@
 'use client';
 
 import Image from "next/image";
-import { Anchor } from "@/components/ui/form/Anchor";
 import { useAppSelector } from "@/lib/store/hooks";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { cn } from "@/components/utils/cn";
-import { widgetCard } from "@/styles/widget";
+import { widgetCard } from "@/styles";
 import React from "react";
-import { Loading, Main, SubFooter } from "@/components/shared";
+import { Loading, Main, SubFooter, Anchor, cn } from "@/components";
 import { RegisterForm } from "@/features";
 
 const RegisterPage = () => {

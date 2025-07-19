@@ -1,4 +1,4 @@
-import { CahrtEntry, WidgetCardProps } from "@/components/ui/widget/types";
+import { CahrtEntry, WidgetCardProps } from "@/components/widgets/types.widgets";
 import { useAppSelector } from "@/lib/store/hooks";
 import { BadgePercent, Languages, ListPlusIcon } from "lucide-react";
 import { CheckPreferences } from "@/lib/utils/appFunctions";

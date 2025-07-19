@@ -4,7 +4,7 @@ import { useAppSelector } from "@/lib/store/hooks";
 import React from "react";
 import { useParams } from "next/navigation";
 import { WithSkeleton, Main, ControlledWidget } from "@/components";
-import { StaticBackgroundV2 } from "@/components/ui/StaticBackground";
+import { StaticBackgroundV2 } from "@/components/layout/StaticBackground";
 import { CheckPreferences } from "@/lib/utils/appFunctions";
 import { PREFERENCES } from "@/lib/constants";
 import { ProfileFormData } from "@/features/dashboard/profile/schema";

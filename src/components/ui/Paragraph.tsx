@@ -3,7 +3,7 @@
 import React from 'react';
 import { cn } from '@/components/utils';
 import { paragraph } from '@/styles';
-import { ParagraphProps } from './types';
+import { ParagraphProps } from './types.ui';
 
 export const Paragraph = ({
     children,

@@ -1,7 +1,6 @@
 'use client'
 
-import { Container } from "@/components/shared/Container";
-import { Header } from "@/components/shared/Header";
+import { Header, Container } from "@/components";
 import Image from "next/image";
 
 export default function AccountLayout({children}: Readonly<{children: React.ReactNode;}>) {

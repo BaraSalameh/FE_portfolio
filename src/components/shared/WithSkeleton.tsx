@@ -1,5 +1,5 @@
 import React from 'react';
-import { WithSkeletonProps } from './types';
+import { WithSkeletonProps } from './types.shared';
 import { Loading } from './Loading';
 
 export const WithSkeleton = ({ isLoading, skeleton, children }: WithSkeletonProps) =>

@@ -1,6 +1,6 @@
 'use client'
 
-import { Container } from "@/components/shared/Container";
+import { Container } from "@/components";
 import { Role } from "@/features/types.features";
 import { useAppSelector } from "@/lib/store/hooks";
 import { useParams, useRouter } from "next/navigation";

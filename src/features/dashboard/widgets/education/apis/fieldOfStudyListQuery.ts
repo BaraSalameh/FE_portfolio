@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { FetchAction } from '@/components/types';
+import { FetchAction } from '@/components/types.components';
 import { dynamicApi } from "@/features";
 
 export const fieldOfStudyListQuery = createAsyncThunk(
