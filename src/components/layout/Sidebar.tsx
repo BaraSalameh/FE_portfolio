@@ -5,7 +5,7 @@ import { useParams, usePathname, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Menu } from 'lucide-react';
 import { Paragraph, ResponsiveIcon } from '../ui';
-import { getNavLinks } from '@/lib/utils/appFunctions';
+import { getNavLinks } from '@/lib/utils';
 import React from 'react';
 
 export const Sidebar = () => {

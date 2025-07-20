@@ -1,8 +1,8 @@
 import { WidgetCardProps } from "@/components/widgets/types.widgets";
 import { useAppSelector } from "@/lib/store/hooks";
 import { Folder, Link, SearchCodeIcon, WandSparklesIcon } from "lucide-react";
-import { CheckChartPreferences, CheckPreferences } from "@/lib/utils/appFunctions";
-import { CHART_PREFERENCES, PREFERENCES } from "@/lib/constants";
+import { checkChartPreferences, checkWidgetPreferences } from "@/lib/utils";
+import { chart_preferences, widget_preferences } from "@/lib/utils";
 import { useHandleProjectDelete } from "./useHandleProjectDelete";
 import { useDebouncedSortProject } from "./useDebouncedSortProject";
 import { ProjectTechnologyForm } from "../forms";
@@ -15,39 +15,39 @@ export const useProjectWidget = (): WidgetCardProps => {
     const handleProjectDelete = useHandleProjectDelete();
     const debouncedSortProject = useDebouncedSortProject();
 
-    const barData = CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_PROJECT_BAR_CHART)
+    const barData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_project_bar_chart)
         ?   { 
-                groupBy: CheckChartPreferences(
+                groupBy: checkChartPreferences(
                     lstUserChartPreferences,
                     {
-                        widget: CHART_PREFERENCES.KEY.WIDGET.Project,
-                        chartType: CHART_PREFERENCES.KEY.CHART.Bar
+                        widget: chart_preferences.key.widget.project,
+                        chartType: chart_preferences.key.chart.bar
                     }
-                )?.groupBy ?? CHART_PREFERENCES.VALUES.Project.BAR[0].value}
+                )?.groupBy ?? chart_preferences.values.project.bar[0].value}
         :   {};
     
-        const pieData = CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_PROJECT_PIE_CHART)
+        const pieData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_project_pie_chart)
         ?   { 
                 title: 'technologies Overview',
-                groupBy: CheckChartPreferences(
+                groupBy: checkChartPreferences(
                     lstUserChartPreferences,
                     {
-                        widget: CHART_PREFERENCES.KEY.WIDGET.Project,
-                        chartType: CHART_PREFERENCES.KEY.CHART.Pie
+                        widget: chart_preferences.key.widget.project,
+                        chartType: chart_preferences.key.chart.pie
                     }
-                )?.groupBy ?? CHART_PREFERENCES.VALUES.Project.PIE[0].value }
+                )?.groupBy ?? chart_preferences.values.project.pie[0].value }
         :   {};
     
-        const radarData = CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_PROJECT_RADAR_CHART)
+        const radarData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_project_radar_chart)
         ?   { 
                 title: 'Degrees Duration Overview',
-                groupBy: CheckChartPreferences(
+                groupBy: checkChartPreferences(
                     lstUserChartPreferences,
                     {
-                        widget: CHART_PREFERENCES.KEY.WIDGET.Project,
-                        chartType: CHART_PREFERENCES.KEY.CHART.Radar
+                        widget: chart_preferences.key.widget.project,
+                        chartType: chart_preferences.key.chart.radar
                     }
-                )?.groupBy ?? CHART_PREFERENCES.VALUES.Project.RADAR[0].value}
+                )?.groupBy ?? chart_preferences.values.project.radar[0].value}
         :   {};
 
     return {

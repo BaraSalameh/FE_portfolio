@@ -1,0 +1,1 @@
+export type GetClientLinkResponse = Record<string, string> | null;

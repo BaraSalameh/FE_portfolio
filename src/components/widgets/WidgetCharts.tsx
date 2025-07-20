@@ -3,7 +3,7 @@ import { PieChartWidget, BarChartWidget } from '.';
 import { WidgetChartsProps } from './types.widgets';
 import { RadarChartWidget } from './RadarChart';
 import { useMemo } from 'react';
-import { generateColorMap, generateDurationData, generatePieData } from '@/lib/utils/appFunctions';
+import { generateColorMap, generateDurationData, generatePieData } from '@/lib/utils';
 
 export const WidgetCharts = ({ items, pie, bar, radar }: WidgetChartsProps) => {
 

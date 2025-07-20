@@ -1,8 +1,8 @@
 import { CahrtEntry, WidgetCardProps } from "@/components/widgets/types.widgets";
 import { useAppSelector } from "@/lib/store/hooks";
 import { BadgePercent, Languages, ListPlusIcon } from "lucide-react";
-import { CheckPreferences } from "@/lib/utils/appFunctions";
-import { PREFERENCES } from "@/lib/constants";
+import { checkWidgetPreferences } from "@/lib/utils";
+import { widget_preferences } from "@/lib/utils";
 import { UserLanguageForm } from "../forms";
 
 export const useLanguageWidget = (): WidgetCardProps => {
@@ -23,15 +23,15 @@ export const useLanguageWidget = (): WidgetCardProps => {
         value: levelMap[item.languageProficiency.level.toLowerCase()] ?? 0
     }));
 
-    const barData = CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_LANGUAGE_BAR_CHART)
+    const barData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_language_bar_chart)
     ?   { title: 'Language proficiency overview (100%)', customData: customBarData }
     :   {};
 
-    const pieData = CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_LANGUAGE_PIE_CHART)
+    const pieData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_language_pie_chart)
     ?   { title: 'Language overview', customData: customBarData }
     :   {};
 
-    const radarData = CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_LANGUAGE_RADAR_CHART)
+    const radarData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_language_radar_chart)
     ?   { title: 'proficiency overview', customData: customBarData }
     :   {};
 

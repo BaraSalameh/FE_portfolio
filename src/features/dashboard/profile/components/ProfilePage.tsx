@@ -4,12 +4,12 @@ import Image from 'next/image';
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Copy, Home, Link, Mail, MessageCircle, Phone, Settings } from 'lucide-react';
-import { CheckPreferences, getClientLink, getUrlParams } from '@/lib/utils/appFunctions';
+import { checkWidgetPreferences, getClientLink, getUrlParams } from '@/lib/utils';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { Button, cn, CUDModal, Paragraph, ResponsiveIcon } from '@/components';
 import dayjs from 'dayjs';
 import { widgetCard } from '@/styles';
-import { PREFERENCES } from '@/lib/constants';
+import { widget_preferences } from '@/lib/utils';
 import { useAppSelector } from '@/lib/store/hooks';
 import { ProfileProps } from '../types.profile';
 import { ContactMessageForm, ContactMessagePage, SettingsPage, ProfileForm } from '@/features';
@@ -108,7 +108,7 @@ export const ProfilePage = ({
                     <Paragraph position='center' className="italic">
                         {user?.title} 
                     </Paragraph>
-                    {CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_GENDER) && user?.gender && 
+                    {checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_gender) && user?.gender && 
                         <Paragraph position="center">
                             {user?.gender?.toString() === '1'
                                 ? 'Male'
@@ -118,21 +118,21 @@ export const ProfilePage = ({
                             }
                         </Paragraph>
                     }
-                    {CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_BIRTHDATE) && user?.birthDate &&
+                    {checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_birthdate) && user?.birthDate &&
                         <Paragraph position="center">
                             {user?.birthDate ? ` (${ dayjs().diff(user.birthDate, 'year')} years old)` : ''}
                         </Paragraph>
                     }
                 </div>
                 <div className='sm:flex justify-around py-4 gap-5 space-y-2'>
-                    {CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_EMAIL_ADDRESS) &&
+                    {checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_email_address) &&
                         <Paragraph>
                             <ResponsiveIcon icon={Mail} />
                             {user?.email}
                             <ResponsiveIcon icon={Copy} onClick={() => navigator.clipboard.writeText(user.email as string)} className='cursor-pointer' />
                         </Paragraph>
                     }
-                    {CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_PHONE_NUMBER) && user?.phone &&
+                    {checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_phone_number) && user?.phone &&
                         <Paragraph>
                             <ResponsiveIcon icon={Phone} />
                             {user.phone}

@@ -1,7 +1,7 @@
 'use client'
 import { Button, Anchor } from "@/components/forms";
 import Image from "next/image";
-import { home } from "@/lib/constants";
+import { static_home_page } from "@/lib/utils";
 import { Paragraph, List, ImageSlider, ResponsiveIcon, Container, Header, Main, SubFooter } from "@/components";
 import { Contact, File, MoreHorizontal } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -26,19 +26,19 @@ export const Home = () => {
                     </div>
                 </Header>
                 <Main itemsX='start'>
-                    <ImageSlider imageList={home.slider} />
+                    <ImageSlider imageList={static_home_page.slider} />
                     <Paragraph size="xl" className="w-full">
-                        {home.introduction}
+                        {static_home_page.introduction}
                     </Paragraph>
                     <Paragraph size='lg'>
-                        {home.subtext}
+                        {static_home_page.subtext}
                     </Paragraph>
                         <List>
                             How it works:
-                            {home.list.map((p, idx) => <li key={idx}>{p}</li>)}
+                            {static_home_page.list.map((p, idx) => <li key={idx}>{p}</li>)}
                         </List>
                     <Paragraph>
-                        {home.abstract}
+                        {static_home_page.abstract}
                     </Paragraph>
                     <div className="flex gap-4 items-center flex-col sm:flex-row w-full">
                         <SearchBarPage />

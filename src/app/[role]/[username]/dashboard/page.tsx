@@ -5,8 +5,8 @@ import React from "react";
 import { useParams } from "next/navigation";
 import { WithSkeleton, Main, ControlledWidget } from "@/components";
 import { StaticBackgroundV2 } from "@/components/layout/StaticBackground";
-import { CheckPreferences } from "@/lib/utils/appFunctions";
-import { PREFERENCES } from "@/lib/constants";
+import { checkWidgetPreferences } from "@/lib/utils";
+import { widget_preferences } from "@/lib/utils";
 import { ProfileFormData } from "@/features/dashboard/profile/schema";
 import { useWidgets } from "@/features/dashboard/widgets/useWidgets";
 import { useOverviewWidget } from "@/features/dashboard/widgets/overview/hooks";
@@ -24,7 +24,7 @@ export default function OwnerDashboardPage() {
     useLoadUserData(role, username);
     const widgets = useWidgets();
     const overviewData = useOverviewWidget();
-    const showOverview = CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_OVERVIEW_WIDGET);
+    const showOverview = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_overview_widget);
 
     return (
         <>

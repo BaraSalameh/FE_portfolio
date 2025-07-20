@@ -1,8 +1,8 @@
 import { JSX, useMemo } from "react";
 import { WidgetCardProps } from "@/components/widgets/types.widgets";
 import { ControlledWidget } from "@/components";
-import { CheckPreferences } from "@/lib/utils/appFunctions";
-import { PREFERENCES } from "@/lib/constants";
+import { checkWidgetPreferences } from "@/lib/utils";
+import { widget_preferences } from "@/lib/utils";
 import { useAppSelector } from "@/lib/store/hooks";
 import { useEducationWidget } from "./education/hooks";
 import { useExperienceWidget } from "./experience/hooks/useExperienceWidget";
@@ -17,7 +17,7 @@ export const useWidgets = () => {
     const experienceData = useExperienceWidget();
     const languageData = useLanguageWidget();
 
-    const showProjectWidget = CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_PROJECT_WIDGET);
+    const showProjectWidget = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_project_widget);
 
     const renderWidgets = useMemo((): JSX.Element[] => {
         const widgets: WidgetCardProps[] = [

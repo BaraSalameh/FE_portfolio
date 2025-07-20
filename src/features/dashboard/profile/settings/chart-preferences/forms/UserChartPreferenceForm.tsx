@@ -2,7 +2,7 @@
 
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { useEffect, useMemo } from "react";
-import { mapChartPreferenceToForm } from "@/lib/utils/appFunctions";
+import { mapChartPreferenceToForm } from "@/lib/utils";
 import { ControlledForm } from "@/components/forms";
 import { UserChartPreferenceProps } from "../types.chart-preferences";
 import { UserChartPreferenceFormData, userChartPreferenceSchema } from "../schema";

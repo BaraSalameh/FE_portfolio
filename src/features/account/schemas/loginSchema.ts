@@ -1,7 +1,5 @@
+import { emailRegex, passwordRegex } from '@/lib/utils';
 import { z } from 'zod';
-
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
 
 export const loginSchema = z.object({
     email: z.string().min(1, 'Email is required').regex(emailRegex, 'Not valid email'),

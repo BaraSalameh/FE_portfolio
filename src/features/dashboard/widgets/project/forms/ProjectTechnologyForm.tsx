@@ -2,7 +2,7 @@
 
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { useEffect, useMemo, useState } from "react";
-import { mapProjectTechnologyToForm, mergeOptions, OptionsCreator } from "@/lib/utils/appFunctions";
+import { mapProjectTechnologyToForm, mergeOptions, optionsCreator } from "@/lib/utils";
 import { ControlledForm } from "@/components/forms";
 import { Option } from "@/features/types.features";
 import { addEditDeleteProjectTechnology, projectTechnologyListQuery, technologyListQuery } from "../apis";
@@ -27,7 +27,7 @@ export const ProjectTechnologyForm = ({id, onClose} : ProjectTechnologyProps) =>
     , [lstEducations]);
 
     const experienceOptions = useMemo(() =>
-        OptionsCreator({list: lstExperiences, labelKey: 'companyName'})
+        optionsCreator({list: lstExperiences, labelKey: 'companyName'})
     , [lstEducations]);
 
     const onSubmit = async (data: ProjectTechnologyFormData) => {
@@ -57,8 +57,8 @@ export const ProjectTechnologyForm = ({id, onClose} : ProjectTechnologyProps) =>
 
     useEffect(() => {
         const { lstTechnologies: ltfe } = projectTechnologyToHandle ?? {};
-        const technologiesFromEdit = ltfe ? OptionsCreator({list: ltfe, iconKey: 'iconUrl'}) : [];
-        const technologiesStore = OptionsCreator({list: lstTechnologies, iconKey: 'iconUrl'});
+        const technologiesFromEdit = ltfe ? optionsCreator({list: ltfe, iconKey: 'iconUrl'}) : [];
+        const technologiesStore = optionsCreator({list: lstTechnologies, iconKey: 'iconUrl'});
         setTechnologyOptions(mergeOptions(technologiesFromEdit, technologiesStore));
 
     }, [projectTechnologyToHandle, lstTechnologies]);

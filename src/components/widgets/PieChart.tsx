@@ -1,7 +1,7 @@
 "use client";
 
 import { customTooltip } from "@/components/utils";
-import { generateColorMap } from "@/lib/utils/appFunctions";
+import { generateColorMap } from "@/lib/utils";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { ChartWidgetProps } from "./types.widgets";
 import { useMediaQuery } from 'react-responsive';

@@ -2,7 +2,7 @@
 
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { useEffect, useMemo, useState } from "react";
-import { mapEducationToForm, mergeOptions, OptionsCreator } from "@/lib/utils/appFunctions";
+import { mapEducationToForm, mergeOptions, optionsCreator } from "@/lib/utils";
 import { ControlledForm } from "@/components/forms";
 import { Option } from "@/features/types.features";
 import { EducationProps } from "../types.education";
@@ -35,13 +35,13 @@ export const EducationForm = ({id, onClose} : EducationProps) => {
 
     useEffect(() => {
         const { institution, degree, fieldOfStudy } = educationToHandle ?? {};
-        const institutionFromEdit = OptionsCreator({list: institution });
-        const degreeFromEdit = OptionsCreator({list: degree});
-        const fieldOfStudyFromEdit = OptionsCreator({list: fieldOfStudy});
+        const institutionFromEdit = optionsCreator({list: institution });
+        const degreeFromEdit = optionsCreator({list: degree});
+        const fieldOfStudyFromEdit = optionsCreator({list: fieldOfStudy});
 
-        const institutionFromStore = OptionsCreator({list: lstInstitutions});
-        const degreeFromStore = OptionsCreator({list: lstDegrees});
-        const fieldOfStudyFromStore = OptionsCreator({list: lstFields});
+        const institutionFromStore = optionsCreator({list: lstInstitutions});
+        const degreeFromStore = optionsCreator({list: lstDegrees});
+        const fieldOfStudyFromStore = optionsCreator({list: lstFields});
 
         setInstitutionOptions(mergeOptions(institutionFromEdit, institutionFromStore));
         setDegreeOptions(mergeOptions(degreeFromEdit, degreeFromStore));

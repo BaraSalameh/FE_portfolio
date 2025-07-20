@@ -1,7 +1,7 @@
 "use client";
 
 import { customTooltip } from "@/components/utils";
-import { generateColorMap } from "@/lib/utils/appFunctions";
+import { generateColorMap } from "@/lib/utils";
 import { Cell, Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { ChartWidgetProps } from "./types.widgets";
 

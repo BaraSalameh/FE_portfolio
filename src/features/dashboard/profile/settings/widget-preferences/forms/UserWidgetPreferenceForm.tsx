@@ -2,9 +2,9 @@
 
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { useEffect, useMemo } from "react";
-import { mapPreferenceToForm } from "@/lib/utils/appFunctions";
+import { mapPreferenceToForm } from "@/lib/utils";
 import { ControlledForm } from "@/components/forms";
-import { PREFERENCES } from "@/lib/constants";
+import { widget_preferences } from "@/lib/utils";
 import { UserPreferenceProps } from "../types.widget-preferences";
 import { UserWidgetPreferenceFormData, userWidgetPreferenceSchema } from "../schema";
 import { editUserWidgetPreference, userWidgetPreferenceListQuery, widgetPreferenceListQuery } from "../apis";
@@ -17,7 +17,7 @@ export const UserWidgetPreferenceForm = ({id, onClose, preferenceKey, preference
     const indicator = {when: 'Update', while: 'Updating...'};
 
     const valueOptions = useMemo(() =>
-        !preferenceValues || preferenceValues === 'toggle' ? PREFERENCES.VALUE.TOGGLE : preferenceValues
+        !preferenceValues || preferenceValues === 'toggle' ? widget_preferences.value.toggle : preferenceValues
     , [preferenceValues]);
 
     const onSubmit = async (data: UserWidgetPreferenceFormData) => {

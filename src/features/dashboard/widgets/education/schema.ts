@@ -1,6 +1,5 @@
+import { guidRegex } from '@/lib/utils';
 import { z } from 'zod';
-
-const guidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/;
 
 export const educationSchema = z.object({
     id: z.string().optional(),

@@ -5,12 +5,11 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { ContentContainer } from '@/components';
 import { CUDModal, Paragraph, ResponsiveIcon } from '@/components';
 import { BarChart, Calendar, Component, LogOut, Mail, Mars, Phone, PieChart, Radar, SunMoonIcon } from 'lucide-react';
-import { PREFERENCES, CHART_PREFERENCES } from '@/lib/constants';
-import { CheckPreferences, getUrlParams } from '@/lib/utils/appFunctions';
 import { useRouter } from 'next/navigation';
 import { useAppSelector } from '@/lib/store/hooks';
 import { UserWidgetPreferenceForm } from '../widget-preferences/forms/UserWidgetPreferenceForm';
 import { UserChartPreferenceForm } from '../chart-preferences/forms/UserChartPreferenceForm';
+import { chart_preferences, checkWidgetPreferences, getUrlParams, widget_preferences } from '@/lib/utils';
 
 export const SettingsPage = () => {
 
@@ -26,102 +25,102 @@ export const SettingsPage = () => {
                 </CUDModal>
                 <ContentContainer title='Profile'>
                     <CUDModal title='Show/Hide gender' icon={Mars}>
-                        <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_GENDER} />
+                        <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_gender} />
                     </CUDModal>
                     <CUDModal title='Show/Hide birthdate' icon={Calendar}>
-                        <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_BIRTHDATE} />
+                        <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_birthdate} />
                     </CUDModal>
                     <CUDModal title='Show/Hide email address' icon={Mail}>
-                        <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_EMAIL_ADDRESS} />
+                        <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_email_address} />
                     </CUDModal>
                     <CUDModal title='Show/Hide phone number' icon={Phone}>
-                        <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_PHONE_NUMBER} />
+                        <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_phone_number} />
                     </CUDModal>
                 </ContentContainer>
                 <ContentContainer title='Overview'>
                     <CUDModal title='Show/Hide widget' icon={Component}>
-                        <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_OVERVIEW_WIDGET} />
+                        <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_overview_widget} />
                     </CUDModal>
-                    {CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_OVERVIEW_WIDGET) &&
+                    {checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_overview_widget) &&
                         <React.Fragment>
                             <CUDModal title='Show/Hide Bar chart' icon={BarChart}>
-                                <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_OVERVIEW_BAR_CHART} />
+                                <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_overview_bar_chart} />
                             </CUDModal>
                             <CUDModal title='Show/Hide Pie chart' icon={PieChart}>
-                                <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_OVERVIEW_PIE_CHART} />
+                                <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_overview_pie_chart} />
                             </CUDModal>
                             <CUDModal title='Show/Hide Radar chart' icon={Radar}>
-                                <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_OVERVIEW_RADAR_CHART} />
+                                <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_overview_radar_chart} />
                             </CUDModal>
                         </React.Fragment>
                     }
                 </ContentContainer>
                 <ContentContainer title='Education'>
                     <CUDModal title='Show/Hide Bar chart' icon={BarChart}>
-                        <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_EDUCATION_BAR_CHART} />
+                        <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_education_bar_chart} />
                     </CUDModal>
                     <CUDModal title='Show/Hide Pie chart' icon={PieChart}>
-                        <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_EDUCATION_PIE_CHART} />
+                        <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_education_pie_chart} />
                     </CUDModal>
                     <CUDModal title='Show/Hide Radar chart' icon={Radar}>
-                        <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_EDUCATION_RADAR_CHART} />
+                        <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_education_radar_chart} />
                     </CUDModal>
                 </ContentContainer>
                 <ContentContainer title='Experience'>
                     <CUDModal title='Show/Hide Bar chart' icon={BarChart}>
-                        <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_EXPERIENCE_BAR_CHART} />
+                        <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_experience_bar_chart} />
                     </CUDModal>
                     <CUDModal title='Show/Hide Pie chart' icon={PieChart}>
-                        <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_EXPERIENCE_PIE_CHART} />
+                        <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_experience_pie_chart} />
                     </CUDModal>
                     <CUDModal title='Show/Hide Radar chart' icon={Radar}>
-                        <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_EXPERIENCE_RADAR_CHART} />
+                        <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_experience_radar_chart} />
                     </CUDModal>
                 </ContentContainer>
                 <ContentContainer title='Project'>
                     <CUDModal title='Show/Hide widget' icon={Component}>
-                        <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_PROJECT_WIDGET} />
+                        <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_project_widget} />
                     </CUDModal>
-                    {CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_PROJECT_WIDGET) &&
+                    {checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_project_widget) &&
                         <React.Fragment>
                             <CUDModal title='Show/Hide Bar chart' icon={BarChart}>
-                                <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_PROJECT_BAR_CHART} />
+                                <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_project_bar_chart} />
                             </CUDModal>
                             <CUDModal title='Show/Hide Pie chart' icon={PieChart}>
-                                <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_PROJECT_PIE_CHART} />
+                                <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_project_pie_chart} />
                             </CUDModal>
                             <CUDModal title='Show/Hide Radar chart' icon={Radar}>
-                                <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_PROJECT_RADAR_CHART} />
+                                <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_project_radar_chart} />
                             </CUDModal>
                         </React.Fragment>
                     }
                 </ContentContainer>
                 <ContentContainer title='Language'>
                     <CUDModal title='Show/Hide Bar chart' icon={BarChart}>
-                        <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_LANGUAGE_BAR_CHART} />
+                        <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_language_bar_chart} />
                     </CUDModal>
                     <CUDModal title='Show/Hide Pie chart' icon={PieChart}>
-                        <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_LANGUAGE_PIE_CHART} />
+                        <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_language_pie_chart} />
                     </CUDModal>
                     <CUDModal title='Show/Hide Radar chart' icon={Radar}>
-                        <UserWidgetPreferenceForm preferenceKey={PREFERENCES.KEY.SHOW_LANGUAGE_RADAR_CHART} />
+                        <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_language_radar_chart} />
                     </CUDModal>
                 </ContentContainer>
             </ContentContainer>
             <ContentContainer title='Chart Preferences' space='lg'>
                 <ContentContainer title='Education'>
-                    {CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_EDUCATION_BAR_CHART) &&
+                    {checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_education_bar_chart) &&
                         <CUDModal title='Customize bar chart' icon={BarChart}>
                             <UserChartPreferenceForm
                                 preferenceKeys={
                                     {
-                                        widget: CHART_PREFERENCES.KEY.WIDGET.Education,
-                                        chartType: CHART_PREFERENCES.KEY.CHART.Bar
+                                        widget: chart_preferences.key.widget.education,
+                                        chartType: chart_preferences.key.chart.bar
                                     }
                                 }
                                 preferenceValues={
                                     {
-                                        groupBy: CHART_PREFERENCES.VALUES.Education.BAR,
+                                        groupBy: chart_preferences.values.education.bar,
                                         valueSource: [
                                             {label: 'Duration', value: 'duration'},
                                             {label: 'Count', value: 'count'}
@@ -131,18 +130,18 @@ export const SettingsPage = () => {
                             />
                         </CUDModal>
                     }
-                    {CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_EDUCATION_PIE_CHART) &&
+                    {checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_education_pie_chart) &&
                         <CUDModal title='Customize pie chart' icon={PieChart}>
                             <UserChartPreferenceForm
                                 preferenceKeys={
                                     {
-                                        widget: CHART_PREFERENCES.KEY.WIDGET.Education,
-                                        chartType: CHART_PREFERENCES.KEY.CHART.Pie
+                                        widget: chart_preferences.key.widget.education,
+                                        chartType: chart_preferences.key.chart.pie
                                     }
                                 }
                                 preferenceValues={
                                     {
-                                        groupBy: CHART_PREFERENCES.VALUES.Education.PIE,
+                                        groupBy: chart_preferences.values.education.pie,
                                         valueSource: [
                                             {label: 'Duration', value: 'duration'},
                                             {label: 'Count', value: 'count'}
@@ -152,18 +151,18 @@ export const SettingsPage = () => {
                             />
                         </CUDModal>
                     }
-                    {CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_EDUCATION_RADAR_CHART) &&
+                    {checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_education_radar_chart) &&
                         <CUDModal title='Customize radar chart' icon={Radar}>
                             <UserChartPreferenceForm
                                 preferenceKeys={
                                     {
-                                        widget: CHART_PREFERENCES.KEY.WIDGET.Education,
-                                        chartType: CHART_PREFERENCES.KEY.CHART.Radar
+                                        widget: chart_preferences.key.widget.education,
+                                        chartType: chart_preferences.key.chart.radar
                                     }
                                 }
                                 preferenceValues={
                                     {
-                                        groupBy: CHART_PREFERENCES.VALUES.Education.RADAR,
+                                        groupBy: chart_preferences.values.education.radar,
                                         valueSource: [
                                             {label: 'Duration', value: 'duration'},
                                             {label: 'Count', value: 'count'}
@@ -175,18 +174,18 @@ export const SettingsPage = () => {
                     }
                 </ContentContainer>
                 <ContentContainer title='Experience'>
-                    {CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_EXPERIENCE_BAR_CHART) &&
+                    {checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_experience_bar_chart) &&
                         <CUDModal title='Customize bar chart' icon={BarChart}>
                             <UserChartPreferenceForm
                                 preferenceKeys={
                                     {
-                                        widget: CHART_PREFERENCES.KEY.WIDGET.Experience,
-                                        chartType: CHART_PREFERENCES.KEY.CHART.Bar
+                                        widget: chart_preferences.key.widget.experience,
+                                        chartType: chart_preferences.key.chart.bar
                                     }
                                 }
                                 preferenceValues={
                                     {
-                                        groupBy: CHART_PREFERENCES.VALUES.Experience.BAR,
+                                        groupBy: chart_preferences.values.experience.bar,
                                         valueSource: [
                                             {label: 'Duration', value: 'duration'},
                                             {label: 'Count', value: 'count'}
@@ -196,18 +195,18 @@ export const SettingsPage = () => {
                             />
                         </CUDModal>
                     }
-                    {CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_EXPERIENCE_PIE_CHART) &&
+                    {checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_experience_pie_chart) &&
                         <CUDModal title='Customize pie chart' icon={PieChart}>
                             <UserChartPreferenceForm
                                 preferenceKeys={
                                     {
-                                        widget: CHART_PREFERENCES.KEY.WIDGET.Experience,
-                                        chartType: CHART_PREFERENCES.KEY.CHART.Pie
+                                        widget: chart_preferences.key.widget.experience,
+                                        chartType: chart_preferences.key.chart.pie
                                     }
                                 }
                                 preferenceValues={
                                     {
-                                        groupBy: CHART_PREFERENCES.VALUES.Experience.PIE,
+                                        groupBy: chart_preferences.values.experience.pie,
                                         valueSource: [
                                             {label: 'Duration', value: 'duration'},
                                             {label: 'Count', value: 'count'}
@@ -217,18 +216,18 @@ export const SettingsPage = () => {
                             />
                         </CUDModal>
                     }
-                    {CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_EXPERIENCE_RADAR_CHART) &&
+                    {checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_experience_radar_chart) &&
                         <CUDModal title='Customize radar chart' icon={Radar}>
                             <UserChartPreferenceForm
                                 preferenceKeys={
                                     {
-                                        widget: CHART_PREFERENCES.KEY.WIDGET.Experience,
-                                        chartType: CHART_PREFERENCES.KEY.CHART.Radar
+                                        widget: chart_preferences.key.widget.experience,
+                                        chartType: chart_preferences.key.chart.radar
                                     }
                                 }
                                 preferenceValues={
                                     {
-                                        groupBy: CHART_PREFERENCES.VALUES.Experience.RADAR,
+                                        groupBy: chart_preferences.values.experience.radar,
                                         valueSource: [
                                             {label: 'Duration', value: 'duration'},
                                             {label: 'Count', value: 'count'}
@@ -239,20 +238,20 @@ export const SettingsPage = () => {
                         </CUDModal>
                     }
                 </ContentContainer>
-                {CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_PROJECT_WIDGET) &&
+                {checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_project_widget) &&
                     <ContentContainer title='Project'>
-                        {CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_PROJECT_BAR_CHART) &&
+                        {checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_project_bar_chart) &&
                             <CUDModal title='Customize bar chart' icon={BarChart}>
                                 <UserChartPreferenceForm
                                     preferenceKeys={
                                         {
-                                            widget: CHART_PREFERENCES.KEY.WIDGET.Project,
-                                            chartType: CHART_PREFERENCES.KEY.CHART.Bar
+                                            widget: chart_preferences.key.widget.project,
+                                            chartType: chart_preferences.key.chart.bar
                                         }
                                     }
                                     preferenceValues={
                                         {
-                                            groupBy: CHART_PREFERENCES.VALUES.Project.BAR,
+                                            groupBy: chart_preferences.values.project.bar,
                                             valueSource: [
                                                 {label: 'Duration', value: 'duration'},
                                                 {label: 'Count', value: 'count'}
@@ -262,18 +261,18 @@ export const SettingsPage = () => {
                                 />
                             </CUDModal>
                         }
-                        {CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_PROJECT_PIE_CHART) &&
+                        {checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_project_pie_chart) &&
                             <CUDModal title='Customize pie chart' icon={PieChart}>
                                 <UserChartPreferenceForm
                                     preferenceKeys={
                                         {
-                                            widget: CHART_PREFERENCES.KEY.WIDGET.Project,
-                                            chartType: CHART_PREFERENCES.KEY.CHART.Pie
+                                            widget: chart_preferences.key.widget.project,
+                                            chartType: chart_preferences.key.chart.pie
                                         }
                                     }
                                     preferenceValues={
                                         {
-                                            groupBy: CHART_PREFERENCES.VALUES.Project.PIE,
+                                            groupBy: chart_preferences.values.project.pie,
                                             valueSource: [
                                                 {label: 'Duration', value: 'duration'},
                                                 {label: 'Count', value: 'count'}
@@ -283,18 +282,18 @@ export const SettingsPage = () => {
                                 />
                             </CUDModal>
                         }
-                        {CheckPreferences(lstUserPreferences, PREFERENCES.KEY.SHOW_PROJECT_RADAR_CHART) &&
+                        {checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_project_radar_chart) &&
                             <CUDModal title='Customize radar chart' icon={Radar}>
                                 <UserChartPreferenceForm
                                     preferenceKeys={
                                         {
-                                            widget: CHART_PREFERENCES.KEY.WIDGET.Project,
-                                            chartType: CHART_PREFERENCES.KEY.CHART.Radar
+                                            widget: chart_preferences.key.widget.project,
+                                            chartType: chart_preferences.key.chart.radar
                                         }
                                     }
                                     preferenceValues={
                                         {
-                                            groupBy: CHART_PREFERENCES.VALUES.Project.RADAR,
+                                            groupBy: chart_preferences.values.project.radar,
                                             valueSource: [
                                                 {label: 'Duration', value: 'duration'},
                                                 {label: 'Count', value: 'count'}

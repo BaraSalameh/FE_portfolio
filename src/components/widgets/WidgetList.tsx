@@ -8,7 +8,7 @@ import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from 
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { SortableItem } from './SortableItem';
 import { WidgetListProps } from './types.widgets';
-import { extractPathValue } from '@/lib/utils/appFunctions';
+import { extractPathValue } from '@/lib/utils';
 import { ResponsiveIcon, Paragraph } from '../ui';
 import { ControlledInfiniteScroll } from '../ui/ControlledInfiniteScroll';
 
