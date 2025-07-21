@@ -1,4 +1,4 @@
-import { dynamicApi } from "@/features";
+import { dynamicApi } from "@/lib/utils";
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 export const userFullInfoQuery = createAsyncThunk(

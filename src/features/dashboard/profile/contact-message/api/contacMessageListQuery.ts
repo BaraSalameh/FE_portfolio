@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { FetchAction } from '@/components/types.components';
-import { dynamicApi } from "@/features";
+import { dynamicApi } from "@/lib/utils";
 
 export const contactMessageListQuery = createAsyncThunk(
     'contactMessage/contactMessageListQuery',

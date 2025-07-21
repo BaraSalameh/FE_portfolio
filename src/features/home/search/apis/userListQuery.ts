@@ -1,6 +1,6 @@
 import { FetchAction } from '@/components/types.components';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { dynamicApi } from '../../../apiClient';
+import { dynamicApi } from '../../../../lib/utils/api/apiClient';
 
 export const userListQuery = createAsyncThunk(
     'search/userListQuery',

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { dynamicApi } from '@/features';
+import { dynamicApi } from '@/lib/utils';
 
 export const validateToken = createAsyncThunk(
     'auth/validateToken',

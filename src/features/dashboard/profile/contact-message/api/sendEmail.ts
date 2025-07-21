@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ContactMessageFormData } from "../schema";
-import { dynamicApi } from "@/features/apiClient";
+import { dynamicApi } from "@/lib/utils/api/apiClient";
 
 export const sendEmail = createAsyncThunk(
     'client/sendEmail',

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { dynamicApi } from "../../../../apiClient";
+import { dynamicApi } from "../../../../../lib/utils/api/apiClient";
 
 export const deleteEducation = createAsyncThunk(
     'education/deleteEducation',
