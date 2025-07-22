@@ -8,6 +8,7 @@ import { useEducationWidget } from "./education/hooks";
 import { useExperienceWidget } from "./experience/hooks/useExperienceWidget";
 import { useProjectWidget } from "./project/hooks";
 import { useLanguageWidget } from "./language/hooks";
+import { useSkillWidget } from "./skill";
 
 export const useWidgets = () => {
 
@@ -16,6 +17,7 @@ export const useWidgets = () => {
     const educationData = useEducationWidget();
     const experienceData = useExperienceWidget();
     const languageData = useLanguageWidget();
+    const skillData = useSkillWidget();
 
     const showProjectWidget = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_project_widget);
 
@@ -24,6 +26,7 @@ export const useWidgets = () => {
             educationData,
             experienceData,
             languageData,
+            // skillData
         ];
 
         if (showProjectWidget) {

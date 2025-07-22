@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { HTTPMethod } from './types.utils.api';
 
 const api = axios.create({
     baseURL: process.env.NODE_ENV === 'development'
@@ -26,8 +27,6 @@ const refreshAccessToken = async () => {
         }
     }
 };
-
-type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 interface DynamicApiOptions extends AxiosRequestConfig {
     method: HTTPMethod;

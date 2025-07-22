@@ -2,7 +2,7 @@ import { dynamicApi } from "@/lib/utils";
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 export const userByUsernameQuery = createAsyncThunk(
-    'client/userByUsernameQuery',
+    'profile/userByUsernameQuery',
     async (username: string, thunkAPI) => {
         try {
             const response = await dynamicApi({

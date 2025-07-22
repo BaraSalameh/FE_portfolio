@@ -3,3 +3,4 @@ export { mapEducationToForm } from './mapEducationToForm';
 export { mapPreferenceToForm } from './mapPreferenceToForm';
 export { mapProjectTechnologyToForm } from './mapProjectTechnologyToForm';
 export { mapUserLanguageToForm } from './mapUserLanguageToForm';
+export { mapSkillToForm } from './mapSkillToForm';

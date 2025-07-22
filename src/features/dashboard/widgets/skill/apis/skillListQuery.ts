@@ -1,22 +1,22 @@
 import { dynamicApi } from "@/lib/utils";
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-export const userFullInfoQuery = createAsyncThunk(
-    'profile/userFullInfoQuery',
+export const skillListQuery = createAsyncThunk(
+    'skill/skillListQuery',
     async (_, thunkAPI)  => {
         try {
+
             const response = await dynamicApi({
                 method: 'GET',
-                url: '/Owner/UserFullInfo',
+                url: '/Owner/SkillList',
                 withCredentials: true
             });
 
-            return response.data;
+            if (response.status === 204) return [];
+
+            return [...response.data.items];
 
         } catch (error: any) {
-            if(error.status === 400) {
-                return thunkAPI.rejectWithValue(error.response.data);
-            }
             return thunkAPI.rejectWithValue(error.message);
         }
     }
