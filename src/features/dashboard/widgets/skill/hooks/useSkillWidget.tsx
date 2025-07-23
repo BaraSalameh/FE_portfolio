@@ -1,23 +1,34 @@
-import { WidgetCardProps } from "@/components/widgets/types.widgets";
+import { CahrtEntry, WidgetCardProps } from "@/components/widgets/types.widgets";
 import { useAppSelector } from "@/lib/store/hooks";
-import { BadgePercent, ListPlusIcon, StarIcon } from "lucide-react";
-import { SkillForm } from "../forms";
+import { ListPlusIcon, StarIcon } from "lucide-react";
+import { UserSkillForm } from "../forms";
 
 export const useSkillWidget = (): WidgetCardProps => {
 
-    const { loading, lstSkills } = useAppSelector(state => state.skill);
+    const { loading, lstUserSkills } = useAppSelector(state => state.userSkill);
+
+
+    const customData = (lstUserSkills as any).map((item: any): CahrtEntry => ({
+        name: item.skill.name,
+        value: item.proficiency
+    }));
 
     return {
         isLoading: loading,
-        items: lstSkills,
+        items: lstUserSkills,
         header: { title: 'Skill', icon: StarIcon },
-        pie: { title: 'Skill overview', groupBy: 'skill.name' },
-        bar: { title: 'Skill overview', groupBy: 'skill.name' },
-        radar: { title: 'Skill overview', groupBy: 'skill.name' },
+        pie: { title: 'Skill overview', customData: customData },
+        bar: { title: 'Skill overview', customData: customData },
+        radar: { title: 'Skill overview', customData: customData },
         list: [
             { leftKey: 'skill.name', size: 'lg' },
-            { leftKey: 'skill.proficiency', icon: BadgePercent }
+            { leftKey: 'proficiency', icon: StarIcon }
         ],
-        create: { subTitle: 'Modify Skills', form: <SkillForm />, icon: ListPlusIcon},
+        details: [
+            { leftKey: 'skill.skillCategory.name', between: '-', rightKey: 'skill.name', size: 'lg' },
+            { leftKey: 'proficiency', icon: StarIcon },
+            { leftKey: 'description', size: 'sm' }
+        ],
+        create: { subTitle: 'Modify Skills', form: <UserSkillForm />, icon: ListPlusIcon},
     }
 }

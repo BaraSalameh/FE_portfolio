@@ -121,7 +121,7 @@ export const WidgetCard = ({
             </section>
 
             <WidgetModal
-                key={item?.id}
+                key={item?.id || item}
                 isLoading={isLoading}
                 isOpen={openModal}
                 onClose={() => setOpenModal(false)}

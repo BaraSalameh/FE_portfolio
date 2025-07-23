@@ -2,8 +2,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { FetchAction } from '@/components/types.components';
 import { dynamicApi } from "@/lib/utils";
 
-export const lkpSkillCategoryListQuery = createAsyncThunk(
-    'skill/lkpSkillCategoryListQuery',
+export const skillCategoryListQuery = createAsyncThunk(
+    'userSkill/SkillCategoryListQuery',
     async ({query, page = 0, pageSize = 5} : FetchAction, thunkAPI)  => {
         try {
 

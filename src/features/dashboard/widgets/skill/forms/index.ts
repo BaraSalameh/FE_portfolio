@@ -1,1 +1,1 @@
-export { SkillForm } from './SkillForm';
+export { UserSkillForm } from './UserSkillForm';

@@ -1,4 +1,4 @@
-import { LkpSkillCategoryFormData, LkpSkillFormData, SkillFormData } from "./schema";
+import { SkillCategoryFormData, SkillFormData, UserSkillFormData } from "./schema";
 
 // form
 export interface SkillProps {
@@ -7,23 +7,23 @@ export interface SkillProps {
 }
 
 // slice
-export interface SkillState {
-    lstSkills: SkillFormData[];
-    lkpSkill: LkpSkillState;
-    lkpSkillCategory: LkpSkillCategoryState;
+export interface UserSkillState {
+    lstUserSkills: UserSkillFormData[];
+    skill: SkillState;
+    skillCategory: SkillCategoryState;
     loading: boolean;
     error: string | null;
 }
 
-interface LkpSkillState {
-    lstSkills: LkpSkillFormData[];
+interface SkillState {
+    lstSkills: SkillFormData[];
     skillsRowCount: number;
     loading: boolean;
     error: string | null;
 }
 
-interface LkpSkillCategoryState {
-    lstSkillCategories: LkpSkillCategoryFormData[];
+interface SkillCategoryState {
+    lstSkillCategories: SkillCategoryFormData[];
     skillCategoriesRowCount: number;
     loading: boolean;
     error: string | null;

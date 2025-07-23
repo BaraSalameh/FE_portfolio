@@ -1,17 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { userByUsernameQuery, userFullInfoQuery } from '@/features';
-import { editDeleteSkill, lkpSkillCategoryListQuery, lkpSkillListQuery, skillListQuery } from './apis';
-import { SkillState } from './types.skill';
+import { UserSkillState } from './types.skill';
+import { editDeleteUserSkill, skillCategoryListQuery, skillListQuery, userSkillListQuery } from './apis';
 
-const initialState : SkillState = {
-    lstSkills: [],
-    lkpSkill: {
+const initialState : UserSkillState = {
+    lstUserSkills: [],
+    skill: {
         lstSkills: [],
         skillsRowCount: 0,
         loading: false,
         error: null as string | null
     },
-    lkpSkillCategory: {
+    skillCategory: {
         lstSkillCategories: [],
         skillCategoriesRowCount: 0,
         loading: false,
@@ -21,85 +21,85 @@ const initialState : SkillState = {
     error: null as string | null
 }
 
-const skillSlice = createSlice({
+const userSkillSlice = createSlice({
     name: 'skill',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
         .addCase(userFullInfoQuery.fulfilled, (state, action) => {
-            state.lstSkills = action.payload.lstSkills;
+            state.lstUserSkills = action.payload.lstUserSkills;
         })
 
         .addCase(userByUsernameQuery.fulfilled, (state, action) => {
-            state.lstSkills = action.payload.lstSkills;
+            state.lstUserSkills = action.payload.lstUserSkills;
         })
         
-        .addCase(skillListQuery.pending, (state) => {
+        .addCase(userSkillListQuery.pending, (state) => {
             state.loading = true;
             state.error = null;
         })
-        .addCase(skillListQuery.fulfilled, (state, action) => {
+        .addCase(userSkillListQuery.fulfilled, (state, action) => {
             state.loading = false;
-            state.lstSkills = action.payload;
+            state.lstUserSkills = action.payload;
         })
-        .addCase(skillListQuery.rejected, (state, action) => {
+        .addCase(userSkillListQuery.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload as string;
         })
 
-        .addCase(lkpSkillListQuery.pending, (state) => {
-            state.lkpSkill.loading = true;
-            state.lkpSkill.error = null;
+        .addCase(skillListQuery.pending, (state) => {
+            state.skill.loading = true;
+            state.skill.error = null;
         })
-        .addCase(lkpSkillListQuery.fulfilled, (state, action) => {
+        .addCase(skillListQuery.fulfilled, (state, action) => {
             const { items, rowCount, page } = action.payload;
 
             if (page === 0) {
-                state.lkpSkill.lstSkills = items;
+                state.skill.lstSkills = items;
             } else {
-                state.lkpSkill.lstSkills =  [...state.lkpSkill.lstSkills, ...items];
+                state.skill.lstSkills =  [...state.skill.lstSkills, ...items];
             }
-            state.lkpSkill.loading = false;
-            state.lkpSkill.skillsRowCount = rowCount;
+            state.skill.loading = false;
+            state.skill.skillsRowCount = rowCount;
         })
-        .addCase(lkpSkillListQuery.rejected, (state, action) => {
-            state.lkpSkill.loading = false;
-            state.lkpSkill.error = action.payload as string;
+        .addCase(skillListQuery.rejected, (state, action) => {
+            state.skill.loading = false;
+            state.skill.error = action.payload as string;
         })
 
-        .addCase(lkpSkillCategoryListQuery.pending, (state) => {
-            state.lkpSkillCategory.loading = true;
-            state.lkpSkillCategory.error = null;
+        .addCase(skillCategoryListQuery.pending, (state) => {
+            state.skillCategory.loading = true;
+            state.skillCategory.error = null;
         })
-        .addCase(lkpSkillCategoryListQuery.fulfilled, (state, action) => {
+        .addCase(skillCategoryListQuery.fulfilled, (state, action) => {
             const { items, rowCount, page } = action.payload;
 
             if (page === 0) {
-                state.lkpSkillCategory.lstSkillCategories = items;
+                state.skillCategory.lstSkillCategories = items;
             } else {
-                state.lkpSkillCategory.lstSkillCategories =  [...state.lkpSkillCategory.lstSkillCategories, ...items];
+                state.skillCategory.lstSkillCategories =  [...state.skillCategory.lstSkillCategories, ...items];
             }
-            state.lkpSkillCategory.loading = false;
-            state.lkpSkillCategory.skillCategoriesRowCount = rowCount;
+            state.skillCategory.loading = false;
+            state.skillCategory.skillCategoriesRowCount = rowCount;
         })
-        .addCase(lkpSkillCategoryListQuery.rejected, (state, action) => {
-            state.lkpSkillCategory.loading = false;
-            state.lkpSkillCategory.error = action.payload as string;
+        .addCase(skillCategoryListQuery.rejected, (state, action) => {
+            state.skillCategory.loading = false;
+            state.skillCategory.error = action.payload as string;
         })
         
-        .addCase(editDeleteSkill.pending, (state) => {
+        .addCase(editDeleteUserSkill.pending, (state) => {
             state.loading = true;
             state.error = null;
         })
-        .addCase(editDeleteSkill.fulfilled, (state) => {
+        .addCase(editDeleteUserSkill.fulfilled, (state) => {
             state.loading = false;
         })
-        .addCase(editDeleteSkill.rejected, (state, action) => {
+        .addCase(editDeleteUserSkill.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload as string;
         })
     },
 });
 
-export default skillSlice.reducer;
+export default userSkillSlice.reducer;

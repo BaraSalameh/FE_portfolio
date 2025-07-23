@@ -7,57 +7,69 @@ import { ActionMeta, MultiValue, SingleValue } from "react-select";
 import { z } from "zod";
 import { Option } from '@/features/types.features';
 
-type As = 'Input' | 'Checkbox' | 'Dropdown' | 'DropdownMulti' | 'Modal' | 'FieldArray';
+type ItemAs = 'Input' | 'Checkbox' | 'Dropdown' | 'DropdownMulti' | 'Modal' | 'FieldArray';
 type Type = 'Password' | 'Email' | 'Text' | 'Number' | 'Date' | 'Textarea';
 type ModalAs = 'create' | 'update' | 'delete' | 'none';
 type Config = 'Disabled';
 type ButtonType = 'button' | 'submit' | 'reset';
 type ImageType = 'Profile_Picture' | 'Cover_Photo';
 
+interface FormModal {
+    as: ModalAs;
+    children: React.ReactNode;
+    title?: string;
+    subTitle?: string;
+}
+
+export interface FormField {
+    as: ItemAs;
+    name: string;
+    label: string;
+    type?: Type;
+    placeholder?: string;
+    options?: Option[];
+    fetchAction?: PaginatiedAction;
+    isLoading?: boolean;
+}
+
+interface FormItem<T extends z.ZodTypeAny> {
+    as: ItemAs;
+    label?: string;
+    type?: Type;
+    placeholder?: string;
+    name: Path<z.infer<T>>;
+    options?: Option[];
+    modal?: FormModal;
+    fields?: FormField[];
+    config?: Config[];
+    fetchAction?: PaginatiedAction;
+    isLoading?: boolean;
+}
+
+interface FormItemWatch<T extends z.ZodTypeAny> {
+    name: Path<z.infer<T>>;
+    defaultValue: boolean;
+    watched: Path<z.infer<T>>
+}
+
+interface Indicator {
+    when: string;
+    while?: string;
+}
+
 export interface ControlledFormProps<T extends z.ZodTypeAny> {
     schema: T;
     onSubmit: (data: z.infer<T>) => void;
-    items: {
-        as: As;
-        label?: string;
-        type?: Type;
-        placeholder?: string;
-        name: Path<z.infer<T>>;
-        options?: Option[];
-        modal?: {
-            as: ModalAs;
-            children: React.ReactNode;
-            title?: string;
-            subTitle?: string;
-        };
-        fields?: {
-            name: string;
-            label: string;
-            options: Option[];
-            fetchAction?: PaginatiedAction;
-            isLoading?: boolean;
-        }[];
-        config?: Config[];
-        fetchAction?: PaginatiedAction;
-        isLoading?: boolean;
-    }[];
+    items: FormItem<T>[];
     error?: string | string[] | null;
     loading?: boolean;
     className?: string;
     defaultValues?: Partial<z.infer<T>>;
-    watch?: {
-        name: Path<z.infer<T>>;
-        defaultValue: boolean;
-        watched: Path<z.infer<T>>
-    };
+    watch?: FormItemWatch<T>;
     resetItems?: T;
-    indicator?: {
-        when: string;
-        while?: string;
-    };
+    indicator?: Indicator;
     children?: React.ReactNode;
 }
-
 
 export interface AnchorProps extends AnchorVariantProps {
     children: React.ReactNode;

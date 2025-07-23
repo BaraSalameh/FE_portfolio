@@ -1,4 +1,4 @@
-export { editDeleteSkill } from './editDeleteSkill';
-export { lkpSkillCategoryListQuery } from './lkpSkillCategoryListQuery';
-export { lkpSkillListQuery } from './lkpSkillListQuery';
+export { editDeleteUserSkill } from './editDeleteUserSkill';
+export { skillCategoryListQuery } from './skillCategoryListQuery';
+export { userSkillListQuery } from './userSkillListQuery';
 export { skillListQuery } from './skillListQuery';

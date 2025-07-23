@@ -122,6 +122,7 @@ export const ControlledForm = <T extends z.ZodTypeAny> ({
                                     control={control}
                                     errors={errors}
                                     fields={item.fields}
+                                    register={register}
                                 />
                             )
                         default: return null;

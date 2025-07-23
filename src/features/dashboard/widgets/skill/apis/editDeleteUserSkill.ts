@@ -1,18 +1,16 @@
 import { dynamicApi } from "@/lib/utils";
-import { transformPayload } from "@/lib/utils";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { SkillFormData } from "../schema";
+import { UserSkillFormData } from "../schema";
 
-export const editDeleteSkill = createAsyncThunk(
-    'skill/editDeleteSkill',
-    async (payload: SkillFormData, thunkAPI) => {
+export const editDeleteUserSkill = createAsyncThunk(
+    'userSkill/editDeleteUserSkill',
+    async (payload: UserSkillFormData, thunkAPI) => {
         try {
-            const request = transformPayload(payload);
 
             await dynamicApi({
                 method: 'POST',
-                url: '/Owner/EditDeleteSkill',
-                data: request,
+                url: '/Owner/EditDeleteUserSkill',
+                data: payload,
                 withCredentials: true
             });
             

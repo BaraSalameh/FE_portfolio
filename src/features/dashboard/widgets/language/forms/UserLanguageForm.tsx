@@ -8,6 +8,7 @@ import { Option } from "@/features/types.features";
 import { UserLanguageProps } from "../types.language";
 import { UserLanguageFormData, userLanguageSchema } from "../schema";
 import { editDeleteUserLanguage, languageListQuery, languageProficiencyListQuery, userLanguageListQuery } from "../apis";
+import { FormField } from "@/components/forms/types.forms";
 
 export const UserLanguageForm = ({id, onClose} : UserLanguageProps) => {
 
@@ -42,9 +43,9 @@ export const UserLanguageForm = ({id, onClose} : UserLanguageProps) => {
         
     }, [lstUserLanguages, lstLanguages]);
 
-    const fieldConfigs = useMemo(() => [
-        {label: 'Language', name: 'lkP_LanguageID', options: languageOptions, fetchAction: languageListQuery, isLoading: languageLoading},
-        {label: 'Proficiency', name: 'lkP_LanguageProficiencyID', options: languageProficiencyOptions}
+    const fieldConfigs: FormField[] = useMemo(() => [
+        {as: 'Dropdown' , label: 'Language', name: 'lkP_LanguageID', options: languageOptions, fetchAction: languageListQuery, isLoading: languageLoading},
+        {as: 'Dropdown', label: 'Proficiency', name: 'lkP_LanguageProficiencyID', options: languageProficiencyOptions}
     ], [languageOptions, languageProficiencyOptions, languageLoading, languageProficiencyLoading]);
 
     const resetItems = useMemo(
@@ -55,7 +56,7 @@ export const UserLanguageForm = ({id, onClose} : UserLanguageProps) => {
         <ControlledForm
             schema={userLanguageSchema}
             onSubmit={onSubmit}
-            items={[{as: 'FieldArray',name: 'lstLanguages',fields: fieldConfigs}]}
+            items={[{as: 'FieldArray', name: 'lstLanguages', fields: fieldConfigs}]}
             error={error}
             loading={loading}
             resetItems={resetItems as any}

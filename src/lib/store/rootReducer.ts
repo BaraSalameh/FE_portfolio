@@ -9,7 +9,7 @@ import userLanguageSlice from "@/features/dashboard/widgets/language/slice";
 import contactMessageSlice from '@/features/dashboard/profile/contact-message/slice';
 import userWidgetPreferenceSlice from "@/features/dashboard/profile/settings/widget-preferences/slice";
 import userChartPreferenceSlice from "@/features/dashboard/profile/settings/chart-preferences/slice";
-import skillSlice from "@/features/dashboard/widgets/skill/slice";
+import userSkillSlice from "@/features/dashboard/widgets/skill/slice";
 
 const rootReducer = combineReducers({
     auth: authSlice,
@@ -22,7 +22,7 @@ const rootReducer = combineReducers({
     contactMessage: contactMessageSlice,
     userWidgetPreference: userWidgetPreferenceSlice,
     userChartPreference: userChartPreferenceSlice,
-    skill: skillSlice
+    userSkill: userSkillSlice
 });
 
 export default rootReducer;
