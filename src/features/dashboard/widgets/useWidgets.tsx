@@ -20,17 +20,21 @@ export const useWidgets = () => {
     const skillData = useSkillWidget();
 
     const showProjectWidget = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_project_widget);
+    const showSkillWidget = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_skill_widget);
 
     const renderWidgets = useMemo((): JSX.Element[] => {
         const widgets: WidgetCardProps[] = [
             educationData,
             experienceData,
             languageData,
-            // skillData
         ];
 
         if (showProjectWidget) {
             widgets.splice(1, 0, projectData);
+        }
+
+        if (showSkillWidget) {
+            widgets.splice(2, 0, skillData);
         }
 
         return widgets.map((widget, index) => (
@@ -40,7 +44,7 @@ export const useWidgets = () => {
                 />
             </div>
         ));
-    }, [projectData, educationData, experienceData, languageData]);
+    }, [projectData, skillData, educationData, experienceData, languageData]);
 
     return renderWidgets;
 };

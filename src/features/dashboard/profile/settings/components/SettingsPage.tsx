@@ -95,6 +95,24 @@ export const SettingsPage = () => {
                         </React.Fragment>
                     }
                 </ContentContainer>
+                <ContentContainer title='Skill'>
+                    <CUDModal title='Show/Hide widget' icon={Component}>
+                        <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_skill_widget} />
+                    </CUDModal>
+                    {checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_skill_widget) &&
+                        <React.Fragment>
+                            <CUDModal title='Show/Hide Bar chart' icon={BarChart}>
+                                <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_skill_bar_chart} />
+                            </CUDModal>
+                            <CUDModal title='Show/Hide Pie chart' icon={PieChart}>
+                                <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_skill_pie_chart} />
+                            </CUDModal>
+                            <CUDModal title='Show/Hide Radar chart' icon={Radar}>
+                                <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_skill_radar_chart} />
+                            </CUDModal>
+                        </React.Fragment>
+                    }
+                </ContentContainer>
                 <ContentContainer title='Language'>
                     <CUDModal title='Show/Hide Bar chart' icon={BarChart}>
                         <UserWidgetPreferenceForm preferenceKey={widget_preferences.key.show_language_bar_chart} />
