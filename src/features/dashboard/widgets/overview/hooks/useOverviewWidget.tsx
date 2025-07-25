@@ -11,24 +11,37 @@ export const useOverviewWidget = (): WidgetCardProps => {
     const { lstProjectTechnologies } = useAppSelector(state => state.projectTechnology);
     const { lstUserLanguages } = useAppSelector(state => state.userLanguage);
     const { lstExperiences } = useAppSelector(state => state.experience);
+    const { lstUserSkills } = useAppSelector(state => state.userSkill);
 
     const customData = [
         {name: 'Education', value: lstEducations.length},
-        {name: 'Project', value: lstProjectTechnologies.length},
         {name: 'Language', value: lstUserLanguages.length},
-        {name: 'Experience', value: lstExperiences.length},
+        {name: 'Experience', value: lstExperiences.length}
     ]
+
+    const projectData =  {name: 'Project', value: lstProjectTechnologies.length};
+    const skillData = {name: 'Skills', value: lstUserSkills.length};
+
+    const showProjectWidget = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_project_widget);
+    const showSkillWidget = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_skill_widget);
+    if (showProjectWidget) {
+        customData.push(projectData);
+    }
+
+    if (showSkillWidget) {
+        customData.push(skillData);
+    }
 
     const barData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_overview_bar_chart)
     ?   { title: '', customData: customData}
     :   {};
 
     const pieData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_overview_pie_chart)
-    ?   { title: '',customData: customData}
+    ?   { title: '', customData: customData}
     :   {};
 
     const radarData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_overview_radar_chart)
-    ?   { title: '',customData: customData}
+    ?   { title: '', customData: customData}
     :   {};
 
     return {
