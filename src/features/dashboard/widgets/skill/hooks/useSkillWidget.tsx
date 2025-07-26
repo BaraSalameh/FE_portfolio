@@ -9,10 +9,25 @@ export const useSkillWidget = (): WidgetCardProps => {
     const { loading, lstUserSkills } = useAppSelector(state => state.userSkill);
     const { lstUserPreferences } = useAppSelector(state => state.userWidgetPreference);
 
-    const customData = (lstUserSkills as any).map((item: any): CahrtEntry => ({
-        name: item.skill.name,
-        value: item.proficiency
-    }));
+    const counts = (lstUserSkills as any).reduce((acc: any, item: any) => {
+        if (item.experience) acc.experience += 1;
+        if (item.project) acc.project += 1;
+        if (item.education) acc.education += 1;
+        if (item.certificate) acc.certificate += 1;
+        return acc;
+    }, {
+        experience: 0,
+        project: 0,
+        education: 0,
+        certificate: 0
+    });
+
+    const customData: CahrtEntry[] = Object.entries(counts as Record<string, number>).map(
+        ([key, value]) => ({
+            name: key,
+            value: value
+        })
+    );
 
     const barData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_skill_bar_chart)
     ?   { title: 'Skill overview', customData: customData }
@@ -33,15 +48,7 @@ export const useSkillWidget = (): WidgetCardProps => {
         bar: barData,
         pie: pieData,
         radar: radarData,
-        list: [
-            { leftKey: 'skill.name', size: 'lg' },
-            { leftKey: 'proficiency', icon: StarIcon }
-        ],
-        details: [
-            { leftKey: 'skill.skillCategory.name', between: '-', rightKey: 'skill.name', size: 'lg' },
-            { leftKey: 'proficiency', icon: StarIcon },
-            { leftKey: 'description', size: 'sm' }
-        ],
+        list: [  { leftKey: 'skill.name', size: 'lg' } ],
         create: { subTitle: 'Modify Skills', form: <UserSkillForm />, icon: ListPlusIcon},
     }
 }

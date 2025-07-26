@@ -16,7 +16,7 @@ export const FieldArray = ({
     errors
 }: any) => {
     
-    const { fields, append, remove } = useFieldArray({
+    const { fields, prepend, remove } = useFieldArray({
         control,
         name,
     });
@@ -26,7 +26,7 @@ export const FieldArray = ({
             <h3 className="text-white text-sm font-medium">{label}</h3>
             <Button
                 type="button"
-                onClick={() => append(
+                onClick={() => prepend(
                     fieldConfigs.reduce((acc: any, config: any) => {
                         acc[config.name] = '';
                         return acc;

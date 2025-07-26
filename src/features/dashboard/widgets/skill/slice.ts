@@ -1,19 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { userByUsernameQuery, userFullInfoQuery } from '@/features';
 import { UserSkillState } from './types.skill';
-import { editDeleteUserSkill, skillCategoryListQuery, skillListQuery, userSkillListQuery } from './apis';
+import { editDeleteUserSkill, skillListQuery, userSkillListQuery } from './apis';
 
 const initialState : UserSkillState = {
     lstUserSkills: [],
     skill: {
         lstSkills: [],
         skillsRowCount: 0,
-        loading: false,
-        error: null as string | null
-    },
-    skillCategory: {
-        lstSkillCategories: [],
-        skillCategoriesRowCount: 0,
         loading: false,
         error: null as string | null
     },
@@ -66,26 +60,6 @@ const userSkillSlice = createSlice({
         .addCase(skillListQuery.rejected, (state, action) => {
             state.skill.loading = false;
             state.skill.error = action.payload as string;
-        })
-
-        .addCase(skillCategoryListQuery.pending, (state) => {
-            state.skillCategory.loading = true;
-            state.skillCategory.error = null;
-        })
-        .addCase(skillCategoryListQuery.fulfilled, (state, action) => {
-            const { items, rowCount, page } = action.payload;
-
-            if (page === 0) {
-                state.skillCategory.lstSkillCategories = items;
-            } else {
-                state.skillCategory.lstSkillCategories =  [...state.skillCategory.lstSkillCategories, ...items];
-            }
-            state.skillCategory.loading = false;
-            state.skillCategory.skillCategoriesRowCount = rowCount;
-        })
-        .addCase(skillCategoryListQuery.rejected, (state, action) => {
-            state.skillCategory.loading = false;
-            state.skillCategory.error = action.payload as string;
         })
         
         .addCase(editDeleteUserSkill.pending, (state) => {

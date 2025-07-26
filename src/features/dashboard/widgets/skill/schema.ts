@@ -29,17 +29,13 @@ export const userSkillSchema = z.object({
                 .optional()
                 .nullable()
             ),
-            proficiency: z.preprocess(
-                val => val === '' ? undefined : Number(val),
-                z.number()
-                    .min(0, { message: "Must be at least 0" })
-                    .max(100, { message: "Must be at most 100" })
-            ),
-            description: z.preprocess(
+            CertificateID: z.preprocess(
                 val => val === '' ? null : val,
-                z.string().max(1000, 'Describtion is too long')
+                z.string()
+                .regex(guidRegex, 'Certificate ID must be a valid GUID')
+                .optional()
                 .nullable()
-            ),
+            )
         })
     ),
 });

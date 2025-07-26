@@ -55,8 +55,7 @@ export const UserSkillForm = ({id, onClose} : SkillProps) => {
         {as: 'Dropdown', label: 'Corresponding education', name: 'EducationID', options: educationOptions},
         {as: 'Dropdown', label: 'Corresponding experience', name: 'ExperienceID', options: experienceOptions},
         {as: 'Dropdown', label: 'Corresponding Project', name: 'ProjectID', options: projectOptions},
-        {as: 'Input', label: 'Proficiency', name: 'proficiency',  type: 'Number', placeholder: '1-100'},
-        {as: 'Input', label: 'Description', name: 'description',  type: 'Textarea', placeholder: 'Description', }
+        {as: 'Dropdown', label: 'Corresponding Certificate', name: 'CertificateID', options: projectOptions}
     ], [skillOptions, educationOptions, experienceOptions, projectOptions, skillLoading]);
 
     const resetItems = useMemo(

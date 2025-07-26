@@ -7,8 +7,7 @@ export const mapUserSkillToForm = (userSkillFromDb: any): UserSkillFormData => {
             EducationID: s?.education?.id,
             ExperienceID: s?.experience?.id,
             ProjectID: s?.project?.id,
-            proficiency: s.proficiency,
-            description: s?.description
+            CertificateID: s?.certificate?.id
         }))
     };
 

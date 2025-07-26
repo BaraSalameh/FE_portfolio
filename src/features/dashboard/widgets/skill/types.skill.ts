@@ -10,7 +10,6 @@ export interface SkillProps {
 export interface UserSkillState {
     lstUserSkills: UserSkillFormData[];
     skill: SkillState;
-    skillCategory: SkillCategoryState;
     loading: boolean;
     error: string | null;
 }
@@ -18,13 +17,6 @@ export interface UserSkillState {
 interface SkillState {
     lstSkills: SkillFormData[];
     skillsRowCount: number;
-    loading: boolean;
-    error: string | null;
-}
-
-interface SkillCategoryState {
-    lstSkillCategories: SkillCategoryFormData[];
-    skillCategoriesRowCount: number;
     loading: boolean;
     error: string | null;
 }
