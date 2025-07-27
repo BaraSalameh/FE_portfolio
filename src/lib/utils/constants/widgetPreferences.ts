@@ -41,6 +41,12 @@ export const widget_preferences = {
         show_skill_bar_chart: 'show-skill-bar-chart',
         show_skill_pie_chart: 'show-skill-pie-chart',
         show_skill_radar_chart: 'show-skill-radar-chart',
+
+        // certificate widget
+        show_certificate_widget: 'show-certificate-widget',
+        show_certificate_bar_chart: 'show-certificate-bar-chart',
+        show_certificate_pie_chart: 'show-certificate-pie-chart',
+        show_certificate_radar_chart: 'show-certificate-radar-chart',
     },
     value: {
         toggle: [

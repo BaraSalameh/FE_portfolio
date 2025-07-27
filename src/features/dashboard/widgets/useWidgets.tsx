@@ -9,6 +9,7 @@ import { useExperienceWidget } from "./experience/hooks/useExperienceWidget";
 import { useProjectWidget } from "./project/hooks";
 import { useLanguageWidget } from "./language/hooks";
 import { useSkillWidget } from "./skill";
+import { useCertificateWidget } from "./certificate/hooks";
 
 export const useWidgets = () => {
 
@@ -18,9 +19,11 @@ export const useWidgets = () => {
     const experienceData = useExperienceWidget();
     const languageData = useLanguageWidget();
     const skillData = useSkillWidget();
+    const certificateData = useCertificateWidget();
 
     const showProjectWidget = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_project_widget);
     const showSkillWidget = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_skill_widget);
+    const showCertificateWidget = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_certificate_widget);
 
     const renderWidgets = useMemo((): JSX.Element[] => {
         const widgets: WidgetCardProps[] = [
@@ -34,7 +37,11 @@ export const useWidgets = () => {
         }
 
         if (showSkillWidget) {
-            widgets.splice(2, 0, skillData);
+            widgets.splice(1, 0, skillData);
+        }
+
+        if (showCertificateWidget) {
+            // widgets.splice(1, 0, certificateData);
         }
 
         return widgets.map((widget, index) => (

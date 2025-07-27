@@ -1,11 +1,9 @@
+import { urlRegex } from '@/lib/utils';
 import { z } from 'zod';
-
-const URLRegex = /^(https?:\/\/)?([\w\-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/;
-
 
 const optionalUrl = z
     .string()
-    .regex(URLRegex, 'Invalid URL')
+    .regex(urlRegex, 'Invalid URL')
     .nullable()
     .or(z.literal('').transform(() => null))
 

@@ -12,7 +12,7 @@ type Type = 'Password' | 'Email' | 'Text' | 'Number' | 'Date' | 'Textarea';
 type ModalAs = 'create' | 'update' | 'delete' | 'none';
 type Config = 'Disabled';
 type ButtonType = 'button' | 'submit' | 'reset';
-type ImageType = 'Profile_Picture' | 'Cover_Photo';
+type ImageType = 'Profile_Picture' | 'Cover_Photo' | 'Certificate_Media';
 
 interface FormModal {
     as: ModalAs;
