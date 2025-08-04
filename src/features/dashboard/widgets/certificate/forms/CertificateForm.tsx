@@ -17,7 +17,7 @@ export const CertificateForm = ({id, onClose} : CertificateProps) => {
     const { loading: certificateLoading, lstCertificates } = certificate;
     const { loading: skillLoading, lstSkills } = useAppSelector((state) => state.userSkill.skill);
 
-    const certificateToHandle: any = lstUserCertificate.find(pt => pt.id === id);
+    const certificateToHandle: any = lstUserCertificate.find((pt: any) => pt.id === id);
     const indicator = id ? {when: 'Update', while: 'Updating...'} : {when: 'Create', while: 'creating...'};
     
     const [ skillOptions, setSkillOptions ] = useState<Option[]>([]);
@@ -49,7 +49,7 @@ export const CertificateForm = ({id, onClose} : CertificateProps) => {
                 subTitle: 'Choose a new media'
             }
         },
-    ], [skillListQuery, certificateOptions, skillLoading, certificateLoading]);
+    ], [skillOptions, certificateOptions, skillLoading, certificateLoading]);
     
     const resetItems = useMemo(
         () => mapCertificateToForm(certificateToHandle),
@@ -78,7 +78,6 @@ export const CertificateForm = ({id, onClose} : CertificateProps) => {
             items={items as any}
             error={error}
             loading={loading}
-            defaultValues={{isStudying: false}}
             resetItems={resetItems as any}
             indicator={indicator}
         />

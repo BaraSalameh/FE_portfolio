@@ -4,7 +4,7 @@ export const mapCertificateToForm = (certificateFromDb: any): ProjectTechnologyF
     const result = certificateFromDb
         ?   {
                 ...certificateFromDb,
-                LKP_CertificateID: certificateFromDb?.LKP_CertificateID,
+                LKP_CertificateID: certificateFromDb?.certificate.id,
                 issueDate: certificateFromDb?.issueDate,
                 expirationDate: certificateFromDb?.expirationDate,
                 credintialID: certificateFromDb?.credintialID,

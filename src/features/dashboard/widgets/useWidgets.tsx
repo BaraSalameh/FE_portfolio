@@ -41,7 +41,7 @@ export const useWidgets = () => {
         }
 
         if (showCertificateWidget) {
-            // widgets.splice(1, 0, certificateData);
+            widgets.splice(1, 0, certificateData);
         }
 
         return widgets.map((widget, index) => (

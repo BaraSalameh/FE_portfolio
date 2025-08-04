@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { userByUsernameQuery, userFullInfoQuery } from '@/features';
 import { CertificateState } from './types.certificate';
 import { addEditDeleteCertificate, certificateListQuery, deleteCertificate, lkp_CertificateListQuery } from './apis';
+import { userSkillListQuery } from '../skill';
 
 const initialState : CertificateState = {
     lstCertificates: [],
@@ -26,9 +27,22 @@ const certificateSlice = createSlice({
         })
 
         .addCase(userByUsernameQuery.fulfilled, (state, action) => {
-                state.lstCertificates = action.payload.lstCertificates;
-            })
-        
+            state.lstCertificates = action.payload.lstCertificates;
+        })
+
+        .addCase(userSkillListQuery.fulfilled, (state, action) => {
+            state.lstCertificates = state.lstCertificates.map(cert => {
+                const matchingSkills = action.payload
+                    .filter(us => us.certificate?.id === cert.id)
+                    .map(us => us.skill);
+
+                return {
+                    ...cert,
+                    lstSkills: matchingSkills,
+                };
+            });
+        })
+
         .addCase(certificateListQuery.pending, (state) => {
             state.loading = true;
             state.error = null;

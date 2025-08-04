@@ -18,6 +18,7 @@ export const UserSkillForm = ({id, onClose} : SkillProps) => {
     const { lstEducations } = useAppSelector(state => state.education);
     const { lstExperiences } = useAppSelector(state => state.experience);
     const { lstProjectTechnologies } = useAppSelector(state => state.projectTechnology);
+    const { lstCertificates } = useAppSelector(state => state.certificate);
     
     const educationOptions = useMemo(() =>
         // Didn't use OptionCreator because the label is a combination of paths
@@ -26,11 +27,15 @@ export const UserSkillForm = ({id, onClose} : SkillProps) => {
     
     const experienceOptions = useMemo(() =>
         optionsCreator({list: lstExperiences, labelKey: 'companyName'})
-    , [lstEducations]);
+    , [lstExperiences]);
     
     const projectOptions = useMemo(() =>
         optionsCreator({list: lstProjectTechnologies, labelKey: 'title'})
     , [lstProjectTechnologies]);
+
+    const certificateOptions = useMemo(() =>
+        optionsCreator({list: lstCertificates, labelKey: 'certificate.name'})
+    , [lstCertificates]);
     
     const onSubmit = async (data: UserSkillFormData) => {
         const resultAction = await dispatch(editDeleteUserSkill(data));
@@ -55,8 +60,8 @@ export const UserSkillForm = ({id, onClose} : SkillProps) => {
         {as: 'Dropdown', label: 'Corresponding education', name: 'EducationID', options: educationOptions},
         {as: 'Dropdown', label: 'Corresponding experience', name: 'ExperienceID', options: experienceOptions},
         {as: 'Dropdown', label: 'Corresponding Project', name: 'ProjectID', options: projectOptions},
-        {as: 'Dropdown', label: 'Corresponding Certificate', name: 'CertificateID', options: projectOptions}
-    ], [skillOptions, educationOptions, experienceOptions, projectOptions, skillLoading]);
+        {as: 'Dropdown', label: 'Corresponding Certificate', name: 'CertificateID', options: certificateOptions}
+    ], [skillOptions, educationOptions, experienceOptions, projectOptions, certificateOptions, skillLoading]);
 
     const resetItems = useMemo(
         () => mapUserSkillToForm(lstUserSkills),

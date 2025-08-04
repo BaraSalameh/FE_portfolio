@@ -1,6 +1,6 @@
 import { WidgetCardProps } from "@/components/widgets/types.widgets";
 import { useAppSelector } from "@/lib/store/hooks";
-import { GraduationCap } from "lucide-react";
+import { Award, Clock, GraduationCap, Link, SearchCodeIcon, WandSparklesIcon } from "lucide-react";
 import { checkWidgetPreferences } from "@/lib/utils";
 import {widget_preferences} from "@/lib/utils";
 import { useHandleCertificateDelete } from "./useHandleCertificateDelete";
@@ -29,12 +29,19 @@ export const useCertificateWidget = (): WidgetCardProps => {
     return {
         isLoading: certificateLoading,
         items: lstCertificates,
-        header: { title: 'Certificate', icon: GraduationCap },
+        header: { title: 'Certificate', icon: Award },
         bar: barData,
         pie: pieData,
         radar: radarData,
         list: [
             { leftKey: 'certificate.name', size: 'lg' }
+        ],
+        details: [
+            { leftKey: 'certificate.name', size: 'lg' },
+            { leftKey: 'credintialID', icon: Link },
+            { leftKey: 'credintialUrl', icon: SearchCodeIcon , isLink: true},
+            { leftKey: 'lstSkills.name', icon: WandSparklesIcon, itemIcon: 'lstSkills.iconUrl' },
+            { leftKey: 'issueDate', between: '-', rightKey: 'expirationDate', icon: Clock, isTime: true }
         ],
         create: { subTitle: 'Add Certificate', form: <CertificateForm />},
         update: { subTitle: 'Update Certificate', form: <CertificateForm /> },

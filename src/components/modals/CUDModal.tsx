@@ -16,6 +16,7 @@ export const CUDModal = ({
     as = 'create',
     title,
     subTitle = title,
+    error,
     children,
     icon,
     className
@@ -35,11 +36,11 @@ export const CUDModal = ({
     
     return (
         <>
-        <Paragraph onClick={() => setOpenModal(true)}>
+        <Paragraph intent={error ? 'danger' : 'primary'} onClick={() => setOpenModal(true)}>
             {currentIcon}
             {title ? title : null}
         </Paragraph>
-  
+        {error && <Paragraph intent="danger" size="sm">{error.message}</Paragraph>}
         {openModal && (
             <BlurBackground intent='sm'>
                 <div className={ cn(widgetCard({ scroll: true }), className) }>

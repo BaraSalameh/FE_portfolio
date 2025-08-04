@@ -13,15 +13,31 @@ export const certificateSchema = z.object({
         val => val === '' ? null : val,
         z.string()
         .regex(guidRegex, 'Certificate ID must be a valid GUID')
-        .optional()
-        .nullable()
     ),
-    issueDate: z.string().optional().nullable(),
-    expirationDate: z.string().optional().nullable(),
-    credintialID: z.string().optional().nullable(),
+    issueDate: z.preprocess(
+        val => val === '' ? null : val,
+        z.string()
+        .nullish()
+    ),
+    expirationDate: z.preprocess(
+        val => val === '' ? null : val,
+        z.string()
+        .nullish()
+    ),
+    credintialID: z.preprocess(
+        val => val === '' ? null : val,
+        z.string()
+        .nullish()
+    ),
     credintialUrl: optionalUrl.optional(),
     lstSkills: z.array(z.string()),
-    lstCertificateMedias: z.array(z.string()).optional().nullable(),
+    lstCertificateMedias: z
+        .union([z.array(z.string()), z.string()])
+        .transform((val) => (Array.isArray(val) ? val : [val]))
+        .refine(
+            (val) => val !== null && val !== undefined,
+            { message: "lstCertificateMedias is required" }
+        ),
 });
 
 export const lkp_certificateSchema = z.object({

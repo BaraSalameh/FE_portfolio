@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { userByUsernameQuery, userFullInfoQuery } from '@/features';
 import { UserSkillState } from './types.skill';
 import { editDeleteUserSkill, skillListQuery, userSkillListQuery } from './apis';
+import { certificateListQuery } from '../certificate';
 
 const initialState : UserSkillState = {
     lstUserSkills: [],
@@ -28,7 +29,45 @@ const userSkillSlice = createSlice({
         .addCase(userByUsernameQuery.fulfilled, (state, action) => {
             state.lstUserSkills = action.payload.lstUserSkills;
         })
-        
+
+        .addCase(certificateListQuery.fulfilled, (state, action) => {
+            const certificates = action.payload;
+
+            // first, build a map of skill IDs to their certificates
+            const skillIdToCertificate: Record<string, any> = {};
+
+            certificates.forEach(cert => {
+                cert.lstSkills?.forEach((skill: any) => {
+                    skillIdToCertificate[skill.id] = {
+                        id: cert.id,
+                        certificate: cert.certificate,
+                    };
+                });
+            });
+
+            // update lstUserSkills based on that
+            state.lstUserSkills = state.lstUserSkills.map((us: any) => {
+                const skillId = us.skill.id;
+
+                if (skillIdToCertificate[skillId]) {
+                    // this skill is present in the latest certificate list
+                    return {
+                        ...us,
+                        certificate: skillIdToCertificate[skillId],
+                    };
+                } else if (us.certificate !== null) {
+                    // this skill used to have a certificate but no longer has one
+                    return {
+                        ...us,
+                        certificate: null,
+                    };
+                }
+
+                // skills unrelated to any certificate remain as they are
+                return us;
+            });
+        })
+
         .addCase(userSkillListQuery.pending, (state) => {
             state.loading = true;
             state.error = null;

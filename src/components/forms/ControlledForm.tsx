@@ -104,7 +104,7 @@ export const ControlledForm = <T extends z.ZodTypeAny> ({
                             )
                         case 'Modal':
                             return (
-                                <CUDModal key={index} as={item.modal?.as} title={item.modal?.title} subTitle={item.modal?.subTitle}>
+                                <CUDModal key={index} as={item.modal?.as} title={item.modal?.title} subTitle={item.modal?.subTitle} error={(errors as any)[item.name]}>
                                     {React.isValidElement(item.modal?.children)
                                         ?   React.cloneElement(item.modal?.children as React.ReactElement<{ onAction: (value: any) => void }>, {
                                                 onAction: (item.modal?.children as any)?.props.onAction ?? ((value) => setValue(item.name, value))
