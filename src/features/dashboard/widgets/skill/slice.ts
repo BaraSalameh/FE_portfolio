@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { userByUsernameQuery, userFullInfoQuery } from '@/features';
+import { projectListQuery, userByUsernameQuery, userFullInfoQuery } from '@/features';
 import { UserSkillState } from './types.skill';
 import { editDeleteUserSkill, skillListQuery, userSkillListQuery } from './apis';
 import { certificateListQuery } from '../certificate';
@@ -33,14 +33,74 @@ const userSkillSlice = createSlice({
         .addCase(certificateListQuery.fulfilled, (state, action) => {
             const certificates = action.payload;
 
-            // first, build a map of skill IDs to their certificates
+            // Build a map of skill ID → full certificate link
             const skillIdToCertificate: Record<string, any> = {};
 
             certificates.forEach(cert => {
                 cert.lstSkills?.forEach((skill: any) => {
                     skillIdToCertificate[skill.id] = {
-                        id: cert.id,
-                        certificate: cert.certificate,
+                        id: cert.id, // the UserCertificate ID
+                        certificate: cert.certificate, // the lookup certificate object
+                        skill: skill
+                    };
+                });
+            });
+
+            // Track current skills to avoid duplicate adds
+            const existingSkillIds = new Set(state.lstUserSkills.map(us => us.skill.id));
+
+            // Update or clean up certificate links for existing skills
+            state.lstUserSkills = state.lstUserSkills.map(us => {
+                const skillId = us.skill.id;
+                const certEntry = skillIdToCertificate[skillId];
+
+                if (certEntry) {
+                    // Update or overwrite certificate
+                    return {
+                        ...us,
+                        certificate: {
+                            id: certEntry.id,
+                            certificate: certEntry.certificate,
+                            skill: certEntry.skill
+                        }
+                    };
+                } else if (us.certificate) {
+                    // Certificate removed, clean it
+                    const { certificate, ...rest } = us;
+                    return { ...rest };
+                }
+
+                // No change
+                return us;
+            });
+
+            // Add new skills not already in lstUserSkills
+            Object.entries(skillIdToCertificate).forEach(([skillId, certEntry]) => {
+                if (!existingSkillIds.has(skillId)) {
+                    state.lstUserSkills.push({
+                        skill: certEntry.skill,
+                        certificate: {
+                            id: certEntry.id,
+                            certificate: certEntry.certificate
+                        }
+                    });
+                }
+            });
+        })
+
+
+
+        .addCase(projectListQuery.fulfilled, (state, action) => {
+            const projects = action.payload;
+
+            // first, build a map of skill IDs to their projects
+            const skillIdToProject: Record<string, any> = {};
+
+            projects.forEach(proj => {
+                proj.lstSkills?.forEach((skill: any) => {
+                    skillIdToProject[skill.id] = {
+                        id: proj.id,
+                        project: proj.title,
                     };
                 });
             });
@@ -49,17 +109,17 @@ const userSkillSlice = createSlice({
             state.lstUserSkills = state.lstUserSkills.map((us: any) => {
                 const skillId = us.skill.id;
 
-                if (skillIdToCertificate[skillId]) {
+                if (skillIdToProject[skillId]) {
                     // this skill is present in the latest certificate list
                     return {
                         ...us,
-                        certificate: skillIdToCertificate[skillId],
+                        project: skillIdToProject[skillId],
                     };
-                } else if (us.certificate !== null) {
+                } else if (us.project !== null) {
                     // this skill used to have a certificate but no longer has one
                     return {
                         ...us,
-                        certificate: null,
+                        project: null,
                     };
                 }
 

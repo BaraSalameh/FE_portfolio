@@ -2,7 +2,7 @@ import { dynamicApi } from "@/lib/utils";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const deleteProject = createAsyncThunk(
-    'projectTechnology/deleteProject',
+    'project/deleteProject',
     async (id: string, thunkAPI) => {
         try {
             await dynamicApi({

@@ -1,75 +1,63 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ProjectTechnologyState } from './types.project';
-import { addEditDeleteProjectTechnology, deleteProject, projectTechnologyListQuery, technologyListQuery } from './apis';
+import { addEditProject, deleteProject, projectListQuery } from './apis';
 import { userByUsernameQuery, userFullInfoQuery } from '@/features';
+import { ProjectState } from './types.project';
+import { userSkillListQuery } from '../skill';
 
-const initialState : ProjectTechnologyState = {
-    lstProjectTechnologies: [],
-    technology: {
-        lstTechnologies: [],
-        technologiesRowCount: 0,
-        loading: false,
-        error: null as string | null
-    },
+const initialState : ProjectState = {
+    lstProjects: [],
     loading: false,
     error: null as string | null
 }
 
-const projectTechnologySlice = createSlice({
-    name: 'projectTechnology',
+const projectSlice = createSlice({
+    name: 'project',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
         .addCase(userFullInfoQuery.fulfilled, (state, action) => {
-            state.lstProjectTechnologies = action.payload.lstProjects;
+            state.lstProjects = action.payload.lstProjects;
         })
 
         .addCase(userByUsernameQuery.fulfilled, (state, action) => {
-                state.lstProjectTechnologies = action.payload.lstProjects;
-            })
+            state.lstProjects = action.payload.lstProjects;
+        })
+
+        .addCase(userSkillListQuery.fulfilled, (state, action) => {
+            state.lstProjects = state.lstProjects.map(proj => {
+                const matchingSkills = action.payload
+                    .filter(us => us.project?.id === proj.id)
+                    .map(us => us.skill);
+
+                return {
+                    ...proj,
+                    lstSkills: matchingSkills,
+                };
+            });
+        })
         
-        .addCase(projectTechnologyListQuery.pending, (state) => {
+        .addCase(projectListQuery.pending, (state) => {
             state.loading = true;
             state.error = null;
         })
-        .addCase(projectTechnologyListQuery.fulfilled, (state, action) => {
+        .addCase(projectListQuery.fulfilled, (state, action) => {
             state.loading = false;
-            state.lstProjectTechnologies = action.payload;
+            state.lstProjects = action.payload;
         })
-        .addCase(projectTechnologyListQuery.rejected, (state, action) => {
+        .addCase(projectListQuery.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload as string;
         })
         
-        .addCase(technologyListQuery.pending, (state) => {
-            state.technology.loading = true;
-            state.technology.error = null;
-        })
-        .addCase(technologyListQuery.fulfilled, (state, action) => {
-            const { items, rowCount, page } = action.payload;
-
-            if (page === 0) {
-                state.technology.lstTechnologies = items;
-            } else {
-                state.technology.lstTechnologies =  [...state.technology.lstTechnologies, ...items];
-            }
-            state.technology.loading = false;
-            state.technology.technologiesRowCount = rowCount;
-        })
-        .addCase(technologyListQuery.rejected, (state, action) => {
-            state.technology.loading = false;
-            state.technology.error = action.payload as string;
-        })
-        
-        .addCase(addEditDeleteProjectTechnology.pending, (state) => {
+        .addCase(addEditProject.pending, (state) => {
             state.loading = true;
             state.error = null;
         })
-        .addCase(addEditDeleteProjectTechnology.fulfilled, (state) => {
+        .addCase(addEditProject.fulfilled, (state) => {
             state.loading = false;
         })
-        .addCase(addEditDeleteProjectTechnology.rejected, (state, action) => {
+        .addCase(addEditProject.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload as string;
         })
@@ -88,4 +76,4 @@ const projectTechnologySlice = createSlice({
     },
 });
 
-export default projectTechnologySlice.reducer;
+export default projectSlice.reducer;

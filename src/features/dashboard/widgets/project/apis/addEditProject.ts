@@ -1,16 +1,18 @@
+import { transformPayload } from "@/lib/utils";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { ProjectFormData } from "../schema";
 import { dynamicApi } from "@/lib/utils";
-import { CertificateFormData } from "../schema";
 
-export const addEditDeleteCertificate = createAsyncThunk(
-    'certificate/addEditDeleteCertificate',
-    async (payload: CertificateFormData, thunkAPI) => {
+export const addEditProject = createAsyncThunk(
+    'project/addEditProject',
+    async (payload: ProjectFormData, thunkAPI) => {
         try {
+            const request = transformPayload(payload);
 
             await dynamicApi({
                 method: 'POST',
-                url: '/Owner/AddEditDeleteCertificate',
-                data: payload,
+                url: '/Owner/AddEditProject',
+                data: request,
                 withCredentials: true
             });
 

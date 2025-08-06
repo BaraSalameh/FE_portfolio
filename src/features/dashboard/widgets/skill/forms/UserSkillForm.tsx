@@ -17,7 +17,7 @@ export const UserSkillForm = ({id, onClose} : SkillProps) => {
     const { loading: skillLoading, lstSkills } = skill;
     const { lstEducations } = useAppSelector(state => state.education);
     const { lstExperiences } = useAppSelector(state => state.experience);
-    const { lstProjectTechnologies } = useAppSelector(state => state.projectTechnology);
+    const { lstProjects } = useAppSelector(state => state.project);
     const { lstCertificates } = useAppSelector(state => state.certificate);
     
     const educationOptions = useMemo(() =>
@@ -30,8 +30,8 @@ export const UserSkillForm = ({id, onClose} : SkillProps) => {
     , [lstExperiences]);
     
     const projectOptions = useMemo(() =>
-        optionsCreator({list: lstProjectTechnologies, labelKey: 'title'})
-    , [lstProjectTechnologies]);
+        optionsCreator({list: lstProjects, labelKey: 'title'})
+    , [lstProjects]);
 
     const certificateOptions = useMemo(() =>
         optionsCreator({list: lstCertificates, labelKey: 'certificate.name'})

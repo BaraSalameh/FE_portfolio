@@ -2,24 +2,23 @@
 
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { useEffect, useMemo, useState } from "react";
-import { mapProjectTechnologyToForm, mergeOptions, optionsCreator } from "@/lib/utils";
+import { mapProjectToForm, mergeOptions, optionsCreator } from "@/lib/utils";
 import { ControlledForm } from "@/components/forms";
 import { Option } from "@/features/types.features";
-import { addEditDeleteProjectTechnology, projectTechnologyListQuery, technologyListQuery } from "../apis";
-import { ProjectTechnologyProps } from "../types.project";
-import { ProjectTechnologyFormData, projectTechnologySchema } from "../schema";
+import { addEditProject, projectListQuery } from "../apis";
+import { ProjectProps } from "../types.project";
+import { ProjectFormData, projectSchema } from "../schema";
+import { skillListQuery } from "../../skill";
 
-export const ProjectTechnologyForm = ({id, onClose} : ProjectTechnologyProps) => {
+export const ProjectForm = ({id, onClose} : ProjectProps) => {
 
     const dispatch = useAppDispatch();
-    const { loading, error, lstProjectTechnologies, technology } = useAppSelector((state) => state.projectTechnology);
-    const { loading: technologyLoading, lstTechnologies } = technology;
+    const { loading: skillLoading, lstSkills } = useAppSelector((state) => state.userSkill.skill);
+    const { loading, error, lstProjects } = useAppSelector((state) => state.project);
     const { lstEducations } = useAppSelector(state => state.education);
     const { lstExperiences } = useAppSelector(state => state.experience);
-    const projectTechnologyToHandle = lstProjectTechnologies.find(pt => pt.id === id);
+    const projectToHandle = lstProjects.find(pt => pt.id === id);
     const indicator = id ? {when: 'Update', while: 'Updating...'} : {when: 'Create', while: 'creating...'};
-    
-    const [ technologyOptions, setTechnologyOptions ] = useState<Option[]>([]);
 
     const educationOptions = useMemo(() =>
         // Didn't use OptionCreator because the label is a combination of paths
@@ -30,17 +29,19 @@ export const ProjectTechnologyForm = ({id, onClose} : ProjectTechnologyProps) =>
         optionsCreator({list: lstExperiences, labelKey: 'companyName'})
     , [lstEducations]);
 
-    const onSubmit = async (data: ProjectTechnologyFormData) => {
-        const resultAction = await dispatch(addEditDeleteProjectTechnology(data));
+    const [ skillOptions, setSkillOptions ] = useState<Option[]>([]);
 
-        if (!addEditDeleteProjectTechnology.rejected.match(resultAction)) {
-            await dispatch(projectTechnologyListQuery());
+    const onSubmit = async (data: ProjectFormData) => {
+        const resultAction = await dispatch(addEditProject(data));
+
+        if (!addEditProject.rejected.match(resultAction)) {
+            await dispatch(projectListQuery());
             onClose?.();
         }
     };
 
     const items = useMemo(() => [
-        {as: 'DropdownMulti', name: 'lstTechnologies', options: technologyOptions, label: 'Technologies', fetchAction: technologyListQuery, isLoading: technologyLoading},
+        {as: 'DropdownMulti', name: 'lstSkills', options: skillOptions, label: 'Skills', fetchAction: skillListQuery, isLoading: skillLoading},
         {as: 'Dropdown', name: 'EducationID', options: educationOptions, label: 'Corresponding education'},
         {as: 'Dropdown', name: 'ExperienceID', options: experienceOptions, label: 'Corresponding experience'},
         {as: 'Input', name: 'title', label: 'Title', placeholder: 'MyProject'},
@@ -49,23 +50,23 @@ export const ProjectTechnologyForm = ({id, onClose} : ProjectTechnologyProps) =>
         {as: 'Input', name: 'imageUrl', label: 'Image URL', placeholder: 'https://Image'},
         {as: 'Checkbox', name: 'isFeatured', label: 'Is featured?'},
         {as: 'Input', name: 'description', label: 'Description', placeholder: 'Description', type: 'Textarea'}
-    ], [technologyOptions, educationOptions, experienceOptions, technologyLoading]);
+    ], [ skillOptions, educationOptions, experienceOptions ]);
     
     const resetItems = useMemo(
-        () => mapProjectTechnologyToForm(projectTechnologyToHandle),
-    [projectTechnologyToHandle]);
+        () => mapProjectToForm(projectToHandle),
+    [projectToHandle]);
 
     useEffect(() => {
-        const { lstTechnologies: ltfe } = projectTechnologyToHandle ?? {};
-        const technologiesFromEdit = ltfe ? optionsCreator({list: ltfe, iconKey: 'iconUrl'}) : [];
-        const technologiesStore = optionsCreator({list: lstTechnologies, iconKey: 'iconUrl'});
-        setTechnologyOptions(mergeOptions(technologiesFromEdit, technologiesStore));
+        const { lstSkills: lsfe } = projectToHandle ?? {};
+        const skillsFromEdit = lsfe ? optionsCreator({list: lsfe, iconKey: 'iconUrl'}) : [];
+        const skillsStore = optionsCreator({list: lstSkills, iconKey: 'iconUrl'});
+        setSkillOptions(mergeOptions(skillsFromEdit, skillsStore));
 
-    }, [projectTechnologyToHandle, lstTechnologies]);
+    }, [projectToHandle, lstSkills]);
 
     return (
         <ControlledForm
-            schema={projectTechnologySchema}
+            schema={projectSchema}
             onSubmit={onSubmit}
             items={items as any}
             error={error}

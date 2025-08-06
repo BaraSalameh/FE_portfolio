@@ -1,22 +1,15 @@
-import { ProjectTechnologyFormData, TechnologyFormData } from "./schema";
+import { ProjectFormData } from "./schema";
+
 
 // form
-export interface ProjectTechnologyProps {
+export interface ProjectProps {
     id?: string;
     onClose?: () => void;
 }
 
 // slice
-export interface ProjectTechnologyState {
-    lstProjectTechnologies: ProjectTechnologyFormData[],
-    technology: TechnologyState;
-    loading: boolean;
-    error: string | null;
-}
-
-interface TechnologyState {
-    lstTechnologies: TechnologyFormData[];
-    technologiesRowCount: number;
+export interface ProjectState {
+    lstProjects: ProjectFormData[],
     loading: boolean;
     error: string | null;
 }

@@ -30,14 +30,11 @@ export const certificateSchema = z.object({
         .nullish()
     ),
     credintialUrl: optionalUrl.optional(),
-    lstSkills: z.array(z.string()),
+    lstSkills: z.array(z.string()).nullish(),
     lstCertificateMedias: z
         .union([z.array(z.string()), z.string()])
         .transform((val) => (Array.isArray(val) ? val : [val]))
-        .refine(
-            (val) => val !== null && val !== undefined,
-            { message: "lstCertificateMedias is required" }
-        ),
+        .nullish(),
 });
 
 export const lkp_certificateSchema = z.object({

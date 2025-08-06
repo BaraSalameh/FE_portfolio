@@ -1,14 +1,14 @@
 import { dynamicApi } from "@/lib/utils";
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-export const projectTechnologyListQuery = createAsyncThunk(
-    'projectTechnology/projectTechnologyListQuery',
+export const projectListQuery = createAsyncThunk(
+    'project/projectListQuery',
     async (_, thunkAPI)  => {
         try {
 
             const response = await dynamicApi({
                 method: 'GET',
-                url: '/Owner/ProjectTechnologyList',
+                url: '/Owner/ProjectList',
                 withCredentials: true
             });
 

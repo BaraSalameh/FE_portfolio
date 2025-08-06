@@ -53,21 +53,21 @@ export const chart_preferences = {
                 {label: 'Featured?', value: 'isFeatured'},
                 {label: 'Experience', value: 'experience.companyName'},
                 {label: 'Education', value: 'education.institution.name'},
-                {label: 'Technologies', value: 'lstTechnologies.name'}
+                {label: 'Skills', value: 'lstSkills.name'}
             ],
             pie: [
                 {label: 'Title', value: 'title'},
                 {label: 'Featured?', value: 'isFeatured'},
                 {label: 'Experience', value: 'experience.companyName'},
                 {label: 'Education', value: 'education.institution.name'},
-                {label: 'Technologies', value: 'lstTechnologies.name'}
+                {label: 'Skills', value: 'lstSkills.name'}
             ],
             radar: [
                 {label: 'Title', value: 'title'},
                 {label: 'Featured?', value: 'isFeatured'},
                 {label: 'Experience', value: 'experience.companyName'},
                 {label: 'Education', value: 'education.institution.name'},
-                {label: 'Technologies', value: 'lstTechnologies.name'}
+                {label: 'Skills', value: 'lstSkills.name'}
             ]
         }
     }

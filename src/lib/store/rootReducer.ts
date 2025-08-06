@@ -4,7 +4,7 @@ import searchSlice from "@/features/home/search/slice";
 import educationSlice from "@/features/dashboard/widgets/education/slice";
 import profileSlice from "@/features/dashboard/profile/slice";
 import experienceSlice from "@/features/dashboard/widgets/experience/slice";
-import projectTechnologySlice from "@/features/dashboard/widgets/project/slice";
+import projectSlice from "@/features/dashboard/widgets/project/slice";
 import userLanguageSlice from "@/features/dashboard/widgets/language/slice";
 import contactMessageSlice from '@/features/dashboard/profile/contact-message/slice';
 import userWidgetPreferenceSlice from "@/features/dashboard/profile/settings/widget-preferences/slice";
@@ -18,7 +18,7 @@ const rootReducer = combineReducers({
     profile: profileSlice,
     education: educationSlice,
     experience: experienceSlice,
-    projectTechnology: projectTechnologySlice,
+    project: projectSlice,
     userLanguage: userLanguageSlice,
     contactMessage: contactMessageSlice,
     userWidgetPreference: userWidgetPreferenceSlice,

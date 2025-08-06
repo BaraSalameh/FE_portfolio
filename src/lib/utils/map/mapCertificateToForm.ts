@@ -1,6 +1,6 @@
-import { ProjectTechnologyFormData } from "@/features/dashboard/widgets/project/schema";
+import { CertificateFormData } from "@/features/dashboard/widgets/certificate/schema";
 
-export const mapCertificateToForm = (certificateFromDb: any): ProjectTechnologyFormData => {
+export const mapCertificateToForm = (certificateFromDb: any): CertificateFormData => {
     const result = certificateFromDb
         ?   {
                 ...certificateFromDb,

@@ -5,11 +5,11 @@ import { checkChartPreferences, checkWidgetPreferences } from "@/lib/utils";
 import { chart_preferences, widget_preferences } from "@/lib/utils";
 import { useHandleProjectDelete } from "./useHandleProjectDelete";
 import { useDebouncedSortProject } from "./useDebouncedSortProject";
-import { ProjectTechnologyForm } from "../forms";
+import { ProjectForm } from "../forms";
 
 export const useProjectWidget = (): WidgetCardProps => {
     
-    const { loading: projectTechnologyLoading, lstProjectTechnologies } = useAppSelector(state => state.projectTechnology);
+    const { loading: projectTechnologyLoading, lstProjects } = useAppSelector(state => state.project);
     const { lstUserPreferences } = useAppSelector(state => state.userWidgetPreference);
     const { lstUserChartPreferences } = useAppSelector(state => state.userChartPreference);
     const handleProjectDelete = useHandleProjectDelete();
@@ -52,7 +52,7 @@ export const useProjectWidget = (): WidgetCardProps => {
 
     return {
         isLoading: projectTechnologyLoading,
-        items: lstProjectTechnologies,
+        items: lstProjects,
         header: { title: 'Project', icon: Folder },
         bar: barData,
         radar: radarData,
@@ -61,14 +61,14 @@ export const useProjectWidget = (): WidgetCardProps => {
             { leftKey: 'title', between: '-', rightKey: ['experience.companyName', 'education.institution.name'], size: 'lg' },
             { leftKey: 'isFeatured' }
         ],
-        create: { subTitle: 'Add Project & technologis', form: <ProjectTechnologyForm /> },
-        update: { subTitle: 'Update Project & technologies', form: <ProjectTechnologyForm /> },
+        create: { subTitle: 'Add Project & technologis', form: <ProjectForm /> },
+        update: { subTitle: 'Update Project & technologies', form: <ProjectForm /> },
         del: { subTitle: 'Delete Project', message: 'Are you sure?', onDelete: handleProjectDelete },
         details: [
             { leftKey: 'title', size: 'lg' },
             { leftKey: 'liveLink', icon: Link, isLink: true },
             { leftKey: 'sourceCode', icon: SearchCodeIcon , isLink: true},
-            { leftKey: 'lstTechnologies.name', icon: WandSparklesIcon, itemIcon: 'lstTechnologies.iconUrl' },
+            { leftKey: 'lstSkills.name', icon: WandSparklesIcon, itemIcon: 'lstSkills.iconUrl' },
             { leftKey: 'description', size: 'sm' }
         ],
         onSort: debouncedSortProject

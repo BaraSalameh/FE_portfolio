@@ -7,7 +7,7 @@ const optionalUrl = z
     .nullable()
     .or(z.literal('').transform(() => null))
 
-export const projectTechnologySchema = z.object({
+export const projectSchema = z.object({
     id: z.string().optional(),
 
     title: z
@@ -40,11 +40,10 @@ export const projectTechnologySchema = z.object({
         .optional()
         .nullable(),
     
-    lstTechnologies: z
-        .array(z.string())
+    lstSkills: z.array(z.string()).nullish(),
 });
 
-export const technologySchema = z.object({
+export const skillSchema = z.object({
     id: z.string(),
     name: z
         .string()
@@ -54,5 +53,5 @@ export const technologySchema = z.object({
         .max(1000, 'Image string is too long'),
 });
 
-export type ProjectTechnologyFormData = z.infer<typeof projectTechnologySchema>;
-export type TechnologyFormData = z.infer<typeof technologySchema>;
+export type ProjectFormData = z.infer<typeof projectSchema>;
+export type SkillFormData = z.infer<typeof skillSchema>;

@@ -7,7 +7,7 @@ import { ControlledForm, ImageUploader } from "@/components/forms";
 import { Option } from "@/features/types.features";
 import { CertificateProps } from "../types.certificate";
 import { CertificateFormData, certificateSchema } from "../schema";
-import { addEditDeleteCertificate, certificateListQuery, lkp_CertificateListQuery } from "../apis";
+import { addEditCertificate, certificateListQuery, lkp_CertificateListQuery } from "../apis";
 import { skillListQuery } from "../../skill";
 
 export const CertificateForm = ({id, onClose} : CertificateProps) => {
@@ -24,9 +24,9 @@ export const CertificateForm = ({id, onClose} : CertificateProps) => {
     const [ certificateOptions, setCertificateOptions ] = useState<Option[]>([]);
 
     const onSubmit = async (data: CertificateFormData) => {
-        const resultAction = await dispatch(addEditDeleteCertificate(data));
+        const resultAction = await dispatch(addEditCertificate(data));
 
-        if (!addEditDeleteCertificate.rejected.match(resultAction)) {
+        if (!addEditCertificate.rejected.match(resultAction)) {
             await dispatch(certificateListQuery());
             onClose?.();
         }

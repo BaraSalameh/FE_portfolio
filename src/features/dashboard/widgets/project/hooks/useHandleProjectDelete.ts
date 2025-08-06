@@ -1,5 +1,5 @@
 import { useAppDispatch } from "@/lib/store/hooks";
-import { deleteProject, projectTechnologyListQuery } from "../apis";
+import { deleteProject, projectListQuery } from "../apis";
 
 export const useHandleProjectDelete = () => {
   const dispatch = useAppDispatch();
@@ -7,7 +7,7 @@ export const useHandleProjectDelete = () => {
   return async (id: string) => {
         try {
             await dispatch(deleteProject(id));
-            await dispatch(projectTechnologyListQuery());
+            await dispatch(projectListQuery());
         } catch (err) {
             console.error('Failed to delete:', err);
         }

@@ -8,7 +8,7 @@ export const useOverviewWidget = (): WidgetCardProps => {
 
     const { lstEducations } = useAppSelector(state => state.education);
     const { lstUserPreferences } = useAppSelector(state => state.userWidgetPreference);
-    const { lstProjectTechnologies } = useAppSelector(state => state.projectTechnology);
+    const { lstProjects } = useAppSelector(state => state.project);
     const { lstUserLanguages } = useAppSelector(state => state.userLanguage);
     const { lstExperiences } = useAppSelector(state => state.experience);
     const { lstUserSkills } = useAppSelector(state => state.userSkill);
@@ -19,7 +19,7 @@ export const useOverviewWidget = (): WidgetCardProps => {
         {name: 'Experience', value: lstExperiences.length}
     ]
 
-    const projectData =  {name: 'Project', value: lstProjectTechnologies.length};
+    const projectData =  {name: 'Project', value: lstProjects.length};
     const skillData = {name: 'Skills', value: lstUserSkills.length};
 
     const showProjectWidget = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_project_widget);

@@ -1,5 +1,4 @@
-export { addEditDeleteProjectTechnology } from './addEditDeleteProjectTechnology';
+export { addEditProject } from './addEditProject';
 export { deleteProject } from './deleteProject';
-export { projectTechnologyListQuery } from './projectTechnologyListQuery';
+export { projectListQuery } from './projectListQuery';
 export { sortProject } from './sortProject';
-export { technologyListQuery } from './technologyListQuery';

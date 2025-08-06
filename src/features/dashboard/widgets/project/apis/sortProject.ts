@@ -2,7 +2,7 @@ import { dynamicApi } from "@/lib/utils";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const sortProject = createAsyncThunk(
-    'projectTechnology/sortProject',
+    'project/sortProject',
     async (payload: string[], thunkAPI) => {
         try {
             await dynamicApi({

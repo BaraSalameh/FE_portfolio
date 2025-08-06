@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { userByUsernameQuery, userFullInfoQuery } from '@/features';
 import { CertificateState } from './types.certificate';
-import { addEditDeleteCertificate, certificateListQuery, deleteCertificate, lkp_CertificateListQuery } from './apis';
+import { addEditCertificate, certificateListQuery, deleteCertificate, lkp_CertificateListQuery } from './apis';
 import { userSkillListQuery } from '../skill';
 
 const initialState : CertificateState = {
@@ -76,14 +76,14 @@ const certificateSlice = createSlice({
             state.certificate.error = action.payload as string;
         })
         
-        .addCase(addEditDeleteCertificate.pending, (state) => {
+        .addCase(addEditCertificate.pending, (state) => {
             state.loading = true;
             state.error = null;
         })
-        .addCase(addEditDeleteCertificate.fulfilled, (state) => {
+        .addCase(addEditCertificate.fulfilled, (state) => {
             state.loading = false;
         })
-        .addCase(addEditDeleteCertificate.rejected, (state, action) => {
+        .addCase(addEditCertificate.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload as string;
         })
