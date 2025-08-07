@@ -60,8 +60,7 @@ const userSkillSlice = createSlice({
                         ...us,
                         certificate: {
                             id: certEntry.id,
-                            certificate: certEntry.certificate,
-                            skill: certEntry.skill
+                            certificate: certEntry.certificate
                         }
                     };
                 } else if (us.certificate) {
@@ -89,44 +88,63 @@ const userSkillSlice = createSlice({
         })
 
 
-
         .addCase(projectListQuery.fulfilled, (state, action) => {
             const projects = action.payload;
 
-            // first, build a map of skill IDs to their projects
+            // Build a map of skill ID → full project link
             const skillIdToProject: Record<string, any> = {};
 
             projects.forEach(proj => {
                 proj.lstSkills?.forEach((skill: any) => {
                     skillIdToProject[skill.id] = {
                         id: proj.id,
-                        project: proj.title,
+                        title: proj.title,
+                        skill: skill
                     };
                 });
             });
 
-            // update lstUserSkills based on that
-            state.lstUserSkills = state.lstUserSkills.map((us: any) => {
-                const skillId = us.skill.id;
+            // Track current skills to avoid duplicate adds
+            const existingSkillIds = new Set(state.lstUserSkills.map(us => us.skill.id));
 
-                if (skillIdToProject[skillId]) {
-                    // this skill is present in the latest certificate list
+            // Update or clean up certificate links for existing skills
+            state.lstUserSkills = state.lstUserSkills.map(us => {
+                const skillId = us.skill.id;
+                const projEntry = skillIdToProject[skillId];
+
+                if (projEntry) {
+                    // Update or overwrite certificate
                     return {
                         ...us,
-                        project: skillIdToProject[skillId],
+                        project: {
+                            id: projEntry.id,
+                            title: projEntry.title
+                        }
                     };
-                } else if (us.project !== null) {
-                    // this skill used to have a certificate but no longer has one
-                    return {
-                        ...us,
-                        project: null,
-                    };
+                } else if (us.project) {
+                    // Certificate removed, clean it
+                    const { project, ...rest } = us;
+                    return { ...rest };
                 }
 
-                // skills unrelated to any certificate remain as they are
+                // No change
                 return us;
             });
+
+            // Add new skills not already in lstUserSkills
+            Object.entries(skillIdToProject).forEach(([skillId, projEntry]) => {
+                if (!existingSkillIds.has(skillId)) {
+                    state.lstUserSkills.push({
+                        skill: projEntry.skill,
+                        project: {
+                            id: projEntry.id,
+                            title: projEntry.title
+                        }
+                    });
+                }
+            });
         })
+        
 
         .addCase(userSkillListQuery.pending, (state) => {
             state.loading = true;
