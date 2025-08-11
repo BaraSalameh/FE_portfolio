@@ -8,34 +8,14 @@ export const userSkillSchema = z.object({
                 .string()
                 .min(1, 'Skill is required')
                 .regex(guidRegex, 'Skill ID must be a valid GUID'),
-            EducationID: z.preprocess(
-                val => val === '' ? null : val,
-                z.string()
-                .regex(guidRegex, 'Education ID must be a valid GUID')
-                .optional()
-                .nullable()
-            ),
-            ExperienceID: z.preprocess(
-                val => val === '' ? null : val,
-                z.string()
-                .regex(guidRegex, 'Experience ID must be a valid GUID')
-                .optional()
-                .nullable()
-            ),
-            ProjectID: z.preprocess(
-                val => val === '' ? null : val,
-                z.string()
-                .regex(guidRegex, 'Project ID must be a valid GUID')
-                .optional()
-                .nullable()
-            ),
-            CertificateID: z.preprocess(
-                val => val === '' ? null : val,
-                z.string()
-                .regex(guidRegex, 'Certificate ID must be a valid GUID')
-                .optional()
-                .nullable()
-            )
+
+            EducationIDs: z.array(z.string()).nullish(),
+
+            ExperienceIDs: z.array(z.string()).nullish(),
+
+            ProjectIDs: z.array(z.string()).nullish(),
+            
+            CertificateIDs: z.array(z.string()).nullish(),
         })
     ),
 });

@@ -17,7 +17,7 @@ export const ProjectForm = ({id, onClose} : ProjectProps) => {
     const { loading, error, lstProjects } = useAppSelector((state) => state.project);
     const { lstEducations } = useAppSelector(state => state.education);
     const { lstExperiences } = useAppSelector(state => state.experience);
-    const projectToHandle = lstProjects.find(pt => pt.id === id);
+    const projectToHandle = lstProjects.find(p => p.id === id);
     const indicator = id ? {when: 'Update', while: 'Updating...'} : {when: 'Create', while: 'creating...'};
 
     const educationOptions = useMemo(() =>

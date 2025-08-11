@@ -57,10 +57,10 @@ export const UserSkillForm = ({id, onClose} : SkillProps) => {
 
     const fieldConfigs: FormField[] = useMemo(() => [
         {as: 'Dropdown', label: 'Skills', name: 'LKP_SkillID', options: skillOptions, fetchAction: skillListQuery, isLoading: skillLoading},
-        {as: 'Dropdown', label: 'Corresponding education', name: 'EducationID', options: educationOptions},
-        {as: 'Dropdown', label: 'Corresponding experience', name: 'ExperienceID', options: experienceOptions},
-        {as: 'Dropdown', label: 'Corresponding Project', name: 'ProjectID', options: projectOptions},
-        {as: 'Dropdown', label: 'Corresponding Certificate', name: 'CertificateID', options: certificateOptions}
+        {as: 'DropdownMulti', label: 'Corresponding education', name: 'EducationIDs', options: educationOptions},
+        {as: 'DropdownMulti', label: 'Corresponding experience', name: 'ExperienceIDs', options: experienceOptions},
+        {as: 'DropdownMulti', label: 'Corresponding Project', name: 'ProjectIDs', options: projectOptions},
+        {as: 'DropdownMulti', label: 'Corresponding Certificate', name: 'CertificateIDs', options: certificateOptions}
     ], [skillOptions, educationOptions, experienceOptions, projectOptions, certificateOptions, skillLoading]);
 
     const resetItems = useMemo(

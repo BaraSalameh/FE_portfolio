@@ -3,6 +3,8 @@ import { addEditExperience, deleteExperience, experienceListQuery } from '@/feat
 import { createSlice } from '@reduxjs/toolkit';
 import { ExperienceState } from './types.experience';
 import { userFullInfoQuery } from '@/features';
+import { userSkillListQuery } from '../skill';
+import { UserSkillResponse } from '../skill/types.skill';
 
 const initialState : ExperienceState = {
     lstExperiences: [],
@@ -23,7 +25,20 @@ const ExperienceSlice = createSlice({
         .addCase(userByUsernameQuery.fulfilled, (state, action) => {
             state.lstExperiences = action.payload.lstExperiences;
         })
-        
+
+        .addCase(userSkillListQuery.fulfilled, (state, action) => {
+            state.lstExperiences = state.lstExperiences.map(exp => {
+                const matchingSkills = action.payload
+                    .filter((us: UserSkillResponse) => us.lstExperiences?.find(e => e.id === exp.id))
+                    .map(us => us.skill);
+
+                return {
+                    ...exp,
+                    lstSkills: matchingSkills,
+                };
+            });
+        })
+
         .addCase(experienceListQuery.pending, (state) => {
             state.loading = true;
             state.error = null;

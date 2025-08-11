@@ -21,13 +21,22 @@ interface SkillState {
     error: string | null;
 }
 
+export type SkillMap = Record<string, SkillLink[]>;
+
+type SkillLink = {
+    id: string;
+    prop?: any;  // make generic so it's not tied to only Education
+    skill: SkillFormData;
+};
+
+
 // schema
 export interface UserSkillResponse {
     skill: Record<string, string>;
-    education?: US_EducationResponse;
-    experience?: Record<string, string>;
-    project?: Record<string, string>;
-    certificate?: US_CertificateResponse;
+    lstEducations?: US_EducationResponse[];
+    lstExperiences?: Record<string, string>[];
+    lstProjects?: Record<string, string>[];
+    lstCertificates?: US_CertificateResponse[];
 }
 
 interface US_EducationResponse {

@@ -1,8 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { projectListQuery, userByUsernameQuery, userFullInfoQuery } from '@/features';
+import { educationListQuery, experienceListQuery, projectListQuery, userByUsernameQuery, userFullInfoQuery } from '@/features';
 import { UserSkillState } from './types.skill';
 import { editDeleteUserSkill, skillListQuery, userSkillListQuery } from './apis';
 import { certificateListQuery } from '../certificate';
+import { EducationResponse } from '../education/types.education';
+import { syncUserSkillsFromParentList } from '@/lib/utils';
+import { CertificateResponse } from '../certificate/types.certificate';
+import { ExperienceResponse } from '../experience/types.experience';
+import { ProjectResponse } from '../project/types.project';
 
 const initialState : UserSkillState = {
     lstUserSkills: [],
@@ -30,121 +35,49 @@ const userSkillSlice = createSlice({
             state.lstUserSkills = action.payload.lstUserSkills;
         })
 
-        .addCase(certificateListQuery.fulfilled, (state, action) => {
-            const certificates = action.payload;
+        .addCase(educationListQuery.fulfilled, (state, action) => {
+            const educations: EducationResponse[] = action.payload;
 
-            // Build a map of skill ID → full certificate link
-            const skillIdToCertificate: Record<string, any> = {};
-
-            certificates.forEach(cert => {
-                cert.lstSkills?.forEach((skill: any) => {
-                    skillIdToCertificate[skill.id] = {
-                        id: cert.id, // the UserCertificate ID
-                        certificate: cert.certificate, // the lookup certificate object
-                        skill: skill
-                    };
-                });
-            });
-
-            // Track current skills to avoid duplicate adds
-            const existingSkillIds = new Set(state.lstUserSkills.map(us => us.skill.id));
-
-            // Update or clean up certificate links for existing skills
-            state.lstUserSkills = state.lstUserSkills.map(us => {
-                const skillId = us.skill.id;
-                const certEntry = skillIdToCertificate[skillId];
-
-                if (certEntry) {
-                    // Update or overwrite certificate
-                    return {
-                        ...us,
-                        certificate: {
-                            id: certEntry.id,
-                            certificate: certEntry.certificate
-                        }
-                    };
-                } else if (us.certificate) {
-                    // Certificate removed, clean it
-                    const { certificate, ...rest } = us;
-                    return { ...rest };
-                }
-
-                // No change
-                return us;
-            });
-
-            // Add new skills not already in lstUserSkills
-            Object.entries(skillIdToCertificate).forEach(([skillId, certEntry]) => {
-                if (!existingSkillIds.has(skillId)) {
-                    state.lstUserSkills.push({
-                        skill: certEntry.skill,
-                        certificate: {
-                            id: certEntry.id,
-                            certificate: certEntry.certificate
-                        }
-                    });
-                }
-            });
+            syncUserSkillsFromParentList(
+                educations,
+                state,
+                edu => edu.institution,
+                "lstEducations"
+            );
         })
 
+        .addCase(certificateListQuery.fulfilled, (state, action) => {
+            const certificates: CertificateResponse[] = action.payload;
+
+            syncUserSkillsFromParentList(
+                certificates,
+                state,
+                cert => cert.certificate,
+                "lstCertificates"
+            );
+        })
+
+        .addCase(experienceListQuery.fulfilled, (state, action) => {
+            const experiences: ExperienceResponse[] = action.payload;
+
+            syncUserSkillsFromParentList(
+                experiences,
+                state,
+                exp => exp.companyName,
+                "lstExperiences"
+            );
+        })
 
         .addCase(projectListQuery.fulfilled, (state, action) => {
-            const projects = action.payload;
+            const projects: ProjectResponse[] = action.payload;
 
-            // Build a map of skill ID → full project link
-            const skillIdToProject: Record<string, any> = {};
-
-            projects.forEach(proj => {
-                proj.lstSkills?.forEach((skill: any) => {
-                    skillIdToProject[skill.id] = {
-                        id: proj.id,
-                        title: proj.title,
-                        skill: skill
-                    };
-                });
-            });
-
-            // Track current skills to avoid duplicate adds
-            const existingSkillIds = new Set(state.lstUserSkills.map(us => us.skill.id));
-
-            // Update or clean up certificate links for existing skills
-            state.lstUserSkills = state.lstUserSkills.map(us => {
-                const skillId = us.skill.id;
-                const projEntry = skillIdToProject[skillId];
-
-                if (projEntry) {
-                    // Update or overwrite certificate
-                    return {
-                        ...us,
-                        project: {
-                            id: projEntry.id,
-                            title: projEntry.title
-                        }
-                    };
-                } else if (us.project) {
-                    // Certificate removed, clean it
-                    const { project, ...rest } = us;
-                    return { ...rest };
-                }
-
-                // No change
-                return us;
-            });
-
-            // Add new skills not already in lstUserSkills
-            Object.entries(skillIdToProject).forEach(([skillId, projEntry]) => {
-                if (!existingSkillIds.has(skillId)) {
-                    state.lstUserSkills.push({
-                        skill: projEntry.skill,
-                        project: {
-                            id: projEntry.id,
-                            title: projEntry.title
-                        }
-                    });
-                }
-            });
+            syncUserSkillsFromParentList(
+                projects,
+                state,
+                proj => proj.title,
+                "lstProjects"
+            );
         })
-        
 
         .addCase(userSkillListQuery.pending, (state) => {
             state.loading = true;

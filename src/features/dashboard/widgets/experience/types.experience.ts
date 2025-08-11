@@ -1,14 +1,26 @@
-import { ExperienceFormData } from "./schema";
-
-// slice
-export interface ExperienceState {
-    lstExperiences: ExperienceFormData[];
-    loading: boolean;
-    error: string | null;
-}
+import { SkillFormData } from "../project/schema";
 
 // form
 export interface ExperienceProps {
     id?: string;
     onClose?: () => void;
+}
+
+// slice
+export interface ExperienceState {
+    lstExperiences: ExperienceResponse[];
+    loading: boolean;
+    error: string | null;
+}
+
+//schema
+export interface ExperienceResponse {
+    id: string;
+    jobTitle: string;
+    companyName: string;
+    startDate: string;
+    endDate?: string;
+    location?: string;
+    description?: string;
+    lstSkills: SkillFormData[];
 }

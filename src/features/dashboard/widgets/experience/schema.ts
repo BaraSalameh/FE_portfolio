@@ -31,6 +31,8 @@ export const experienceSchema = z.object({
     isWorking: z
         .boolean()
         .optional(),
+
+    lstSkills: z.array(z.string()).nullish(),
 }).superRefine((data, ctx) => {
     const now = new Date();
     const start = new Date(data.startDate);

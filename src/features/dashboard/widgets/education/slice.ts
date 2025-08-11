@@ -3,6 +3,8 @@ import { institutionListQuery, degreeListQuery, fieldOfStudyListQuery, education
 import { userFullInfoQuery } from '@/features';
 import { userByUsernameQuery } from '@/features';
 import { EducationState } from './types.education';
+import { userSkillListQuery } from '../skill';
+import { UserSkillResponse } from '../skill/types.skill';
 
 const initialState : EducationState = {
     lstEducations: [],
@@ -40,6 +42,19 @@ const educationSlice = createSlice({
 
         .addCase(userByUsernameQuery.fulfilled, (state, action) => {
             state.lstEducations = action.payload.lstEducations;
+        })
+
+        .addCase(userSkillListQuery.fulfilled, (state, action) => {
+            state.lstEducations = state.lstEducations.map(edu => {
+                const matchingSkills = action.payload
+                    .filter((us: UserSkillResponse) => us.lstEducations?.find(e => e.id === edu.id))
+                    .map(us => us.skill);
+
+                return {
+                    ...edu,
+                    lstSkills: matchingSkills,
+                };
+            });
         })
 
         .addCase(educationListQuery.pending, (state) => {

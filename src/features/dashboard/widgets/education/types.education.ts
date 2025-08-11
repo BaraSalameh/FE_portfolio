@@ -1,3 +1,4 @@
+import { SkillFormData } from "../project/schema";
 import { DegreeFormData, EducationFormData, FieldOfStudyFormData, InstitutionFormData } from "./schema";
 
 // form
@@ -8,7 +9,7 @@ export interface EducationProps {
 
 // slice
 export interface EducationState {
-    lstEducations: EducationFormData[];
+    lstEducations: EducationResponse[];
     institution: InstitutionState;
     degree: DegreeState;
     fieldOfStudy: FieldOfStudyState;
@@ -35,4 +36,17 @@ interface FieldOfStudyState {
     fieldRowCount: number;
     loading: boolean;
     error: string | null;
+}
+
+// schema
+export interface EducationResponse {
+    id: string;
+    institution: InstitutionFormData;
+    degree: DegreeFormData;
+    fieldOfStudy: FieldOfStudyFormData;
+    startDate: string;
+    endDate?: string;
+    description?: string;
+    lstProjects: Record<string, string>[];
+    lstSkills: SkillFormData[];
 }

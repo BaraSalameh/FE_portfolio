@@ -3,17 +3,18 @@ import { useAppSelector } from "@/lib/store/hooks";
 import { ListPlusIcon, StarIcon } from "lucide-react";
 import { UserSkillForm } from "../forms";
 import { checkWidgetPreferences, widget_preferences } from "@/lib/utils";
+import { UserSkillResponse } from "../types.skill";
 
 export const useSkillWidget = (): WidgetCardProps => {
 
     const { loading, lstUserSkills } = useAppSelector(state => state.userSkill);
     const { lstUserPreferences } = useAppSelector(state => state.userWidgetPreference);
 
-    const counts = (lstUserSkills as any).reduce((acc: any, item: any) => {
-        if (item.experience) acc.experience += 1;
-        if (item.project) acc.project += 1;
-        if (item.education) acc.education += 1;
-        if (item.certificate) acc.certificate += 1;
+    const counts = lstUserSkills.reduce((acc: any, item: UserSkillResponse) => {
+        if (item.lstExperiences) acc.experience += item.lstExperiences.length > 0 ? 1 : 0;
+        if (item.lstProjects) acc.project += item.lstProjects.length > 0 ? 1 : 0;
+        if (item.lstEducations) acc.education += item.lstEducations.length > 0 ? 1 : 0;
+        if (item.lstCertificates) acc.certificate += item.lstCertificates.length > 0 ? 1 : 0;
         return acc;
     }, {
         experience: 0,

@@ -17,7 +17,7 @@ export const CertificateForm = ({id, onClose} : CertificateProps) => {
     const { loading: certificateLoading, lstCertificates } = certificate;
     const { loading: skillLoading, lstSkills } = useAppSelector((state) => state.userSkill.skill);
 
-    const certificateToHandle: any = lstUserCertificate.find((pt: any) => pt.id === id);
+    const certificateToHandle = lstUserCertificate.find(c => c.id === id);
     const indicator = id ? {when: 'Update', while: 'Updating...'} : {when: 'Create', while: 'creating...'};
     
     const [ skillOptions, setSkillOptions ] = useState<Option[]>([]);

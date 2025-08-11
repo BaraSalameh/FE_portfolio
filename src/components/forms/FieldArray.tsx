@@ -57,6 +57,7 @@ export const FieldArray = ({
                                         />
                                     )
                                 case 'Dropdown':
+                                case 'DropdownMulti':
                                     return (
                                         <ControlledDropdown
                                             key={config.name}
@@ -64,6 +65,7 @@ export const FieldArray = ({
                                             control={control}
                                             label={config.label}
                                             options={config.options || []}
+                                            isMulti={config.as === 'DropdownMulti'}
                                             fetchAction={config.fetchAction}
                                             isLoading={config.isLoading}
                                         />

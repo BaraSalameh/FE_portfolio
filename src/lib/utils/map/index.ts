@@ -5,3 +5,4 @@ export { mapProjectToForm } from './mapProjectToForm';
 export { mapUserLanguageToForm } from './mapUserLanguageToForm';
 export { mapUserSkillToForm } from './mapUserSkillToForm';
 export { mapCertificateToForm } from './mapCertificateToForm';
+export { mapExperienceToForm } from './mapExperienceToForm';
