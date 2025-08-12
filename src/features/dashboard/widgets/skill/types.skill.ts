@@ -32,7 +32,7 @@ type SkillLink = {
 
 // schema
 export interface UserSkillResponse {
-    skill: Record<string, string>;
+    skill: SkillFormData;
     lstEducations?: US_EducationResponse[];
     lstExperiences?: Record<string, string>[];
     lstProjects?: Record<string, string>[];

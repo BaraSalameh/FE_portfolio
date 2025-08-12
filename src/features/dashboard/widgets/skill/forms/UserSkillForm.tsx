@@ -1,20 +1,20 @@
 'use client';
 
-import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
-import { useEffect, useMemo, useState } from "react";
-import { mapUserSkillToForm, mergeOptions, optionsCreator } from "@/lib/utils";
+import { useAppSelector } from "@/lib/store/hooks";
+import { useMemo } from "react";
+import { mapUserSkillToForm, optionsCreator } from "@/lib/utils";
 import { ControlledForm } from "@/components/forms";
-import { Option } from "@/features/types.features";
 import { SkillProps } from "../types.skill";
-import { UserSkillFormData, userSkillSchema } from "../schema";
-import { editDeleteUserSkill, skillListQuery, userSkillListQuery } from "../apis";
+import { userSkillSchema } from "../schema";
+import { skillListQuery } from "../apis";
 import { FormField } from "@/components/forms/types.forms";
+import { useLoadUserSkill } from "@/features/dashboard/hooks";
+import { useHandleSubmit } from "../hooks";
 
-export const UserSkillForm = ({id, onClose} : SkillProps) => {
+export const UserSkillForm = ({ onClose } : SkillProps) => {
 
-    const dispatch = useAppDispatch();
     const { loading, error, lstUserSkills, skill } = useAppSelector((state) => state.userSkill);
-    const { loading: skillLoading, lstSkills } = skill;
+    const { loading: skillLoading } = skill;
     const { lstEducations } = useAppSelector(state => state.education);
     const { lstExperiences } = useAppSelector(state => state.experience);
     const { lstProjects } = useAppSelector(state => state.project);
@@ -37,23 +37,9 @@ export const UserSkillForm = ({id, onClose} : SkillProps) => {
         optionsCreator({list: lstCertificates, labelKey: 'certificate.name'})
     , [lstCertificates]);
     
-    const onSubmit = async (data: UserSkillFormData) => {
-        const resultAction = await dispatch(editDeleteUserSkill(data));
-        
-        if (!editDeleteUserSkill.rejected.match(resultAction)) {
-            await dispatch(userSkillListQuery());
-            onClose?.();
-        }
-    };
-    
-    const [ skillOptions, setSkillOptions ] = useState<Option[]>([]);
-    
-    useEffect(() => {
-        const skillsFromEdit = optionsCreator({list: lstUserSkills, labelKey: 'skill.name', valueKey: 'skill.id', iconKey: 'skill.iconUrl'});
-        const skillStore = optionsCreator({list: lstSkills, iconKey: 'iconUrl'});
-        setSkillOptions(mergeOptions(skillsFromEdit, skillStore));
-        
-    }, [lstUserSkills, lstSkills]);
+    const skillOptions = useLoadUserSkill(lstUserSkills);
+    const onSubmit = useHandleSubmit({onClose});
+    const resetItems = useMemo(() => mapUserSkillToForm(lstUserSkills), [lstUserSkills]);
 
     const fieldConfigs: FormField[] = useMemo(() => [
         {as: 'Dropdown', label: 'Skills', name: 'LKP_SkillID', options: skillOptions, fetchAction: skillListQuery, isLoading: skillLoading},
@@ -62,10 +48,6 @@ export const UserSkillForm = ({id, onClose} : SkillProps) => {
         {as: 'DropdownMulti', label: 'Corresponding Project', name: 'ProjectIDs', options: projectOptions},
         {as: 'DropdownMulti', label: 'Corresponding Certificate', name: 'CertificateIDs', options: certificateOptions}
     ], [skillOptions, educationOptions, experienceOptions, projectOptions, certificateOptions, skillLoading]);
-
-    const resetItems = useMemo(
-        () => mapUserSkillToForm(lstUserSkills),
-    [lstUserSkills]);
 
     return (
         <ControlledForm
