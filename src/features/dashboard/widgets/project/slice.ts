@@ -3,7 +3,7 @@ import { addEditProject, deleteProject, projectListQuery } from './apis';
 import { userByUsernameQuery, userFullInfoQuery } from '@/features';
 import { ProjectState } from './types.project';
 import { userSkillListQuery } from '../skill';
-import { UserSkillResponse } from '../skill/types.skill';
+import { syncParentFromUserSkill } from '@/lib/utils';
 
 const initialState : ProjectState = {
     lstProjects: [],
@@ -26,16 +26,7 @@ const projectSlice = createSlice({
         })
 
         .addCase(userSkillListQuery.fulfilled, (state, action) => {
-            state.lstProjects = state.lstProjects.map(proj => {
-                const matchingSkills = action.payload
-                    .filter((us: UserSkillResponse) => us.lstProjects?.find(e => e.id === proj.id))
-                    .map(us => us.skill);
-
-                return {
-                    ...proj,
-                    lstSkills: matchingSkills,
-                };
-            });
+            syncParentFromUserSkill(state, action.payload, "lstProjects");
         })
         
         .addCase(projectListQuery.pending, (state) => {

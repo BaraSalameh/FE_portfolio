@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { ExperienceState } from './types.experience';
 import { userFullInfoQuery } from '@/features';
 import { userSkillListQuery } from '../skill';
-import { UserSkillResponse } from '../skill/types.skill';
+import { syncParentFromUserSkill } from '@/lib/utils';
 
 const initialState : ExperienceState = {
     lstExperiences: [],
@@ -27,16 +27,7 @@ const ExperienceSlice = createSlice({
         })
 
         .addCase(userSkillListQuery.fulfilled, (state, action) => {
-            state.lstExperiences = state.lstExperiences.map(exp => {
-                const matchingSkills = action.payload
-                    .filter((us: UserSkillResponse) => us.lstExperiences?.find(e => e.id === exp.id))
-                    .map(us => us.skill);
-
-                return {
-                    ...exp,
-                    lstSkills: matchingSkills,
-                };
-            });
+            syncParentFromUserSkill(state, action.payload, "lstExperiences");
         })
 
         .addCase(experienceListQuery.pending, (state) => {
