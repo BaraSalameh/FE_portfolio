@@ -3,26 +3,18 @@
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { ControlledForm, ImageUploader } from "@/components/forms";
 import { useMemo } from "react";
-import { ProfileFormData, profileSchema } from "../schema";
-import { editProfile, userInfoQuery } from "@/features";
+import { profileSchema } from "../schema";
+import { useHandleSubmit } from "../hooks";
 
 export const ProfileForm = ({ onClose } : { onClose?: () => void }) => {
 
-    const dispatch = useAppDispatch();
     const { loading, error, user } = useAppSelector((state) => state.profile);
     const genderOptions = [
         { label: 'Female', value: '0' },
         { label: 'Male', value: '1' }
     ];
 
-    const onSubmit = async (data: ProfileFormData) => {
-        const resultAction = await dispatch(editProfile(data));
-
-        if (!editProfile.rejected.match(resultAction)) {
-            await dispatch(userInfoQuery());
-            onClose?.();
-        }
-    };
+    const onSubmit = useHandleSubmit({ onClose });
 
     const items = useMemo(() => [
         {as: 'Input', name: 'firstname', label: 'Firstname', placeholder: 'John'},

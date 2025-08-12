@@ -1,25 +1,18 @@
 'use client';
 
-import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
+import { useAppSelector } from "@/lib/store/hooks";
 import { ControlledForm } from "@/components/forms";
 import { ContactMessageProps } from "../types.contact-message";
-import { ContactMessageFormData, contactMessageSchema } from "../schema";
-import { sendEmail } from "../api";
+import { contactMessageSchema } from "../schema";
+import { useHandleSubmit } from "../hooks";
 
 export const ContactMessageForm = ({onClose} : ContactMessageProps) => {
 
-    const dispatch = useAppDispatch();
     const { loading, error, user } = useAppSelector((state) => state.profile);
 
     const messagePlaceholder = `Dear ${user?.firstname} ${user?.lastname}...`;
 
-    const onSubmit = async (data: ContactMessageFormData) => {
-        const resultAction = await dispatch(sendEmail(data));
-
-        if (!sendEmail.rejected.match(resultAction)) {
-            onClose?.();
-        }
-    };
+    const onSubmit = useHandleSubmit({ onClose });
 
     return (
         <ControlledForm
