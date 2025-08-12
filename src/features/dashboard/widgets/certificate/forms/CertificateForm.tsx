@@ -1,36 +1,29 @@
 'use client';
 
-import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
-import { useEffect, useMemo, useState } from "react";
-import { mapCertificateToForm, mergeOptions, optionsCreator } from "@/lib/utils";
+import { useAppSelector } from "@/lib/store/hooks";
+import { useMemo } from "react";
+import { mapCertificateToForm } from "@/lib/utils";
 import { ControlledForm, ImageUploader } from "@/components/forms";
-import { Option } from "@/features/types.features";
 import { CertificateProps } from "../types.certificate";
-import { CertificateFormData, certificateSchema } from "../schema";
-import { addEditCertificate, certificateListQuery, lkp_CertificateListQuery } from "../apis";
+import { certificateSchema } from "../schema";
+import { lkp_CertificateListQuery } from "../apis";
 import { skillListQuery } from "../../skill";
+import { useHandleSubmit, useLoadCertificate } from "../hooks";
+import { useLoadUserSkill } from "@/features/dashboard/hooks";
 
 export const CertificateForm = ({id, onClose} : CertificateProps) => {
 
-    const dispatch = useAppDispatch();
     const { loading, error, lstCertificates: lstUserCertificate, certificate } = useAppSelector((state) => state.certificate);
-    const { loading: certificateLoading, lstCertificates } = certificate;
-    const { loading: skillLoading, lstSkills } = useAppSelector((state) => state.userSkill.skill);
+    const { loading: skillLoading } = useAppSelector((state) => state.userSkill.skill);
+    const { loading: certificateLoading } = certificate;
 
     const certificateToHandle = lstUserCertificate.find(c => c.id === id);
     const indicator = id ? {when: 'Update', while: 'Updating...'} : {when: 'Create', while: 'creating...'};
     
-    const [ skillOptions, setSkillOptions ] = useState<Option[]>([]);
-    const [ certificateOptions, setCertificateOptions ] = useState<Option[]>([]);
-
-    const onSubmit = async (data: CertificateFormData) => {
-        const resultAction = await dispatch(addEditCertificate(data));
-
-        if (!addEditCertificate.rejected.match(resultAction)) {
-            await dispatch(certificateListQuery());
-            onClose?.();
-        }
-    };
+    const certificateOptions = useLoadCertificate(certificateToHandle);
+    const skillOptions = useLoadUserSkill(certificateToHandle);
+    const onSubmit = useHandleSubmit({onClose});
+    const resetItems = useMemo(() => mapCertificateToForm(certificateToHandle), [certificateToHandle]);
 
     const items = useMemo(() => [
         {as: 'DropdownMulti', name: 'lstSkills', options: skillOptions, label: 'Skills', fetchAction: skillListQuery, isLoading: skillLoading},
@@ -50,26 +43,6 @@ export const CertificateForm = ({id, onClose} : CertificateProps) => {
             }
         },
     ], [skillOptions, certificateOptions, skillLoading, certificateLoading]);
-    
-    const resetItems = useMemo(
-        () => mapCertificateToForm(certificateToHandle),
-    [certificateToHandle]);
-
-    useEffect(() => {
-        const { lstSkills: lsfe } = certificateToHandle ?? {};
-        const skillsFromEdit = lsfe ? optionsCreator({list: lsfe, iconKey: 'iconUrl'}) : [];
-        const skillsStore = optionsCreator({list: lstSkills, iconKey: 'iconUrl'});
-        setSkillOptions(mergeOptions(skillsFromEdit, skillsStore));
-
-    }, [certificateToHandle, lstSkills]);
-
-    useEffect(() => {
-        const { certificate } = certificateToHandle ?? {};
-        const certificateFromEdit = optionsCreator({list: certificate });
-        const certificateFromStore = optionsCreator({list: lstCertificates});
-
-        setCertificateOptions(mergeOptions(certificateFromEdit, certificateFromStore));
-    }, [certificateToHandle, lstCertificates]);
 
     return (
         <ControlledForm
