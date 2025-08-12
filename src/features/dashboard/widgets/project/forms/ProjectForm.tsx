@@ -1,23 +1,23 @@
 'use client';
 
-import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
-import { useEffect, useMemo, useState } from "react";
-import { mapProjectToForm, mergeOptions, optionsCreator } from "@/lib/utils";
+import { useAppSelector } from "@/lib/store/hooks";
+import { useMemo } from "react";
+import { mapProjectToForm, optionsCreator } from "@/lib/utils";
 import { ControlledForm } from "@/components/forms";
-import { Option } from "@/features/types.features";
-import { addEditProject, projectListQuery } from "../apis";
 import { ProjectProps } from "../types.project";
-import { ProjectFormData, projectSchema } from "../schema";
+import { projectSchema } from "../schema";
 import { skillListQuery } from "../../skill";
+import { useHandleSubmit } from "../hooks";
+import { useLoadUserSkill } from "@/features/dashboard/hooks";
 
 export const ProjectForm = ({id, onClose} : ProjectProps) => {
 
-    const dispatch = useAppDispatch();
-    const { loading: skillLoading, lstSkills } = useAppSelector((state) => state.userSkill.skill);
     const { loading, error, lstProjects } = useAppSelector((state) => state.project);
+    const { loading: skillLoading } = useAppSelector((state) => state.userSkill.skill);
     const { lstEducations } = useAppSelector(state => state.education);
     const { lstExperiences } = useAppSelector(state => state.experience);
-    const projectToHandle = lstProjects.find(p => p.id === id);
+
+    const projectToHandle = useMemo(() => lstProjects.find(p => p.id === id), [lstProjects]);
     const indicator = id ? {when: 'Update', while: 'Updating...'} : {when: 'Create', while: 'creating...'};
 
     const educationOptions = useMemo(() =>
@@ -29,16 +29,9 @@ export const ProjectForm = ({id, onClose} : ProjectProps) => {
         optionsCreator({list: lstExperiences, labelKey: 'companyName'})
     , [lstEducations]);
 
-    const [ skillOptions, setSkillOptions ] = useState<Option[]>([]);
-
-    const onSubmit = async (data: ProjectFormData) => {
-        const resultAction = await dispatch(addEditProject(data));
-
-        if (!addEditProject.rejected.match(resultAction)) {
-            await dispatch(projectListQuery());
-            onClose?.();
-        }
-    };
+    const skillOptions = useLoadUserSkill(projectToHandle);
+    const onSubmit = useHandleSubmit({onClose});
+    const resetItems = useMemo(() => mapProjectToForm(projectToHandle), [projectToHandle]);
 
     const items = useMemo(() => [
         {as: 'DropdownMulti', name: 'lstSkills', options: skillOptions, label: 'Skills', fetchAction: skillListQuery, isLoading: skillLoading},
@@ -52,18 +45,6 @@ export const ProjectForm = ({id, onClose} : ProjectProps) => {
         {as: 'Input', name: 'description', label: 'Description', placeholder: 'Description', type: 'Textarea'}
     ], [ skillOptions, educationOptions, experienceOptions ]);
     
-    const resetItems = useMemo(
-        () => mapProjectToForm(projectToHandle),
-    [projectToHandle]);
-
-    useEffect(() => {
-        const { lstSkills: lsfe } = projectToHandle ?? {};
-        const skillsFromEdit = lsfe ? optionsCreator({list: lsfe, iconKey: 'iconUrl'}) : [];
-        const skillsStore = optionsCreator({list: lstSkills, iconKey: 'iconUrl'});
-        setSkillOptions(mergeOptions(skillsFromEdit, skillsStore));
-
-    }, [projectToHandle, lstSkills]);
-
     return (
         <ControlledForm
             schema={projectSchema}
