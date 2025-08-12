@@ -1,57 +1,30 @@
 'use client';
 
-import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
-import { useEffect, useMemo, useState } from "react";
+import { useAppSelector } from "@/lib/store/hooks";
+import { useMemo } from "react";
 import { ControlledForm } from "@/components/forms";
-import { mapUserLanguageToForm, mergeOptions, optionsCreator } from "@/lib/utils";
-import { Option } from "@/features/types.features";
+import { mapUserLanguageToForm } from "@/lib/utils";
 import { UserLanguageProps } from "../types.language";
-import { UserLanguageFormData, userLanguageSchema } from "../schema";
-import { editDeleteUserLanguage, languageListQuery, languageProficiencyListQuery, userLanguageListQuery } from "../apis";
+import { userLanguageSchema } from "../schema";
+import { languageListQuery } from "../apis";
 import { FormField } from "@/components/forms/types.forms";
+import { useHandleSubmit, useLoadLanguage, useLoadLanguageProficiency } from "../hooks";
 
-export const UserLanguageForm = ({id, onClose} : UserLanguageProps) => {
+export const UserLanguageForm = ({onClose} : UserLanguageProps) => {
 
-    const dispatch = useAppDispatch();
-    const { loading, error, lstUserLanguages, language, languageProficiency } = useAppSelector((state) => state.userLanguage);
-    const { loading: languageLoading, lstLanguages } = language;
-    const { loading: languageProficiencyLoading, lstLanguageProficiencies } = languageProficiency;
-
-    const languageProficiencyOptions = useMemo(() =>
-        optionsCreator({list: lstLanguageProficiencies, labelKey: 'level'})
-    , [lstLanguageProficiencies]);
-
-    const onSubmit = async (data: UserLanguageFormData) => {
-        const resultAction = await dispatch(editDeleteUserLanguage(data));
-
-        if (!editDeleteUserLanguage.rejected.match(resultAction)) {
-            await dispatch(userLanguageListQuery());
-            onClose?.();
-        }
-    };
-
-    useEffect(() => {
-        lstLanguageProficiencies.length === 0 && dispatch(languageProficiencyListQuery());
-    }, []);
-
-    const [ languageOptions, setLanguageOptions ] = useState<Option[]>([]);
+    const { loading, error, lstUserLanguages, language } = useAppSelector((state) => state.userLanguage);
+    const { loading: languageLoading } = language;
     
-    useEffect(() => {
-        const languagesFromEdit = optionsCreator({list: lstUserLanguages, labelKey: 'language.name', valueKey: 'language.id'});
-        const languagesStore = optionsCreator({list: lstLanguages});
-        setLanguageOptions(mergeOptions(languagesFromEdit, languagesStore));
-        
-    }, [lstUserLanguages, lstLanguages]);
+    const languageOptions = useLoadLanguage();
+    const languageProficiencyOptions = useLoadLanguageProficiency();
+    const onSubmit = useHandleSubmit({onClose});
+    const resetItems = useMemo(() => mapUserLanguageToForm(lstUserLanguages), [lstUserLanguages]);
 
     const fieldConfigs: FormField[] = useMemo(() => [
         {as: 'Dropdown' , label: 'Language', name: 'lkP_LanguageID', options: languageOptions, fetchAction: languageListQuery, isLoading: languageLoading},
         {as: 'Dropdown', label: 'Proficiency', name: 'lkP_LanguageProficiencyID', options: languageProficiencyOptions}
-    ], [languageOptions, languageProficiencyOptions, languageLoading, languageProficiencyLoading]);
+    ], [ languageOptions, languageProficiencyOptions, languageLoading ]);
 
-    const resetItems = useMemo(
-        () => mapUserLanguageToForm(lstUserLanguages),
-    [lstUserLanguages]);
-    
     return (
         <ControlledForm
             schema={userLanguageSchema}
