@@ -19,7 +19,7 @@ export const EducationForm = ({id, onClose} : EducationProps) => {
     const { loading: degreeLoading } = degree;
     const { loading: fieldLoading } = fieldOfStudy;
 
-    const educationToHandle = lstEducations.find(ed => ed.id === id);
+    const educationToHandle = useMemo(() => lstEducations.find(ed => ed.id === id), [lstEducations]);
     const indicator = id ? {when: 'Update', while: 'Updating...'} : {when: 'Create', while: 'creating...'};
     
     const institutionOptions = useLoadInstitution(educationToHandle);

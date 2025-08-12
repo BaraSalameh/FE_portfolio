@@ -1,42 +1,27 @@
 'use client';
 
-import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
-import { addEditExperience, experienceListQuery } from "@/features/dashboard/widgets/experience/apis";
+import { useAppSelector } from "@/lib/store/hooks";
 import { ControlledForm } from "@/components/forms";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { ExperienceProps } from "../types.experience";
-import { ExperienceFormData, experienceSchema } from "../schema";
-import { Option } from "@/features/types.features";
-import { mapExperienceToForm, mergeOptions, optionsCreator } from "@/lib/utils";
+import { experienceSchema } from "../schema";
+import { mapExperienceToForm } from "@/lib/utils";
 import { skillListQuery } from "../../skill";
+import { useLoadUserSkill } from "@/features/dashboard/hooks";
+import { useHandleSubmit } from "../hooks";
 
 export const ExperienceForm = ({id, onClose} : ExperienceProps) => {
 
-    const dispatch = useAppDispatch();
-    const { loading: skillLoading, lstSkills } = useAppSelector((state) => state.userSkill.skill);
     const { loading, error, lstExperiences } = useAppSelector((state) => state.experience);
-    const experienceToHandle = useMemo(() => lstExperiences.find(ex => ex.id === id), [lstExperiences])
+    const { loading: skillLoading } = useAppSelector((state) => state.userSkill.skill);
+    
+    const experienceToHandle = useMemo(() => lstExperiences.find(ex => ex.id === id), [lstExperiences]);
     const indicator = id ? {when: 'Update', while: 'Updating...'} : {when: 'Create', while: 'creating...'};
 
-    const [ skillOptions, setSkillOptions ] = useState<Option[]>([]);
-
-    const onSubmit = async (data: ExperienceFormData) => {
-        const resultAction = await dispatch(addEditExperience(data));
-
-        if (!addEditExperience.rejected.match(resultAction)) {
-            await dispatch(experienceListQuery());
-            onClose?.();
-        }
-    };
-
-     useEffect(() => {
-            const { lstSkills: lsfe } = experienceToHandle ?? {};
-            const skillsFromEdit = lsfe ? optionsCreator({list: lsfe, iconKey: 'iconUrl'}) : [];
-            const skillsStore = optionsCreator({list: lstSkills, iconKey: 'iconUrl'});
-            setSkillOptions(mergeOptions(skillsFromEdit, skillsStore));
-    
-        }, [experienceToHandle, lstSkills]);
-
+    const skillOptions = useLoadUserSkill(experienceToHandle);
+    const onSubmit = useHandleSubmit({onClose});
+    const resetItems = useMemo(() => mapExperienceToForm(experienceToHandle), [experienceToHandle]);
+     
     const items = useMemo(() => [
         {as: 'Input', name: 'companyName', label: 'Company', placeholder: 'Google'},
         {as: 'Input', name: 'jobTitle', label: 'Job title', placeholder: 'Software Developer'},
@@ -47,10 +32,6 @@ export const ExperienceForm = ({id, onClose} : ExperienceProps) => {
         {as: 'Input', name: 'description', label: 'Description', placeholder: 'Description', type: 'Textarea'},
         {as: 'DropdownMulti', name: 'lstSkills', options: skillOptions, label: 'Skills', fetchAction: skillListQuery, isLoading: skillLoading}
     ], [ skillOptions ]);
-
-    const resetItems = useMemo(
-        () => mapExperienceToForm(experienceToHandle),
-    [experienceToHandle]);
 
     return (
         <ControlledForm
