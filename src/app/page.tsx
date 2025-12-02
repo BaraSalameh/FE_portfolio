@@ -1,4 +1,3 @@
-'use client'
 import { ContactUs, Examples, Home, MoreDetails } from '@/features';
 import React from 'react';
 

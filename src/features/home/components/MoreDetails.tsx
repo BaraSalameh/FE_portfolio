@@ -1,4 +1,3 @@
-'use client'
 import { Anchor, Container, Header, ImageSlider, List, Main, Paragraph, ResponsiveIcon, SubFooter } from "@/components";
 import { static_more_details_page } from "@/lib/utils";
 import { Home, LogIn, FileEditIcon } from "lucide-react";

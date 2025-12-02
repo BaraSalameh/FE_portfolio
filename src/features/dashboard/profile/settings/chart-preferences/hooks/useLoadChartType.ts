@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect } from "react";
 import { chartTypeListQuery } from "../apis";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";

@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from "react"
 import { EducationResponse } from "../types.education"
 import { useAppSelector } from "@/lib/store/hooks"

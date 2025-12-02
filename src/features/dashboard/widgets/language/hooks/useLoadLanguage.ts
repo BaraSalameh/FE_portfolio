@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from "react"
 import { useAppSelector } from "@/lib/store/hooks"
 import { mergeOptions, optionsCreator } from "@/lib/utils";

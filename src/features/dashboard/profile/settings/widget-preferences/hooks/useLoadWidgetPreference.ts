@@ -1,3 +1,5 @@
+'use client';
+
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { useEffect } from "react"
 import { widgetPreferenceListQuery } from "../apis";

@@ -1,4 +1,3 @@
-'use client'
 import { Button, Anchor } from "@/components/forms";
 import Image from "next/image";
 import { static_home_page } from "@/lib/utils";
@@ -8,7 +7,6 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { SearchBarPage } from "@/features";
 
 export const Home = () => {
-
     return (
         <>
             {/* Main content */}
@@ -18,7 +16,7 @@ export const Home = () => {
                         src='/portfolio-logo.svg'
                         alt="portfolio logo"
                         width={300}
-                        height={40}
+                        height={80}
                         priority
                     />
                     <div className="absolute right-7 sm:right-10 lg:right-15 bottom-0">

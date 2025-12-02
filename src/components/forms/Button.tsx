@@ -1,10 +1,8 @@
-'use client';
-
 import React from 'react';
 import { button } from '@/styles';
 import { cn } from '@/components/utils';
-import { useRouter } from 'next/navigation';
 import { ButtonProps } from './types.forms';
+import Link from 'next/link';
 
 export const Button = ({
     children,
@@ -17,7 +15,6 @@ export const Button = ({
     url,
     disabled
 }: ButtonProps) => {
-    const router = useRouter();
 
     const handleClick = () => {
         onClick?.();
@@ -25,7 +22,6 @@ export const Button = ({
     };
     
     const buttonContent = (
-
         <button
             type={type}
             className={cn(button({ size, rounded }), className)}
@@ -38,9 +34,9 @@ export const Button = ({
 
     if (url) {
         return (
-            <button onClick={() => router.push(url)} className={cn(button({ size }), className)}>
+            <Link href={url} className={cn(button({ size }), className)}>
                 {children}
-            </button>
+            </Link>
         );
     }
 
