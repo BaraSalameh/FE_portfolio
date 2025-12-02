@@ -41,11 +41,11 @@ const LoginPage = () => {
                 </section>
             </Main>
             <SubFooter>
-                <Anchor size="xs" url="/">
+                <Anchor url="/">
                     <Image src="/file.svg" alt="File icon" width={16} height={16} />
                     Go home
                 </Anchor>
-                <Anchor size="xs" url="/account/register">
+                <Anchor url="/account/register">
                     <Image src="/window.svg" alt="Window icon" width={16} height={16} />
                     Don't have an account? Register!
                 </Anchor>

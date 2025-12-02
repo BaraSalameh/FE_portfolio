@@ -22,15 +22,15 @@ export const MoreDetails = () => {
                 </Paragraph>
             </Main>
             <SubFooter>
-                <Anchor size="xs" url="#">
+                <Anchor url="#home">
                     <ResponsiveIcon icon={Home} />
                     Go Home
                 </Anchor>
-                <Anchor size="xs" url="/account/login">
+                <Anchor url="/account/login">
                     <ResponsiveIcon icon={LogIn} />
                     Login
                 </Anchor>
-                <Anchor size="xs" url="/account/register">
+                <Anchor url="/account/register">
                     <ResponsiveIcon icon={FileEditIcon} />
                     Register
                 </Anchor>

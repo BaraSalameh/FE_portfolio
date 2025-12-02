@@ -1,4 +1,4 @@
-import { ContactUs, Examples, Home, MoreDetails } from '@/features';
+import { Home, MoreDetails } from '@/features';
 import React from 'react';
 
 const Index = () => {
@@ -6,8 +6,6 @@ const Index = () => {
         <React.Fragment>
             <Home />
             <MoreDetails />
-            <Examples />
-            <ContactUs />
         </React.Fragment>
     );
 }

@@ -72,10 +72,9 @@ export interface ControlledFormProps<T extends z.ZodTypeAny> {
 }
 
 export interface AnchorProps extends AnchorVariantProps {
+    url: string;
     children: React.ReactNode;
     className?: string;
-    type?: ButtonType;
-    url?: string;
 }
 
 export interface ButtonProps extends ButtonVariantProps {

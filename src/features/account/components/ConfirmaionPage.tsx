@@ -42,11 +42,11 @@ export const ConfirmationPage = () => {
                 </div>
             </Main>
             <SubFooter>
-                <Anchor size="xs" url="/">
+                <Anchor url="/">
                     <ResponsiveIcon icon={Home} />
                     Go home
                 </Anchor>
-                <Anchor size="xs" url={`${username ? `/account/register/confirm-email/${username}/resend` : '/account/login'}`}>
+                <Anchor url={`${username ? `/account/register/confirm-email/${username}/resend` : '/account/login'}`}>
                     <ResponsiveIcon icon={Send} />
                     Resend email
                 </Anchor>

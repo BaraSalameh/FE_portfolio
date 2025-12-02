@@ -11,6 +11,7 @@ export const Home = () => {
         <>
             {/* Main content */}
             <Container className="min-h-screen">
+                <div id="home" />
                 <Header className="relative">
                     <Image
                         src='/portfolio-logo.svg'
@@ -49,17 +50,9 @@ export const Home = () => {
                     </div>
                 </Main>
                 <SubFooter>
-                    <Anchor size="xs" url="#more-details">
+                    <Anchor url="#more-details">
                         <ResponsiveIcon icon={MoreHorizontal} />
                         More details
-                    </Anchor>
-                    <Anchor size="xs" url="#examples">
-                        <ResponsiveIcon icon={File} />
-                        Examples
-                    </Anchor>
-                    <Anchor size="xs" url="#contact-us">
-                        <ResponsiveIcon icon={Contact} />
-                        Contact us →
                     </Anchor>
                 </SubFooter>
             </Container>
