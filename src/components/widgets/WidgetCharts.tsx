@@ -43,7 +43,7 @@ export const WidgetCharts = ({ items, pie, bar, radar }: WidgetChartsProps) => {
                         : 'col-span-3'
                     }`}
                 >
-                    <Paragraph size="md" position="center">{pie?.title ?? 'Distribution'}</Paragraph>
+                    <Paragraph position="center">{pie?.title ?? 'Distribution'}</Paragraph>
                     <PieChartWidget data={pieData} colorMap={pieColorMap} />
                 </div>
             )}
@@ -58,7 +58,7 @@ export const WidgetCharts = ({ items, pie, bar, radar }: WidgetChartsProps) => {
                         : 'col-span-1'
                     }`}
                 >
-                    <Paragraph size="md" position="center">{radar?.title ?? 'Distribution'}</Paragraph>
+                    <Paragraph position="center">{radar?.title ?? 'Distribution'}</Paragraph>
                     <RadarChartWidget data={radarData} />
                 </div>
             )}
@@ -75,7 +75,7 @@ export const WidgetCharts = ({ items, pie, bar, radar }: WidgetChartsProps) => {
                         : 'col-span-3'
                     }`}
                 >
-                    <Paragraph size="md" position="center">{bar?.title ?? 'Duration (in months)'}</Paragraph>
+                    <Paragraph position="center">{bar?.title ?? 'Duration (in months)'}</Paragraph>
                     <BarChartWidget data={barData} colorMap={barColorMap} />
                 </div>
             )}

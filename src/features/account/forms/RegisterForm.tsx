@@ -32,7 +32,7 @@ export const RegisterForm = () => {
             defaultValues={{rememberMe: false}}
             indicator={{when: 'Register', while: 'Registering...'}}
         >
-            <Paragraph size="xl" className="py-3">
+            <Paragraph className="py-3">
                 Register
             </Paragraph>
         </ControlledForm>

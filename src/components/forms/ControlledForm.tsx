@@ -131,13 +131,13 @@ export const ControlledForm = <T extends z.ZodTypeAny> ({
             }
             </fieldset>
             {Array.isArray(error) && error.length > 1 ? (
-                <List intent="danger" size="sm">
+                <List intent="danger" className="text-sm">
                     {error.map((e: string, i: number) => (
                         <li key={i}>{e}</li>
                     ))}
                 </List>
             ) : (
-                error && <Paragraph intent="danger" size="sm">{error}</Paragraph>
+                error && <Paragraph intent="danger" className="text-sm">{error}</Paragraph>
             )}
 
             <Button rounded="full" size="lg" type="submit" disabled={loading}>

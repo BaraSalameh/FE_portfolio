@@ -7,7 +7,7 @@ export const MoreDetails = () => {
         <Container>
             <div id="more-details" />
             <Main className='items-center sm:items-start'>
-                <Paragraph size='lg' text='justify'>
+                <Paragraph text='justify'>
                     {static_more_details_page.introduction}
                 </Paragraph>
                 <div className="md:flex w-full gap-5 space-y-5">
@@ -17,7 +17,7 @@ export const MoreDetails = () => {
                     </List>
                     <ImageSlider imageList={static_more_details_page.slider} />
                 </div>
-                <Paragraph size='lg' text='justify'>
+                <Paragraph text='justify'>
                     {static_more_details_page.abstract}
                 </Paragraph>
             </Main>

@@ -15,8 +15,9 @@ export interface ImageSliderProps {
 }
 
 export interface ThemeToggleProps {
-    title?: string;
-    themeNameIncluded?: boolean;
+    label?: string;
+    lightLabel?: string;
+    darkLabel?: string;
     className?: string;
 }
 

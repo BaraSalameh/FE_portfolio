@@ -9,12 +9,11 @@ export const List = ({
     children,
     intent,
     as,
-    size,
     className,
     
 }: ListProps) => {
     return (
-        <ol className={cn(list({ intent, size, as }), className)}>
+        <ol className={cn(list({ intent, as }), className)}>
             {children}
         </ol>
     );

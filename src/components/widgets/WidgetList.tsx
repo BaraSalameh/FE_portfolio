@@ -70,7 +70,7 @@ export const WidgetList = ({
                         :   cfg.rightKey ? rightRaw : '';
 
                     return (
-                        <Paragraph key={index} size={cfg.size}>
+                        <Paragraph key={index}>
                             {cfg.icon && <ResponsiveIcon icon={cfg.icon} />}
 
                             {Array.isArray(leftVal)

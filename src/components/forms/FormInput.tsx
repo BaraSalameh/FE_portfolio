@@ -42,7 +42,7 @@ export const FormInput = ({
                     className={inputClasses}
                 />
             )}
-            {error && <Paragraph intent="danger" size="sm">{error.message}</Paragraph>}
+            {error && <Paragraph intent="danger" className="text-sm">{error.message}</Paragraph>}
         </div>
     );
 };

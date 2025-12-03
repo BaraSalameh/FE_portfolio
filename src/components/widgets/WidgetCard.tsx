@@ -51,7 +51,7 @@ export const WidgetCard = ({
             <section className={cn(widgetCard(), className)}>
                 <Loading isLoading={isLoading} fullScreen={false} />
                 <Header itemsX="between" paddingX="xs" paddingY="xs">
-                    <Paragraph size="lg" space="xs">
+                    <Paragraph space="xs">
                         {header?.icon && <ResponsiveIcon icon={header.icon} />}
                         {header?.title}
                     </Paragraph>
@@ -72,7 +72,7 @@ export const WidgetCard = ({
                 <Loading isLoading={isLoading} fullScreen={false} />
                 {header && (header.icon || header.title) && (
                     <Header itemsX="between" paddingX="xs" paddingY="xs">
-                        <Paragraph size="lg" space="xs">
+                        <Paragraph space="xs">
                             {header.icon && <ResponsiveIcon icon={header.icon} />}
                             {header.title}
                         </Paragraph>
@@ -107,7 +107,7 @@ export const WidgetCard = ({
 
                 {list && (
                     <Main paddingX="none" paddingY="none">
-                        <List size="md" as="none" className="w-full">
+                        <List as="none" className="w-full">
                             <WidgetList
                                 items={items}
                                 list={list}

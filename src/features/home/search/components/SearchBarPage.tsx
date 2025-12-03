@@ -30,7 +30,7 @@ import { SearchBarForm } from "..";
                     </div>
                 </BlurBackground>
             )}
-            <Button size="lg" rounded="full" onClick={handleFocus}>
+            <Button rounded="full" onClick={handleFocus}>
                 <ResponsiveIcon icon={Search} />
                 <Paragraph>Start searching</Paragraph>
             </Button>

@@ -46,15 +46,15 @@ export const SearchBarForm = () => {
 
     const renderUserList = () => {
         if (error) {
-            return <Paragraph intent="danger" size="sm" className="p-3">{error}</Paragraph>;
+            return <Paragraph intent="danger" className="p-3">{error}</Paragraph>;
         }
 
         if (loading && userList.length === 0) {
-            return <Paragraph size="sm" className="p-3">Searching...</Paragraph>;
+            return <Paragraph className="p-3">Searching...</Paragraph>;
         }
 
         if (!loading && userList.length === 0) {
-            return <Paragraph size="sm" className="p-3">No result</Paragraph>;
+            return <Paragraph className="p-3">No result</Paragraph>;
         }
 
         return userList?.map((user: any) => {
@@ -77,8 +77,8 @@ export const SearchBarForm = () => {
                         />
                     </div>
                     <div className="flex flex-col justify-center">
-                        <Paragraph size="sm">{user.firstname} {user.lastname}</Paragraph>
-                        <Paragraph size="xs">{user.title}</Paragraph>
+                        <Paragraph>{user.firstname} {user.lastname}</Paragraph>
+                        <Paragraph>{user.title}</Paragraph>
                     </div>
                 </div>
             );

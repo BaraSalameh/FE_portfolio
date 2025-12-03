@@ -21,7 +21,7 @@ export const SettingsPage = () => {
         <React.Fragment>
             <ContentContainer title='Preferences' space='lg'>
                 <CUDModal title='Change theme' icon={SunMoonIcon}>
-                    <ThemeToggle title="Click to change theme" />
+                    <ThemeToggle label="Click to change theme" />
                 </CUDModal>
                 <ContentContainer title='Profile'>
                     <CUDModal title='Show/Hide gender' icon={Mars}>

@@ -1,61 +1,57 @@
-import { Button, Anchor } from "@/components/forms";
+import { Button } from "@/components/forms";
 import Image from "next/image";
 import { static_home_page } from "@/lib/utils";
-import { Paragraph, List, ImageSlider, ResponsiveIcon, Container, Header, Main, SubFooter } from "@/components";
-import { Contact, File, MoreHorizontal } from "lucide-react";
+import { Paragraph, List, Container, Header, Main } from "@/components";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { SearchBarPage } from "@/features";
 
 export const Home = () => {
     return (
-        <>
-            {/* Main content */}
-            <Container className="min-h-screen">
-                <div id="home" />
-                <Header className="relative">
-                    <Image
-                        src='/portfolio-logo.svg'
-                        alt="portfolio logo"
-                        width={300}
-                        height={80}
-                        priority
-                    />
-                    <div className="absolute right-7 sm:right-10 lg:right-15 bottom-0">
-                        <ThemeToggle />
-                    </div>
-                </Header>
-                <Main itemsX='start'>
-                    <ImageSlider imageList={static_home_page.slider} />
-                    <Paragraph size="xl" className="w-full">
+        <Container>
+            <div id="home" />
+            <Header>
+                <Image
+                    src='/portfolio-logo.svg'
+                    alt="portfolio logo"
+                    width={300}
+                    height={80}
+                    priority
+                />
+            </Header>
+            <Main direction='row'>
+                <section className="space-y-5">
+                    <ThemeToggle darkLabel="Use Light Theme" lightLabel="Use Dark Theme" />
+                    <Paragraph className="text-lg">
                         {static_home_page.introduction}
                     </Paragraph>
-                    <Paragraph size='lg'>
-                        {static_home_page.subtext}
-                    </Paragraph>
-                        <List>
-                            How it works:
-                            {static_home_page.list.map((p, idx) => <li key={idx}>{p}</li>)}
-                        </List>
-                    <Paragraph>
+                    <List>
+                        How it works:
+                        {static_home_page.list.map((p, idx) => <li key={idx}>{p}</li>)}
+                    </List>
+                    <Paragraph className="text-sm">
                         {static_home_page.abstract}
                     </Paragraph>
                     <div className="flex gap-4 items-center flex-col sm:flex-row w-full">
                         <SearchBarPage />
-                        <Button url="/account/login" size="lg" rounded="full">
+                        <Button url="/account/login" rounded="full">
                             <Paragraph>Login</Paragraph>
                         </Button>
-                        <Button url="/account/register" size="lg" rounded="full">
+                        <Button url="/account/register" rounded="full">
                             <Paragraph>Register</Paragraph>
                         </Button>
                     </div>
-                </Main>
-                <SubFooter>
-                    <Anchor url="#more-details">
-                        <ResponsiveIcon icon={MoreHorizontal} />
-                        More details
-                    </Anchor>
-                </SubFooter>
-            </Container>
-        </>
+                </section>
+                <section>
+                    <Image
+                        src='/hero-desktop.png'
+                        alt="Screenshots of the Portfolio project showing desktop version"
+                        width={1600}
+                        height={800}
+                        className="hidden md:block"
+                        priority
+                    />
+                </section>
+            </Main>
+        </Container>
     );
 }

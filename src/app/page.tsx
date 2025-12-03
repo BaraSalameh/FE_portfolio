@@ -5,7 +5,7 @@ const Index = () => {
     return (
         <React.Fragment>
             <Home />
-            <MoreDetails />
+            {/* <MoreDetails /> */}
         </React.Fragment>
     );
 }

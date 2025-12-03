@@ -40,12 +40,12 @@ export const CUDModal = ({
             {currentIcon}
             {title ? title : null}
         </Paragraph>
-        {error && <Paragraph intent="danger" size="sm">{error.message}</Paragraph>}
+        {error && <Paragraph intent="danger" className="text-sm">{error.message}</Paragraph>}
         {openModal && (
             <BlurBackground intent='sm'>
                 <div className={ cn(widgetCard({ scroll: true }), className) }>
                     <Header itemsX="between" paddingX="xs" paddingY="xs">
-                        {subTitle && <Paragraph size="md">{subTitle}</Paragraph>}
+                        {subTitle && <Paragraph>{subTitle}</Paragraph>}
                         <ResponsiveIcon icon={X} onClick={() => setOpenModal(false)} />
                     </Header>
                     <hr />
@@ -57,7 +57,7 @@ export const CUDModal = ({
                                         })
                                     :   children
                             :   <>
-                                <Paragraph size="md">{children}</Paragraph>
+                                <Paragraph>{children}</Paragraph>
                                 <Button
                                     onClick={async () => {
                                         if (onAction && idToDelete) {

@@ -14,6 +14,6 @@ export const Header = ({
     paddingY,
     space
 }: HeaderProps) => 
-    <div className={cn(header({ itemsX, itemsY, paddingX, paddingY, space}), className)}>
+    <header className={cn(header({ itemsX, itemsY, paddingX, paddingY, space}), className)}>
         {children}
-    </div>
+    </header>

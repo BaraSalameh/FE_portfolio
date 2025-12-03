@@ -29,7 +29,7 @@ export const LoginForm = () => {
             defaultValues={{rememberMe: false}}
             indicator={{when: 'Login', while: 'Loging in...'}}
         >
-            <Paragraph size="xl" className="py-3">
+            <Paragraph className="py-3">
                 Login
             </Paragraph>
         </ControlledForm>

@@ -1,7 +1,7 @@
 import { cva, VariantProps } from 'class-variance-authority';
 
 export const paragraph = cva(
-    'flex items-center whitespace-pre-line font-[family-name:var(--font-geist-mono)]',
+    'flex items-center whitespace-pre-line',
     {
         variants: {
             intent: {
@@ -14,19 +14,10 @@ export const paragraph = cva(
                 danger:
                     'text-danger',
             },
-            size: {
-                xs: 'text-xs',
-                sm: 'text-xs sm:text-xs md:text-sm',
-                md: 'text-xs sm:text-md md:text-md',
-                lg: 'text-sm sm:text-md md:text-lg',
-                xl: 'text-md sm:text-lg md:text-xl'
-            },
             text: {
-                standard: null,
                 justify: 'text-justify',
             },
             position: {
-                start: null,
                 center: 'justify-center'
             },
             space: {
@@ -43,9 +34,6 @@ export const paragraph = cva(
         },
         defaultVariants: {
             intent: 'primary',
-            size: 'md',
-            text: 'standard',
-            position: 'start',
             space: 'sm',
             clickable: false
         },

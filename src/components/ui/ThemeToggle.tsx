@@ -2,14 +2,16 @@
 
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import { Moon, Sun } from 'lucide-react';
 import { ResponsiveIcon } from './ResponsiveIcon';
 import { Paragraph } from './Paragraph';
 import { ThemeToggleProps } from './types.ui';
+import { SunIcon, MoonIcon } from '@heroicons/react/24/outline';
+import { Button } from '../forms';
 
 export const ThemeToggle = ({
-    title,
-    themeNameIncluded = false,
+    label,
+    lightLabel,
+    darkLabel,
     className
 }: ThemeToggleProps) => {
     
@@ -23,23 +25,20 @@ export const ThemeToggle = ({
     if (!mounted) return null;
 
     const isDark = theme === 'dark';
-    const text: string | null =
-        title
-        ?   themeNameIncluded
-            ?   `${title}${theme}`
-            :   `${title}`
-        :   themeNameIncluded
-            ?   `${theme}`
-            :   null
-        
+
+    const text = label === undefined
+    ?   isDark
+        ?   darkLabel === undefined ? null : darkLabel
+        :   lightLabel === undefined ? null : lightLabel
+    :   label;
 
     return (
-        <Paragraph onClick={() => setTheme(isDark ? 'light' : 'dark')} className={className}>
-            <ResponsiveIcon
-                icon={isDark ? Sun : Moon}
-                className='cursor-pointer'
-            />
-            {text}
-        </Paragraph>
+        <Button
+            onClick={() => setTheme(isDark ? 'light' : 'dark')}
+            className={className}
+        >
+            <ResponsiveIcon icon={isDark ? SunIcon : MoonIcon} />
+            {!!text && <Paragraph>{text}</Paragraph>}
+        </Button>
     );
 };

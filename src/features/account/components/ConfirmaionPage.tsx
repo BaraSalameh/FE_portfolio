@@ -22,13 +22,13 @@ export const ConfirmationPage = () => {
         <React.Fragment>
             <Main>
                 <div className={cn(widgetCard())}>
-                    <Paragraph size='lg'>
+                    <Paragraph>
                         We've sent a confirmation link to your email address.{'\n'}
                         Please check your inbox and click the confirm button to verify your email.{'\n\n'}
                     </Paragraph>
 
-                    <List size="xs">
-                        <Paragraph size='lg'>If you don't see the email:</Paragraph>
+                    <List className="text-sm">
+                        <Paragraph>If you don't see the email:</Paragraph>
                         <li>
                             Check your Spam or Junk folder.
                         </li>

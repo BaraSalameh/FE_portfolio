@@ -16,6 +16,6 @@ export const ContactMessagePage = () => {
             ?   <ControlledWidget
                     {...contactMessageWidget}
                 />
-            :   <Paragraph size='sm'>{"No messages found"}</Paragraph>
+            :   <Paragraph className='text-sm'>{"No messages found"}</Paragraph>
     )
 }

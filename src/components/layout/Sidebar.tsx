@@ -59,7 +59,7 @@ export const Sidebar = () => {
                                 }`}
                             >
                                 <ResponsiveIcon icon={Icon} />
-                                {!isCollapsed && <Paragraph size="sm">{label}</Paragraph>}
+                                {!isCollapsed && <Paragraph className="text-sm">{label}</Paragraph>}
                             </button>
                         );
                     })}

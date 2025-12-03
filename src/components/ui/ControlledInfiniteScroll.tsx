@@ -39,7 +39,7 @@ export const ControlledInfiniteScroll = ({
                 dataLength={items.length}
                 next={handleNext}
                 hasMore={hasMore}
-                loader={<Paragraph size="sm" className="p-3" >Loading...</Paragraph>}
+                loader={<Paragraph className="p-3 text-sm" >Loading...</Paragraph>}
                 scrollableTarget="scrollableDiv"
             >
                 {children}

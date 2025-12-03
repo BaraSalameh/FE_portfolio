@@ -18,9 +18,9 @@ export const FormCheckbox = ({
                 className={`h-5 w-4 accent-green-700 cursor-pointer`}
             />
             {label && (
-                <Paragraph size="sm">{label}</Paragraph>
+                <Paragraph className="text-sm">{label}</Paragraph>
             )}
-            {error && <Paragraph intent="danger" size="sm">{error.message}</Paragraph>}
+            {error && <Paragraph intent="danger" className="text-sm">{error.message}</Paragraph>}
         </div>
     );
 };

@@ -41,7 +41,7 @@ export const WidgetModal = ({ isLoading, isOpen, onClose, onAction, item, update
                 </Header>
                 {details &&
                     <Main paddingX="none" paddingY="none">
-                        <List size="md" as="none" className="w-full">
+                        <List as="none" className="w-full">
                             <WidgetList items={[item ?? {}]} list={details}  />
                         </List>
                     </Main>

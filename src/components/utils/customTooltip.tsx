@@ -5,7 +5,7 @@ export const customTooltip = ({ active, payload, label } : any) => {
         return (
             <div className="bg-light-sub-component dark:bg-dark-sub-component p-4 rounded-2xl">
                 {payload.map((item: any, index: any)  => (
-                    <Paragraph size='sm' key={index}>
+                    <Paragraph className='text-sm' key={index}>
                         {label ?? item.name}: {item.value}
                     </Paragraph>
                 ))}
