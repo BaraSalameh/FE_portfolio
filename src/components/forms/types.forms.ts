@@ -85,6 +85,7 @@ export interface ButtonProps extends ButtonVariantProps {
     onClose?: () => void;
     url?: string;
     disabled?: boolean;
+    testId?: string;
 }
 
 export interface ControlledDropdownProps<T extends FieldValues>  {

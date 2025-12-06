@@ -1,5 +1,18 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# Playwright
+/playwright-report/
+/playwright/.cache/
+/test-results/
+/playwright-report/
+/blob-report/
+/trace.zip
+*.zip
+
+# videos or screenshots
+/videos/
+/screenshots/
+
 # dependencies
 /node_modules
 /.pnp

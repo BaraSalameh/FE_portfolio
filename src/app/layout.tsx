@@ -18,7 +18,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
             <body className={`bg-light-background dark:bg-dark-background ${inter.className} antialiased`}>
                 <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
                     <ReduxProvider>
-                        <main className="flex-grow">{children}</main>
+                        {children}
                     </ReduxProvider>
                 </ThemeProvider>
             </body>

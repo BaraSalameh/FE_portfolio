@@ -3,42 +3,20 @@ import { button } from '@/styles';
 import { cn } from '@/components/utils';
 import { ButtonProps } from './types.forms';
 import Link from 'next/link';
+import ButtonClient from '../ui/ButtonClient';
 
-export const Button = ({
-    children,
-    size,
-    rounded,
-    className,
-    type = 'button',
-    onClick,
-    onClose,
-    url,
-    disabled
-}: ButtonProps) => {
+export const Button = (props: ButtonProps) => {
 
-    const handleClick = () => {
-        onClick?.();
-        onClose?.();
-    };
-    
-    const buttonContent = (
-        <button
-            type={type}
-            className={cn(button({ size, rounded }), className)}
-            onClick={handleClick}
-            disabled={disabled}
-        >
-            {children}
-        </button>
-    );
+    const { url, children, ...rest } = props;
 
-    if (url) {
+    if (!!url) {
+        const { size, className } = rest;
         return (
             <Link href={url} className={cn(button({ size }), className)}>
                 {children}
             </Link>
         );
+    } else {
+        return <ButtonClient {...rest}>{children}</ButtonClient>
     }
-
-    return buttonContent;
 };

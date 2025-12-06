@@ -22,8 +22,6 @@ export const ThemeToggle = ({
         setMounted(true);
     }, []);
 
-    if (!mounted) return null;
-
     const isDark = theme === 'dark';
 
     const text = label === undefined
@@ -36,6 +34,8 @@ export const ThemeToggle = ({
         <Button
             onClick={() => setTheme(isDark ? 'light' : 'dark')}
             className={className}
+            testId='theme-toggle-button'
+            disabled={!mounted}
         >
             <ResponsiveIcon icon={isDark ? SunIcon : MoonIcon} />
             {!!text && <Paragraph>{text}</Paragraph>}

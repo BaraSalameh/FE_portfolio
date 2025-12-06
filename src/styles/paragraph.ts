@@ -8,7 +8,7 @@ export const paragraph = cva(
                 primary:
                     'text-light-primary dark:text-dark-primary',
                 secondary:
-                    'text-gray-900 dark:text-gray-100',
+                    'text-light-Secondary dark:text-dark-secondary',
                 success:
                     'text-green-900 dark:text-green-900',
                 danger:

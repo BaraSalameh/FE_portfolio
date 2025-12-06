@@ -4,6 +4,8 @@ export { blurBackground } from './blurBackground';
 export type { BlurBackgroundVariantProps } from './blurBackground';
 export { button } from './button';
 export type { ButtonVariantProps } from './button';
+export { link } from './link';
+export type { LinkVariantProps } from './link';
 export { container } from './container';
 export type { ContainerVariantProps } from './container';
 export { header } from './header';
