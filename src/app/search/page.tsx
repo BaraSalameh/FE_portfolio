@@ -5,6 +5,7 @@ import { Table } from '@/components/search';
 import { SearchTableSkeleton } from '@/components/skeletons/search.skeletons';
 import { Button, Container, Main, ResponsiveIcon } from '@/components';
 import { Home } from 'lucide-react';
+import { GoHomeLink } from '@/components/GoHomeLink';
 
 export const metadata: Metadata = {
     title: 'Search'
@@ -26,10 +27,7 @@ const Page = async (
         <Container>
             <Main className='mx-auto md:w-2/3' >
                 <div className="flex w-full justify-between">
-                    <Button url='/' >
-                        <ResponsiveIcon icon={Home} />
-                        Home
-                    </Button>
+                    <GoHomeLink />
                     <Search placeholder="Search users..." />
                 </div>
                 <Suspense key={query + currentPage} fallback={<SearchTableSkeleton />}>
