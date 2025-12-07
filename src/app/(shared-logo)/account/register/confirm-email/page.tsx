@@ -1,5 +1,3 @@
-'use client';
-
 import { ConfirmationPage } from "@/features";
 import React from "react";
 

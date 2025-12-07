@@ -1,6 +1,6 @@
 'use client';
 
-import {  useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
