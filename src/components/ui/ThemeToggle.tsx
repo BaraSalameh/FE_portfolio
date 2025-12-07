@@ -7,6 +7,7 @@ import { Paragraph } from './Paragraph';
 import { ThemeToggleProps } from './types.ui';
 import { SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 import { Button } from '../forms';
+import { ButtonSkeleton } from '../skeletons/home.skeletons';
 
 export const ThemeToggle = ({
     label,
@@ -30,12 +31,13 @@ export const ThemeToggle = ({
         :   lightLabel === undefined ? null : lightLabel
     :   label;
 
+    if (!mounted) return <ButtonSkeleton />
+
     return (
         <Button
             onClick={() => setTheme(isDark ? 'light' : 'dark')}
             className={className}
             testId='theme-toggle-button'
-            disabled={!mounted}
         >
             <ResponsiveIcon icon={isDark ? SunIcon : MoonIcon} />
             {!!text && <Paragraph>{text}</Paragraph>}
