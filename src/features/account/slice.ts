@@ -1,6 +1,6 @@
 
 import { createSlice } from '@reduxjs/toolkit';
-import { confirmEmail, login, logout, register, resendEmail, validateToken } from './apis';
+import { confirmEmail, logout, register, resendEmail } from './apis';
 
 const authSlice = createSlice({
     name: 'auth',
@@ -22,23 +22,6 @@ const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-        .addCase(login.pending, (state) => {
-            state.loading = true;
-            state.error = null;
-        })
-        .addCase(login.fulfilled, (state, action) => {
-            state.loading = false;
-            Object.assign(state, action.payload);
-        })
-        .addCase(login.rejected, (state, action) => {
-            state.loading = false;
-            if (Array.isArray(action.payload)){
-                state.error = (action.payload as string[]);
-            } else {
-                Object.assign(state, action.payload)
-            }
-        })
-
         .addCase(register.pending, (state) => {
             state.loading = true;
             state.error = null;
@@ -50,18 +33,6 @@ const authSlice = createSlice({
         .addCase(register.rejected, (state, action) => {
             state.loading = false;
             state.error = (action.payload as string[]);
-        })
-
-        .addCase(validateToken.pending, (state) => {
-            state.loading = true;
-            state.error = null;
-        })
-        .addCase(validateToken.fulfilled, (state, action) => {
-            state.loading = false;
-            Object.assign(state, action.payload)
-        })
-        .addCase(validateToken.rejected, (state, action) => {
-            state.loading = false;
         })
 
         .addCase(logout.pending, (state) => {

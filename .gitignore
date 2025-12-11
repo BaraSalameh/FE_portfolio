@@ -1,5 +1,12 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# Certificate
+certs/
+*.pem
+*.crt
+*.key
+
+
 # Playwright
 /playwright-report/
 /playwright/.cache/

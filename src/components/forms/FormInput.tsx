@@ -27,9 +27,12 @@ export const FormInput = ({
 
     return (
         <div className="space-y-1">
-            <Paragraph>{label ? label : null}</Paragraph>
+            <label htmlFor={label}>
+                <Paragraph>{label ? label : null}</Paragraph>
+            </label>
             {(rest.type === 'textarea' || rest.type === 'Textarea') ? (
                 <textarea
+                    id={label}
                     {...(registration as any)}
                     {...rest}
                     className={`${inputClasses} overflow-auto scrollbar-hide`}
@@ -37,6 +40,7 @@ export const FormInput = ({
                 />
             ) : (
                 <input
+                    id={label}
                     {...registration}
                     {...rest}
                     className={inputClasses}

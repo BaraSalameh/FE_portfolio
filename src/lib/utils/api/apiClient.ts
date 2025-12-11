@@ -1,13 +1,17 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { HTTPMethod } from './types.utils.api';
+import https from "https";
 
 const api = axios.create({
     baseURL: process.env.NODE_ENV === 'development'
-        ?   `${process.env.API_URL}/api`
+        ?   `${process.env.NEXT_PUBLIC_API_URL}/api`
         :   '/api',
     headers: {
         'Content-Type': 'application/json',
     },
+    httpsAgent: process.env.NODE_ENV === 'development'
+        ?   new https.Agent({rejectUnauthorized: false})
+        :   undefined
 });
 
 let isRefreshing = false;

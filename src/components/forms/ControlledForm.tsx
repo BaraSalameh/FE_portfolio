@@ -11,9 +11,8 @@ import { FormInput } from "./FormInput";
 import { FormCheckbox } from "./FormCheckbox";
 import { ControlledDropdown } from "./ControlledDropdown";
 import { useEffect } from "react";
-import { CUDModal, FieldArray, ResponsiveIcon } from "@/components";
+import { CUDModal, FieldArray } from "@/components";
 import React from "react";
-import { Upload } from "lucide-react";
 
 export const ControlledForm = <T extends z.ZodTypeAny> ({ 
     schema,
@@ -140,9 +139,8 @@ export const ControlledForm = <T extends z.ZodTypeAny> ({
                 error && <Paragraph intent="danger" className="text-sm">{error}</Paragraph>
             )}
 
-            <Button rounded="full" size="lg" type="submit" disabled={loading}>
-                <ResponsiveIcon icon={Upload} />
-                <Paragraph>
+            <Button rounded="md" type="submit" disabled={loading}>
+                <Paragraph className="text-sm">
                     {loading ? indicator?.while || 'Submitting...' : indicator?.when || 'Submit'}
                 </Paragraph>
             </Button>

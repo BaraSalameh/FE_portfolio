@@ -1,42 +1,14 @@
-'use client';
-
-import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
-import { useEffect } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { widgetCard } from "@/styles/widget";
 import React from "react";
-import { Loading, Main, SubFooter, Anchor, cn } from "@/components";
-import { LoginForm, validateToken } from "@/features";
+import { Main, SubFooter, Anchor, cn } from "@/components";
+import { LoginForm } from '@/components/login/LoginForm';
 
-const LoginPage = () => {
-
-    const router = useRouter();
-    const { loading, isConfirmed, username } = useAppSelector(state => state.auth);
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        const checkSession = async () => {
-            !username && await dispatch(validateToken());
-            if (username){
-                router.push(`/owner/${username}/dashboard`);
-            }
-        }
-        checkSession();
-    }, [username]);
-
-    useEffect(() => {
-        if(isConfirmed === false){
-            router.push(`/account/register/confirm-email`);
-            return;
-        }
-    }, [isConfirmed]);
-
+const LoginPage = async () => {
     return (
         <React.Fragment>
-            <Loading isLoading={loading} />
             <Main>
-                <section className={cn(widgetCard())}>
+                <section className={cn(widgetCard(), 'w-full md:w-2/3 lg:w-1/3')}>
                     <LoginForm />
                 </section>
             </Main>

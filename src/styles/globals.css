@@ -4,10 +4,10 @@
 
 @theme {
   --color-dark-background: oklch(13% 0.028 261.692); 
-  --color-light-background: oklch(98.5% 0 0);
+  --color-light-background: oklch(95% 0 0);
 
   --color-dark-component: oklch(21% 0.034 264.665);
-  --color-light-component: oklch(97% 0 0);
+  --color-light-component: oklch(90% 0 0);
 
   --color-dark-sub-component: oklch(27.8% 0.033 256.848);
   --color-light-sub-component: oklch(92.2% 0 0);
@@ -23,7 +23,7 @@
   --color-danger: oklch(58.6% 0.253 17.585);
 
   --color-dark-bg-hover: oklch(37.3% 0.034 259.733);
-  --color-light-bg-hover: oklch(92.2% 0 0);
+  --color-light-bg-hover: oklch(85% 0 0);
 
   --color-dark-border-hover: oklch(27.8% 0.033 256.848);
   --color-light-border-hover: oklch(87% 0 0);
