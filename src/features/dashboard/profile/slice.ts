@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { userByUsernameQuery, userFullInfoQuery } from "../apis";
-import { logout } from "@/features";
+// import { logout } from "@/features";
 import { userInfoQuery } from "../profile/apis";
 import { ProfileState } from "./types.profile";
 
@@ -55,24 +55,24 @@ const profileSlice = createSlice({
             state.error = (action.payload as string);
         })
         
-        .addCase(logout.pending, (state) => {
-            state.loading = true;
-            state.error = null;
-        })
-        .addCase(logout.fulfilled, () => {
-            return{
-                loading: false,
-                error: null,
-                user: null
-            }
-        })
-        .addCase(logout.rejected, (_, action) => {
-            return {
-                user: null,
-                loading: false,
-                error: action.payload as string,
-            }
-        })
+        // .addCase(logout.pending, (state) => {
+        //     state.loading = true;
+        //     state.error = null;
+        // })
+        // .addCase(logout.fulfilled, () => {
+        //     return{
+        //         loading: false,
+        //         error: null,
+        //         user: null
+        //     }
+        // })
+        // .addCase(logout.rejected, (_, action) => {
+        //     return {
+        //         user: null,
+        //         loading: false,
+        //         error: action.payload as string,
+        //     }
+        // })
     },
 });
 

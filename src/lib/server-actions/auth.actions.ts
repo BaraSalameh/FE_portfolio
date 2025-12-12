@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import axios from "axios";
 import { setCookies } from "./cookieHelpers";
 import { LoginFormData } from "@/lib/schemas/loginSchema";
+import { RegisterFormData } from "@/lib/schemas/registerSchema";
 
 export const authenticate = async (prevState: string | undefined, formData: LoginFormData) => {
     let response;
@@ -19,7 +20,10 @@ export const authenticate = async (prevState: string | undefined, formData: Logi
 
     } catch (error) {
         if (axios.isAxiosError(error)) {
-            return error.response?.data;
+            const message = error.status === 403
+            ?   `${error.response?.data} Check your email for confirmation link`
+            :   `${error.response?.data}`;
+            return message;
         }
 
         return 'Something went wrong!';
@@ -27,4 +31,39 @@ export const authenticate = async (prevState: string | undefined, formData: Logi
 
     const { role, username } = response.data;
     return redirect(`/${role}/${username}/dashboard`.toLowerCase());
+}
+
+export const register = async (prevState: string | undefined, formData: RegisterFormData) => {
+    let response;
+     try {
+        response = await dynamicApi({
+            method: "POST",
+            url: '/Account/Register',
+            data: formData,
+        });
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return error.response?.data;
+        }
+
+        return 'Something went wrong!';
+    }
+
+    const { username } = response.data;
+    return redirect(`/account/register/confirm-email/${username}`);
+}
+
+export const resendEmail = async (username: string) => {
+    try {
+        const query = new URLSearchParams({
+            username: username
+        }).toString();
+
+        await dynamicApi({
+            method: "GET",
+            url: `/Account/ResendConfirmEmail?${query}`
+        });    
+    } finally {
+        return redirect(`/account/register/confirm-email/${username}`);
+    }
 }

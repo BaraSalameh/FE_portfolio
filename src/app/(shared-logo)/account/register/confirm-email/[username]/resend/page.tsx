@@ -1,12 +1,18 @@
-import { ResendPage } from "@/features";
-import { Suspense } from "react";
+import { Loading } from "@/components";
+import { resendEmail } from "@/lib/server-actions/auth.actions";
 
-const ResendPageWrapper = () => {
-    return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <ResendPage />
-        </Suspense>
-    );
+const Page = async (
+    props: {
+        params: Promise<{
+            username: string;
+        }>
+    }
+) => {
+    const { username } = await props.params;
+
+    await resendEmail(username);
+
+    return (<Loading isLoading={true} />);
 }
 
-export default ResendPageWrapper;
+export default Page;

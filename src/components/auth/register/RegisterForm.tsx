@@ -1,19 +1,20 @@
-'use client';
+'use client'
 
-import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { Paragraph } from "@/components/ui/Paragraph";
-import { register } from "@/features";
-import { RegisterFormData, registerSchema } from "@/features/account/schemas";
+import { register } from "@/lib/server-actions/auth.actions";
+import { RegisterFormData, registerSchema } from "@/lib/schemas/registerSchema";
 import { ControlledForm } from "@/components/forms";
+import { startTransition, useActionState } from "react";
 
 export const RegisterForm = () => {
 
-    const dispatch = useAppDispatch();
-    const { loading, error } = useAppSelector((state) => state.auth);
+    const [ errorMessage, formAction, isPending ] = useActionState(register, undefined)
 
     const onSubmit = (data: RegisterFormData) => {
-        dispatch(register(data));
-    };
+        startTransition(() => {
+            formAction(data)
+        })
+    }
 
     return(
         <ControlledForm
@@ -25,14 +26,13 @@ export const RegisterForm = () => {
                 {as: 'Input', name: 'email', label: 'Email', placeholder: 'john.doe@example.com', type: 'Email'},
                 {as: 'Input', name: 'reEmail', label: 'Confirm Email', placeholder: 'Re-enter your email', type: 'Email'},
                 {as: 'Input', name: 'password', label: 'Password', placeholder: '* * * * * * * *', type: 'Password'},
-                {as: 'Checkbox', name: 'rememberMe', label: 'Remember me'},
+                {as: 'Checkbox', name: 'rememberMe', label: 'Remember me'}
             ]}
-            error={error}
-            loading={loading}
-            defaultValues={{rememberMe: false}}
+            error={errorMessage}
+            loading={isPending}
             indicator={{when: 'Register', while: 'Registering...'}}
         >
-            <Paragraph className="py-3">
+            <Paragraph className="text-xl py-2">
                 Register
             </Paragraph>
         </ControlledForm>

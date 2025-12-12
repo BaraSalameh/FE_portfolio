@@ -2,7 +2,7 @@ import Image from "next/image";
 import { widgetCard } from "@/styles/widget";
 import React from "react";
 import { Main, SubFooter, Anchor, cn } from "@/components";
-import { LoginForm } from '@/components/login/LoginForm';
+import { LoginForm } from '@/components/auth/login/LoginForm';
 
 const LoginPage = async () => {
     return (

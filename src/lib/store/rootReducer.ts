@@ -1,5 +1,4 @@
 import { combineReducers } from "redux";
-import authSlice from "@/features/account/slice";
 import educationSlice from "@/features/dashboard/widgets/education/slice";
 import profileSlice from "@/features/dashboard/profile/slice";
 import experienceSlice from "@/features/dashboard/widgets/experience/slice";
@@ -12,7 +11,6 @@ import userSkillSlice from "@/features/dashboard/widgets/skill/slice";
 import certificateSlice from "@/features/dashboard/widgets/certificate/slice";
 
 const rootReducer = combineReducers({
-    auth: authSlice,
     profile: profileSlice,
     education: educationSlice,
     experience: experienceSlice,

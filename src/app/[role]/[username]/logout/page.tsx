@@ -1,23 +1,25 @@
 'use client';
 
 import { Loading } from "@/components";
-import { logout } from "@/features";
-import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import { logout } from "@/lib/client-actions/auth.actions";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export default function Logout() {
-
-    const dispatch = useAppDispatch();
+const Page = () => {
     const router = useRouter();
-    const { loading } = useAppSelector(state => state.auth);
 
     useEffect(() => {
-        dispatch(logout());
-        router.push('/');
+        const logoutAction = async () =>{
+            await logout();
+            router.push('/account/login');
+        }
+
+        logoutAction();
     }, []);
 
     return (
-        <Loading message="Logging out..." isLoading={loading} />
+        <Loading isLoading={true} />
     );
 }
+
+export default Page;

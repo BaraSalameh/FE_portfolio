@@ -33,3 +33,19 @@ export const logout = async () => {
         return { error: 'Unexpected error occurred!' }
     }
 }
+
+export const confirmEmail = async (email: string, token: string) => {
+    try {
+        const query = new URLSearchParams({
+            email: email,
+            token: token
+        }).toString();
+
+        await dynamicApi({
+            method: 'GET',
+            url: `/Account/ConfirmEmail?${query}`
+        });
+    } catch {
+        return { error: 'Unexpected error occurred!' }
+    }
+}

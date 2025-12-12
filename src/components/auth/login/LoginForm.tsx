@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import { Paragraph } from "@/components/ui/Paragraph";
 import { LoginFormData, loginSchema } from "@/lib/schemas/loginSchema";
@@ -11,7 +11,7 @@ export const LoginForm = () => {
     
     const onSubmit = (data: LoginFormData) => {
         startTransition(() => {
-            formAction(data);
+            formAction(data)
         })
     };
 
@@ -22,7 +22,7 @@ export const LoginForm = () => {
             items={[
                 {as: 'Input', name: 'email', label: 'Email', placeholder: 'Email Address'},
                 {as: 'Input', name: 'password', label: 'Password', placeholder: 'Password', type: 'Password'},
-                {as: 'Checkbox', name: 'rememberMe', label: 'Remember me'},
+                {as: 'Checkbox', name: 'rememberMe', label: 'Remember me'}
             ]}
             error={errorMessage}
             loading={isPending}
