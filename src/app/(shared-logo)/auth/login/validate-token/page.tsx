@@ -2,6 +2,7 @@
 
 import { Loading } from "@/components";
 import { logout, validateToken } from "@/lib/client-actions/auth.actions";
+import { paths } from "@/lib/pathHelper";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -12,13 +13,13 @@ export default function page() {
         const refreshToken = async () => {
             const result = await validateToken();
 
-            if(result.error) await logout();
+            if(!result.success) await logout()
             
-            router.push('/account/login');
+            router.push(paths.root.auth.login.path());
         }
 
         refreshToken();
     }, []);
 
-    return (<Loading isLoading={true} />)
+    return (<Loading isLoading={true} message="Extending your session, please wait..." />)
 }

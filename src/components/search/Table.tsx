@@ -18,7 +18,7 @@ export const Table = async ({
 
     return (
         <div className="w-full rounded-lg bg-light-component dark:bg-dark-component p-2">
-            {users.items?.map((user: any, idx: number) => (
+            {users.items.map((user, idx) => (
                 <div
                     key={idx}
                     className="mb-2 w-full rounded-md p-4 bg-light-sub-component dark:bg-dark-sub-component"

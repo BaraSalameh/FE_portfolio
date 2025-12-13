@@ -2,6 +2,7 @@
 
 import { Loading } from "@/components";
 import { confirmEmail } from "@/lib/client-actions/auth.actions";
+import { paths } from "@/lib/pathHelper";
 import { useRouter, useSearchParams, useParams } from "next/navigation";
 import { useEffect } from "react";
 
@@ -17,16 +18,18 @@ const Page = () => {
         const confirm = async () => {
             const result = await confirmEmail(email, token);
 
-            if (result?.error) router.push(`/account/register/confirm-email/${username}`);
-            
-            router.push('/account/login');
+            if (result.success) {
+                router.push(paths.root.auth.login.path());
+            } else {
+                router.push(paths.root.auth.register.confirmEmail(username as string).path());
+            }
         }
         
         confirm();
     }, [token, email]);
 
     return (
-        <Loading isLoading={true} />
+        <Loading isLoading={true} message="Autheniticating your account, please wait..." />
     );
 }
 

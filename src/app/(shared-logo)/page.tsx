@@ -1,4 +1,5 @@
 import { Button, List, Main, Paragraph, ThemeToggle } from '@/components';
+import { paths } from '@/lib/pathHelper';
 import { static_home_page } from '@/lib/utils';
 import Image from 'next/image';
 import React from 'react';
@@ -20,13 +21,13 @@ const Page = async () => {
                     {static_home_page.abstract}
                 </Paragraph>
                 <div className="flex gap-4 items-center flex-col sm:flex-row w-full">
-                    <Button url="/search" rounded="full">
+                    <Button url={paths.root.search.path()} rounded="full">
                         <Paragraph>Search</Paragraph>
                     </Button>
-                    <Button url="/account/login" rounded="full">
+                    <Button url={paths.root.auth.login.path()} rounded="full">
                         <Paragraph>Login</Paragraph>
                     </Button>
-                    <Button url="/account/register" rounded="full">
+                    <Button url={paths.root.auth.register.path()} rounded="full">
                         <Paragraph>Register</Paragraph>
                     </Button>
                 </div>

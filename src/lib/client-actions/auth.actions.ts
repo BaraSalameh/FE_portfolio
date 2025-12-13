@@ -1,40 +1,44 @@
 import axios from "axios";
 import { dynamicApi } from "../utils";
+import { ActionResult } from "../definitions/actions.definitions";
+import { ValidateTokenResponse } from "../definitions/auth.definitions";
 
-export const validateToken = async () => {
+export const validateToken = async (): Promise<ActionResult<ValidateTokenResponse>> => {
+    let response;
+
     try {
-        const response = await dynamicApi({
+        response = await dynamicApi({
             method: "POST",
             url: '/Account/ValidateToken',
             data: {},
             retryOn401: false
         });
-
-        return { success: true, data: response.data};
     } catch(error) {
         if(axios.isAxiosError(error)) {
-            return { error: error.response?.data }
+            return { success: false, error: error.response?.data }
         }
 
-        return { error: 'Unexpected error occurred!' }
+        return { success: false, error: 'Unexpected error occurred!' }
     }
+
+    return { success: true, data: response.data};
 }
 
-export const logout = async () => {
+export const logout = async (): Promise<ActionResult> => {
     try {
         await dynamicApi({
             method: "POST",
             url: '/Account/Logout',
             data: {}
         });
-
-        return { success: true};
     } catch {
-        return { error: 'Unexpected error occurred!' }
+        return { success: false, error: 'Unexpected error occurred!' }
     }
+    
+    return { success: true};
 }
 
-export const confirmEmail = async (email: string, token: string) => {
+export const confirmEmail = async (email: string, token: string): Promise<ActionResult> => {
     try {
         const query = new URLSearchParams({
             email: email,
@@ -46,6 +50,8 @@ export const confirmEmail = async (email: string, token: string) => {
             url: `/Account/ConfirmEmail?${query}`
         });
     } catch {
-        return { error: 'Unexpected error occurred!' }
+        return { success: false, error: 'Unexpected error occurred'};
     }
+    
+    return { success: true}
 }

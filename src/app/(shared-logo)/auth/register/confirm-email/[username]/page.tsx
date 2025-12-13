@@ -3,6 +3,7 @@ import { Paragraph, SubFooter, Main, Anchor } from "@/components";
 import { cn, List, ResponsiveIcon } from "@/components";
 import { Home, Send } from "lucide-react";
 import { widgetCard } from "@/styles";
+import { paths } from "@/lib/pathHelper";
 
 export const Page = async (
     props: {
@@ -41,11 +42,11 @@ export const Page = async (
                 </div>
             </Main>
             <SubFooter>
-                <Anchor url="/">
+                <Anchor url={paths.root.path()}>
                     <ResponsiveIcon icon={Home} />
                     Go home
                 </Anchor>
-                <Anchor url={`/account/register/confirm-email/${username}/resend`}>
+                <Anchor url={paths.root.auth.register.confirmEmail(username).resend.path()}>
                     <ResponsiveIcon icon={Send} />
                     Resend email
                 </Anchor>

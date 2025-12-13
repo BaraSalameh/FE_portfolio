@@ -12,7 +12,7 @@ const Page = async (
 
     await resendEmail(username);
 
-    return (<Loading isLoading={true} />);
+    return (<Loading isLoading={true} message="Resending email, please wait..." />);
 }
 
 export default Page;

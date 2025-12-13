@@ -1,5 +1,6 @@
 import { jwtVerify } from "jose";
 import { NextRequest, NextResponse } from 'next/server';
+import { paths } from "./lib/pathHelper";
 
 export default async function middleware(req: NextRequest) {
     const accessToken = req.cookies.get('AccessToken')?.value;
@@ -9,7 +10,7 @@ export default async function middleware(req: NextRequest) {
         if (!refreshToken) return NextResponse.next()
         
         return NextResponse.redirect(
-            new URL('/account/login/validate-token', req.url)
+            new URL(paths.root.auth.login.validateToken.path(), req.url)
         )
     };
 
@@ -20,7 +21,7 @@ export default async function middleware(req: NextRequest) {
         const { role, unique_name, IsConfirmed } = payload;
 
         if(!IsConfirmed) return NextResponse.redirect(
-            new URL('/account/register/confirm-email', req.url)
+            new URL(paths.root.auth.register.confirmEmail(unique_name as string).path(), req.url)
         );
 
         return NextResponse.redirect(
@@ -33,5 +34,5 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/account/login'],
+    matcher: ['/auth/login'],
 };

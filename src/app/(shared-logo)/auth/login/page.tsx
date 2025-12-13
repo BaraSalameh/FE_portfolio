@@ -3,6 +3,7 @@ import { widgetCard } from "@/styles/widget";
 import React from "react";
 import { Main, SubFooter, Anchor, cn } from "@/components";
 import { LoginForm } from '@/components/auth/login/LoginForm';
+import { paths } from "@/lib/pathHelper";
 
 const LoginPage = async () => {
     return (
@@ -13,11 +14,11 @@ const LoginPage = async () => {
                 </section>
             </Main>
             <SubFooter>
-                <Anchor url="/">
+                <Anchor url={paths.root.path()}>
                     <Image src="/file.svg" alt="File icon" width={16} height={16} />
                     Go home
                 </Anchor>
-                <Anchor url="/account/register">
+                <Anchor url={paths.root.auth.register.path()}>
                     <Image src="/window.svg" alt="Window icon" width={16} height={16} />
                     Don't have an account? Register!
                 </Anchor>

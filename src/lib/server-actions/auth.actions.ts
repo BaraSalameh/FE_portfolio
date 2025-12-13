@@ -6,6 +6,8 @@ import axios from "axios";
 import { setCookies } from "./cookieHelpers";
 import { LoginFormData } from "@/lib/schemas/loginSchema";
 import { RegisterFormData } from "@/lib/schemas/registerSchema";
+import { paths } from "../pathHelper";
+import { LoginResponse, RegisterResponse } from "../definitions/auth.definitions";
 
 export const authenticate = async (prevState: string | undefined, formData: LoginFormData) => {
     let response;
@@ -29,7 +31,7 @@ export const authenticate = async (prevState: string | undefined, formData: Logi
         return 'Something went wrong!';
     }
 
-    const { role, username } = response.data;
+    const { role, username } = response.data as LoginResponse;
     return redirect(`/${role}/${username}/dashboard`.toLowerCase());
 }
 
@@ -49,8 +51,8 @@ export const register = async (prevState: string | undefined, formData: Register
         return 'Something went wrong!';
     }
 
-    const { username } = response.data;
-    return redirect(`/account/register/confirm-email/${username}`);
+    const { username } = response.data as RegisterResponse;
+    return redirect(paths.root.auth.register.confirmEmail(username).path());
 }
 
 export const resendEmail = async (username: string) => {
@@ -64,6 +66,6 @@ export const resendEmail = async (username: string) => {
             url: `/Account/ResendConfirmEmail?${query}`
         });    
     } finally {
-        return redirect(`/account/register/confirm-email/${username}`);
+        return redirect(paths.root.auth.register.confirmEmail(username).path());
     }
 }
