@@ -5,40 +5,31 @@ import { Home, Send } from "lucide-react";
 import { widgetCard } from "@/styles";
 import { paths } from "@/lib/pathHelper";
 
-export const Page = async (
-    props: {
-        params?: Promise<{
-            username?: string;
-        }>
-    }
-) => {
-
-    const params = await props.params;
-    const username = params?.username;
-
-    if(!username) return;
-
+export const Page = () => {
     return (
         <React.Fragment>
             <Main>
                 <div className={cn(widgetCard())}>
-                    <Paragraph>
-                        We've sent a confirmation link to your email address.{'\n'}
-                        Please check your inbox and click the confirm button to verify your email.{'\n\n'}
+                    <Paragraph >
+                        Check your email{'\n'}{'\n'}
+                        We've sent a confirmation link to your email address.
+                        Please open the email and click the link to verify your account.{'\n'}{'\n'}
                     </Paragraph>
-
                     <List className="text-sm">
-                        <Paragraph>If you don't see the email:</Paragraph>
+                        <Paragraph>Didn't receive the email?</Paragraph>
                         <li>
                             Check your Spam or Junk folder.
                         </li>
                         <li>
-                            Make sure you entered the correct email address.
+                            Make sure you signed up with the correct email address.
                         </li>
                         <li>
-                            You can request a new confirmation email below.
+                            You can request a new confirmation email by loging in.
                         </li>
                     </List>
+                    <Paragraph intent='secondary' className="text-sm italic mt-2">
+                        You can safely close this page. The confirmation link will remain valid for 15 minutes.
+                    </Paragraph>
                 </div>
             </Main>
             <SubFooter>
@@ -46,7 +37,7 @@ export const Page = async (
                     <ResponsiveIcon icon={Home} />
                     Go home
                 </Anchor>
-                <Anchor url={paths.root.auth.register.confirmEmail(username).resend.path()}>
+                <Anchor url={paths.root.auth.login.path()}>
                     <ResponsiveIcon icon={Send} />
                     Resend email
                 </Anchor>

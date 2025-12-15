@@ -38,10 +38,9 @@ export const logout = async (): Promise<ActionResult> => {
     return { success: true};
 }
 
-export const confirmEmail = async (email: string, token: string): Promise<ActionResult> => {
+export const confirmEmail = async (token: string): Promise<ActionResult> => {
     try {
         const query = new URLSearchParams({
-            email: email,
             token: token
         }).toString();
 

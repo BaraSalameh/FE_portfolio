@@ -7,7 +7,7 @@ import { setCookies } from "./cookieHelpers";
 import { LoginFormData } from "@/lib/schemas/loginSchema";
 import { RegisterFormData } from "@/lib/schemas/registerSchema";
 import { paths } from "../pathHelper";
-import { LoginResponse, RegisterResponse } from "../definitions/auth.definitions";
+import { LoginResponse } from "../definitions/auth.definitions";
 
 export const authenticate = async (prevState: string | undefined, formData: LoginFormData) => {
     let response;
@@ -22,10 +22,9 @@ export const authenticate = async (prevState: string | undefined, formData: Logi
 
     } catch (error) {
         if (axios.isAxiosError(error)) {
-            const message = error.status === 403
-            ?   `${error.response?.data} Check your email for confirmation link`
+            return error.status === 403
+            ?   redirect(paths.root.auth.email.path())
             :   `${error.response?.data}`;
-            return message;
         }
 
         return 'Something went wrong!';
@@ -36,9 +35,8 @@ export const authenticate = async (prevState: string | undefined, formData: Logi
 }
 
 export const register = async (prevState: string | undefined, formData: RegisterFormData) => {
-    let response;
      try {
-        response = await dynamicApi({
+        await dynamicApi({
             method: "POST",
             url: '/Account/Register',
             data: formData,
@@ -51,21 +49,5 @@ export const register = async (prevState: string | undefined, formData: Register
         return 'Something went wrong!';
     }
 
-    const { username } = response.data as RegisterResponse;
-    return redirect(paths.root.auth.register.confirmEmail(username).path());
-}
-
-export const resendEmail = async (username: string) => {
-    try {
-        const query = new URLSearchParams({
-            username: username
-        }).toString();
-
-        await dynamicApi({
-            method: "GET",
-            url: `/Account/ResendConfirmEmail?${query}`
-        });    
-    } finally {
-        return redirect(paths.root.auth.register.confirmEmail(username).path());
-    }
+    return redirect(paths.root.auth.email.path());
 }

@@ -10,18 +10,17 @@ export default async function middleware(req: NextRequest) {
         if (!refreshToken) return NextResponse.next()
         
         return NextResponse.redirect(
-            new URL(paths.root.auth.login.validateToken.path(), req.url)
+            new URL(paths.root.auth.refresh.path(), req.url)
         )
     };
 
     try {
         const secret = new TextEncoder().encode(process.env.JWT_SECRET);
         const { payload } = await jwtVerify(accessToken, secret);
-        console.log(payload);
         const { role, unique_name, IsConfirmed } = payload;
 
         if(!IsConfirmed) return NextResponse.redirect(
-            new URL(paths.root.auth.register.confirmEmail(unique_name as string).path(), req.url)
+            new URL(paths.root.auth.email.path(), req.url)
         );
 
         return NextResponse.redirect(

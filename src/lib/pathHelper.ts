@@ -35,22 +35,13 @@ export const routeTree = {
             auth: {
                 segment: () => 'auth',
                 children: {
-                    login: {
-                        segment: () => 'login',
+                    login: { segment: () => 'login' },
+                    register: { segment: () => 'register' },
+                    refresh: { segment: () => 'refresh' },
+                    email: {
+                        segment: () => 'email',
                         children: {
-                            validateToken: { segment: () => 'validate-token' }
-                        }
-                    },
-                    register: {
-                        segment: () => 'register',
-                        children: {
-                            confirmEmail: {
-                                segment: (username: string) => `confirm-email/${username}`,
-                                children: {
-                                    confirm: { segment: () => 'confirm' },
-                                    resend: { segment: () => 'resend' }
-                                }
-                            }
+                            confirm: { segment: () => 'confirm'}
                         }
                     }
                 }

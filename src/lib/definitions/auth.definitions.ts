@@ -7,7 +7,3 @@ export interface LoginResponse {
     username: string;
     role: string;
 }
-
-export interface RegisterResponse {
-    username: string;
-}
