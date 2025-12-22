@@ -14,7 +14,7 @@ export const Table = async ({
     page,
 }: TableParams) => {
     const users = await fetchFilteredUsers(query, page);
-    if (!users) return <EmptyResult />
+    if (users.rowCount === 0) return <EmptyResult />
 
     return (
         <div className="w-full rounded-lg bg-light-component dark:bg-dark-component p-2">

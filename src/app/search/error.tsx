@@ -18,7 +18,7 @@ const Error = ({ error, reset }: {
         <Container className='h-screen'>
             <Main className='h-full'>
                 <Paragraph className="text-2xl">
-                    Something went wrong!
+                    {error.message}
                 </Paragraph>
                 <div className="flex gap-2">
                     <GoHomeLink />

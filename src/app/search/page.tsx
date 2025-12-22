@@ -3,7 +3,7 @@ import { Search } from '@/components/ui/Search';
 import { Metadata } from 'next';
 import { Table } from '@/components/search';
 import { SearchTableSkeleton } from '@/components/skeletons/search.skeletons';
-import { Button, Container, Main } from '@/components';
+import { Container, Main } from '@/components';
 import { GoHomeLink } from '@/components/GoHomeLink';
 
 export const metadata: Metadata = {
