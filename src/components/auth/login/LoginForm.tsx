@@ -24,7 +24,7 @@ export const LoginForm = () => {
                 {as: 'Input', name: 'password', label: 'Password', placeholder: 'Password', type: 'Password'},
                 {as: 'Checkbox', name: 'rememberMe', label: 'Remember me'}
             ]}
-            error={errorMessage}
+            error={!errorMessage?.success ? errorMessage?.error : undefined}
             loading={isPending}
             defaultValues={{rememberMe: false}}
             indicator={{when: 'Login', while: 'Loging in...'}}

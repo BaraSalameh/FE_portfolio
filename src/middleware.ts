@@ -1,6 +1,8 @@
 import { jwtVerify } from "jose";
 import { NextRequest, NextResponse } from 'next/server';
 import { paths } from "./lib/pathHelper";
+import { refreshTokenServer } from "./lib/api/refreshToken.server";
+import { setCookies } from "./lib/api/cookieHelpers";
 
 export default async function middleware(req: NextRequest) {
     const accessToken = req.cookies.get('AccessToken')?.value;
@@ -9,9 +11,15 @@ export default async function middleware(req: NextRequest) {
     if (!accessToken) {
         if (!refreshToken) return NextResponse.next()
         
-        return NextResponse.redirect(
-            new URL(paths.root.auth.refresh.path(), req.url)
-        )
+        try {
+            const response = await refreshTokenServer();
+            const { role, username } = await response.json();
+            
+            await setCookies(response);
+            return NextResponse.redirect(new URL(`/${role}/${username}/dashboard`.toLowerCase(), req.url), { status: 307});
+        } catch {
+            return NextResponse.next();
+        }
     };
 
     try {

@@ -28,7 +28,7 @@ export const RegisterForm = () => {
                 {as: 'Input', name: 'password', label: 'Password', placeholder: '* * * * * * * *', type: 'Password'},
                 {as: 'Checkbox', name: 'rememberMe', label: 'Remember me'}
             ]}
-            error={errorMessage}
+            error={!errorMessage?.success ? errorMessage?.error : undefined}
             loading={isPending}
             indicator={{when: 'Register', while: 'Registering...'}}
         >

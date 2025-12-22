@@ -36,8 +36,8 @@ export const routeTree = {
                 segment: () => 'auth',
                 children: {
                     login: { segment: () => 'login' },
+                    logout: { segment: () => 'logout' },
                     register: { segment: () => 'register' },
-                    refresh: { segment: () => 'refresh' },
                     email: {
                         segment: () => 'email',
                         children: {

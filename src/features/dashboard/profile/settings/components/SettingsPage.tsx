@@ -10,6 +10,7 @@ import { useAppSelector } from '@/lib/store/hooks';
 import { UserWidgetPreferenceForm } from '../widget-preferences/forms/UserWidgetPreferenceForm';
 import { UserChartPreferenceForm } from '../chart-preferences/forms/UserChartPreferenceForm';
 import { chart_preferences, checkWidgetPreferences, getUrlParams, widget_preferences } from '@/lib/utils';
+import { paths } from '@/lib/pathHelper';
 
 export const SettingsPage = () => {
 
@@ -326,7 +327,7 @@ export const SettingsPage = () => {
             </ContentContainer>
             <ContentContainer title='General' space='lg'>
                 {role === 'owner' && username &&
-                    <Paragraph onClick={() => router.push(`/${role}/${username}/logout`)}>
+                    <Paragraph onClick={() => router.push(paths.root.auth.logout.path())}>
                         <ResponsiveIcon icon={LogOut} />
                         Logout
                     </Paragraph>

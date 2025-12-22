@@ -1,18 +1,22 @@
 'use server';
 
-import { dynamicApi } from "../utils";
 import { redirect } from "next/navigation";
-import axios from "axios";
-import { setCookies } from "./cookieHelpers";
+import { setCookies } from "@/lib/api/cookieHelpers";
 import { LoginFormData } from "@/lib/schemas/loginSchema";
 import { RegisterFormData } from "@/lib/schemas/registerSchema";
-import { paths } from "../pathHelper";
-import { LoginResponse } from "../definitions/auth.definitions";
+import { paths } from "@/lib/pathHelper";
+import { LoginResponse } from "@/lib/definitions/auth.definitions";
+import { ActionResult } from "@/lib/definitions/actions.definitions";
+import { dynamicFetch } from "@/lib/api/fetchClient";
+import { ApiError } from "../definitions/api.definitions";
 
-export const authenticate = async (prevState: string | undefined, formData: LoginFormData) => {
+export const authenticate = async (
+    prevState: string | undefined,
+    formData: LoginFormData
+): Promise<ActionResult> => {
     let response;
     try {
-        response = await dynamicApi({
+        response = await dynamicFetch({
             method: "POST",
             url: "/Account/Login",
             data: formData,
@@ -21,33 +25,32 @@ export const authenticate = async (prevState: string | undefined, formData: Logi
         await setCookies(response);
 
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            return error.status === 403
-            ?   redirect(paths.root.auth.email.path())
-            :   `${error.response?.data}`;
+        let errorMessage = 'Unknown login error occurred';
+        if (error instanceof ApiError) {
+            if (error.status === 403) redirect(paths.root.auth.email.path());
+            errorMessage = error.message;
         }
-
-        return 'Something went wrong!';
+        return {success: false, error: errorMessage};
     }
 
-    const { role, username } = response.data as LoginResponse;
-    return redirect(`/${role}/${username}/dashboard`.toLowerCase());
+    const { role, username } = await response.json() as LoginResponse;
+    redirect(`/${role}/${username}/dashboard`.toLowerCase());
 }
 
-export const register = async (prevState: string | undefined, formData: RegisterFormData) => {
+export const register = async (
+    prevState: string | undefined,
+    formData: RegisterFormData
+): Promise<ActionResult> => {
      try {
-        await dynamicApi({
+        await dynamicFetch({
             method: "POST",
             url: '/Account/Register',
             data: formData,
         });
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            return error.response?.data;
-        }
-
-        return 'Something went wrong!';
+        const errorMessage = error instanceof Error ? error.message : 'Unknown register error occurred';
+        return {success: false, error: errorMessage};
     }
 
-    return redirect(paths.root.auth.email.path());
+    redirect(paths.root.auth.email.path());
 }

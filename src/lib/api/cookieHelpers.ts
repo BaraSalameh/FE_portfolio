@@ -1,20 +1,19 @@
-import { AxiosResponse } from "axios";
 import { cookies } from "next/headers";
 
-// export const getCookies = async () => {
-//     const cookieStore = await cookies();
-//     const all = cookieStore.getAll();
+export const getCookies = async () => {
+    const cookieStore = await cookies();
+    const all = cookieStore.getAll();
 
-//     const header = all
-//         .map(c => `${c.name}=${c.value}`)
-//         .join("; ");
+    const header = all
+        .map(c => `${c.name}=${c.value}`)
+        .join("; ");
 
-//     return header;
-// }
+    return header;
+}
 
-export const setCookies = async (response: AxiosResponse) => {
+export const setCookies = async (response: Response) => {
     // forward cookies to the browser
-    const setCookies = response.headers["set-cookie"] ?? [];
+    const setCookies = response.headers.getSetCookie?.() ?? [];
 
     const cookieStore = await cookies();
 
