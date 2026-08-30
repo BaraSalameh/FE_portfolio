@@ -1,12 +1,13 @@
 'use client';
 
-import Select from 'react-select';
+import Select, { StylesConfig } from 'react-select';
 import { FormDropdownProps } from './types.forms';
 import { Paragraph } from '../ui/Paragraph';
 import { useAppDispatch } from '@/lib/store/hooks';
-import { useCallback } from 'react';
+import { useEffect, useMemo } from 'react';
 import debounce from 'lodash.debounce';
 import { CustomMultiValue, CustomOption, CustomSingleValue } from './CustomOption';
+import { Option } from '@/features/types.features';
 
 export const FormDropdown = ({
     label,
@@ -22,68 +23,68 @@ export const FormDropdown = ({
     placeholder = 'Select...',
     fetchAction
 }: FormDropdownProps) => {
-    const customStyles = {
-        control: (base: any) => ({
+    const customStyles: StylesConfig<Option, boolean> = {
+        control: (base) => ({
             ...base,
             backgroundColor: 'transparent',
         }),
-        menu: (provided: any) => {
-            const {backgroundColor, ...rest} = provided;
+        menu: (provided) => {
             return {
-                ...rest,
+                ...provided,
+                backgroundColor: 'transparent',
                 zIndex: 10
             }
         },
-        option: (provided: any, state: any) => {
-            const {backgroundColor, cursor, ...rest} = provided;
+        option: (provided, state) => {
             return {
-                ...rest,
+                ...provided,
+                cursor: 'pointer',
                 backgroundColor: state.isSelected
                 ? '#22c55e' // green-500
                 : ''
             }
         },
-        input: (provided: any) => {
-            const {color, ...rest} = provided;
+        input: (provided) => {
             return {
-                ...rest
+                ...provided,
+                color: 'inherit',
             }
         },
-        singleValue: (provided: any) => {
-            const {color, ...rest} = provided;
+        singleValue: (provided) => {
             return {
-                ...rest
+                ...provided,
+                color: 'inherit',
             }
         },
-        multiValue: (provided: any) => {
-            const {backgroundColor, ...rest} = provided;
+        multiValue: (provided) => {
             return {
-                ...rest,
+                ...provided,
+                backgroundColor: 'transparent',
             };
         },
-        multiValueLabel: (provided: any) => {
-            const {color, ...rest} = provided;
+        multiValueLabel: (provided) => {
             return {
-                ...rest
+                ...provided,
+                color: 'inherit',
             }
         },
-        multiValueRemove: (provided: any) => {
-            const {backgroundColor, ...rest} = provided;
+        multiValueRemove: (provided) => {
             return {
-                ...rest,
+                ...provided,
+                backgroundColor: 'transparent',
                 ':hover': {},
             }
         },
-        clearIndicator: (provided: any) => {
-            const {color, ...rest} = provided;
+        clearIndicator: (provided) => {
             return {
-                ...rest,
+                ...provided,
+                color: 'inherit',
             }
         },
-        dropdownIndicator: (provided: any, state: any) => {
-            const {color, ...rest} = provided;
+        dropdownIndicator: (provided, state) => {
             return {
-                ...rest,
+                ...provided,
+                color: 'inherit',
                 transition: 'transform 0.2s ease',
                 transform: state.selectProps.menuIsOpen ? 'rotate(180deg)' : 'rotate(0deg)'
             }
@@ -92,14 +93,16 @@ export const FormDropdown = ({
 
     const dispatch = useAppDispatch();
     
-    const debouncedSearch = useCallback(
-        debounce((value: string) => {
-            value.trim().length > 0 
-            &&  fetchAction
-            &&  dispatch(fetchAction({ query: value, page: 0 }));
+    const debouncedSearch = useMemo(
+        () => debounce((value: string) => {
+            if (value.trim().length > 0 && fetchAction) {
+                dispatch(fetchAction({ query: value, page: 0 }));
+            }
         }, 1000),
-        [dispatch]
+        [dispatch, fetchAction]
     );
+
+    useEffect(() => () => debouncedSearch.cancel(), [debouncedSearch]);
 
     return (
         <div className="space-y-1">
@@ -134,7 +137,7 @@ export const FormDropdown = ({
                     dropdownIndicator: () => 'text-light-primary dark:text-dark-primary cursor-pointer',
                 }}
             />
-            {error && <Paragraph intent="danger" size="sm">{error.message}</Paragraph>}
+            {error && <Paragraph intent="danger" className="text-sm">{error.message}</Paragraph>}
         </div>
     );
 };

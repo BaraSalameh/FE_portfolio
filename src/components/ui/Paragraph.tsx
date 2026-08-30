@@ -8,7 +8,6 @@ import { ParagraphProps } from './types.ui';
 export const Paragraph = ({
     children,
     intent,
-    size,
     text,
     position,
     space,
@@ -16,7 +15,7 @@ export const Paragraph = ({
     onClick
 }: ParagraphProps) => {
     return (
-        <p className={cn(paragraph({ intent, size, text, position, space, clickable: onClick ? true : false }), className)} onClick={onClick}>
+        <p className={cn(paragraph({ intent, text, position, space, clickable: onClick ? true : false }), className)} onClick={onClick}>
             {children}
         </p>
     );

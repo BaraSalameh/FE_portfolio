@@ -1,5 +1,5 @@
 import { SkillFormData } from "../skill/schema";
-import { CertificateFormData, LKP_CertificateSchemaFormData } from "./schema";
+import { LKP_CertificateSchemaFormData } from "./schema";
 
 
 // form
@@ -26,7 +26,7 @@ interface certificateState {
 // schema
 export interface CertificateResponse {
     id: string;
-    certificate: CertificateFormData;
+    certificate: LKP_CertificateSchemaFormData;
     issueDate?: string;
     expirationDate?: string;
     credintialID?: string;

@@ -8,14 +8,15 @@ export const sendEmail = createAsyncThunk(
         try {
             await dynamicApi({
                 method: "POST",
-                url: `Client/sendEmail`,
+                url: '/Client/SendEmail',
                 data: payload
             });
     
             return;
 
-        } catch (error: any) {
-            return thunkAPI.rejectWithValue(error.response.data ?? ['Unexpected error occurred.']);
+        } catch (error) {
+            return thunkAPI.rejectWithValue(getApiErrorPayload(error));
         }
     }
 );
+import { getApiErrorPayload } from "@/lib/utils";

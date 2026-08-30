@@ -1,13 +1,13 @@
 import { useAppDispatch } from "@/lib/store/hooks";
 import debounce from "lodash.debounce";
-import { useCallback } from "react";
+import { useEffect, useMemo } from "react";
 import { experienceListQuery, sortExperience } from "../apis";
 
 export const useDebouncedSortExperience = () => {
   const dispatch = useAppDispatch();
 
-  return useCallback(
-        debounce(async (lstIds: string[]) => {
+  const sort = useMemo(
+        () => debounce(async (lstIds: string[]) => {
             if (lstIds.length > 0) {
                 await dispatch(sortExperience(lstIds));
                 await dispatch(experienceListQuery());
@@ -15,4 +15,7 @@ export const useDebouncedSortExperience = () => {
         }, 1000),
         [dispatch]
     );
+
+  useEffect(() => () => sort.cancel(), [sort]);
+  return sort;
 };

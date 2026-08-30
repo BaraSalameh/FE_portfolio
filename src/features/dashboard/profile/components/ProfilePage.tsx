@@ -4,7 +4,7 @@ import Image from 'next/image';
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Copy, Home, Link, Mail, MessageCircle, Phone, Settings } from 'lucide-react';
-import { checkWidgetPreferences, getClientLink, getUrlParams } from '@/lib/utils';
+import { checkWidgetPreferences, getClientLink, useUrlParams } from '@/lib/utils';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { Button, cn, CUDModal, Paragraph, ResponsiveIcon } from '@/components';
 import dayjs from 'dayjs';
@@ -12,7 +12,10 @@ import { widgetCard } from '@/styles';
 import { widget_preferences } from '@/lib/utils';
 import { useAppSelector } from '@/lib/store/hooks';
 import { ProfileProps } from '../types.profile';
-import { ContactMessageForm, ContactMessagePage, SettingsPage, ProfileForm } from '@/features';
+import { ContactMessageForm } from '../contact-message/forms';
+import { ContactMessagePage } from '../contact-message/components';
+import { SettingsPage } from '../settings/components';
+import { ProfileForm } from '../forms';
  
 export const ProfilePage = ({ 
     user,
@@ -20,7 +23,7 @@ export const ProfilePage = ({
     className
 } : ProfileProps) => {
 
-    const { role } = getUrlParams();
+    const { role } = useUrlParams();
     const clientLink = getClientLink() as Record<string, string>;
     const profilePicture =
         user?.profilePicture ??
@@ -68,7 +71,7 @@ export const ProfilePage = ({
                     }
                 </div>
                 <div className='relative w-20 h-20 sm:w-30 sm:h-30 lg:w-40 lg:h-40 top-10 sm:top-20'>
-                    <div className="w-20 h-20 sm:w-30 sm:h-30 lg:w-40 lg:h-40 rounded-full border-4 border-white bg-black/25 backdrop-blur-sm overflow-hidden">
+                    <div className="relative w-20 h-20 sm:w-30 sm:h-30 lg:w-40 lg:h-40 rounded-full border-4 border-white bg-black/25 backdrop-blur-sm overflow-hidden">
                         <Image
                             src={profilePicture}
                             alt="Profile picture"
@@ -102,7 +105,7 @@ export const ProfilePage = ({
             </div>
             <div className='relative space-y-5 top-15 sm:top-25 px-5'>
                 <div className='space-y-2'>
-                    <Paragraph position='center' size='lg' className='font-bold'>
+                    <Paragraph position='center' className='text-lg font-bold'>
                         {user?.firstname} {user?.lastname}
                     </Paragraph>
                     <Paragraph position='center' className="italic">

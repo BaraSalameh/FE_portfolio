@@ -1,3 +1,5 @@
+'use client';
+
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { useEffect } from "react";
 import { languageProficiencyListQuery } from "../apis";
@@ -8,8 +10,8 @@ export const useLoadLanguageProficiency = () => {
     const { lstLanguageProficiencies } = useAppSelector(state => state.userLanguage.languageProficiency);
 
     useEffect(() => {
-        lstLanguageProficiencies.length === 0 && dispatch(languageProficiencyListQuery());
-    }, []);
+        if (lstLanguageProficiencies.length === 0) dispatch(languageProficiencyListQuery());
+    }, [dispatch, lstLanguageProficiencies.length]);
 
     return optionsCreator({list: lstLanguageProficiencies, labelKey: 'level'})
 }

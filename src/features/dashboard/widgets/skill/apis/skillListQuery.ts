@@ -1,13 +1,15 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { FetchAction } from '@/components/types.components';
 import { dynamicApi } from "@/lib/utils";
+import { PaginatedResponse } from '@/lib/definitions/api.definitions';
+import { SkillFormData } from '../schema';
 
 export const skillListQuery = createAsyncThunk(
     'userSkill/skillListQuery',
     async ({query, page = 0, pageSize = 5} : FetchAction, thunkAPI)  => {
         try {
 
-            const response = await dynamicApi({
+            const response = await dynamicApi<PaginatedResponse<SkillFormData>>({
                 method: 'GET',
                 url: `/Owner/LKP_SkillList?Search=${query}&PageNumber=${page}&PageSize=${pageSize}`,
                 withCredentials: true
@@ -17,8 +19,9 @@ export const skillListQuery = createAsyncThunk(
 
             return { ...response.data, page };
 
-        } catch (error: any) {
-            return thunkAPI.rejectWithValue(error.message);
+        } catch (error) {
+            return thunkAPI.rejectWithValue(getApiErrorPayload(error));
         }
     }
 );
+import { getApiErrorPayload } from "@/lib/utils";

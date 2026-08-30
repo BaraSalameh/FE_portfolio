@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import {  userFullInfoQuery } from '@/features';
+import { userFullInfoQuery } from '../../apis';
 import { ContactMessageState } from './types.contact-message';
 import { contactMessageListQuery, deleteMessage, signMessage } from './api';
 

@@ -28,17 +28,16 @@ export const WidgetCard = ({
     className
 }: WidgetCardProps) => {
 
-    var isInitialWidgetCard: boolean = false;
-
-    if ((!Array.isArray(items) || items.length === 0 || (!header && !list && !pie && !bar)) && create) {
-        isInitialWidgetCard = true;
-    } else if (!Array.isArray(items) || items.length === 0 || (!header && !list && !pie && !bar)) return null;
-
     const [sortable, setSortable] = useState<boolean>(false);
     const [openModal, setOpenModal] = useState(false);
-    const [item, setItem] = useState<Record<string, any> | undefined>();
+    const [item, setItem] = useState<object | undefined>();
+
+    const isEmpty = !Array.isArray(items) || items.length === 0 || (!header && !list && !pie && !bar);
+    const isInitialWidgetCard = isEmpty && Boolean(create);
+
+    if (isEmpty && !create) return null;
     
-    const handleModal = (item: Record<string, any>) => {
+    const handleModal = (item: object) => {
         setOpenModal(true); 
         setItem(item);
     };
@@ -51,7 +50,7 @@ export const WidgetCard = ({
             <section className={cn(widgetCard(), className)}>
                 <Loading isLoading={isLoading} fullScreen={false} />
                 <Header itemsX="between" paddingX="xs" paddingY="xs">
-                    <Paragraph size="lg" space="xs">
+                    <Paragraph space="xs">
                         {header?.icon && <ResponsiveIcon icon={header.icon} />}
                         {header?.title}
                     </Paragraph>
@@ -72,7 +71,7 @@ export const WidgetCard = ({
                 <Loading isLoading={isLoading} fullScreen={false} />
                 {header && (header.icon || header.title) && (
                     <Header itemsX="between" paddingX="xs" paddingY="xs">
-                        <Paragraph size="lg" space="xs">
+                        <Paragraph space="xs">
                             {header.icon && <ResponsiveIcon icon={header.icon} />}
                             {header.title}
                         </Paragraph>
@@ -107,7 +106,7 @@ export const WidgetCard = ({
 
                 {list && (
                     <Main paddingX="none" paddingY="none">
-                        <List size="md" as="none" className="w-full">
+                        <List as="none" className="w-full">
                             <WidgetList
                                 items={items}
                                 list={list}
@@ -121,7 +120,7 @@ export const WidgetCard = ({
             </section>
 
             <WidgetModal
-                key={item?.id || item}
+                key={item && 'id' in item ? String(item.id) : 'widget-modal'}
                 isLoading={isLoading}
                 isOpen={openModal}
                 onClose={() => setOpenModal(false)}

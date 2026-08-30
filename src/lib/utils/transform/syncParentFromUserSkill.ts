@@ -4,7 +4,7 @@ import { UserSkillResponse } from "@/features/dashboard/widgets/skill/types.skil
 type ParentEntity = { id: string; lstSkills?: SkillFormData[] };
 
 type ArrayKeys<T> = {
-    [K in keyof T]: T[K] extends Array<any> | undefined ? K : never;
+    [K in keyof T]: T[K] extends unknown[] | undefined ? K : never;
 }[keyof T];
 
 export function syncParentFromUserSkill<

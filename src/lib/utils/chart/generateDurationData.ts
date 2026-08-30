@@ -1,18 +1,20 @@
 import dayjs from "dayjs";
 import { extractPathValue, normalizeFieldValue } from "@/lib/utils";
 
-export const generateDurationData = <T extends Record<string, any>>(
-    list: T[],
+export const generateDurationData = (
+    list: object[],
     nameKey?: string | string[],
-    startDateKey: keyof T = 'startDate',
-    endDateKey: keyof T = 'endDate',
+    startDateKey = 'startDate',
+    endDateKey = 'endDate',
     unit: dayjs.ManipulateType = 'month'
 ): { name: string; value: number }[] => {
     const durations = new Map<string, number>();
 
     list.forEach(item => {
-        const start = item[startDateKey] ? dayjs(item[startDateKey]) : null;
-        const end = item[endDateKey] ? dayjs(item[endDateKey]) : dayjs();
+        const startDate = extractPathValue(item, startDateKey);
+        const endDate = extractPathValue(item, endDateKey);
+        const start = startDate ? dayjs(String(startDate)) : null;
+        const end = endDate ? dayjs(String(endDate)) : dayjs();
         const value = start ? end.diff(start, unit) : null;
 
         const names = normalizeFieldValue(extractPathValue(item, nameKey ?? '')) || ['Unknown'];

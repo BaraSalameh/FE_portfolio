@@ -1,27 +1,46 @@
 "use client";
 
-import React from 'react';
+import React, { useTransition } from 'react';
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { ContentContainer } from '@/components';
-import { CUDModal, Paragraph, ResponsiveIcon } from '@/components';
+import { CUDModal, ResponsiveIcon } from '@/components';
 import { BarChart, Calendar, Component, LogOut, Mail, Mars, Phone, PieChart, Radar, SunMoonIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAppSelector } from '@/lib/store/hooks';
 import { UserWidgetPreferenceForm } from '../widget-preferences/forms/UserWidgetPreferenceForm';
 import { UserChartPreferenceForm } from '../chart-preferences/forms/UserChartPreferenceForm';
-import { chart_preferences, checkWidgetPreferences, getUrlParams, widget_preferences } from '@/lib/utils';
+import { chart_preferences, checkWidgetPreferences, useUrlParams, widget_preferences } from '@/lib/utils';
+import { paths } from '@/lib/pathHelper';
+import ButtonClient from '@/components/ui/ButtonClient';
 
 export const SettingsPage = () => {
 
     const router = useRouter();
-    const {role, username} = getUrlParams();
+    const {role, username} = useUrlParams();
     const { lstUserPreferences } = useAppSelector(state => state.userWidgetPreference);
+    const [isLoggingOut, startLogout] = useTransition();
+
+    const handleLogout = () => startLogout(async () => {
+        try {
+            await fetch('/api/Account/Logout', {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: '{}',
+            });
+        } finally {
+            // Ensure browser cookies are removed even if portfolio-api is down.
+            await fetch(paths.root.auth.logout.path(), { method: 'POST' }).catch(() => undefined);
+            router.replace(paths.root.auth.login.path());
+            router.refresh();
+        }
+    });
 
     return (
         <React.Fragment>
             <ContentContainer title='Preferences' space='lg'>
                 <CUDModal title='Change theme' icon={SunMoonIcon}>
-                    <ThemeToggle title="Click to change theme" />
+                    <ThemeToggle label="Click to change theme" />
                 </CUDModal>
                 <ContentContainer title='Profile'>
                     <CUDModal title='Show/Hide gender' icon={Mars}>
@@ -326,10 +345,10 @@ export const SettingsPage = () => {
             </ContentContainer>
             <ContentContainer title='General' space='lg'>
                 {role === 'owner' && username &&
-                    <Paragraph onClick={() => router.push(`/${role}/${username}/logout`)}>
+                    <ButtonClient onClick={handleLogout} disabled={isLoggingOut}>
                         <ResponsiveIcon icon={LogOut} />
-                        Logout
-                    </Paragraph>
+                        {isLoggingOut ? 'Logging out…' : 'Logout'}
+                    </ButtonClient>
                 }
             </ContentContainer>
         </React.Fragment>

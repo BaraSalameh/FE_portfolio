@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect } from "react";
 import { widgetListQuery } from "../apis";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
@@ -7,6 +9,6 @@ export const useLoadWidget = () => {
     const { lstWidgets } = useAppSelector((state) => state.userChartPreference.widget);
         
     useEffect(() => {
-        lstWidgets.length === 0 && dispatch(widgetListQuery());
-    }, []);
+        if (lstWidgets.length === 0) dispatch(widgetListQuery());
+    }, [dispatch, lstWidgets.length]);
 }

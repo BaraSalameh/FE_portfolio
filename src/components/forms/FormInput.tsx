@@ -2,6 +2,7 @@
 
 import { Paragraph } from '../ui/Paragraph';
 import { FormInputProps } from './types.forms';
+import type { TextareaHTMLAttributes } from 'react';
 
 
 
@@ -27,22 +28,26 @@ export const FormInput = ({
 
     return (
         <div className="space-y-1">
-            <Paragraph>{label ? label : null}</Paragraph>
+            <label htmlFor={label}>
+                <Paragraph>{label ? label : null}</Paragraph>
+            </label>
             {(rest.type === 'textarea' || rest.type === 'Textarea') ? (
                 <textarea
-                    {...(registration as any)}
-                    {...rest}
+                    id={label}
+                    {...registration}
+                    {...(rest as TextareaHTMLAttributes<HTMLTextAreaElement>)}
                     className={`${inputClasses} overflow-auto scrollbar-hide`}
                     rows={8}
                 />
             ) : (
                 <input
+                    id={label}
                     {...registration}
                     {...rest}
                     className={inputClasses}
                 />
             )}
-            {error && <Paragraph intent="danger" size="sm">{error.message}</Paragraph>}
+            {error && <Paragraph intent="danger" className="text-sm">{error.message}</Paragraph>}
         </div>
     );
 };

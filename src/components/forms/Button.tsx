@@ -1,48 +1,22 @@
-'use client';
-
 import React from 'react';
 import { button } from '@/styles';
 import { cn } from '@/components/utils';
-import { useRouter } from 'next/navigation';
 import { ButtonProps } from './types.forms';
+import Link from 'next/link';
+import ButtonClient from '../ui/ButtonClient';
 
-export const Button = ({
-    children,
-    size,
-    rounded,
-    className,
-    type = 'button',
-    onClick,
-    onClose,
-    url,
-    disabled
-}: ButtonProps) => {
-    const router = useRouter();
+export const Button = (props: ButtonProps) => {
 
-    const handleClick = () => {
-        onClick?.();
-        onClose?.();
-    };
-    
-    const buttonContent = (
+    const { url, children, ...rest } = props;
 
-        <button
-            type={type}
-            className={cn(button({ size, rounded }), className)}
-            onClick={handleClick}
-            disabled={disabled}
-        >
-            {children}
-        </button>
-    );
-
-    if (url) {
+    if (!!url) {
+        const { size, className } = rest;
         return (
-            <button onClick={() => router.push(url)} className={cn(button({ size }), className)}>
+            <Link href={url} className={cn(button({ size }), className)}>
                 {children}
-            </button>
+            </Link>
         );
+    } else {
+        return <ButtonClient {...rest}>{children}</ButtonClient>
     }
-
-    return buttonContent;
 };

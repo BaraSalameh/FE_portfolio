@@ -1,10 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { institutionListQuery, degreeListQuery, fieldOfStudyListQuery, educationListQuery, addEditEducation, deleteEducation } from '@/features/dashboard/widgets/education/apis';
-import { userFullInfoQuery } from '@/features';
-import { userByUsernameQuery } from '@/features';
+import { userByUsernameQuery, userFullInfoQuery } from '../../apis';
 import { EducationState } from './types.education';
 import { userSkillListQuery } from '../skill';
-import { UserSkillResponse } from '../skill/types.skill';
 import { syncParentFromUserSkill } from '@/lib/utils';
 
 const initialState : EducationState = {

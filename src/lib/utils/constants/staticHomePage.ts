@@ -1,6 +1,5 @@
 export const static_home_page = {
-    introduction: "Create Your Professional Portfolio in Minutes",
-    subtext: "A modern, customizable platform for whoever want to showcase their work with style.",
+    introduction: "A modern, customizable platform for whoever want to showcase their work with style. Create Your Professional Portfolio in Minutes",
     list: [
         "Register",
         "Add your info and projects.",

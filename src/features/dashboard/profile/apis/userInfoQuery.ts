@@ -1,11 +1,12 @@
 import { dynamicApi } from "@/lib/utils";
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { ProfileFormData } from '../schema';
 
 export const userInfoQuery = createAsyncThunk(
     'owner/userInfoQuery',
     async (_, thunkAPI)  => {
         try {
-            const response = await dynamicApi({
+            const response = await dynamicApi<ProfileFormData>({
                 method: 'GET',
                 url: '/Owner/UserInfo',
                 withCredentials: true
@@ -17,8 +18,9 @@ export const userInfoQuery = createAsyncThunk(
 
             return response.data;
 
-        } catch (error: any) {
-            return thunkAPI.rejectWithValue(error.message);
+        } catch (error) {
+            return thunkAPI.rejectWithValue(getApiErrorPayload(error));
         }
     }
 );
+import { getApiErrorPayload } from "@/lib/utils";

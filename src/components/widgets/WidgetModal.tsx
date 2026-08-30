@@ -9,11 +9,13 @@ import { WidgetList } from './WidgetList';
 import { WidgetModalProps } from './types.widgets';
 
 export const WidgetModal = ({ isLoading, isOpen, onClose, onAction, item, update, del, details, className }: WidgetModalProps) => {
-    if (!isOpen) return null;
+    const itemId = item && 'id' in item ? String(item.id) : undefined;
 
     useEffect(() => {
-            onAction?.(item?.id);
-    }, []);
+        if (isOpen && itemId) onAction?.(itemId);
+    }, [isOpen, itemId, onAction]);
+
+    if (!isOpen) return null;
     
     return (
         <BlurBackground intent='sm' className='p-5'>
@@ -25,14 +27,14 @@ export const WidgetModal = ({ isLoading, isOpen, onClose, onAction, item, update
                                 {React.isValidElement(update.form)
                                     ?   React.cloneElement(update.form as React.ReactElement<{ onClose: () => void; id: string }>, {
                                             onClose,
-                                            id: item?.id,
+                                            id: itemId,
                                         })
                                     :   update.form
                                 }
                             </CUDModal>
                         )}
                         {del && (
-                            <CUDModal isLoading={isLoading} as='delete' title={del.title} subTitle={del.subTitle} onAction={del.onDelete} onClose={onClose} idToDelete={item?.id}>
+                            <CUDModal isLoading={isLoading} as='delete' title={del.title} subTitle={del.subTitle} onAction={del.onDelete} onClose={onClose} idToDelete={itemId}>
                                 {del.message}
                             </CUDModal>
                         )}
@@ -41,7 +43,7 @@ export const WidgetModal = ({ isLoading, isOpen, onClose, onAction, item, update
                 </Header>
                 {details &&
                     <Main paddingX="none" paddingY="none">
-                        <List size="md" as="none" className="w-full">
+                        <List as="none" className="w-full">
                             <WidgetList items={[item ?? {}]} list={details}  />
                         </List>
                     </Main>

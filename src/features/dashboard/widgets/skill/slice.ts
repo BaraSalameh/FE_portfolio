@@ -1,5 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { educationListQuery, experienceListQuery, projectListQuery, userByUsernameQuery, userFullInfoQuery } from '@/features';
+import { userByUsernameQuery, userFullInfoQuery } from '../../apis';
+import { educationListQuery } from '../education/apis';
+import { experienceListQuery } from '../experience/apis';
+import { projectListQuery } from '../project/apis';
 import { UserSkillState } from './types.skill';
 import { editDeleteUserSkill, skillListQuery, userSkillListQuery } from './apis';
 import { certificateListQuery } from '../certificate';

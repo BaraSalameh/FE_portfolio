@@ -1,6 +1,6 @@
 "use client";
 
-import { userByUsernameQuery, userFullInfoQuery } from "@/features";
+import { userByUsernameQuery, userFullInfoQuery } from "../apis";
 import { Role } from "@/features/types.features";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { useEffect } from "react";
@@ -17,5 +17,5 @@ export const useLoadUserData = (role: Role, username: string) => {
                 dispatch(userByUsernameQuery(username));
                 break;
         }
-    }, [dispatch]);
+    }, [dispatch, role, username]);
 };

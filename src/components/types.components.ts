@@ -8,7 +8,7 @@ export type FetchAction = {
     page: number;
     pageSize?: number;
 }
-export type PaginatiedAction = (params: FetchAction) => ThunkAction<any, RootState, unknown, Action>;
+export type PaginatiedAction = (params: FetchAction) => ThunkAction<unknown, RootState, unknown, Action>;
 
 export interface FCProps {
     children: React.ReactNode;

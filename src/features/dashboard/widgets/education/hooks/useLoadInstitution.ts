@@ -1,20 +1,17 @@
-import { useEffect, useState } from "react"
+'use client';
+
+import { useMemo } from "react"
 import { EducationResponse } from "../types.education"
 import { useAppSelector } from "@/lib/store/hooks"
 import { mergeOptions, optionsCreator } from "@/lib/utils";
-import { Option } from "@/features/types.features";
 
 export const useLoadInstitution = (educationFromStore?: EducationResponse) => {
     const { lstInstitutions } = useAppSelector(state => state.education.institution);
-    const [ institutionOptions, setInstitutionOptions ] = useState<Option[]>([]);
-
-    useEffect(() => {
+    return useMemo(() => {
         const { institution } = educationFromStore ?? {};
 
         const institutionFromEdit = optionsCreator({list: institution });
         const institutionFromStore = optionsCreator({list: lstInstitutions});
-        setInstitutionOptions(mergeOptions(institutionFromEdit, institutionFromStore));
+        return mergeOptions(institutionFromEdit, institutionFromStore);
     }, [ educationFromStore, lstInstitutions ]);
-
-    return institutionOptions;
 }

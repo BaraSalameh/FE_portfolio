@@ -1,1 +1,0 @@
-export { SearchBarPage } from './SearchBarPage';

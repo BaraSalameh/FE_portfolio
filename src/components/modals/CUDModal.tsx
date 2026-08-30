@@ -33,6 +33,11 @@ export const CUDModal = ({
         ) : (
             <ResponsiveIcon icon={LucideTrash2} />
         );
+    const modalChild = React.isValidElement<{ onClose?: () => void }>(children)
+        ? React.cloneElement(children, {
+            onClose: children.props.onClose ?? (() => setOpenModal(false)),
+        })
+        : children;
     
     return (
         <>
@@ -40,29 +45,26 @@ export const CUDModal = ({
             {currentIcon}
             {title ? title : null}
         </Paragraph>
-        {error && <Paragraph intent="danger" size="sm">{error.message}</Paragraph>}
+        {error && <Paragraph intent="danger" className="text-sm">{error.message}</Paragraph>}
         {openModal && (
             <BlurBackground intent='sm'>
                 <div className={ cn(widgetCard({ scroll: true }), className) }>
                     <Header itemsX="between" paddingX="xs" paddingY="xs">
-                        {subTitle && <Paragraph size="md">{subTitle}</Paragraph>}
+                        {subTitle && <Paragraph>{subTitle}</Paragraph>}
                         <ResponsiveIcon icon={X} onClick={() => setOpenModal(false)} />
                     </Header>
                     <hr />
                     <Main paddingX='sm' paddingY='sm' space='sm'>
                         {as !== 'delete'
-                            ?   React.isValidElement(children)
-                                    ?   React.cloneElement(children as React.ReactElement<{ onClose: () => void }>, {
-                                            onClose: (children as any).props.onClose ?? (() => setOpenModal(false))
-                                        })
-                                    :   children
+                            ?   modalChild
                             :   <>
-                                <Paragraph size="md">{children}</Paragraph>
+                                <Paragraph>{children}</Paragraph>
                                 <Button
                                     onClick={async () => {
                                         if (onAction && idToDelete) {
                                             await onAction(idToDelete);
-                                            onClose ? onClose() : setOpenModal(false);
+                                            if (onClose) onClose();
+                                            else setOpenModal(false);
                                             
                                         }
                                     }}

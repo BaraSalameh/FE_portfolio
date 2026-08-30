@@ -32,7 +32,7 @@ export const UserLanguageForm = ({onClose} : UserLanguageProps) => {
             items={[{as: 'FieldArray', name: 'lstLanguages', fields: fieldConfigs}]}
             error={error}
             loading={loading}
-            resetItems={resetItems as any}
+            resetItems={resetItems}
             indicator={{when: 'Update', while: 'Updating...'}}
         />
     );

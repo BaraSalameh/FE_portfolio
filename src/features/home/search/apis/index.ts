@@ -1,1 +1,0 @@
-export { userListQuery } from './userListQuery'

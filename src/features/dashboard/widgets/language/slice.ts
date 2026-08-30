@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { UserLanguageState } from './types.language';
-import { userByUsernameQuery, userFullInfoQuery } from '@/features';
+import { userByUsernameQuery, userFullInfoQuery } from '../../apis';
 import { editDeleteUserLanguage, languageListQuery, languageProficiencyListQuery, userLanguageListQuery } from './apis';
 
 const initialState : UserLanguageState = {

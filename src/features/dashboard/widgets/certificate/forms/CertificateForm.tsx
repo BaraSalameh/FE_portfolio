@@ -10,6 +10,7 @@ import { lkp_CertificateListQuery } from "../apis";
 import { skillListQuery } from "../../skill";
 import { useHandleSubmit, useLoadCertificate } from "../hooks";
 import { useLoadUserSkill } from "@/features/dashboard/hooks";
+import { FormItem } from "@/components/forms/types.forms";
 
 export const CertificateForm = ({id, onClose} : CertificateProps) => {
 
@@ -25,7 +26,7 @@ export const CertificateForm = ({id, onClose} : CertificateProps) => {
     const onSubmit = useHandleSubmit({onClose});
     const resetItems = useMemo(() => mapCertificateToForm(certificateToHandle), [certificateToHandle]);
 
-    const items = useMemo(() => [
+    const items = useMemo<FormItem<typeof certificateSchema>[]>(() => [
         {as: 'DropdownMulti', name: 'lstSkills', options: skillOptions, label: 'Skills', fetchAction: skillListQuery, isLoading: skillLoading},
         {as: 'Dropdown', name: 'LKP_CertificateID', options: certificateOptions, label: 'Certificate', fetchAction: lkp_CertificateListQuery, isLoading: certificateLoading},
         {as: 'Input', name: 'issueDate', label: 'Issue Date', type: 'Date'},
@@ -48,10 +49,10 @@ export const CertificateForm = ({id, onClose} : CertificateProps) => {
         <ControlledForm
             schema={certificateSchema}
             onSubmit={onSubmit}
-            items={items as any}
+            items={items}
             error={error}
             loading={loading}
-            resetItems={resetItems as any}
+            resetItems={resetItems}
             indicator={indicator}
         />
     );

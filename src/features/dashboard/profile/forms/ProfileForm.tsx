@@ -1,22 +1,23 @@
 'use client';
 
-import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
+import { useAppSelector } from "@/lib/store/hooks";
 import { ControlledForm, ImageUploader } from "@/components/forms";
+import { FormItem } from "@/components/forms/types.forms";
 import { useMemo } from "react";
 import { profileSchema } from "../schema";
 import { useHandleSubmit } from "../hooks";
 
+const genderOptions = [
+    { label: 'Female', value: '0' },
+    { label: 'Male', value: '1' },
+];
+
 export const ProfileForm = ({ onClose } : { onClose?: () => void }) => {
 
     const { loading, error, user } = useAppSelector((state) => state.profile);
-    const genderOptions = [
-        { label: 'Female', value: '0' },
-        { label: 'Male', value: '1' }
-    ];
-
     const onSubmit = useHandleSubmit({ onClose });
 
-    const items = useMemo(() => [
+    const items = useMemo<FormItem<typeof profileSchema>[]>(() => [
         {as: 'Input', name: 'firstname', label: 'Firstname', placeholder: 'John'},
         {as: 'Input', name: 'lastname', label: 'Lastname', placeholder: 'Doe'},
         {as: 'Input', name: 'title', label: 'Title', placeholder: 'Sr. Next.js Developer'},
@@ -44,19 +45,19 @@ export const ProfileForm = ({ onClose } : { onClose?: () => void }) => {
         },
         {as: 'Dropdown', name: 'gender', label: 'Gender', options: genderOptions},
         {as: 'Input', name: 'birthDate', label: 'Birth date', type: 'Date'}
-    ], [genderOptions]);
+    ], []);
 
     return (
         <ControlledForm
             schema={profileSchema}
             onSubmit={onSubmit}
-            items={items as any}
+            items={items}
             error={error}
             loading={loading}
-            resetItems={{
-                ...user as any,
+            resetItems={user ? {
+                ...user,
                 gender: user?.gender?.toString()
-            }}
+            } : undefined}
             indicator={{when: 'Update', while: 'Updating...'}}
         />
     );

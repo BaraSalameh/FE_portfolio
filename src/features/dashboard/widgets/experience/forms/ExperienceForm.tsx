@@ -9,20 +9,21 @@ import { mapExperienceToForm } from "@/lib/utils";
 import { skillListQuery } from "../../skill";
 import { useLoadUserSkill } from "@/features/dashboard/hooks";
 import { useHandleSubmit } from "../hooks";
+import { FormItem } from "@/components/forms/types.forms";
 
 export const ExperienceForm = ({id, onClose} : ExperienceProps) => {
 
     const { loading, error, lstExperiences } = useAppSelector((state) => state.experience);
     const { loading: skillLoading } = useAppSelector((state) => state.userSkill.skill);
     
-    const experienceToHandle = useMemo(() => lstExperiences.find(ex => ex.id === id), [lstExperiences]);
+    const experienceToHandle = useMemo(() => lstExperiences.find(ex => ex.id === id), [id, lstExperiences]);
     const indicator = id ? {when: 'Update', while: 'Updating...'} : {when: 'Create', while: 'creating...'};
 
     const skillOptions = useLoadUserSkill(experienceToHandle);
     const onSubmit = useHandleSubmit({onClose});
     const resetItems = useMemo(() => mapExperienceToForm(experienceToHandle), [experienceToHandle]);
      
-    const items = useMemo(() => [
+    const items = useMemo<FormItem<typeof experienceSchema>[]>(() => [
         {as: 'Input', name: 'companyName', label: 'Company', placeholder: 'Google'},
         {as: 'Input', name: 'jobTitle', label: 'Job title', placeholder: 'Software Developer'},
         {as: 'Input', name: 'startDate', label: 'Start date', type: 'Date'},
@@ -31,22 +32,22 @@ export const ExperienceForm = ({id, onClose} : ExperienceProps) => {
         {as: 'Input', name: 'location', label: 'Location', placeholder: 'Champs-Élysées St - Paris'},
         {as: 'Input', name: 'description', label: 'Description', placeholder: 'Description', type: 'Textarea'},
         {as: 'DropdownMulti', name: 'lstSkills', options: skillOptions, label: 'Skills', fetchAction: skillListQuery, isLoading: skillLoading}
-    ], [ skillOptions ]);
+    ], [skillLoading, skillOptions]);
 
     return (
         <ControlledForm
             schema={experienceSchema}
             onSubmit={onSubmit}
-            items={items as any}
+            items={items}
             error={error}
             loading={loading}
-            defaultValues={{isStudying: false}}
+            defaultValues={{isWorking: false}}
             watch={{
                 name: 'isWorking',
                 defaultValue: false,
                 watched: 'endDate'
             }}
-            resetItems= {resetItems as any}
+            resetItems={resetItems}
             indicator={indicator}
         />
     );

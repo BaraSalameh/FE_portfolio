@@ -1,10 +1,12 @@
 "use client";
+/* Item icons are runtime API values and cannot be enumerated in Next image config. */
+/* eslint-disable @next/next/no-img-element */
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import { widgetList } from '@/styles';
 import { cn } from '@/components/utils';
-import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { closestCenter, DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { SortableItem } from './SortableItem';
 import { WidgetListProps } from './types.widgets';
@@ -21,35 +23,35 @@ export const WidgetList = ({
     className
 }: WidgetListProps) => {
 
-    const [rows, setRows] = useState<Record<string, any>[]>(items);
+    const [sortedState, setSortedState] = useState<{ source: object[]; rows: object[] }>({ source: items, rows: items });
+    const rows = sortedState.source === items ? sortedState.rows : items;
     const sensors = useSensors(useSensor(PointerSensor));
 
-    const handleDragEnd = async (event: any) => {
+    const getItemId = (item: object) => 'id' in item ? String(item.id) : undefined;
+    const getIsRead = (item: object) => 'isRead' in item && Boolean(item.isRead);
+
+    const handleDragEnd = async (event: DragEndEvent) => {
         const { active, over } = event;
 
         if (!over || active.id === over.id) return;
 
-        const oldIndex = rows.findIndex((item) => item.id === active.id);
-        const newIndex = rows.findIndex((item) => item.id === over.id);
+        const oldIndex = rows.findIndex((item) => getItemId(item) === String(active.id));
+        const newIndex = rows.findIndex((item) => getItemId(item) === String(over.id));
 
         const newItems = arrayMove(rows, oldIndex, newIndex);
-        setRows(newItems);
+        setSortedState({ source: items, rows: newItems });
 
-        const orderedIds = newItems.map((item) => item.id);
+        const orderedIds = newItems.map(getItemId).filter((id): id is string => Boolean(id));
 
         sort?.onSort?.(orderedIds);
     };
 
-    useEffect(() => {
-        setRows(items);
-    }, [items]);
-
     const renderList = () => rows.map((item, idx) => {
         const listItem = (
             <li
-                key={item.id ?? idx}
+                key={getItemId(item) ?? idx}
                 className={`${cn(widgetList({
-                    opacity: item?.isRead,
+                    opacity: getIsRead(item),
                     clickable: sort?.sortable ? false : onItemClick ? true : false
                 }), className)}`}
                 onClick={() => onItemClick?.(item)}
@@ -60,25 +62,25 @@ export const WidgetList = ({
                     const iconUrl = cfg.itemIcon ? extractPathValue(item, cfg.itemIcon) : undefined;
 
                     const leftVal = cfg.isTime
-                        ? dayjs(leftRaw).format('MMM YYYY')
-                        : cfg.isLink
-                            ? <a href={leftRaw} target='_blank'>{leftRaw}</a>
-                            : leftRaw;
+                            ? dayjs(String(leftRaw)).format('MMM YYYY')
+                            : cfg.isLink
+                            ? <a href={String(leftRaw)} target='_blank' rel="noreferrer">{String(leftRaw)}</a>
+                            : leftRaw as React.ReactNode;
                             
                     const rightVal = cfg.isTime
-                        ?   rightRaw ? dayjs(rightRaw).format('MMM YYYY') : 'Present'
-                        :   cfg.rightKey ? rightRaw : '';
+                        ?   rightRaw ? dayjs(String(rightRaw)).format('MMM YYYY') : 'Present'
+                        :   cfg.rightKey ? rightRaw as React.ReactNode : '';
 
                     return (
-                        <Paragraph key={index} size={cfg.size}>
+                        <Paragraph key={index}>
                             {cfg.icon && <ResponsiveIcon icon={cfg.icon} />}
 
                             {Array.isArray(leftVal)
                                 ?   leftVal.length > 0
                                         ?   leftVal.map((val, idx) => (
                                                 <React.Fragment key={idx}>
-                                                    {iconUrl && <img src={iconUrl[idx]} className="h-4 w-4 rounded-full" />}
-                                                    {val}
+                                                    {Array.isArray(iconUrl) && iconUrl[idx] && <img src={String(iconUrl[idx])} alt="" className="h-4 w-4 rounded-full" />}
+                                                    {String(val)}
                                                     {idx !== leftVal.length - 1 && ' | '}
                                                 </React.Fragment>
                                             ))
@@ -99,7 +101,7 @@ export const WidgetList = ({
 
         return sort?.sortable
             ?   (
-                    <SortableItem key={item.id} id={item.id} children={listItem} />
+                    <SortableItem key={getItemId(item)} id={getItemId(item) ?? String(idx)}>{listItem}</SortableItem>
                 )
             :   (
                     <div key={idx}>{listItem}</div>
@@ -113,7 +115,7 @@ export const WidgetList = ({
             onDragEnd={handleDragEnd}
         >
             <SortableContext
-                items={rows.map((i) => i.id)}
+                items={rows.map((item, index) => getItemId(item) ?? String(index))}
                 strategy={verticalListSortingStrategy}
             >
                 {renderList()}

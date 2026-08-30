@@ -1,7 +1,7 @@
 import { extractPathValue, normalizeFieldValue } from "@/lib/utils";
 
-export const generatePieData = <T extends Record<string, any>>(
-    list: T[],
+export const generatePieData = (
+    list: object[],
     key?: string | string[]
 ) => {
     const counts = new Map<string, number>();

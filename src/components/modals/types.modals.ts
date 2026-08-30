@@ -7,7 +7,7 @@ type ModalAs = 'create' | 'update' | 'delete' | 'none';
 export interface CUDProps extends InputHTMLAttributes<HTMLInputElement> {
     isLoading?: boolean;
     idToDelete?: string;
-    onAction?: (id: string) => any;
+    onAction?: (id: string) => void | Promise<void>;
     onClose?: () => void;
     error?: FieldError;
     as?: ModalAs;

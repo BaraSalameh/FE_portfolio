@@ -7,8 +7,9 @@ import { ControlledForm } from "@/components/forms";
 import { UserChartPreferenceProps } from "../types.chart-preferences";
 import { userChartPreferenceSchema } from "../schema";
 import { useHandleSubmit, useLoadChartType, useLoadWidget } from "../hooks";
+import { FormItem } from "@/components/forms/types.forms";
 
-export const UserChartPreferenceForm = ({id, onClose, preferenceKeys, preferenceValues} : UserChartPreferenceProps) => {
+export const UserChartPreferenceForm = ({onClose, preferenceKeys, preferenceValues} : UserChartPreferenceProps) => {
 
     const { loading, error, lstUserChartPreferences, widget, chartType } = useAppSelector((state) => state.userChartPreference);
     const { lstWidgets } = widget;
@@ -21,9 +22,9 @@ export const UserChartPreferenceForm = ({id, onClose, preferenceKeys, preference
     
     const resetItems = useMemo(
         () => mapChartPreferenceToForm(lstUserChartPreferences, preferenceKeys, lstWidgets, lstChartTypes, preferenceValues),
-    [lstUserChartPreferences, preferenceKeys, lstWidgets, lstChartTypes]);
+    [lstUserChartPreferences, preferenceKeys, lstWidgets, lstChartTypes, preferenceValues]);
 
-    const items = useMemo(() => [
+    const items = useMemo<FormItem<typeof userChartPreferenceSchema>[]>(() => [
         {as: 'Input', name: 'LKP_WidgetID', type: 'hidden', config: ['Disabled']},
         {as: 'Input', name: 'LKP_ChartTypeID', type: 'hidden', config: ['Disabled']},
         {as: 'Dropdown', name: 'groupBy', options: preferenceValues.groupBy, label: 'Group by'},
@@ -34,10 +35,10 @@ export const UserChartPreferenceForm = ({id, onClose, preferenceKeys, preference
         <ControlledForm
             schema={userChartPreferenceSchema}
             onSubmit={onSubmit}
-            items={items as any}
+            items={items}
             error={error}
             loading={loading}
-            resetItems={resetItems as any}
+            resetItems={resetItems}
             indicator={indicator}
         />
     );

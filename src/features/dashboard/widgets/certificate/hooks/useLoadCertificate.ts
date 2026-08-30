@@ -1,20 +1,17 @@
-import { useEffect, useState } from "react"
+'use client';
+
+import { useMemo } from "react"
 import { useAppSelector } from "@/lib/store/hooks"
 import { mergeOptions, optionsCreator } from "@/lib/utils";
-import { Option } from "@/features/types.features";
 import { CertificateResponse } from "../types.certificate";
 
 export const useLoadCertificate = (subCertificateFromStore?: CertificateResponse) => {
     const { lstCertificates } = useAppSelector(state => state.certificate.certificate);
-    const [ certificateOptions, setCertificateOptions ] = useState<Option[]>([]);
-
-    useEffect(() => {
+    return useMemo(() => {
         const { certificate } = subCertificateFromStore ?? {};
 
         const certificateFromEdit = optionsCreator({list: certificate });
         const certificateFromStore = optionsCreator({list: lstCertificates});
-        setCertificateOptions(mergeOptions(certificateFromEdit, certificateFromStore));
+        return mergeOptions(certificateFromEdit, certificateFromStore);
     }, [ subCertificateFromStore, lstCertificates ]);
-
-    return certificateOptions;
 }

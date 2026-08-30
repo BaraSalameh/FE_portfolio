@@ -1,6 +1,6 @@
 'use client';
 
-import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
+import { useAppSelector } from "@/lib/store/hooks";
 import { useMemo } from "react";
 import { mapEducationToForm } from "@/lib/utils";
 import { ControlledForm } from "@/components/forms";
@@ -10,6 +10,7 @@ import { degreeListQuery, fieldOfStudyListQuery, institutionListQuery } from "..
 import { skillListQuery } from "../../skill";
 import { useLoadInstitution, useLoadDegree, useLoadFieldOfStudy, useHandleSubmit } from "../hooks";
 import { useLoadUserSkill } from "@/features/dashboard/hooks";
+import { FormItem } from "@/components/forms/types.forms";
 
 export const EducationForm = ({id, onClose} : EducationProps) => {
 
@@ -19,7 +20,7 @@ export const EducationForm = ({id, onClose} : EducationProps) => {
     const { loading: degreeLoading } = degree;
     const { loading: fieldLoading } = fieldOfStudy;
 
-    const educationToHandle = useMemo(() => lstEducations.find(ed => ed.id === id), [lstEducations]);
+    const educationToHandle = useMemo(() => lstEducations.find(ed => ed.id === id), [id, lstEducations]);
     const indicator = id ? {when: 'Update', while: 'Updating...'} : {when: 'Create', while: 'creating...'};
     
     const institutionOptions = useLoadInstitution(educationToHandle);
@@ -29,7 +30,7 @@ export const EducationForm = ({id, onClose} : EducationProps) => {
     const onSubmit = useHandleSubmit({onClose});
     const resetItems = useMemo(() => mapEducationToForm(educationToHandle), [educationToHandle]);
 
-    const items = useMemo(() => [
+    const items = useMemo<FormItem<typeof educationSchema>[]>(() => [
         {as: 'Dropdown', name: 'LKP_InstitutionID', options: institutionOptions, label: 'Institution', fetchAction: institutionListQuery, isLoading: institutionLoading},
         {as: 'Dropdown', name: 'LKP_DegreeID', options: degreeOptions, label: 'Degree', fetchAction: degreeListQuery, isLoading: degreeLoading},
         {as: 'Dropdown', name: 'LKP_FieldOfStudyID', options: fieldOfStudyOptions, label: 'Field of study', fetchAction: fieldOfStudyListQuery, isLoading: fieldLoading},
@@ -37,13 +38,13 @@ export const EducationForm = ({id, onClose} : EducationProps) => {
         {as: 'Input', name: 'endDate', label: 'End date', type: 'Date'},
         {as: 'Checkbox', name: 'isStudying', label: 'Still studying?'},
         {as: 'DropdownMulti', name: 'lstSkills', options: skillOptions, label: 'Skills', fetchAction: skillListQuery, isLoading: skillLoading}
-    ], [ institutionOptions, degreeOptions, fieldOfStudyOptions, institutionLoading, degreeLoading, fieldLoading, skillOptions ]);
+    ], [ institutionOptions, degreeOptions, fieldOfStudyOptions, institutionLoading, degreeLoading, fieldLoading, skillOptions, skillLoading ]);
     
     return (
         <ControlledForm
             schema={educationSchema}
             onSubmit={onSubmit}
-            items={items as any}
+            items={items}
             error={error}
             loading={loading}
             defaultValues={{isStudying: false}}
@@ -52,7 +53,7 @@ export const EducationForm = ({id, onClose} : EducationProps) => {
                 defaultValue: false,
                 watched: 'endDate'
             }}
-            resetItems={resetItems as any}
+            resetItems={resetItems}
             indicator={indicator}
         />
     );

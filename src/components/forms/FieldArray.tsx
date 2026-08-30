@@ -1,20 +1,31 @@
 "use client";
 
-import { useFieldArray } from "react-hook-form";
+import { Control, FieldArray as FieldArrayValue, FieldArrayPath, FieldError, FieldErrors, FieldPath, FieldValues, UseFormRegister, useFieldArray } from "react-hook-form";
 import { ControlledDropdown } from "./ControlledDropdown";
 import { Button } from "./Button";
 import { ResponsiveIcon } from "../ui/ResponsiveIcon";
 import { Trash2 } from "lucide-react";
 import { FormInput, Header } from "@/components";
+import { FormField } from "./types.forms";
+import { extractPathValue } from "@/lib/utils";
 
-export const FieldArray = ({
+interface FieldArrayProps<T extends FieldValues> {
+    name: FieldArrayPath<T>;
+    label?: string;
+    control: Control<T>;
+    fields: FormField[];
+    register: UseFormRegister<T>;
+    errors: FieldErrors<T>;
+}
+
+export const FieldArray = <T extends FieldValues>({
     name,
     label,
     control,
     fields: fieldConfigs,
     register,
     errors
-}: any) => {
+}: FieldArrayProps<T>) => {
     
     const { fields, prepend, remove } = useFieldArray({
         control,
@@ -27,10 +38,10 @@ export const FieldArray = ({
             <Button
                 type="button"
                 onClick={() => prepend(
-                    fieldConfigs.reduce((acc: any, config: any) => {
+                    fieldConfigs.reduce<Record<string, string>>((acc, config) => {
                         acc[config.name] = '';
                         return acc;
-                    }, {})
+                    }, {}) as FieldArrayValue<T, FieldArrayPath<T>>
                 )}
             >
                 <ResponsiveIcon />
@@ -42,8 +53,10 @@ export const FieldArray = ({
                         <Header paddingX='none' paddingY='none' itemsX='end'>
                             <ResponsiveIcon icon={Trash2} onClick={() => remove(i)} className="cursor-pointer" />
                         </Header>
-                        {fieldConfigs.map((config: any) => {
-                            switch (config.as as any) {
+                        {fieldConfigs.map((config) => {
+                            const fieldPath = `${name}.${i}.${config.name}` as FieldPath<T>;
+                            const fieldError = extractPathValue(errors, fieldPath) as FieldError | undefined;
+                            switch (config.as) {
                                 case 'Input':
                                     return (
                                         <FormInput
@@ -51,8 +64,8 @@ export const FieldArray = ({
                                             label={config.label}
                                             type={config.type || 'text'}
                                             placeholder={config.placeholder}
-                                            registration={register(`${name}[${i}].${config.name}`)}
-                                            error={ errors?.[name]?.[i]?.[config.name] }
+                                            registration={register(fieldPath)}
+                                            error={fieldError}
                                             disabled={config?.config?.includes('Disabled')}
                                         />
                                     )
@@ -61,7 +74,7 @@ export const FieldArray = ({
                                     return (
                                         <ControlledDropdown
                                             key={config.name}
-                                            name={`${name}[${i}].${config.name}`}
+                                            name={fieldPath}
                                             control={control}
                                             label={config.label}
                                             options={config.options || []}

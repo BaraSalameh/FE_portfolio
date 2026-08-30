@@ -1,4 +1,4 @@
-import { PaginatiedAction, Pagination } from "@/components/types.components";
+import { PaginatiedAction } from "@/components/types.components";
 import { AnchorVariantProps } from "@/styles/anchor";
 import { ButtonVariantProps } from "@/styles/button";
 import React, { InputHTMLAttributes } from "react";
@@ -8,7 +8,7 @@ import { z } from "zod";
 import { Option } from '@/features/types.features';
 
 type ItemAs = 'Input' | 'Checkbox' | 'Dropdown' | 'DropdownMulti' | 'Modal' | 'FieldArray';
-type Type = 'Password' | 'Email' | 'Text' | 'Number' | 'Date' | 'Textarea';
+type Type = 'Password' | 'Email' | 'Text' | 'Number' | 'Date' | 'Textarea' | 'hidden';
 type ModalAs = 'create' | 'update' | 'delete' | 'none';
 type Config = 'Disabled';
 type ButtonType = 'button' | 'submit' | 'reset';
@@ -30,9 +30,10 @@ export interface FormField {
     options?: Option[];
     fetchAction?: PaginatiedAction;
     isLoading?: boolean;
+    config?: Config[];
 }
 
-interface FormItem<T extends z.ZodTypeAny> {
+export interface FormItem<T extends z.ZodTypeAny> {
     as: ItemAs;
     label?: string;
     type?: Type;
@@ -66,16 +67,15 @@ export interface ControlledFormProps<T extends z.ZodTypeAny> {
     className?: string;
     defaultValues?: Partial<z.infer<T>>;
     watch?: FormItemWatch<T>;
-    resetItems?: T;
+    resetItems?: Partial<z.infer<T>>;
     indicator?: Indicator;
     children?: React.ReactNode;
 }
 
 export interface AnchorProps extends AnchorVariantProps {
+    url: string;
     children: React.ReactNode;
     className?: string;
-    type?: ButtonType;
-    url?: string;
 }
 
 export interface ButtonProps extends ButtonVariantProps {
@@ -86,6 +86,7 @@ export interface ButtonProps extends ButtonVariantProps {
     onClose?: () => void;
     url?: string;
     disabled?: boolean;
+    testId?: string;
 }
 
 export interface ControlledDropdownProps<T extends FieldValues>  {

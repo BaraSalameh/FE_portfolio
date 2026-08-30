@@ -1,4 +1,4 @@
-import { LanguageFormData, LanguageProficiencyFormData, UserLanguageFormData } from "./schema";
+import { LanguageFormData, LanguageProficiencyFormData } from "./schema";
 
 // form
 export interface UserLanguageProps {
@@ -8,7 +8,7 @@ export interface UserLanguageProps {
 
 // slice
 export interface UserLanguageState {
-    lstUserLanguages: UserLanguageFormData[];
+    lstUserLanguages: UserLanguageResponse[];
     language: LanguageState;
     languageProficiency: LanguageProficiencyState;
     loading: boolean;
@@ -26,4 +26,9 @@ interface LanguageProficiencyState {
     lstLanguageProficiencies: LanguageProficiencyFormData[];
     loading: boolean;
     error: string | null;
+}
+
+export interface UserLanguageResponse {
+    language: LanguageFormData;
+    languageProficiency: LanguageProficiencyFormData;
 }

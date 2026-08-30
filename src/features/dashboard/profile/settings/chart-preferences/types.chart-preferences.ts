@@ -20,7 +20,7 @@ export interface UserChartPreferenceProps {
 
 // User Chart Preference Slice
 export interface UserChartPreferenceState {
-    lstUserChartPreferences: UserChartPreferenceFormData[];
+    lstUserChartPreferences: UserChartPreferenceResponse[];
     widget: WidgetState;
     chartType: ChartTypeState;
     loading: boolean;
@@ -37,4 +37,9 @@ interface ChartTypeState {
     lstChartTypes: ChartTypeFormData[];
     loading: boolean;
     error: string | null;
+}
+
+export interface UserChartPreferenceResponse extends UserChartPreferenceFormData {
+    widget: WidgetFormData;
+    chartType: ChartTypeFormData;
 }
