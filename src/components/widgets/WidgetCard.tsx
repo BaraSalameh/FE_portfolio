@@ -28,17 +28,16 @@ export const WidgetCard = ({
     className
 }: WidgetCardProps) => {
 
-    var isInitialWidgetCard: boolean = false;
-
-    if ((!Array.isArray(items) || items.length === 0 || (!header && !list && !pie && !bar)) && create) {
-        isInitialWidgetCard = true;
-    } else if (!Array.isArray(items) || items.length === 0 || (!header && !list && !pie && !bar)) return null;
-
     const [sortable, setSortable] = useState<boolean>(false);
     const [openModal, setOpenModal] = useState(false);
-    const [item, setItem] = useState<Record<string, any> | undefined>();
+    const [item, setItem] = useState<object | undefined>();
+
+    const isEmpty = !Array.isArray(items) || items.length === 0 || (!header && !list && !pie && !bar);
+    const isInitialWidgetCard = isEmpty && Boolean(create);
+
+    if (isEmpty && !create) return null;
     
-    const handleModal = (item: Record<string, any>) => {
+    const handleModal = (item: object) => {
         setOpenModal(true); 
         setItem(item);
     };
@@ -121,7 +120,7 @@ export const WidgetCard = ({
             </section>
 
             <WidgetModal
-                key={item?.id || item}
+                key={item && 'id' in item ? String(item.id) : 'widget-modal'}
                 isLoading={isLoading}
                 isOpen={openModal}
                 onClose={() => setOpenModal(false)}

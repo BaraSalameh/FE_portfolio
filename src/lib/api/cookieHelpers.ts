@@ -1,4 +1,6 @@
 import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
+import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 export const getCookies = async () => {
     const cookieStore = await cookies();
@@ -27,9 +29,11 @@ export const setCookies = async (response: Response) => {
 function parseCookie(str: string) {
     const parts = str.split(";").map(v => v.trim());
     const [nameValue, ...rest] = parts;
-    const [name, value] = nameValue.split("=");
+    const separator = nameValue.indexOf('=');
+    const name = separator === -1 ? nameValue : nameValue.slice(0, separator);
+    const value = separator === -1 ? '' : nameValue.slice(separator + 1);
 
-    const options: Record<string, any> = {};
+    const options: Partial<ResponseCookie> = {};
 
     for (const part of rest) {
         const [key, val] = part.split("=");
@@ -37,9 +41,15 @@ function parseCookie(str: string) {
         if (lower === "path") options.path = val || "/";
         else if (lower === "httponly") options.httpOnly = true;
         else if (lower === "secure") options.secure = true;
-        else if (lower === "samesite") options.sameSite = val;
+        else if (lower === "samesite") {
+            const sameSite = val?.toLowerCase();
+            if (sameSite === 'strict' || sameSite === 'lax' || sameSite === 'none') {
+                options.sameSite = sameSite;
+            }
+        }
         else if (lower === "max-age") options.maxAge = Number(val);
         else if (lower === "domain") options.domain = val;
+        else if (lower === "expires" && val) options.expires = new Date(val);
     }
 
     return {
@@ -48,3 +58,18 @@ function parseCookie(str: string) {
         options
     };
 }
+
+export const forwardSetCookieHeaders = (source: Response, target: NextResponse) => {
+    for (const cookie of source.headers.getSetCookie?.() ?? []) {
+        target.headers.append('set-cookie', cookie);
+    }
+    return target;
+};
+
+export const clearAuthCookies = (response: NextResponse) => {
+    const expired = 'Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0; HttpOnly; Secure; SameSite=None';
+    response.headers.append('set-cookie', `AccessToken=; Path=/; ${expired}`);
+    response.headers.append('set-cookie', `RefreshToken=; Path=/api/Account; ${expired}`);
+    response.headers.append('set-cookie', `RefreshToken=; Path=/api/v1/Account; ${expired}`);
+    return response;
+};

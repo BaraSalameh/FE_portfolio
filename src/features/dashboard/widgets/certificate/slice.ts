@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { userByUsernameQuery, userFullInfoQuery } from '@/features';
+import { userByUsernameQuery, userFullInfoQuery } from '../../apis';
 import { CertificateState } from './types.certificate';
 import { addEditCertificate, certificateListQuery, deleteCertificate, lkp_CertificateListQuery } from './apis';
 import { userSkillListQuery } from '../skill';

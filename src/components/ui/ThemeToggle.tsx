@@ -1,7 +1,7 @@
 'use client';
 
 import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 import { ResponsiveIcon } from './ResponsiveIcon';
 import { Paragraph } from './Paragraph';
 import { ThemeToggleProps } from './types.ui';
@@ -17,11 +17,11 @@ export const ThemeToggle = ({
 }: ThemeToggleProps) => {
     
     const { theme, setTheme } = useTheme();
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
+    const mounted = useSyncExternalStore(
+        () => () => undefined,
+        () => true,
+        () => false,
+    );
 
     const isDark = theme === 'dark';
 

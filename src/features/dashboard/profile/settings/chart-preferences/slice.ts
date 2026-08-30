@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { userByUsernameQuery, userFullInfoQuery } from '@/features';
+import { userByUsernameQuery, userFullInfoQuery } from '../../../apis';
 import { UserChartPreferenceState } from './types.chart-preferences';
 import { chartTypeListQuery, editUserChartPreference, userChartPreferenceListQuery, widgetListQuery } from './apis';
 

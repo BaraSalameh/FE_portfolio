@@ -33,6 +33,11 @@ export const CUDModal = ({
         ) : (
             <ResponsiveIcon icon={LucideTrash2} />
         );
+    const modalChild = React.isValidElement<{ onClose?: () => void }>(children)
+        ? React.cloneElement(children, {
+            onClose: children.props.onClose ?? (() => setOpenModal(false)),
+        })
+        : children;
     
     return (
         <>
@@ -51,18 +56,15 @@ export const CUDModal = ({
                     <hr />
                     <Main paddingX='sm' paddingY='sm' space='sm'>
                         {as !== 'delete'
-                            ?   React.isValidElement(children)
-                                    ?   React.cloneElement(children as React.ReactElement<{ onClose: () => void }>, {
-                                            onClose: (children as any).props.onClose ?? (() => setOpenModal(false))
-                                        })
-                                    :   children
+                            ?   modalChild
                             :   <>
                                 <Paragraph>{children}</Paragraph>
                                 <Button
                                     onClick={async () => {
                                         if (onAction && idToDelete) {
                                             await onAction(idToDelete);
-                                            onClose ? onClose() : setOpenModal(false);
+                                            if (onClose) onClose();
+                                            else setOpenModal(false);
                                             
                                         }
                                     }}

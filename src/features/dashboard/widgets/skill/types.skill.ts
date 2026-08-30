@@ -25,7 +25,7 @@ export type SkillMap = Record<string, SkillLink[]>;
 
 type SkillLink = {
     id: string;
-    prop?: any;  // make generic so it's not tied to only Education
+    prop?: unknown;
     skill: SkillFormData;
 };
 

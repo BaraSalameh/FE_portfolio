@@ -1,4 +1,4 @@
-import { CahrtEntry, WidgetCardProps } from "@/components/widgets/types.widgets";
+import { ChartEntry, WidgetCardProps } from "@/components/widgets/types.widgets";
 import { useAppSelector } from "@/lib/store/hooks";
 import { ListPlusIcon, StarIcon } from "lucide-react";
 import { UserSkillForm } from "../forms";
@@ -10,7 +10,7 @@ export const useSkillWidget = (): WidgetCardProps => {
     const { loading, lstUserSkills } = useAppSelector(state => state.userSkill);
     const { lstUserPreferences } = useAppSelector(state => state.userWidgetPreference);
 
-    const counts = lstUserSkills.reduce((acc: any, item: UserSkillResponse) => {
+    const counts = lstUserSkills.reduce((acc: Record<'experience' | 'project' | 'education' | 'certificate', number>, item: UserSkillResponse) => {
         if (item.lstExperiences) acc.experience += item.lstExperiences.length > 0 ? 1 : 0;
         if (item.lstProjects) acc.project += item.lstProjects.length > 0 ? 1 : 0;
         if (item.lstEducations) acc.education += item.lstEducations.length > 0 ? 1 : 0;
@@ -23,7 +23,7 @@ export const useSkillWidget = (): WidgetCardProps => {
         certificate: 0
     });
 
-    const customData: CahrtEntry[] = Object.entries(counts as Record<string, number>).map(
+    const customData: ChartEntry[] = Object.entries(counts as Record<string, number>).map(
         ([key, value]) => ({
             name: key,
             value: value

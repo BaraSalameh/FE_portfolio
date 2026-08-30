@@ -7,7 +7,7 @@ export const useSignMessage = () => {
     const { lstMessages } = useAppSelector(state => state.contactMessage);
 
     return async (id: string) => {
-        const currentMessage = lstMessages.find((msg: any) => msg?.id === id);
+        const currentMessage = lstMessages.find((message) => message.id === id);
         if(!currentMessage?.isRead)
             try {
                 await dispatch(signMessage(id));

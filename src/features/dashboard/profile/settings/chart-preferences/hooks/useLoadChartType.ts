@@ -9,6 +9,6 @@ export const useLoadChartType = () => {
     const { lstChartTypes } = useAppSelector((state) => state.userChartPreference.chartType);
         
     useEffect(() => {
-        lstChartTypes.length === 0 && dispatch(chartTypeListQuery());
-    }, []);
+        if (lstChartTypes.length === 0) dispatch(chartTypeListQuery());
+    }, [dispatch, lstChartTypes.length]);
 }

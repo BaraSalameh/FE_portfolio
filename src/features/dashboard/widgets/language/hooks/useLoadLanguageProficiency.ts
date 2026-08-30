@@ -10,8 +10,8 @@ export const useLoadLanguageProficiency = () => {
     const { lstLanguageProficiencies } = useAppSelector(state => state.userLanguage.languageProficiency);
 
     useEffect(() => {
-        lstLanguageProficiencies.length === 0 && dispatch(languageProficiencyListQuery());
-    }, []);
+        if (lstLanguageProficiencies.length === 0) dispatch(languageProficiencyListQuery());
+    }, [dispatch, lstLanguageProficiencies.length]);
 
     return optionsCreator({list: lstLanguageProficiencies, labelKey: 'level'})
 }

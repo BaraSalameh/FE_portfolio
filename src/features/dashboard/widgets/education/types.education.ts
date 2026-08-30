@@ -1,5 +1,5 @@
 import { SkillFormData } from "../project/schema";
-import { DegreeFormData, EducationFormData, FieldOfStudyFormData, InstitutionFormData } from "./schema";
+import { DegreeFormData, FieldOfStudyFormData, InstitutionFormData } from "./schema";
 
 // form
 export interface EducationProps {

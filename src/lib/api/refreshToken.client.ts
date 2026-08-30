@@ -1,14 +1,22 @@
 import { dynamicFetch } from './fetchClient';
 
-export const refreshTokenClient = async () => {
+let refreshPromise: Promise<Response> | null = null;
 
-    const refresh = await dynamicFetch({
+export const refreshTokenClient = () => {
+    if (refreshPromise) return refreshPromise;
+
+    refreshPromise = dynamicFetch({
         method: 'POST',
         url: '/Account/ValidateToken',
         data: {},
         retryOn401: false,
         sendCredentials: true,
+    }).catch((error) => {
+        window.location.assign(new URL('/auth/login', window.location.origin));
+        throw error;
+    }).finally(() => {
+        refreshPromise = null;
     });
 
-    return refresh;
+    return refreshPromise;
 };

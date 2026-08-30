@@ -1,4 +1,3 @@
-import { JSX, useMemo } from "react";
 import { WidgetCardProps } from "@/components/widgets/types.widgets";
 import { ControlledWidget } from "@/components";
 import { checkWidgetPreferences } from "@/lib/utils";
@@ -25,33 +24,19 @@ export const useWidgets = () => {
     const showSkillWidget = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_skill_widget);
     const showCertificateWidget = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_certificate_widget);
 
-    const renderWidgets = useMemo((): JSX.Element[] => {
-        const widgets: WidgetCardProps[] = [
-            educationData,
-            experienceData,
-            languageData,
-        ];
+    const widgets: WidgetCardProps[] = [
+        educationData,
+        experienceData,
+        languageData,
+    ];
 
-        if (showProjectWidget) {
-            widgets.splice(1, 0, projectData);
-        }
+    if (showProjectWidget) widgets.splice(1, 0, projectData);
+    if (showSkillWidget) widgets.splice(1, 0, skillData);
+    if (showCertificateWidget) widgets.splice(1, 0, certificateData);
 
-        if (showSkillWidget) {
-            widgets.splice(1, 0, skillData);
-        }
-
-        if (showCertificateWidget) {
-            widgets.splice(1, 0, certificateData);
-        }
-
-        return widgets.map((widget, index) => (
-            <div key={widget?.header?.title || index} className="break-inside-avoid">
-                <ControlledWidget
-                    {...widget}
-                />
-            </div>
-        ));
-    }, [projectData, skillData, educationData, experienceData, languageData]);
-
-    return renderWidgets;
+    return widgets.map((widget, index) => (
+        <div key={widget?.header?.title || index} className="break-inside-avoid">
+            <ControlledWidget {...widget} />
+        </div>
+    ));
 };

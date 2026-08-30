@@ -5,18 +5,18 @@ import { Home, Send } from "lucide-react";
 import { widgetCard } from "@/styles";
 import { paths } from "@/lib/pathHelper";
 
-export const Page = () => {
+const Page = () => {
     return (
         <React.Fragment>
             <Main>
                 <div className={cn(widgetCard())}>
                     <Paragraph >
                         Check your email{'\n'}{'\n'}
-                        We've sent a confirmation link to your email address.
+                        We&apos;ve sent a confirmation link to your email address.
                         Please open the email and click the link to verify your account.{'\n'}{'\n'}
                     </Paragraph>
                     <List className="text-sm">
-                        <Paragraph>Didn't receive the email?</Paragraph>
+                        <Paragraph>Didn&apos;t receive the email?</Paragraph>
                         <li>
                             Check your Spam or Junk folder.
                         </li>
@@ -24,7 +24,7 @@ export const Page = () => {
                             Make sure you signed up with the correct email address.
                         </li>
                         <li>
-                            You can request a new confirmation email by loging in.
+                            You can request a new confirmation email by logging in.
                         </li>
                     </List>
                     <Paragraph intent='secondary' className="text-sm italic mt-2">

@@ -1,6 +1,6 @@
 import { WidgetCardProps } from "@/components/widgets/types.widgets";
 import { useAppSelector } from "@/lib/store/hooks";
-import { Award, Clock, GraduationCap, Link, SearchCodeIcon, WandSparklesIcon } from "lucide-react";
+import { Award, Clock, Link, SearchCodeIcon, WandSparklesIcon } from "lucide-react";
 import { checkWidgetPreferences } from "@/lib/utils";
 import {widget_preferences} from "@/lib/utils";
 import { useHandleCertificateDelete } from "./useHandleCertificateDelete";

@@ -9,6 +9,6 @@ export const useLoadWidgetPreference = () => {
     const { lstPreferences } = useAppSelector((state) => state.userWidgetPreference.preference);
 
     useEffect(() => {
-        lstPreferences.length === 0 && dispatch(widgetPreferenceListQuery());
-    }, []);
+        if (lstPreferences.length === 0) dispatch(widgetPreferenceListQuery());
+    }, [dispatch, lstPreferences.length]);
 }

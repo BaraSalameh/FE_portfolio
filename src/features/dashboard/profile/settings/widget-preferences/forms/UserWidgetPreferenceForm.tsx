@@ -8,6 +8,7 @@ import { widget_preferences } from "@/lib/utils";
 import { UserPreferenceProps } from "../types.widget-preferences";
 import { userWidgetPreferenceSchema } from "../schema";
 import { useHandleSubmit, useLoadWidgetPreference } from "../hooks";
+import { FormItem } from "@/components/forms/types.forms";
 
 export const UserWidgetPreferenceForm = ({ onClose, preferenceKey, preferenceValues } : UserPreferenceProps) => {
 
@@ -24,9 +25,9 @@ export const UserWidgetPreferenceForm = ({ onClose, preferenceKey, preferenceVal
     const onSubmit = useHandleSubmit({ onClose });
     const resetItems = useMemo(
         () => mapPreferenceToForm(lstUserPreferences, preferenceKey, lstPreferences, valueOptions),
-    [lstUserPreferences, preferenceKey, lstPreferences]);
+    [lstUserPreferences, preferenceKey, lstPreferences, valueOptions]);
 
-    const items = useMemo(() => [
+    const items = useMemo<FormItem<typeof userWidgetPreferenceSchema>[]>(() => [
         {as: 'Input', name: 'LKP_PreferenceID', type: 'hidden', config: ['Disabled']},
         {as: 'Dropdown', name: 'value', options: valueOptions, label: 'Value'}
     ], [valueOptions]);
@@ -35,10 +36,10 @@ export const UserWidgetPreferenceForm = ({ onClose, preferenceKey, preferenceVal
         <ControlledForm
             schema={userWidgetPreferenceSchema}
             onSubmit={onSubmit}
-            items={items as any}
+            items={items}
             error={error}
             loading={loading}
-            resetItems={resetItems as any}
+            resetItems={resetItems}
             indicator={indicator}
         />
     );

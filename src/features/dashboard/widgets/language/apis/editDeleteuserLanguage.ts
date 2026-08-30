@@ -18,11 +18,9 @@ export const editDeleteUserLanguage = createAsyncThunk(
             
             return;
 
-        } catch (error: any) {
-            if (error.response.status === 400) {
-                return thunkAPI.rejectWithValue(error.response.data);
-            }
-            return thunkAPI.rejectWithValue(error.message);
+        } catch (error) {
+            return thunkAPI.rejectWithValue(getApiErrorPayload(error));
         }
     }
 );
+import { getApiErrorPayload } from "@/lib/utils";

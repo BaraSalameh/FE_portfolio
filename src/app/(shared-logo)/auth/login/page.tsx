@@ -20,7 +20,7 @@ const LoginPage = async () => {
                 </Anchor>
                 <Anchor url={paths.root.auth.register.path()}>
                     <Image src="/window.svg" alt="Window icon" width={16} height={16} />
-                    Don't have an account? Register!
+                    Don&apos;t have an account? Register!
                 </Anchor>
             </SubFooter>
         </React.Fragment>

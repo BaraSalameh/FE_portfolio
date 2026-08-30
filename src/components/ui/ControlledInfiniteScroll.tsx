@@ -1,7 +1,7 @@
 'use client';
 
 import { useAppDispatch } from "@/lib/store/hooks";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Paragraph } from "./Paragraph";
 import { ControlledInfiniteScrollProps } from "./types.ui";
@@ -21,18 +21,15 @@ export const ControlledInfiniteScroll = ({
     const dispatch = useAppDispatch();
     const hasMore = items.length < maxLength;
 
-    const [ page, setPage ] = useState<number>(0);
+    const [pagination, setPagination] = useState<{ query?: string; page: number }>({ query, page: 0 });
+    const page = pagination.query === query ? pagination.page : 0;
 
     const handleNext = () => {
         const nextPage = page + 1;
-        setPage(nextPage);
+        setPagination({ query, page: nextPage });
         dispatch(fetchAction({ query, page: nextPage }));
     };
 
-    useEffect(() => {
-        setPage(0);
-    }, [query]);
-    
     return (
         <div id="scrollableDiv" className={cn(infiniteScroll({ ...styles }), className)}>
             <InfiniteScroll

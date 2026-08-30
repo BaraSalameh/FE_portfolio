@@ -34,9 +34,9 @@ export interface ResponsiveIconProps {
 }
 
 export interface ControlledInfiniteScrollProps {
-    items: Record<string, any>[];
+    items: object[];
     maxLength: number;
-    fetchAction: (params: FetchAction) => ThunkAction<any, RootState, unknown, Action>;
+    fetchAction: (params: FetchAction) => ThunkAction<unknown, RootState, unknown, Action>;
     query?: string;
     children: React.ReactNode;
     className?: string;

@@ -1,3 +1,3 @@
-export { dynamicApi } from './apiClient';
+export { dynamicApi, getApiErrorPayload } from './apiClient';
 export { getClientLink } from './getClientLink';
-export { getUrlParams } from './getUrlParams';
+export { useUrlParams } from './getUrlParams';

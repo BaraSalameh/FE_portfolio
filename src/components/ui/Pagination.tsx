@@ -3,7 +3,6 @@
 import { generatePagination } from '@/lib/utilities';
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
-import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Button } from '../forms';
 import { ResponsiveIcon } from './ResponsiveIcon';

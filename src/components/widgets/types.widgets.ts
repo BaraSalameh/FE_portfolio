@@ -5,7 +5,7 @@ import { LucideIcon } from "lucide-react";
 export type PieChartProps = {
     title?: string;
     groupBy?: string | string[];
-    customData?: CahrtEntry[];
+    customData?: ChartEntry[];
 } 
 
 export type BarChartProps = {
@@ -15,22 +15,22 @@ export type BarChartProps = {
         start?: string;
         end?: string;
     };
-    customData?: CahrtEntry[];
+    customData?: ChartEntry[];
 }
 
 export type RadarChartProps = {
     title?: string;
     groupBy?: string | string[];
-    customData?: CahrtEntry[];
+    customData?: ChartEntry[];
 }
 
 export interface WidgetCardProps extends WidgetCardVariantProps {
     isLoading?: boolean;
     header?: {
         title?: string;
-        icon?: any;
+        icon?: LucideIcon;
     };
-    items: Record<string, any>[];
+    items: object[];
     list?: ListItemConfig[];
     pie?: PieChartProps;
     bar?: BarChartProps;
@@ -50,24 +50,24 @@ export interface WidgetCardProps extends WidgetCardVariantProps {
         title?: string;
         subTitle?: string;
         message?: string;
-        onDelete: (id: string) => any;
+        onDelete: (id: string) => void | Promise<void>;
     };
     details?: ListItemConfig[];
-    onSort?: (lstIds: string[]) => any;
+    onSort?: (lstIds: string[]) => void | Promise<void>;
     pagination?: Pagination;
-    onModalAction?: (id: string) => any;
+    onModalAction?: (id: string) => void | Promise<void>;
     className?: string;
 }
 
 export interface WidgetChartsProps {
-    items?: Record<string, any>[];
+    items?: object[];
     pie?: PieChartProps;
     bar?: BarChartProps;
     radar?: RadarChartProps;
 }
 
 export interface ListItemConfig {
-    icon?: any;
+    icon?: LucideIcon;
     leftKey?: string | string[];
     between?: string;
     rightKey?: string | string[];
@@ -78,13 +78,13 @@ export interface ListItemConfig {
 }
 
 export interface WidgetListProps extends WidgetListVariantProps {
-    items: Record<string, any>[];
+    items: object[];
     list: ListItemConfig[];
-    onItemClick?: (item: any) => void;
+    onItemClick?: (item: object) => void;
     className?: string;
     sort?: {
         sortable: boolean;
-        onSort?: (lstIds: string[]) => any;
+        onSort?: (lstIds: string[]) => void | Promise<void>;
     }
     pagination?: Pagination
 }
@@ -93,7 +93,7 @@ export interface WidgetModalProps {
     isLoading?: boolean;
     isOpen: boolean;
     onClose: () => void;
-    item?: Record<string, any>;
+    item?: object;
     update?: {
         title?: string;
         subTitle?: string;
@@ -103,20 +103,20 @@ export interface WidgetModalProps {
         title?: string;
         subTitle?: string;
         message?: string;
-        onDelete: (id: string) => any;
+        onDelete: (id: string) => void | Promise<void>;
     };
     details?: ListItemConfig[];
     className?: string;
-    onAction?: (id: string) => any;
+    onAction?: (id: string) => void | Promise<void>;
 }
 
-export type CahrtEntry = {
+export type ChartEntry = {
     name: string;
     value: number;
 }
 
 export type ChartWidgetProps = {
-    data: CahrtEntry[];
+    data: ChartEntry[];
     colorMap?: Record<string, string>;
 }
 

@@ -1,8 +1,8 @@
 import { ChartTypeFormData, UserChartPreferenceFormData, WidgetFormData } from "@/features/dashboard/profile/settings/chart-preferences/schema";
-import { UserChartPreferenceKeys, UserChartPreferenceValues } from "@/features/dashboard/profile/settings/chart-preferences/types.chart-preferences";
+import { UserChartPreferenceKeys, UserChartPreferenceResponse, UserChartPreferenceValues } from "@/features/dashboard/profile/settings/chart-preferences/types.chart-preferences";
 
 export const mapChartPreferenceToForm = (
-    UserChartPreferences: any[],
+    UserChartPreferences: UserChartPreferenceResponse[],
     Keys: UserChartPreferenceKeys,
     widgets: WidgetFormData[],
     chartTypes: ChartTypeFormData[],

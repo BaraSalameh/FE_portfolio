@@ -1,8 +1,7 @@
-import { userByUsernameQuery } from '@/features';
+import { userByUsernameQuery, userFullInfoQuery } from '../../apis';
 import { addEditExperience, deleteExperience, experienceListQuery } from '@/features/dashboard/widgets/experience/apis';
 import { createSlice } from '@reduxjs/toolkit';
 import { ExperienceState } from './types.experience';
-import { userFullInfoQuery } from '@/features';
 import { userSkillListQuery } from '../skill';
 import { syncParentFromUserSkill } from '@/lib/utils';
 

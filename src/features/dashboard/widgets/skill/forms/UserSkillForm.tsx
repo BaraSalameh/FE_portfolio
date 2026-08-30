@@ -22,7 +22,7 @@ export const UserSkillForm = ({ onClose } : SkillProps) => {
     
     const educationOptions = useMemo(() =>
         // Didn't use OptionCreator because the label is a combination of paths
-        lstEducations.map((i: any) => ({ label: `${i.institution.name} (${i.degree.abbreviation})`, value: i.id, icon: i.icon }))
+        lstEducations.map((item) => ({ label: `${item.institution.name} (${item.degree.abbreviation})`, value: item.id, icon: item.institution.logo }))
     , [lstEducations]);
     
     const experienceOptions = useMemo(() =>
@@ -56,7 +56,7 @@ export const UserSkillForm = ({ onClose } : SkillProps) => {
             items={[{as: 'FieldArray', name: 'lstUserSkills', fields: fieldConfigs}]}
             error={error}
             loading={loading}
-            resetItems={resetItems as any}
+            resetItems={resetItems}
             indicator={{when: 'Update', while: 'Updating...'}}
         />
     );

@@ -19,3 +19,5 @@ export const ControlledWidget = React.memo((props: WidgetCardProps) => {
         />
     );
 });
+
+ControlledWidget.displayName = 'ControlledWidget';

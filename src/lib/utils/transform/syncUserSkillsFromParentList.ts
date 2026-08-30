@@ -4,7 +4,7 @@ import { SkillMap, UserSkillState } from "@/features/dashboard/widgets/skill/typ
 export const syncUserSkillsFromParentList = <T extends { id: string; lstSkills?: SkillFormData[] }> (
     parentList: T[],
     state: UserSkillState,
-    getInstitution: (parent: T) => any,            // how to extract institution-like info
+    getInstitution: (parent: T) => unknown,
     setParentField: keyof typeof state.lstUserSkills[number] // e.g. "lstEducations" or "lstCertificates"
 ) => {
     // Build map: skillId → list of related parents

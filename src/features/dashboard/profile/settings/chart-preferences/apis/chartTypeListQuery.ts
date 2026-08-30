@@ -1,4 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { PaginatedResponse } from '@/lib/definitions/api.definitions';
+import { ChartTypeFormData } from '../schema';
 import { dynamicApi } from '../../../../../../lib/utils/api/apiClient';
 
 export const chartTypeListQuery = createAsyncThunk(
@@ -6,7 +8,7 @@ export const chartTypeListQuery = createAsyncThunk(
     async (_, thunkAPI)  => {
         try {
 
-            const response = await dynamicApi({
+            const response = await dynamicApi<PaginatedResponse<ChartTypeFormData>>({
                 method: 'GET',
                 url: '/Owner/LKP_ChartTypeList',
                 withCredentials: true
@@ -16,8 +18,9 @@ export const chartTypeListQuery = createAsyncThunk(
 
             return [...response.data.items];
 
-        } catch (error: any) {
-            return thunkAPI.rejectWithValue(error.message);
+        } catch (error) {
+            return thunkAPI.rejectWithValue(getApiErrorPayload(error));
         }
     }
 );
+import { getApiErrorPayload } from "@/lib/utils";

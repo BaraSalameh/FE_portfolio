@@ -1,13 +1,19 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { FetchAction } from '@/components/types.components';
 import { dynamicApi } from "@/lib/utils";
+import { PaginatedResponse } from '@/lib/definitions/api.definitions';
+import { ContactMessageFormData } from '../schema';
+
+interface ContactMessageListResponse extends PaginatedResponse<ContactMessageFormData> {
+    unreadContactMessageCount: number;
+}
 
 export const contactMessageListQuery = createAsyncThunk(
     'contactMessage/contactMessageListQuery',
     async ({page = 0, pageSize = 5} : FetchAction, thunkAPI)  => {
         try {
 
-            const response = await dynamicApi({
+            const response = await dynamicApi<ContactMessageListResponse>({
                 method: 'GET',
                 url: `/Owner/ContactMessageList?PageNumber=${page}&PageSize=${pageSize}`,
                 withCredentials: true
@@ -17,8 +23,9 @@ export const contactMessageListQuery = createAsyncThunk(
 
             return { ...response.data, page };
 
-        } catch (error: any) {
-            return thunkAPI.rejectWithValue(error.message);
+        } catch (error) {
+            return thunkAPI.rejectWithValue(getApiErrorPayload(error));
         }
     }
 );
+import { getApiErrorPayload } from "@/lib/utils";

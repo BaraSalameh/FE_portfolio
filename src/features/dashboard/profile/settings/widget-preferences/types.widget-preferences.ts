@@ -3,7 +3,7 @@ import { UserWidgetPreferenceFormData, WidgetPreferenceFormData } from "./schema
 
 // User Widget Preference Slice
 export interface UserPreferenceState {
-    lstUserPreferences: UserWidgetPreferenceFormData[];
+    lstUserPreferences: UserWidgetPreferenceResponse[];
     preference: PreferenceState;
     loading: boolean;
     error: string | null;
@@ -22,4 +22,8 @@ export interface UserPreferenceProps {
     onClose?: () => void;
     preferenceKey: string;
     preferenceValues?: PreferenceValue;
+}
+
+export interface UserWidgetPreferenceResponse extends UserWidgetPreferenceFormData {
+    preference: WidgetPreferenceFormData;
 }

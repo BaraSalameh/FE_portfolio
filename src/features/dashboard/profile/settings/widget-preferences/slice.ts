@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { userByUsernameQuery, userFullInfoQuery } from '@/features';
+import { userByUsernameQuery, userFullInfoQuery } from '../../../apis';
 import { editUserWidgetPreference, userWidgetPreferenceListQuery, widgetPreferenceListQuery } from './apis';
 import { UserPreferenceState } from './types.widget-preferences';
 

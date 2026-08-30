@@ -9,6 +9,6 @@ export const useLoadWidget = () => {
     const { lstWidgets } = useAppSelector((state) => state.userChartPreference.widget);
         
     useEffect(() => {
-        lstWidgets.length === 0 && dispatch(widgetListQuery());
-    }, []);
+        if (lstWidgets.length === 0) dispatch(widgetListQuery());
+    }, [dispatch, lstWidgets.length]);
 }

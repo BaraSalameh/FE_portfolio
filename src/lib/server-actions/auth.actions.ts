@@ -11,7 +11,7 @@ import { dynamicFetch } from "@/lib/api/fetchClient";
 import { ApiError } from "../definitions/api.definitions";
 
 export const authenticate = async (
-    prevState: string | undefined,
+    _prevState: ActionResult | undefined,
     formData: LoginFormData
 ): Promise<ActionResult> => {
     let response;
@@ -38,7 +38,7 @@ export const authenticate = async (
 }
 
 export const register = async (
-    prevState: string | undefined,
+    _prevState: ActionResult | undefined,
     formData: RegisterFormData
 ): Promise<ActionResult> => {
      try {

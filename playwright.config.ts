@@ -9,9 +9,20 @@ export default defineConfig({
         screenshot: "only-on-failure",
         video: "retain-on-failure",
     },
-    webServer: {
-        command: "npm run dev",
-        port: 3000,
-        reuseExistingServer: true,
-    },
+    webServer: [
+        {
+            command: 'node playwright/mock-api.mjs',
+            port: 5055,
+            reuseExistingServer: false,
+        },
+        {
+            command: 'npm run dev',
+            url: 'http://localhost:3000/',
+            reuseExistingServer: false,
+            env: {
+                ...process.env,
+                API_URL: 'http://127.0.0.1:5055',
+            },
+        },
+    ],
 });

@@ -1,13 +1,13 @@
 import { useAppDispatch } from "@/lib/store/hooks";
 import debounce from "lodash.debounce";
-import { useCallback } from "react";
+import { useEffect, useMemo } from "react";
 import { projectListQuery, sortProject } from "../apis";
 
 export const useDebouncedSortProject = () => {
   const dispatch = useAppDispatch();
 
-  return useCallback(
-        debounce(async (lstIds: string[]) => {
+  const sort = useMemo(
+        () => debounce(async (lstIds: string[]) => {
             if (lstIds.length > 0) {
                 await dispatch(sortProject(lstIds));
                 await dispatch(projectListQuery());
@@ -15,4 +15,7 @@ export const useDebouncedSortProject = () => {
         }, 1000),
         [dispatch]
     );
+
+  useEffect(() => () => sort.cancel(), [sort]);
+  return sort;
 };

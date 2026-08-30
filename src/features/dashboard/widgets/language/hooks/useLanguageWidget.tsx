@@ -1,4 +1,4 @@
-import { CahrtEntry, WidgetCardProps } from "@/components/widgets/types.widgets";
+import { ChartEntry, WidgetCardProps } from "@/components/widgets/types.widgets";
 import { useAppSelector } from "@/lib/store/hooks";
 import { BadgePercent, Languages, ListPlusIcon } from "lucide-react";
 import { checkWidgetPreferences } from "@/lib/utils";
@@ -18,7 +18,7 @@ export const useLanguageWidget = (): WidgetCardProps => {
         basic: 20
     };
 
-    const customBarData = (lstUserLanguages as any).map((item: any): CahrtEntry => ({
+    const customBarData = lstUserLanguages.map((item): ChartEntry => ({
         name: item.language.name,
         value: levelMap[item.languageProficiency.level.toLowerCase()] ?? 0
     }));

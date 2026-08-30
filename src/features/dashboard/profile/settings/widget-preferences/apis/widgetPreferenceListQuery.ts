@@ -1,14 +1,16 @@
 import { dynamicApi } from "@/lib/utils";
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { PaginatedResponse } from '@/lib/definitions/api.definitions';
+import { WidgetPreferenceFormData } from '../schema';
 
 export const widgetPreferenceListQuery = createAsyncThunk(
     'userWidgetPreference/widgetPreferenceListQuery',
     async (_, thunkAPI)  => {
         try {
 
-            const response = await dynamicApi({
+            const response = await dynamicApi<PaginatedResponse<WidgetPreferenceFormData>>({
                 method: 'GET',
-                url: '/Owner/LKP_preferenceList',
+                url: '/Owner/LKP_PreferenceList',
                 withCredentials: true
             });
 
@@ -16,8 +18,9 @@ export const widgetPreferenceListQuery = createAsyncThunk(
 
             return [...response.data.items];
 
-        } catch (error: any) {
-            return thunkAPI.rejectWithValue(error.message);
+        } catch (error) {
+            return thunkAPI.rejectWithValue(getApiErrorPayload(error));
         }
     }
 );
+import { getApiErrorPayload } from "@/lib/utils";

@@ -1,73 +1,33 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { HTTPMethod } from './types.utils.api';
-import https from "https";
+import { dynamicFetch } from '@/lib/api/fetchClient';
+import { ApiError, DynamicFetchOptions } from '@/lib/definitions/api.definitions';
 
-const api = axios.create({
-    baseURL: process.env.NODE_ENV === 'development'
-        ?   `${process.env.NEXT_PUBLIC_API_URL}/api`
-        :   '/api',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    httpsAgent: process.env.NODE_ENV === 'development'
-        ?   new https.Agent({rejectUnauthorized: false})
-        :   undefined
-});
-
-let isRefreshing = false;
-
-const refreshAccessToken = async () => {
-    if (!isRefreshing) {
-        isRefreshing = true;
-        try {
-            await api.post('/Account/ValidateToken', {}, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                withCredentials: true
-            }); 
-        } finally {
-            isRefreshing = false;
-        }
-    }
-};
-
-interface DynamicApiOptions extends AxiosRequestConfig {
-    method: HTTPMethod;
-    url: string;
-    data?: any;
-    sendCredentials?: boolean;
-    retryOn401?: boolean;
+interface DynamicApiOptions extends DynamicFetchOptions {
+    withCredentials?: boolean;
 }
 
-export const dynamicApi = async <T = any>(
-    options: DynamicApiOptions
-): Promise<AxiosResponse<T>> => {
-    const { sendCredentials = true, retryOn401 = true, ...axiosOptions } = options;
+export interface DynamicApiResponse<T> {
+    data: T;
+    status: number;
+    headers: Headers;
+}
 
-    try {
-        return await api.request<T>({
-            ...axiosOptions,
-            withCredentials: sendCredentials
-        });
-    } catch (error: any) {
-        // If unauthorized and not already retried, try refresh
-        if (error.response?.status === 401 && retryOn401 && !options.headers?.['x-retry']) {
-            try {
-                await refreshAccessToken();
-                return await api.request<T>({
-                    ...axiosOptions,
-                    headers: {
-                        ...(axiosOptions.headers || {}),
-                        'x-retry': 'true', // Prevent infinite loop
-                    },
-                    withCredentials: sendCredentials
-                });
-            } catch (refreshError) {
-                // Optionally redirect to login if refresh fails
-                window.location.href = '/';
-            }
-        }
-        throw error;
-    }
+export const getApiErrorPayload = (error: unknown): unknown => {
+    if (error instanceof ApiError) return error.message;
+    if (error instanceof Error) return error.message;
+    return 'Unexpected error occurred';
+};
+
+/** Compatibility adapter for dashboard thunks. New code should use dynamicFetch. */
+export const dynamicApi = async <T = unknown>(
+    options: DynamicApiOptions,
+): Promise<DynamicApiResponse<T>> => {
+    const { withCredentials, ...fetchOptions } = options;
+    const response = await dynamicFetch({
+        ...fetchOptions,
+        sendCredentials: withCredentials ?? options.sendCredentials,
+    });
+
+    const data = response.status === 204 ? undefined : await response.json();
+
+    return { data: data as T, status: response.status, headers: response.headers };
 };

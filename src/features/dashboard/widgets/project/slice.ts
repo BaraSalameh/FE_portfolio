@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { addEditProject, deleteProject, projectListQuery } from './apis';
-import { userByUsernameQuery, userFullInfoQuery } from '@/features';
+import { userByUsernameQuery, userFullInfoQuery } from '../../apis';
 import { ProjectState } from './types.project';
 import { userSkillListQuery } from '../skill';
 import { syncParentFromUserSkill } from '@/lib/utils';
