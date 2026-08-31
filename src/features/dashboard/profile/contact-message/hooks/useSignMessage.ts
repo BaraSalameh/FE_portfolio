@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
-import { signMessage } from "../api/signMessage";
+import { signMessage } from '../thunks/signMessage';
 import { markMessage } from "../slice";
 
 export const useSignMessage = () => {

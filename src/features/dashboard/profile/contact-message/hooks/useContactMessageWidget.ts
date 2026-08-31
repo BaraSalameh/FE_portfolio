@@ -3,7 +3,7 @@ import { useAppSelector } from "@/lib/store/hooks";
 import {  MessageCircleHeart, User, SubtitlesIcon, Mail } from "lucide-react";
 import { useMessageDelete } from "./useMessageDelete";
 import { useSignMessage } from "./useSignMessage";
-import { contactMessageListQuery } from "../api";
+import { contactMessageListQuery } from '../thunks';
 
 export const useContactMessageWidget = (): WidgetCardProps => {
 

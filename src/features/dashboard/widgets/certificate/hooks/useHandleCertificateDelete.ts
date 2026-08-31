@@ -1,5 +1,5 @@
 import { useAppDispatch } from "@/lib/store/hooks";
-import { certificateListQuery, deleteCertificate } from "../apis";
+import { certificateListQuery, deleteCertificate } from "../thunks";
 
 export const useHandleCertificateDelete = () => {
   const dispatch = useAppDispatch();

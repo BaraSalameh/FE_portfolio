@@ -6,7 +6,7 @@ import { ControlledForm } from '@/features/dashboard/forms';
 import { mapUserLanguageToForm } from "@/lib/utils";
 import { UserLanguageProps } from "../types.language";
 import { userLanguageSchema } from "../schema";
-import { languageListQuery } from "../apis";
+import { languageListQuery } from "../thunks";
 import { FormField } from '@/features/dashboard/forms/types.forms';
 import { useHandleSubmit, useLoadLanguage, useLoadLanguageProficiency } from "../hooks";
 

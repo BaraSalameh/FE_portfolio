@@ -1,5 +1,5 @@
 import { useAppDispatch } from "@/lib/store/hooks";
-import { deleteEducation, educationListQuery } from "../apis";
+import { deleteEducation, educationListQuery } from "../thunks";
 
 export const useHandleEducationDelete = () => {
   const dispatch = useAppDispatch();

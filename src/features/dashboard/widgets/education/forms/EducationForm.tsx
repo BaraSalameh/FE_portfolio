@@ -6,7 +6,7 @@ import { mapEducationToForm } from "@/lib/utils";
 import { ControlledForm } from '@/features/dashboard/forms';
 import { EducationProps } from "../types.education";
 import { educationSchema } from "../schema";
-import { degreeListQuery, fieldOfStudyListQuery, institutionListQuery } from "../apis";
+import { degreeListQuery, fieldOfStudyListQuery, institutionListQuery } from "../thunks";
 import { skillListQuery } from "../../skill";
 import { useLoadInstitution, useLoadDegree, useLoadFieldOfStudy, useHandleSubmit } from "../hooks";
 import { useLoadUserSkill } from "@/features/dashboard/hooks";

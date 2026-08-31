@@ -1,6 +1,6 @@
 import { useAppDispatch } from "@/lib/store/hooks";
 import { UserLanguageFormData } from "../schema";
-import { editDeleteUserLanguage, userLanguageListQuery } from "../apis";
+import { editDeleteUserLanguage, userLanguageListQuery } from "../thunks";
 import { UserLanguageProps } from "../types.language";
 
 export const useHandleSubmit = ({ onClose } : UserLanguageProps) => {

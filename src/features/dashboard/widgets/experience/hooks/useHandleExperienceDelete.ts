@@ -1,5 +1,5 @@
 import { useAppDispatch } from "@/lib/store/hooks";
-import { deleteExperience, experienceListQuery } from "../apis";
+import { deleteExperience, experienceListQuery } from "../thunks";
 
 export const useHandleExperienceDelete = () => {
   const dispatch = useAppDispatch();

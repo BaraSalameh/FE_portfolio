@@ -6,7 +6,7 @@ import { mapCertificateToForm } from "@/lib/utils";
 import { ControlledForm, ImageUploader } from '@/features/dashboard/forms';
 import { CertificateProps } from "../types.certificate";
 import { certificateSchema } from "../schema";
-import { lkp_CertificateListQuery } from "../apis";
+import { lkp_CertificateListQuery } from "../thunks";
 import { skillListQuery } from "../../skill";
 import { useHandleSubmit, useLoadCertificate } from "../hooks";
 import { useLoadUserSkill } from "@/features/dashboard/hooks";

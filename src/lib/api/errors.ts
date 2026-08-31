@@ -1,4 +1,4 @@
-import { ApiError } from '@/lib/definitions/api.definitions';
+import { ApiError } from '@/lib/api/types';
 
 export const getApiErrorMessage = (data: unknown, fallback: string) => {
     if (typeof data === 'string' && data.trim()) return data;

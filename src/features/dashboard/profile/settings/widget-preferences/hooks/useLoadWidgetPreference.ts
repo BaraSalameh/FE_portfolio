@@ -2,7 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { useEffect } from "react"
-import { widgetPreferenceListQuery } from "../apis";
+import { widgetPreferenceListQuery } from "../thunks";
 
 export const useLoadWidgetPreference = () => {
     const dispatch = useAppDispatch();

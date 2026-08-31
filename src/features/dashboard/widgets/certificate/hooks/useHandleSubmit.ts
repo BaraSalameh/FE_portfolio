@@ -1,5 +1,5 @@
 import { useAppDispatch } from "@/lib/store/hooks";
-import { addEditCertificate, certificateListQuery } from "../apis";
+import { addEditCertificate, certificateListQuery } from "../thunks";
 import { CertificateProps } from "../types.certificate";
 import { CertificateFormData } from "../schema";
 

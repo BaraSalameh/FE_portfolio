@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from "react";
-import { chartTypeListQuery } from "../apis";
+import { chartTypeListQuery } from "../thunks";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 
 export const useLoadChartType = () => {

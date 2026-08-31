@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { institutionListQuery, degreeListQuery, fieldOfStudyListQuery, educationListQuery, addEditEducation, deleteEducation } from '@/features/dashboard/widgets/education/apis';
+import { institutionListQuery, degreeListQuery, fieldOfStudyListQuery, educationListQuery, addEditEducation, deleteEducation } from '@/features/dashboard/widgets/education/thunks';
 import { dashboardHydrated } from '../../dashboard.hydration';
 import { EducationState } from './types.education';
 import { userSkillListQuery } from '../skill';

@@ -1,6 +1,6 @@
 import { useAppDispatch } from "@/lib/store/hooks";
 import { ContactMessageFormData } from "../schema";
-import { sendEmail } from "../api";
+import { sendEmail } from '../thunks';
 import { ContactMessageProps } from "../types.contact-message";
 
 export const useHandleSubmit = ({ onClose }: Partial<ContactMessageProps>) => {

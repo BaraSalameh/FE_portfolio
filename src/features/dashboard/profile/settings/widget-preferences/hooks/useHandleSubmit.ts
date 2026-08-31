@@ -1,6 +1,6 @@
 import { useAppDispatch } from "@/lib/store/hooks";
 import { UserWidgetPreferenceFormData } from "../schema"
-import { editUserWidgetPreference, userWidgetPreferenceListQuery } from "../apis";
+import { editUserWidgetPreference, userWidgetPreferenceListQuery } from "../thunks";
 import { UserPreferenceProps } from "../types.widget-preferences";
 
 export const useHandleSubmit = ({ onClose }: Partial<UserPreferenceProps>) => {

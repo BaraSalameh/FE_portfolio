@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { dashboardHydrated } from '../../dashboard.hydration';
-import { educationListQuery } from '../education/apis';
-import { experienceListQuery } from '../experience/apis';
-import { projectListQuery } from '../project/apis';
+import { educationListQuery } from '../education/thunks';
+import { experienceListQuery } from '../experience/thunks';
+import { projectListQuery } from '../project/thunks';
 import { UserSkillState } from './types.skill';
-import { editDeleteUserSkill, skillListQuery, userSkillListQuery } from './apis';
+import { editDeleteUserSkill, skillListQuery, userSkillListQuery } from './thunks';
 import { certificateListQuery } from '../certificate';
 import { EducationResponse } from '../education/types.education';
 import { syncUserSkillsFromParentList } from '@/lib/utils';

@@ -1,5 +1,5 @@
 import { dashboardHydrated } from '../../dashboard.hydration';
-import { addEditExperience, deleteExperience, experienceListQuery } from '@/features/dashboard/widgets/experience/apis';
+import { addEditExperience, deleteExperience, experienceListQuery } from '@/features/dashboard/widgets/experience/thunks';
 import { createSlice } from '@reduxjs/toolkit';
 import { ExperienceState } from './types.experience';
 import { userSkillListQuery } from '../skill';

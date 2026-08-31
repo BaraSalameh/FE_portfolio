@@ -1,5 +1,5 @@
 import { ActionLink } from '@/design-system';
-import { fetchFilteredUsers } from '@/lib/data/search.data';
+import { fetchFilteredUsers } from '../api';
 import type { TableParams } from '@/lib/definitions/search.definitions';
 import { paths } from '@/lib/pathHelper';
 import { calculateTotalPags } from '@/lib/utilities';

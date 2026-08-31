@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { cookies } from 'next/headers';
-import { ApiError, DynamicFetchOptions } from '@/lib/definitions/api.definitions';
+import { ApiError, DynamicFetchOptions } from '@/lib/api/types';
 import { getApiBaseUrl } from './config';
 import { toApiError } from './errors';
 

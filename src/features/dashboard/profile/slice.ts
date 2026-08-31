@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { dashboardHydrated } from '../dashboard.hydration';
-import { userInfoQuery } from "../profile/apis";
+import { userInfoQuery } from "../profile/thunks";
 import { ProfileState } from "./types.profile";
 
 const initialState: ProfileState = {

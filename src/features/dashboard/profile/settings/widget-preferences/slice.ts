@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { dashboardHydrated } from '../../../dashboard.hydration';
-import { editUserWidgetPreference, userWidgetPreferenceListQuery, widgetPreferenceListQuery } from './apis';
+import { editUserWidgetPreference, userWidgetPreferenceListQuery, widgetPreferenceListQuery } from './thunks';
 import { UserPreferenceState } from './types.widget-preferences';
 
 const initialState : UserPreferenceState = {

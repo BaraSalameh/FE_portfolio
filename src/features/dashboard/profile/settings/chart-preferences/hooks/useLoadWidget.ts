@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from "react";
-import { widgetListQuery } from "../apis";
+import { widgetListQuery } from "../thunks";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 
 export const useLoadWidget = () => {

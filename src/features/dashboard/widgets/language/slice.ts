@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { UserLanguageState } from './types.language';
 import { dashboardHydrated } from '../../dashboard.hydration';
-import { editDeleteUserLanguage, languageListQuery, languageProficiencyListQuery, userLanguageListQuery } from './apis';
+import { editDeleteUserLanguage, languageListQuery, languageProficiencyListQuery, userLanguageListQuery } from './thunks';
 
 const initialState : UserLanguageState = {
     lstUserLanguages: [],

@@ -2,7 +2,7 @@
 
 import { CheckboxField, FormError, SubmitButton, TextField } from '@/design-system';
 import { registerSchema, type RegisterFormData } from '@/lib/schemas/registerSchema';
-import { register as registerAccount } from '@/lib/server-actions/auth.actions';
+import { register as registerAccount } from '../actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { startTransition, useActionState } from 'react';
 import { useForm } from 'react-hook-form';

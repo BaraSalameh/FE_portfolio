@@ -6,7 +6,7 @@ import { mapUserSkillToForm, optionsCreator } from "@/lib/utils";
 import { ControlledForm } from '@/features/dashboard/forms';
 import { SkillProps } from "../types.skill";
 import { userSkillSchema } from "../schema";
-import { skillListQuery } from "../apis";
+import { skillListQuery } from "../thunks";
 import { FormField } from '@/features/dashboard/forms/types.forms';
 import { useLoadUserSkill } from "@/features/dashboard/hooks";
 import { useHandleSubmit } from "../hooks";

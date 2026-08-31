@@ -1,6 +1,6 @@
 import { useAppDispatch } from "@/lib/store/hooks";
 import { ProfileFormData } from "../schema"
-import { editProfile, userInfoQuery } from "../apis";
+import { editProfile, userInfoQuery } from "../thunks";
 import { ProjectProps } from "../../widgets/project/types.project";
 
 export const useHandleSubmit = ({ onClose }: ProjectProps) => {

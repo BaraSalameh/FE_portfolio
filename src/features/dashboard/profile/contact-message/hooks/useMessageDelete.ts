@@ -1,6 +1,6 @@
 
 import { useAppDispatch } from "@/lib/store/hooks";
-import { deleteMessage } from "../api/deleteMessage";
+import { deleteMessage } from '../thunks/deleteMessage';
 import { removeMessage } from "../slice";
 
 export const useMessageDelete = () => {

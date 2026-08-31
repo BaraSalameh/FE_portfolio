@@ -1,7 +1,7 @@
 import { useAppDispatch } from "@/lib/store/hooks";
 import debounce from "lodash.debounce";
 import { useEffect, useMemo } from "react";
-import { experienceListQuery, sortExperience } from "../apis";
+import { experienceListQuery, sortExperience } from "../thunks";
 
 export const useDebouncedSortExperience = () => {
   const dispatch = useAppDispatch();

@@ -1,6 +1,6 @@
 import { serverApiResponse } from '@/lib/api/server-client';
 import { paths } from "@/lib/pathHelper";
-import { setCookies } from "@/lib/api/cookieHelpers";
+import { setCookies } from "@/lib/api/cookies";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
