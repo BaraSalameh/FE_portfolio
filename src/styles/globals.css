@@ -115,7 +115,32 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  button:disabled {
+  :where(
+    a[href],
+    button,
+    label[for],
+    select,
+    summary,
+    input[type="button"],
+    input[type="checkbox"],
+    input[type="color"],
+    input[type="file"],
+    input[type="radio"],
+    input[type="range"],
+    input[type="reset"],
+    input[type="submit"],
+    [role="button"],
+    [role="checkbox"],
+    [role="link"],
+    [role="menuitem"],
+    [role="radio"],
+    [role="switch"],
+    [role="tab"]
+  ) {
+    cursor: pointer;
+  }
+
+  :where(:disabled, [aria-disabled="true"]) {
     cursor: not-allowed;
   }
 }
