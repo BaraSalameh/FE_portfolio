@@ -1,8 +1,8 @@
 'use client';
 
 import { useAppSelector } from "@/lib/store/hooks";
-import { ControlledForm, ImageUploader } from "@/components/forms";
-import { FormItem } from "@/components/forms/types.forms";
+import { ControlledForm, ImageUploader } from '@/features/dashboard/forms';
+import { FormItem } from '@/features/dashboard/forms/types.forms';
 import { useMemo } from "react";
 import { profileSchema } from "../schema";
 import { useHandleSubmit } from "../hooks";
@@ -18,8 +18,8 @@ export const ProfileForm = ({ onClose } : { onClose?: () => void }) => {
     const onSubmit = useHandleSubmit({ onClose });
 
     const items = useMemo<FormItem<typeof profileSchema>[]>(() => [
-        {as: 'Input', name: 'firstname', label: 'Firstname', placeholder: 'John'},
-        {as: 'Input', name: 'lastname', label: 'Lastname', placeholder: 'Doe'},
+        {as: 'Input', name: 'firstname', label: 'First name', placeholder: 'John'},
+        {as: 'Input', name: 'lastname', label: 'Last name', placeholder: 'Doe'},
         {as: 'Input', name: 'title', label: 'Title', placeholder: 'Sr. Next.js Developer'},
         {as: 'Input', name: 'bio', label: 'Bio', placeholder: 'Describe yourself', type: 'Textarea'},
         {as: 'Input', name: 'phone', label: 'Phone', placeholder: '+0 123456789'},

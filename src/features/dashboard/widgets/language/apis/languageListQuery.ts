@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { FetchAction } from '@/components/types.components';
+import { FetchAction } from '@/features/dashboard/types.presentation';
 import { dynamicApi } from "@/lib/utils";
 import { PaginatedResponse } from '@/lib/definitions/api.definitions';
 import { LanguageFormData } from '../schema';

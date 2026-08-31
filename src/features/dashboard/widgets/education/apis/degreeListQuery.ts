@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { dynamicApi } from '../../../../../lib/utils/api/apiClient';
-import { FetchAction } from '@/components/types.components';
+import { FetchAction } from '@/features/dashboard/types.presentation';
 import { PaginatedResponse } from '@/lib/definitions/api.definitions';
 import { DegreeFormData } from '../schema';
 

@@ -3,14 +3,14 @@
 import { useAppSelector } from "@/lib/store/hooks";
 import { useMemo } from "react";
 import { mapCertificateToForm } from "@/lib/utils";
-import { ControlledForm, ImageUploader } from "@/components/forms";
+import { ControlledForm, ImageUploader } from '@/features/dashboard/forms';
 import { CertificateProps } from "../types.certificate";
 import { certificateSchema } from "../schema";
 import { lkp_CertificateListQuery } from "../apis";
 import { skillListQuery } from "../../skill";
 import { useHandleSubmit, useLoadCertificate } from "../hooks";
 import { useLoadUserSkill } from "@/features/dashboard/hooks";
-import { FormItem } from "@/components/forms/types.forms";
+import { FormItem } from '@/features/dashboard/forms/types.forms';
 
 export const CertificateForm = ({id, onClose} : CertificateProps) => {
 

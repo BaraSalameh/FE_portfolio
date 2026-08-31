@@ -1,7 +1,7 @@
 'use client';
 
 import { useAppSelector } from "@/lib/store/hooks";
-import { ControlledForm } from "@/components/forms";
+import { ControlledForm } from '@/features/dashboard/forms';
 import { ContactMessageProps } from "../types.contact-message";
 import { contactMessageSchema } from "../schema";
 import { useHandleSubmit } from "../hooks";

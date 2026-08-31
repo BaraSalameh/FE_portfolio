@@ -1,4 +1,4 @@
-import { WidgetCardProps } from "@/components/widgets/types.widgets";
+import { WidgetCardProps } from '@/features/dashboard/types.presentation';
 import { useAppSelector } from "@/lib/store/hooks";
 import { Briefcase, Clock, LocationEdit } from "lucide-react";
 import { checkChartPreferences, checkWidgetPreferences } from "@/lib/utils";

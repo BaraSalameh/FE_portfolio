@@ -1,4 +1,4 @@
-import { ChartEntry, WidgetCardProps } from "@/components/widgets/types.widgets";
+import { ChartEntry, WidgetCardProps } from '@/features/dashboard/types.presentation';
 import { useAppSelector } from "@/lib/store/hooks";
 import { ListPlusIcon, StarIcon } from "lucide-react";
 import { UserSkillForm } from "../forms";

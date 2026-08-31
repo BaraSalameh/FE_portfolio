@@ -3,11 +3,11 @@
 import { useAppSelector } from "@/lib/store/hooks";
 import { useMemo } from "react";
 import { mapChartPreferenceToForm } from "@/lib/utils";
-import { ControlledForm } from "@/components/forms";
+import { ControlledForm } from '@/features/dashboard/forms';
 import { UserChartPreferenceProps } from "../types.chart-preferences";
 import { userChartPreferenceSchema } from "../schema";
 import { useHandleSubmit, useLoadChartType, useLoadWidget } from "../hooks";
-import { FormItem } from "@/components/forms/types.forms";
+import { FormItem } from '@/features/dashboard/forms/types.forms';
 
 export const UserChartPreferenceForm = ({onClose, preferenceKeys, preferenceValues} : UserChartPreferenceProps) => {
 

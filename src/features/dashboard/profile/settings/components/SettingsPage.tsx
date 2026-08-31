@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useTransition } from 'react';
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { ContentContainer } from '@/components';
-import { CUDModal, ResponsiveIcon } from '@/components';
+import { ActionDialog as CUDModal, Disclosure as ContentContainer, ThemeSwitch } from '@/design-system';
 import { BarChart, Calendar, Component, LogOut, Mail, Mars, Phone, PieChart, Radar, SunMoonIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAppSelector } from '@/lib/store/hooks';
@@ -11,7 +9,6 @@ import { UserWidgetPreferenceForm } from '../widget-preferences/forms/UserWidget
 import { UserChartPreferenceForm } from '../chart-preferences/forms/UserChartPreferenceForm';
 import { chart_preferences, checkWidgetPreferences, useUrlParams, widget_preferences } from '@/lib/utils';
 import { paths } from '@/lib/pathHelper';
-import ButtonClient from '@/components/ui/ButtonClient';
 
 export const SettingsPage = () => {
 
@@ -40,7 +37,10 @@ export const SettingsPage = () => {
         <React.Fragment>
             <ContentContainer title='Preferences' space='lg'>
                 <CUDModal title='Change theme' icon={SunMoonIcon}>
-                    <ThemeToggle label="Click to change theme" />
+                    <div className="flex items-center justify-between rounded-xl border border-line bg-canvas-subtle p-4">
+                        <div><p className="text-sm font-bold">Appearance</p><p className="mt-1 text-xs text-ink-muted">Switch between light and dark mode.</p></div>
+                        <ThemeSwitch />
+                    </div>
                 </CUDModal>
                 <ContentContainer title='Profile'>
                     <CUDModal title='Show/Hide gender' icon={Mars}>
@@ -345,10 +345,10 @@ export const SettingsPage = () => {
             </ContentContainer>
             <ContentContainer title='General' space='lg'>
                 {role === 'owner' && username &&
-                    <ButtonClient onClick={handleLogout} disabled={isLoggingOut}>
-                        <ResponsiveIcon icon={LogOut} />
+                    <button type="button" onClick={handleLogout} disabled={isLoggingOut} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-danger/25 bg-danger/8 px-4 text-sm font-bold text-danger transition hover:bg-danger/12 disabled:opacity-60">
+                        <LogOut className="size-4" aria-hidden="true" />
                         {isLoggingOut ? 'Logging out…' : 'Logout'}
-                    </ButtonClient>
+                    </button>
                 }
             </ContentContainer>
         </React.Fragment>

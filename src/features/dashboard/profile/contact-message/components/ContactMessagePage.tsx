@@ -1,7 +1,7 @@
 'use client';
 
 import { useAppSelector } from "@/lib/store/hooks";
-import { ControlledWidget, Paragraph } from "@/components";
+import { DashboardWidget } from '@/features/dashboard/presentation';
 import React from "react";
 import { useContactMessageWidget, useLoadContactMessageData } from "../hooks";
 
@@ -13,9 +13,9 @@ export const ContactMessagePage = () => {
 
     return (
         lstMessages.length > 0
-            ?   <ControlledWidget
+            ?   <DashboardWidget
                     {...contactMessageWidget}
                 />
-            :   <Paragraph className='text-sm'>{"No messages found"}</Paragraph>
+            :   <p className="py-6 text-center text-sm text-ink-muted">No messages found</p>
     )
 }

@@ -1,4 +1,4 @@
 export * from './apis';
 export * from './hooks';
-export { ProfilePage } from './profile/components';
+export { PortfolioProfile } from './presentation';
 export { useWidgets } from './widgets/useWidgets';

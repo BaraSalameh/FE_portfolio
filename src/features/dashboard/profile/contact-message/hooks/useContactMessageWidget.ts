@@ -1,4 +1,4 @@
-import { WidgetCardProps } from "@/components/widgets/types.widgets";
+import { WidgetCardProps } from '@/features/dashboard/types.presentation';
 import { useAppSelector } from "@/lib/store/hooks";
 import {  MessageCircleHeart, User, SubtitlesIcon, Mail } from "lucide-react";
 import { useMessageDelete } from "./useMessageDelete";
@@ -30,10 +30,6 @@ export const useContactMessageWidget = (): WidgetCardProps => {
         pagination: {
             maxLength: rowCount,
             fetchAction: contactMessageListQuery,
-            styles: {
-                size: 'xl',
-                space: 'md'
-            }
         },
         onModalAction: handleSignMessage
     }

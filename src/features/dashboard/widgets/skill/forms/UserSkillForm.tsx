@@ -3,11 +3,11 @@
 import { useAppSelector } from "@/lib/store/hooks";
 import { useMemo } from "react";
 import { mapUserSkillToForm, optionsCreator } from "@/lib/utils";
-import { ControlledForm } from "@/components/forms";
+import { ControlledForm } from '@/features/dashboard/forms';
 import { SkillProps } from "../types.skill";
 import { userSkillSchema } from "../schema";
 import { skillListQuery } from "../apis";
-import { FormField } from "@/components/forms/types.forms";
+import { FormField } from '@/features/dashboard/forms/types.forms';
 import { useLoadUserSkill } from "@/features/dashboard/hooks";
 import { useHandleSubmit } from "../hooks";
 

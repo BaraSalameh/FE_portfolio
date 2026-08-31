@@ -1,11 +1,8 @@
 'use client';
 
-import { ControlledWidget, Main, Paragraph, WithSkeleton } from '@/components';
-import { StaticBackgroundV2 } from '@/components/layout/StaticBackground';
-import ButtonClient from '@/components/ui/ButtonClient';
 import { useLoadUserData } from '@/features/dashboard/hooks';
-import { ProfilePage } from '@/features/dashboard/profile/components';
 import { ProfileFormData } from '@/features/dashboard/profile/schema';
+import { DashboardWidget, PortfolioLoading, PortfolioProfile } from '@/features/dashboard/presentation';
 import { useOverviewWidget } from '@/features/dashboard/widgets/overview/hooks';
 import { useWidgets } from '@/features/dashboard/widgets/useWidgets';
 import { Role } from '@/features/types.features';
@@ -29,34 +26,30 @@ export default function DashboardPageClient() {
 
     if (error) {
         return (
-            <Main>
-                <div className="mx-auto max-w-lg space-y-4 text-center">
-                    <Paragraph>{error}</Paragraph>
-                    <ButtonClient onClick={() => window.location.reload()}>Try again</ButtonClient>
+            <main className="grid min-h-svh place-items-center bg-canvas px-5 text-ink">
+                <div className="w-full max-w-lg rounded-[1.5rem] border border-line bg-surface p-7 text-center shadow-xl shadow-black/5">
+                    <h1 className="text-2xl font-bold tracking-[-0.04em]">Portfolio unavailable</h1>
+                    <p className="mt-3 text-sm leading-6 text-ink-muted">{error}</p>
+                    <button type="button" onClick={() => window.location.reload()} className="mt-6 min-h-11 rounded-full bg-accent px-6 text-sm font-bold text-white hover:bg-accent-strong">Try again</button>
                 </div>
-            </Main>
+            </main>
         );
     }
 
+    if (!user || loading) return <PortfolioLoading />;
+
     return (
-        <>
-            <div className="grid grid-cols-1 gap-5 px-10 pt-5 sm:grid-cols-2 lg:grid-cols-3">
-                <ProfilePage
+        <main className="min-h-svh bg-canvas px-4 py-4 text-ink sm:px-8 sm:py-6">
+            <div className="mx-auto max-w-[88rem]">
+                <PortfolioProfile
                     user={user as ProfileFormData}
                     unreadContactMessageCount={unreadContactMessageCount}
-                    className={`col-span-3 ${showOverview ? 'sm:col-span-2' : 'sm:col-span-3'}`}
                 />
-                {showOverview ? (
-                    <ControlledWidget className="col-span-3 sm:col-span-1" {...overviewData} />
-                ) : null}
+                {showOverview && <div className="mt-5"><DashboardWidget {...overviewData} /></div>}
+                <div className="mt-5 columns-1 gap-4 sm:columns-2 lg:columns-3">
+                    {widgets}
+                </div>
             </div>
-            <WithSkeleton isLoading={!user || loading} skeleton={<StaticBackgroundV2 />}>
-                <Main>
-                    <div className="w-full columns-1 gap-4 space-y-3 sm:columns-2 lg:columns-3">
-                        {widgets}
-                    </div>
-                </Main>
-            </WithSkeleton>
-        </>
+        </main>
     );
 }

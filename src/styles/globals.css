@@ -3,14 +3,28 @@
 
 
 @theme {
-  --color-dark-background: oklch(13% 0.028 261.692); 
-  --color-light-background: oklch(95% 0 0);
+  /* New semantic design-system tokens. Legacy aliases remain below while
+     journeys migrate into the new presentation layer. */
+  --color-canvas: var(--ds-canvas);
+  --color-canvas-subtle: var(--ds-canvas-subtle);
+  --color-surface: var(--ds-surface);
+  --color-surface-raised: var(--ds-surface-raised);
+  --color-ink: var(--ds-ink);
+  --color-ink-muted: var(--ds-ink-muted);
+  --color-line: var(--ds-line);
+  --color-accent: var(--ds-accent);
+  --color-accent-strong: var(--ds-accent-strong);
+  --color-accent-soft: var(--ds-accent-soft);
+  --color-highlight: var(--ds-highlight);
 
-  --color-dark-component: oklch(21% 0.034 264.665);
-  --color-light-component: oklch(90% 0 0);
+  --color-dark-background: oklch(14% 0.025 262);
+  --color-light-background: oklch(98% 0.006 255);
 
-  --color-dark-sub-component: oklch(27.8% 0.033 256.848);
-  --color-light-sub-component: oklch(92.2% 0 0);
+  --color-dark-component: oklch(20% 0.03 262);
+  --color-light-component: oklch(100% 0 0);
+
+  --color-dark-sub-component: oklch(25% 0.032 258);
+  --color-light-sub-component: oklch(96% 0.01 255);
 
   --color-dark-primary: oklch(96.7% 0.003 264.542);
   --color-light-primary: oklch(20.5% 0 0);
@@ -22,6 +36,10 @@
   
   --color-danger: oklch(58.6% 0.253 17.585);
 
+  --color-brand: oklch(60% 0.2 255);
+  --color-brand-strong: oklch(52% 0.22 258);
+  --color-brand-soft: oklch(93% 0.035 255);
+
   --color-dark-bg-hover: oklch(37.3% 0.034 259.733);
   --color-light-bg-hover: oklch(85% 0 0);
 
@@ -29,8 +47,86 @@
   --color-light-border-hover: oklch(87% 0 0);
 }
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  :root {
+    --ds-canvas: oklch(98.2% 0.012 87);
+    --ds-canvas-subtle: oklch(95.5% 0.021 86);
+    --ds-surface: oklch(99.5% 0.006 87);
+    --ds-surface-raised: oklch(100% 0 0);
+    --ds-ink: oklch(22% 0.04 264);
+    --ds-ink-muted: oklch(47% 0.035 263);
+    --ds-line: oklch(86% 0.025 83);
+    --ds-accent: oklch(56% 0.19 274);
+    --ds-accent-strong: oklch(45% 0.2 274);
+    --ds-accent-soft: oklch(91% 0.045 276);
+    --ds-highlight: oklch(76% 0.15 65);
+  }
+
+  .dark {
+    --ds-canvas: oklch(15% 0.025 266);
+    --ds-canvas-subtle: oklch(18.5% 0.032 266);
+    --ds-surface: oklch(20.5% 0.034 266);
+    --ds-surface-raised: oklch(24% 0.038 266);
+    --ds-ink: oklch(96% 0.009 85);
+    --ds-ink-muted: oklch(75% 0.025 264);
+    --ds-line: oklch(31% 0.035 264);
+    --ds-accent: oklch(72% 0.145 276);
+    --ds-accent-strong: oklch(80% 0.11 276);
+    --ds-accent-soft: oklch(28% 0.08 274);
+    --ds-highlight: oklch(79% 0.14 69);
+  }
+
+  * {
+    border-color: color-mix(in oklab, currentColor 14%, transparent);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100vh;
+    overflow-x: clip;
+    color: var(--color-light-primary);
+    background-image:
+      radial-gradient(circle at 10% 0%, color-mix(in oklab, var(--color-brand) 9%, transparent), transparent 28rem),
+      radial-gradient(circle at 100% 30%, color-mix(in oklab, var(--color-brand) 6%, transparent), transparent 24rem);
+    text-rendering: optimizeLegibility;
+  }
+
+  .dark body {
+    color: var(--color-dark-primary);
+    background-image:
+      radial-gradient(circle at 10% 0%, color-mix(in oklab, var(--color-brand) 15%, transparent), transparent 30rem),
+      radial-gradient(circle at 100% 35%, color-mix(in oklab, var(--color-brand) 10%, transparent), transparent 26rem);
+  }
+
+  ::selection {
+    color: white;
+    background: var(--color-brand-strong);
+  }
+
+  :focus-visible {
+    outline: 3px solid color-mix(in oklab, var(--color-brand) 72%, white);
+    outline-offset: 3px;
+  }
+
+  button, a, input, textarea, select {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 .scrollbar-hide {

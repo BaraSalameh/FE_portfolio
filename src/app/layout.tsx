@@ -9,12 +9,12 @@ export const metadata: Metadata = {
         template: '%s | Portfolio',
         default: 'Portfolio'
     },
-    description: "The official Portfolio app for showcasing profissional expierence"
+    description: "Create and share a polished portfolio that showcases your professional experience."
 };
 
 export default function RootLayout({children}: Readonly<{children: React.ReactNode;}>) {
     return (
-        <html lang="en" suppressHydrationWarning>
+        <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
             <body className={`bg-light-background dark:bg-dark-background ${inter.className} antialiased`}>
                 <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
                     <ReduxProvider>

@@ -13,11 +13,11 @@ export const profileSchema = z.object({
         
     firstname: z
         .string()
-        .min(2, 'Firstname is required'),
+        .min(2, 'First name is required'),
 
     lastname: z
         .string()
-        .min(2, 'Lastname is required'),
+        .min(2, 'Last name is required'),
 
     title: z
         .string()

@@ -2,12 +2,12 @@
 
 import { useAppSelector } from "@/lib/store/hooks";
 import { useMemo } from "react";
-import { ControlledForm } from "@/components/forms";
+import { ControlledForm } from '@/features/dashboard/forms';
 import { mapUserLanguageToForm } from "@/lib/utils";
 import { UserLanguageProps } from "../types.language";
 import { userLanguageSchema } from "../schema";
 import { languageListQuery } from "../apis";
-import { FormField } from "@/components/forms/types.forms";
+import { FormField } from '@/features/dashboard/forms/types.forms';
 import { useHandleSubmit, useLoadLanguage, useLoadLanguageProficiency } from "../hooks";
 
 export const UserLanguageForm = ({onClose} : UserLanguageProps) => {

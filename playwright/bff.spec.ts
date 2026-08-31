@@ -12,7 +12,7 @@ test('forwards API query parameters and correlation headers', async ({ request }
     });
 });
 
-test('forwards trusted origin, body, cookies, and all auth cookies', async ({ request }) => {
+test('forwards trusted origin, body, cookies, and all auth cookies', async ({ request, baseURL }) => {
     const response = await request.post('/api/Account/ValidateToken', {
         data: { probe: true },
         headers: {
@@ -24,7 +24,7 @@ test('forwards trusted origin, body, cookies, and all auth cookies', async ({ re
     await expect(response.json()).resolves.toMatchObject({
         body: JSON.stringify({ probe: true }),
         cookie: 'AccessToken=old-access; RefreshToken=old-refresh',
-        origin: 'http://localhost:3000',
+        origin: baseURL,
     });
     expect(response.headersArray().filter(header => header.name.toLowerCase() === 'set-cookie'))
         .toHaveLength(2);

@@ -3,14 +3,14 @@
 import { useAppSelector } from "@/lib/store/hooks";
 import { useMemo } from "react";
 import { mapEducationToForm } from "@/lib/utils";
-import { ControlledForm } from "@/components/forms";
+import { ControlledForm } from '@/features/dashboard/forms';
 import { EducationProps } from "../types.education";
 import { educationSchema } from "../schema";
 import { degreeListQuery, fieldOfStudyListQuery, institutionListQuery } from "../apis";
 import { skillListQuery } from "../../skill";
 import { useLoadInstitution, useLoadDegree, useLoadFieldOfStudy, useHandleSubmit } from "../hooks";
 import { useLoadUserSkill } from "@/features/dashboard/hooks";
-import { FormItem } from "@/components/forms/types.forms";
+import { FormItem } from '@/features/dashboard/forms/types.forms';
 
 export const EducationForm = ({id, onClose} : EducationProps) => {
 

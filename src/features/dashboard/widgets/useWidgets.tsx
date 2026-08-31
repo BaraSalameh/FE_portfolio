@@ -1,5 +1,5 @@
-import { WidgetCardProps } from "@/components/widgets/types.widgets";
-import { ControlledWidget } from "@/components";
+import { WidgetCardProps } from '@/features/dashboard/types.presentation';
+import { DashboardWidget } from '@/features/dashboard/presentation';
 import { checkWidgetPreferences } from "@/lib/utils";
 import { widget_preferences } from "@/lib/utils";
 import { useAppSelector } from "@/lib/store/hooks";
@@ -36,7 +36,7 @@ export const useWidgets = () => {
 
     return widgets.map((widget, index) => (
         <div key={widget?.header?.title || index} className="break-inside-avoid">
-            <ControlledWidget {...widget} />
+            <DashboardWidget {...widget} />
         </div>
     ));
 };

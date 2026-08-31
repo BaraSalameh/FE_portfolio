@@ -3,13 +3,13 @@
 import { useAppSelector } from "@/lib/store/hooks";
 import { useMemo } from "react";
 import { mapProjectToForm, optionsCreator } from "@/lib/utils";
-import { ControlledForm } from "@/components/forms";
+import { ControlledForm } from '@/features/dashboard/forms';
 import { ProjectProps } from "../types.project";
 import { projectSchema } from "../schema";
 import { skillListQuery } from "../../skill";
 import { useHandleSubmit } from "../hooks";
 import { useLoadUserSkill } from "@/features/dashboard/hooks";
-import { FormItem } from "@/components/forms/types.forms";
+import { FormItem } from '@/features/dashboard/forms/types.forms';
 
 export const ProjectForm = ({id, onClose} : ProjectProps) => {
 

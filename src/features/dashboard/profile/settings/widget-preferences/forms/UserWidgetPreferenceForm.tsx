@@ -3,12 +3,12 @@
 import { useAppSelector } from "@/lib/store/hooks";
 import { useMemo } from "react";
 import { mapPreferenceToForm } from "@/lib/utils";
-import { ControlledForm } from "@/components/forms";
+import { ControlledForm } from '@/features/dashboard/forms';
 import { widget_preferences } from "@/lib/utils";
 import { UserPreferenceProps } from "../types.widget-preferences";
 import { userWidgetPreferenceSchema } from "../schema";
 import { useHandleSubmit, useLoadWidgetPreference } from "../hooks";
-import { FormItem } from "@/components/forms/types.forms";
+import { FormItem } from '@/features/dashboard/forms/types.forms';
 
 export const UserWidgetPreferenceForm = ({ onClose, preferenceKey, preferenceValues } : UserPreferenceProps) => {
 

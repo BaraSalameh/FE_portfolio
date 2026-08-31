@@ -51,3 +51,121 @@ test('portfolio API failures replace the loading skeleton with a retry state', a
     await expect(page.getByText('Not found', { exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Try again' })).toBeVisible();
 });
+
+test('authentication forms expose correct labels and browser metadata', async ({ page }) => {
+    await page.goto('/auth/login');
+
+    await expect(page.getByRole('heading', { name: 'Sign in to your portfolio' })).toBeVisible();
+    await expect(page.getByLabel('Email')).toHaveAttribute('type', 'email');
+    await expect(page.getByLabel('Email')).toHaveAttribute('autocomplete', 'email');
+    await expect(page.getByLabel('Password')).toHaveAttribute('autocomplete', 'current-password');
+
+    await page.goto('/auth/register');
+    await expect(page.getByLabel('Password')).toHaveAttribute('autocomplete', 'new-password');
+});
+
+test('public dashboard is responsive and its contact dialog supports Escape', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/client/demo/dashboard');
+
+    await expect(page.getByRole('heading', { name: 'Demo Portfolio' })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
+
+    await page.getByRole('button', { name: 'Send Message' }).click();
+    const dialog = page.getByRole('dialog', { name: 'Send Message' });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByLabel('Full name')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(dialog).toBeHidden();
+});
+
+test('owner settings preserve the parent dialog when a nested preference closes', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/owner/demo/dashboard');
+
+    await expect(page.getByRole('heading', { name: 'Demo Portfolio' })).toBeVisible();
+    await page.getByRole('button', { name: 'Settings' }).click();
+    const settingsDialog = page.getByRole('dialog', { name: 'Settings' });
+    await expect(settingsDialog).toBeVisible();
+
+    await settingsDialog.getByRole('button', { name: 'Preferences', exact: true }).click();
+    await settingsDialog.getByRole('button', { name: 'Change theme' }).click();
+    const themeDialog = page.getByRole('dialog', { name: 'Change theme' });
+    await expect(themeDialog).toBeVisible();
+
+    await page.keyboard.press('Escape');
+    await expect(themeDialog).toBeHidden();
+    await expect(settingsDialog).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(settingsDialog).toBeHidden();
+});
+
+test('key routes pass baseline accessibility and responsive structure checks', async ({ page }) => {
+    const routes = ['/', '/auth/login', '/auth/register', '/auth/email', '/search', '/client/demo/dashboard'];
+    const viewports = [
+        { width: 390, height: 844 },
+        { width: 1440, height: 900 },
+    ];
+
+    for (const viewport of viewports) {
+        await page.setViewportSize(viewport);
+        for (const route of routes) {
+            await page.goto(route);
+            if (route.includes('/dashboard')) {
+                await expect(page.getByRole('heading', { name: 'Demo Portfolio' })).toBeVisible();
+            }
+
+            const audit = await page.evaluate(() => {
+                const accessibleName = (element: Element) => {
+                    const labelledBy = element.getAttribute('aria-labelledby');
+                    const labelledText = labelledBy
+                        ?.split(/\s+/)
+                        .map(id => document.getElementById(id)?.textContent?.trim())
+                        .filter(Boolean)
+                        .join(' ');
+                    return element.getAttribute('aria-label')?.trim()
+                        || labelledText
+                        || element.textContent?.trim()
+                        || element.getAttribute('title')?.trim()
+                        || '';
+                };
+                const visible = (element: Element) => {
+                    const style = getComputedStyle(element);
+                    return style.display !== 'none' && style.visibility !== 'hidden';
+                };
+                const ids = Array.from(document.querySelectorAll('[id]')).map(element => element.id);
+                const duplicateIds = ids.filter((id, index) => ids.indexOf(id) !== index);
+                const unlabeledFields = Array.from(document.querySelectorAll('input:not([type="hidden"]), textarea, select'))
+                    .filter(visible)
+                    .filter(field => {
+                        const id = field.getAttribute('id');
+                        return !field.getAttribute('aria-label')
+                            && !field.getAttribute('aria-labelledby')
+                            && !(id && document.querySelector(`label[for="${CSS.escape(id)}"]`));
+                    });
+                const unnamedControls = Array.from(document.querySelectorAll('button, [role="button"]'))
+                    .filter(visible)
+                    .filter(control => !accessibleName(control));
+                const imagesWithoutAlt = Array.from(document.querySelectorAll('img')).filter(image => !image.hasAttribute('alt'));
+
+                return {
+                    duplicateIds: [...new Set(duplicateIds)],
+                    headingCount: document.querySelectorAll('h1').length,
+                    horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+                    imagesWithoutAlt: imagesWithoutAlt.length,
+                    unlabeledFields: unlabeledFields.length,
+                    unnamedControls: unnamedControls.length,
+                };
+            });
+
+            expect(audit, `${route} at ${viewport.width}px`).toEqual({
+                duplicateIds: [],
+                headingCount: 1,
+                horizontalOverflow: false,
+                imagesWithoutAlt: 0,
+                unlabeledFields: 0,
+                unnamedControls: 0,
+            });
+        }
+    }
+});

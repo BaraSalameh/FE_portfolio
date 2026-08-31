@@ -1,6 +1,5 @@
 'use client'
 
-import { Container } from "@/components";
 import { Role } from "@/features/types.features";
 import { useAppSelector } from "@/lib/store/hooks";
 import { useParams, useRouter } from "next/navigation";
@@ -20,8 +19,6 @@ export default function OwnerLayout({children}: Readonly<{children: React.ReactN
     }, [role, router, user?.username, username]);
 
     return (
-        <Container>
-            {children}
-        </Container>
+        <div className="min-h-svh bg-canvas text-ink">{children}</div>
     );
 };

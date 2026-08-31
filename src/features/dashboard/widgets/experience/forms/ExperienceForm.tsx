@@ -1,7 +1,7 @@
 'use client';
 
 import { useAppSelector } from "@/lib/store/hooks";
-import { ControlledForm } from "@/components/forms";
+import { ControlledForm } from '@/features/dashboard/forms';
 import { useMemo } from "react";
 import { ExperienceProps } from "../types.experience";
 import { experienceSchema } from "../schema";
@@ -9,7 +9,7 @@ import { mapExperienceToForm } from "@/lib/utils";
 import { skillListQuery } from "../../skill";
 import { useLoadUserSkill } from "@/features/dashboard/hooks";
 import { useHandleSubmit } from "../hooks";
-import { FormItem } from "@/components/forms/types.forms";
+import { FormItem } from '@/features/dashboard/forms/types.forms';
 
 export const ExperienceForm = ({id, onClose} : ExperienceProps) => {
 
