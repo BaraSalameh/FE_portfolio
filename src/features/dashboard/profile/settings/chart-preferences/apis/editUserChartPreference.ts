@@ -1,6 +1,6 @@
 import { transformPayload } from "@/lib/utils";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { dynamicApi } from "@/lib/utils";
+import { dashboardMutation } from "@/lib/utils";
 import { UserChartPreferenceFormData } from "../schema";
 
 export const editUserChartPreference = createAsyncThunk(
@@ -9,7 +9,7 @@ export const editUserChartPreference = createAsyncThunk(
         try {
             const request = transformPayload(payload);
 
-            await dynamicApi({
+            await dashboardMutation({
                 method: 'POST',
                 url: '/Owner/EditUserChartPreference',
                 data: request,

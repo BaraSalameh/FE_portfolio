@@ -1,12 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ContactMessageFormData } from "../schema";
-import { dynamicApi } from "@/lib/utils/api/apiClient";
+import { dashboardMutation } from "@/lib/utils/api/apiClient";
 
 export const sendEmail = createAsyncThunk(
     'client/sendEmail',
     async (payload: ContactMessageFormData, thunkAPI) => {
         try {
-            await dynamicApi({
+            await dashboardMutation({
                 method: "POST",
                 url: '/Client/SendEmail',
                 data: payload

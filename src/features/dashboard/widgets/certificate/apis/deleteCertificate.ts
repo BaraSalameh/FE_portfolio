@@ -1,11 +1,11 @@
-import { dynamicApi } from "@/lib/utils";
+import { dashboardMutation } from "@/lib/utils";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const deleteCertificate = createAsyncThunk(
     'certificate/deleteCertificate',
     async (id: string, thunkAPI) => {
         try {
-            await dynamicApi({
+            await dashboardMutation({
                 method: 'DELETE',
                 url: '/Owner/DeleteCertificate',
                 data: {id},

@@ -1,4 +1,4 @@
-import { dynamicApi } from "@/lib/utils";
+import { dashboardMutation } from "@/lib/utils";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { UserSkillFormData } from "../schema";
 
@@ -7,7 +7,7 @@ export const editDeleteUserSkill = createAsyncThunk(
     async (payload: UserSkillFormData, thunkAPI) => {
         try {
 
-            await dynamicApi({
+            await dashboardMutation({
                 method: 'POST',
                 url: '/Owner/EditDeleteUserSkill',
                 data: payload,

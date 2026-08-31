@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { userFullInfoQuery } from '../../apis';
+import { dashboardHydrated } from '../../dashboard.hydration';
 import { ContactMessageState } from './types.contact-message';
 import { contactMessageListQuery, deleteMessage, signMessage } from './api';
 
@@ -34,7 +34,7 @@ const contactMessageSlice = createSlice({
     extraReducers: (builder) => {
         builder
 
-        .addCase(userFullInfoQuery.fulfilled, (state, action) => {
+        .addCase(dashboardHydrated, (state, action) => {
             state.unreadContactMessageCount = action.payload.unreadContactMessageCount;
         })
 

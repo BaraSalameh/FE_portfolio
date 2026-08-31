@@ -1,7 +1,7 @@
 import { transformPayload } from "@/lib/utils";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { UserWidgetPreferenceFormData } from "../schema";
-import { dynamicApi } from "@/lib/utils";
+import { dashboardMutation } from "@/lib/utils";
 
 export const editUserWidgetPreference = createAsyncThunk(
     'userWidgetPreference/editUserPrference',
@@ -9,7 +9,7 @@ export const editUserWidgetPreference = createAsyncThunk(
         try {
             const request = transformPayload(payload);
 
-            await dynamicApi({
+            await dashboardMutation({
                 method: 'POST',
                 url: '/Owner/EditUserPreference',
                 data: request,

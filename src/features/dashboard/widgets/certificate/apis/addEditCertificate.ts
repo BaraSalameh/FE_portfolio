@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { dynamicApi } from "@/lib/utils";
+import { dashboardMutation } from "@/lib/utils";
 import { CertificateFormData } from "../schema";
 
 export const addEditCertificate = createAsyncThunk(
@@ -7,7 +7,7 @@ export const addEditCertificate = createAsyncThunk(
     async (payload: CertificateFormData, thunkAPI) => {
         try {
 
-            await dynamicApi({
+            await dashboardMutation({
                 method: 'POST',
                 url: '/Owner/AddEditCertificate',
                 data: payload,

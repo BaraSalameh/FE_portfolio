@@ -1,17 +1,17 @@
-import { dynamicFetch } from './fetchClient';
+import { browserApiResponse } from './browser-client';
 
 let refreshPromise: Promise<Response> | null = null;
 
-export const refreshTokenClient = () => {
+export const refreshTokenClient = (): Promise<Response> => {
     if (refreshPromise) return refreshPromise;
 
-    refreshPromise = dynamicFetch({
+    refreshPromise = browserApiResponse({
         method: 'POST',
         url: '/Account/ValidateToken',
         data: {},
         retryOn401: false,
         sendCredentials: true,
-    }).catch((error) => {
+    }).catch((error: unknown) => {
         window.location.assign(new URL('/auth/login', window.location.origin));
         throw error;
     }).finally(() => {

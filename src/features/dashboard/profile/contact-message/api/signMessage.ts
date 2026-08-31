@@ -1,11 +1,11 @@
-import { dynamicApi } from "@/lib/utils";
+import { dashboardMutation } from "@/lib/utils";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const signMessage = createAsyncThunk(
     'contactMessage/signMessage',
     async (id: string, thunkAPI) => {
         try {
-            await dynamicApi({
+            await dashboardMutation({
                 method: 'POST',
                 url: '/Owner/SignMessage',
                 data: {id},

@@ -1,6 +1,5 @@
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { NextRequest, NextResponse } from 'next/server';
-import { paths } from "./lib/pathHelper";
 
 interface AccessTokenClaims extends JwtPayload {
     role?: string;
@@ -18,9 +17,9 @@ export default async function proxy(req: NextRequest) {
         const { role, unique_name, IsConfirmed, exp } = jwtDecode<AccessTokenClaims>(accessToken);
         if (!exp || exp * 1000 <= Date.now()) return NextResponse.next();
 
-        if (IsConfirmed !== 'True') return NextResponse.redirect(
-            new URL(paths.root.auth.email.path(), req.url)
-        );
+        // Unconfirmed users must still be able to reach sign-in to retry
+        // credentials or request another confirmation email.
+        if (IsConfirmed !== 'True') return NextResponse.next();
 
         if (!role || !unique_name) return NextResponse.next();
 

@@ -1,11 +1,11 @@
-import { dynamicApi } from "@/lib/utils";
+import { dashboardMutation } from "@/lib/utils";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const deleteExperience = createAsyncThunk(
     'experience/deleteExperience',
     async (id: string, thunkAPI) => {
         try {
-            await dynamicApi({
+            await dashboardMutation({
                 method: 'DELETE',
                 url: '/Owner/DeleteExperience',
                 data: {id},

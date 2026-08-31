@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addEditProject, deleteProject, projectListQuery } from './apis';
-import { userByUsernameQuery, userFullInfoQuery } from '../../apis';
+import { projectListQuery } from './apis';
+import { dashboardHydrated } from '../../dashboard.hydration';
 import { ProjectState } from './types.project';
 import { userSkillListQuery } from '../skill';
 import { syncParentFromUserSkill } from '@/lib/utils';
@@ -14,14 +14,23 @@ const initialState : ProjectState = {
 const projectSlice = createSlice({
     name: 'project',
     initialState,
-    reducers: {},
+    reducers: {
+        projectMutationStarted: (state) => {
+            state.loading = true;
+            state.error = null;
+        },
+        projectMutationSucceeded: (state, action: { payload: ProjectState['lstProjects'] }) => {
+            state.loading = false;
+            state.lstProjects = action.payload;
+        },
+        projectMutationFailed: (state, action: { payload: string }) => {
+            state.loading = false;
+            state.error = action.payload;
+        },
+    },
     extraReducers: (builder) => {
         builder
-        .addCase(userFullInfoQuery.fulfilled, (state, action) => {
-            state.lstProjects = action.payload.lstProjects;
-        })
-
-        .addCase(userByUsernameQuery.fulfilled, (state, action) => {
+        .addCase(dashboardHydrated, (state, action) => {
             state.lstProjects = action.payload.lstProjects;
         })
 
@@ -40,32 +49,9 @@ const projectSlice = createSlice({
         .addCase(projectListQuery.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload as string;
-        })
-        
-        .addCase(addEditProject.pending, (state) => {
-            state.loading = true;
-            state.error = null;
-        })
-        .addCase(addEditProject.fulfilled, (state) => {
-            state.loading = false;
-        })
-        .addCase(addEditProject.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload as string;
-        })
-
-        .addCase(deleteProject.pending, (state) => {
-            state.loading = true;
-            state.error = null;
-        })
-        .addCase(deleteProject.fulfilled, (state) => {
-            state.loading = false;
-        })
-        .addCase(deleteProject.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload as string;
         });
     },
 });
 
+export const { projectMutationFailed, projectMutationStarted, projectMutationSucceeded } = projectSlice.actions;
 export default projectSlice.reducer;

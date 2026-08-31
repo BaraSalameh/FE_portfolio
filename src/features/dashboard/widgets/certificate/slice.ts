@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { userByUsernameQuery, userFullInfoQuery } from '../../apis';
+import { dashboardHydrated } from '../../dashboard.hydration';
 import { CertificateState } from './types.certificate';
 import { addEditCertificate, certificateListQuery, deleteCertificate, lkp_CertificateListQuery } from './apis';
 import { userSkillListQuery } from '../skill';
@@ -23,11 +23,7 @@ const certificateSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-        .addCase(userFullInfoQuery.fulfilled, (state, action) => {
-            state.lstCertificates = action.payload.lstCertificates;
-        })
-
-        .addCase(userByUsernameQuery.fulfilled, (state, action) => {
+        .addCase(dashboardHydrated, (state, action) => {
             state.lstCertificates = action.payload.lstCertificates;
         })
 

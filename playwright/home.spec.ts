@@ -45,11 +45,11 @@ test('unsupported dashboard roles render the not-found boundary', async ({ page 
     await expect(page.getByRole('heading', { name: 'Portfolio not found' })).toBeVisible();
 });
 
-test('portfolio API failures replace the loading skeleton with a retry state', async ({ page }) => {
+test('missing portfolios render the not-found boundary during server loading', async ({ page }) => {
     await page.goto('/client/missing/dashboard');
 
-    await expect(page.getByText('Not found', { exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Try again' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Portfolio not found' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Return home' })).toBeVisible();
 });
 
 test('authentication forms expose correct labels and browser metadata', async ({ page }) => {
@@ -62,6 +62,39 @@ test('authentication forms expose correct labels and browser metadata', async ({
 
     await page.goto('/auth/register');
     await expect(page.getByLabel('Password')).toHaveAttribute('autocomplete', 'new-password');
+});
+
+test('an unconfirmed token does not trap users on the email page', async ({ context, page }) => {
+    const payload = Buffer.from(JSON.stringify({
+        exp: Math.floor(Date.now() / 1000) + 3600,
+        IsConfirmed: 'False',
+    })).toString('base64url');
+    await context.addCookies([{
+        name: 'AccessToken',
+        value: `eyJhbGciOiJub25lIn0.${payload}.`,
+        domain: 'localhost',
+        path: '/',
+    }]);
+
+    await page.goto('/auth/login');
+    await expect(page.getByRole('heading', { name: 'Sign in to your portfolio' })).toBeVisible();
+    await expect(page).toHaveURL(/\/auth\/login$/);
+});
+
+test('login rejects short and incorrect passwords without redirecting to email', async ({ page }) => {
+    await page.goto('/auth/login');
+    await page.getByLabel('Email').fill('demo@example.com');
+    await page.getByLabel('Password').fill('short');
+    await page.getByRole('button', { name: 'Sign in' }).click();
+
+    await expect(page.getByText('Password must be at least 8 characters long')).toBeVisible();
+    await expect(page).toHaveURL(/\/auth\/login$/);
+
+    await page.getByLabel('Password').fill('WrongPassword1!');
+    await page.getByRole('button', { name: 'Sign in' }).click();
+
+    await expect(page.getByText('Wrong username/password')).toBeVisible();
+    await expect(page).toHaveURL(/\/auth\/login$/);
 });
 
 test('public dashboard is responsive and its contact dialog supports Escape', async ({ page }) => {

@@ -1,7 +1,8 @@
 import { useAppDispatch } from "@/lib/store/hooks";
 import debounce from "lodash.debounce";
 import { useEffect, useMemo } from "react";
-import { projectListQuery, sortProject } from "../apis";
+import { sortProjectsAction } from '../project.actions';
+import { projectMutationFailed, projectMutationStarted, projectMutationSucceeded } from '../slice';
 
 export const useDebouncedSortProject = () => {
   const dispatch = useAppDispatch();
@@ -9,8 +10,13 @@ export const useDebouncedSortProject = () => {
   const sort = useMemo(
         () => debounce(async (lstIds: string[]) => {
             if (lstIds.length > 0) {
-                await dispatch(sortProject(lstIds));
-                await dispatch(projectListQuery());
+                dispatch(projectMutationStarted());
+                const result = await sortProjectsAction(lstIds);
+                if (!result.success) {
+                    dispatch(projectMutationFailed(result.error));
+                    return;
+                }
+                dispatch(projectMutationSucceeded(result.data));
             }
         }, 1000),
         [dispatch]

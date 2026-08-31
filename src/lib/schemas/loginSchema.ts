@@ -8,7 +8,8 @@ export const loginSchema = z.object({
 
   password: z
     .string()
-    .min(1, "Password is required"),
+    .min(8, "Password must be at least 8 characters long")
+    .max(256, "Password must be at most 256 characters long"),
 
   rememberMe: z
     .boolean()

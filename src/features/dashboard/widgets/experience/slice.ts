@@ -1,4 +1,4 @@
-import { userByUsernameQuery, userFullInfoQuery } from '../../apis';
+import { dashboardHydrated } from '../../dashboard.hydration';
 import { addEditExperience, deleteExperience, experienceListQuery } from '@/features/dashboard/widgets/experience/apis';
 import { createSlice } from '@reduxjs/toolkit';
 import { ExperienceState } from './types.experience';
@@ -17,11 +17,7 @@ const ExperienceSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-        .addCase(userFullInfoQuery.fulfilled, (state, action) => {
-            state.lstExperiences = action.payload.lstExperiences;
-        })
-
-        .addCase(userByUsernameQuery.fulfilled, (state, action) => {
+        .addCase(dashboardHydrated, (state, action) => {
             state.lstExperiences = action.payload.lstExperiences;
         })
 

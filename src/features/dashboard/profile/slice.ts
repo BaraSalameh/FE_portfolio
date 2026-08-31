@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { userByUsernameQuery, userFullInfoQuery } from "../apis";
+import { dashboardHydrated } from '../dashboard.hydration';
 import { userInfoQuery } from "../profile/apis";
 import { ProfileState } from "./types.profile";
 
@@ -15,32 +15,10 @@ const profileSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-        .addCase(userFullInfoQuery.pending, (state) => {
-            state.loading = true;
-            state.error = null;
-        })
-        .addCase(userFullInfoQuery.fulfilled, (state, action) => {
+        .addCase(dashboardHydrated, (state, action) => {
             state.loading = false;
             state.user = action.payload.user;
         })
-        .addCase(userFullInfoQuery.rejected, (state, action) => {
-            state.loading = false;
-            state.error = (action.payload as string);
-        })
-
-        .addCase(userByUsernameQuery.pending, (state) => {
-            state.loading = true;
-            state.error = null;
-        })
-        .addCase(userByUsernameQuery.fulfilled, (state, action) => {
-            state.loading = false;
-            state.user = action.payload.user;
-        })
-        .addCase(userByUsernameQuery.rejected, (state, action) => {
-            state.loading = false;
-            state.error = (action.payload as string);
-        })
-        
         .addCase(userInfoQuery.pending, (state) => {
             state.loading = true;
             state.error = null;

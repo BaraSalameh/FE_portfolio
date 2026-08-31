@@ -1,4 +1,4 @@
-import { dynamicApi } from "@/lib/utils";
+import { dashboardMutation } from "@/lib/utils";
 import { transformPayload } from "@/lib/utils";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { UserLanguageFormData } from "../schema";
@@ -9,7 +9,7 @@ export const editDeleteUserLanguage = createAsyncThunk(
         try {
             const request = transformPayload(payload);
 
-            await dynamicApi({
+            await dashboardMutation({
                 method: 'POST',
                 url: '/Owner/EditDeleteUserLanguage',
                 data: request,

@@ -1,7 +1,7 @@
 import { transformPayload } from "@/lib/utils";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ExperienceFormData } from "../schema";
-import { dynamicApi } from "@/lib/utils";
+import { dashboardMutation } from "@/lib/utils";
 
 export const addEditExperience = createAsyncThunk(
     'experience/addEditExperience',
@@ -9,7 +9,7 @@ export const addEditExperience = createAsyncThunk(
         try {
             const request = transformPayload(payload);
 
-            await dynamicApi({
+            await dashboardMutation({
                 method: 'POST',
                 url: '/Owner/AddEditExperience',
                 data: request,

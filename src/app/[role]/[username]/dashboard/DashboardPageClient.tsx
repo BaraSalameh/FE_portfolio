@@ -1,22 +1,16 @@
 'use client';
 
-import { useLoadUserData } from '@/features/dashboard/hooks';
 import { ProfileFormData } from '@/features/dashboard/profile/schema';
 import { DashboardWidget, PortfolioLoading, PortfolioProfile } from '@/features/dashboard/presentation';
 import { useOverviewWidget } from '@/features/dashboard/widgets/overview/hooks';
 import { useWidgets } from '@/features/dashboard/widgets/useWidgets';
-import { Role } from '@/features/types.features';
 import { useAppSelector } from '@/lib/store/hooks';
 import { checkWidgetPreferences, widget_preferences } from '@/lib/utils';
-import { useParams } from 'next/navigation';
 
 export default function DashboardPageClient() {
     const { error, loading, user } = useAppSelector(state => state.profile);
     const { unreadContactMessageCount } = useAppSelector(state => state.contactMessage);
     const { lstUserPreferences } = useAppSelector(state => state.userWidgetPreference);
-    const { role, username } = useParams<{ role: Role; username: string }>();
-
-    useLoadUserData(role, username);
     const widgets = useWidgets();
     const overviewData = useOverviewWidget();
     const showOverview = checkWidgetPreferences(

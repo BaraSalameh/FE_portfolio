@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { userByUsernameQuery, userFullInfoQuery } from '../../../apis';
+import { dashboardHydrated } from '../../../dashboard.hydration';
 import { editUserWidgetPreference, userWidgetPreferenceListQuery, widgetPreferenceListQuery } from './apis';
 import { UserPreferenceState } from './types.widget-preferences';
 
@@ -20,11 +20,7 @@ const userWidgetPreferenceSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-        .addCase(userFullInfoQuery.fulfilled, (state, action) => {
-            state.lstUserPreferences = action.payload.lstUserPreferences;
-        })
-
-        .addCase(userByUsernameQuery.fulfilled, (state, action) => {
+        .addCase(dashboardHydrated, (state, action) => {
             state.lstUserPreferences = action.payload.lstUserPreferences;
         })
         

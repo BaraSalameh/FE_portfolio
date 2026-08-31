@@ -1,11 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { dynamicApi } from "../../../../../lib/utils/api/apiClient";
+import { dashboardMutation } from "../../../../../lib/utils/api/apiClient";
 
 export const sortEducation = createAsyncThunk(
     'education/sortEducation',
     async (payload: string[], thunkAPI) => {
         try {
-            await dynamicApi({
+            await dashboardMutation({
                 method: 'POST',
                 url: '/Owner/ReOrderEducation',
                 data: {educationIdsInOrder: payload},

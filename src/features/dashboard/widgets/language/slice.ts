@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { UserLanguageState } from './types.language';
-import { userByUsernameQuery, userFullInfoQuery } from '../../apis';
+import { dashboardHydrated } from '../../dashboard.hydration';
 import { editDeleteUserLanguage, languageListQuery, languageProficiencyListQuery, userLanguageListQuery } from './apis';
 
 const initialState : UserLanguageState = {
@@ -26,11 +26,7 @@ const userLanguageSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-        .addCase(userFullInfoQuery.fulfilled, (state, action) => {
-            state.lstUserLanguages = action.payload.lstUserLanguages;
-        })
-
-        .addCase(userByUsernameQuery.fulfilled, (state, action) => {
+        .addCase(dashboardHydrated, (state, action) => {
             state.lstUserLanguages = action.payload.lstUserLanguages;
         })
         

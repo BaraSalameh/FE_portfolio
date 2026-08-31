@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { institutionListQuery, degreeListQuery, fieldOfStudyListQuery, educationListQuery, addEditEducation, deleteEducation } from '@/features/dashboard/widgets/education/apis';
-import { userByUsernameQuery, userFullInfoQuery } from '../../apis';
+import { dashboardHydrated } from '../../dashboard.hydration';
 import { EducationState } from './types.education';
 import { userSkillListQuery } from '../skill';
 import { syncParentFromUserSkill } from '@/lib/utils';
@@ -35,11 +35,7 @@ const educationSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-        .addCase(userFullInfoQuery.fulfilled, (state, action) => {
-            state.lstEducations = action.payload.lstEducations;
-        })
-
-        .addCase(userByUsernameQuery.fulfilled, (state, action) => {
+        .addCase(dashboardHydrated, (state, action) => {
             state.lstEducations = action.payload.lstEducations;
         })
 

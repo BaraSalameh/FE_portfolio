@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { userByUsernameQuery, userFullInfoQuery } from '../../apis';
+import { dashboardHydrated } from '../../dashboard.hydration';
 import { educationListQuery } from '../education/apis';
 import { experienceListQuery } from '../experience/apis';
 import { projectListQuery } from '../project/apis';
@@ -30,11 +30,7 @@ const userSkillSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-        .addCase(userFullInfoQuery.fulfilled, (state, action) => {
-            state.lstUserSkills = action.payload.lstUserSkills;
-        })
-
-        .addCase(userByUsernameQuery.fulfilled, (state, action) => {
+        .addCase(dashboardHydrated, (state, action) => {
             state.lstUserSkills = action.payload.lstUserSkills;
         })
 

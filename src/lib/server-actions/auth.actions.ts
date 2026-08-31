@@ -7,7 +7,7 @@ import { RegisterFormData } from "@/lib/schemas/registerSchema";
 import { paths } from "@/lib/pathHelper";
 import { LoginResponse } from "@/lib/definitions/auth.definitions";
 import { ActionResult } from "@/lib/definitions/actions.definitions";
-import { dynamicFetch } from "@/lib/api/fetchClient";
+import { serverApiResponse } from '@/lib/api/server-client';
 import { ApiError } from "../definitions/api.definitions";
 
 export const authenticate = async (
@@ -16,10 +16,11 @@ export const authenticate = async (
 ): Promise<ActionResult> => {
     let response;
     try {
-        response = await dynamicFetch({
+        response = await serverApiResponse({
             method: "POST",
             url: "/Account/Login",
             data: formData,
+            sendCredentials: false,
         });
         
         await setCookies(response);
@@ -42,10 +43,11 @@ export const register = async (
     formData: RegisterFormData
 ): Promise<ActionResult> => {
      try {
-        await dynamicFetch({
+        await serverApiResponse({
             method: "POST",
             url: '/Account/Register',
             data: formData,
+            sendCredentials: false,
         });
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown register error occurred';

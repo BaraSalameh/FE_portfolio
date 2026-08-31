@@ -54,6 +54,12 @@ const server = createServer((request, response) => {
             return;
         }
 
+        if (request.url === '/api/Account/Login' && request.method === 'POST') {
+            response.statusCode = 404;
+            response.end(JSON.stringify(['Wrong username/password']));
+            return;
+        }
+
         if (request.url === '/api/Account/ValidateToken' && request.method === 'POST') {
             response.setHeader('set-cookie', [
                 'AccessToken=new-access; Path=/; HttpOnly; SameSite=None; Secure',

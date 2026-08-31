@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { userByUsernameQuery, userFullInfoQuery } from '../../../apis';
+import { dashboardHydrated } from '../../../dashboard.hydration';
 import { UserChartPreferenceState } from './types.chart-preferences';
 import { chartTypeListQuery, editUserChartPreference, userChartPreferenceListQuery, widgetListQuery } from './apis';
 
@@ -25,11 +25,7 @@ const userChartPreferenceSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-        .addCase(userFullInfoQuery.fulfilled, (state, action) => {
-            state.lstUserChartPreferences = action.payload.lstUserChartPreferences;
-        })
-
-        .addCase(userByUsernameQuery.fulfilled, (state, action) => {
+        .addCase(dashboardHydrated, (state, action) => {
             state.lstUserChartPreferences = action.payload.lstUserChartPreferences;
         })
         

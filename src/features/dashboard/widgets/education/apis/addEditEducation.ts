@@ -2,7 +2,7 @@
 import { transformPayload } from "@/lib/utils";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { EducationFormData } from "../schema";
-import { dynamicApi } from "@/lib/utils";
+import { dashboardMutation } from "@/lib/utils";
 
 export const addEditEducation = createAsyncThunk(
     'education/addEditEducation',
@@ -10,7 +10,7 @@ export const addEditEducation = createAsyncThunk(
         try {
             const request = transformPayload(payload);
 
-            await dynamicApi({
+            await dashboardMutation({
                 method: 'POST',
                 url: '/Owner/AddEditEducation',
                 data: request,
