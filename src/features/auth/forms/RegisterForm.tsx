@@ -19,7 +19,7 @@ export function RegisterForm() {
 
     return (
         <form onSubmit={onSubmit} className="space-y-5" noValidate>
-            <div className="mb-7">
+            <div className="mb-5">
                 <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent">Create your space</p>
                 <h1 className="mt-2 text-3xl font-bold tracking-[-0.05em] sm:text-4xl">Start your portfolio</h1>
                 <p className="mt-3 text-sm leading-6 text-ink-muted">Create your account now, then shape your professional story at your own pace.</p>
