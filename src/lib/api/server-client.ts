@@ -37,8 +37,11 @@ export const serverApiResponse = async (options: DynamicFetchOptions): Promise<R
             signal: options.signal ?? AbortSignal.timeout(30_000),
         });
     } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unable to reach portfolio-api';
-        throw new ApiError(message, 0);
+        console.error('[portfolio-api] request failed', {
+            url,
+            error: error instanceof Error ? error.message : String(error),
+        });
+        throw new ApiError('The service is temporarily unavailable. Please try again.', 0);
     }
 
     if (!response.ok) throw await toApiError(response);

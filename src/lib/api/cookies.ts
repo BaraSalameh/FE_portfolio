@@ -69,7 +69,6 @@ export const forwardSetCookieHeaders = (source: Response, target: NextResponse) 
 export const clearAuthCookies = (response: NextResponse) => {
     const expired = 'Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0; HttpOnly; Secure; SameSite=None';
     response.headers.append('set-cookie', `AccessToken=; Path=/; ${expired}`);
-    response.headers.append('set-cookie', `RefreshToken=; Path=/api/Account; ${expired}`);
-    response.headers.append('set-cookie', `RefreshToken=; Path=/api/v1/Account; ${expired}`);
+    response.headers.append('set-cookie', `RefreshToken=; Path=/api; ${expired}`);
     return response;
 };

@@ -31,7 +31,7 @@ export function TextField({ label, registration, error, hint, className, id, ...
                 {...props}
             />
             {(error || hint) && (
-                <p id={descriptionId} className={cn('text-xs leading-5 text-ink-muted', error && 'text-danger')}>
+                <p id={descriptionId} className={cn('text-xs leading-5', error ? 'text-danger' : 'text-ink-muted')}>
                     {error?.message ?? hint}
                 </p>
             )}
