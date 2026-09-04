@@ -1,7 +1,7 @@
 import { useAppDispatch } from "@/lib/store/hooks";
 import debounce from "lodash.debounce";
 import { useEffect, useMemo } from "react";
-import { educationListQuery, sortEducation } from "../apis";
+import { educationListQuery, sortEducation } from "../thunks";
 
 export const useDebouncedSortEducation = () => {
   const dispatch = useAppDispatch();

@@ -1,7 +1,8 @@
 import { serverApiResponse } from '@/lib/api/server-client';
 import { paths } from "@/lib/pathHelper";
-import { setCookies } from "@/lib/api/cookieHelpers";
+import { setCookies } from "@/lib/api/cookies";
 import { NextRequest, NextResponse } from "next/server";
+import type { LoginResponse } from '@/lib/definitions/auth.definitions';
 
 export async function GET(req: NextRequest) {
 
@@ -26,5 +27,7 @@ export async function GET(req: NextRequest) {
 
 
     await setCookies(response);
-    return NextResponse.redirect(new URL(paths.root.auth.login.path(), req.url));
+    const { role, username } = await response.json() as LoginResponse;
+    const dashboard = paths.root.dashboard(role, username).path().toLowerCase();
+    return NextResponse.redirect(new URL(dashboard, req.url));
 }

@@ -2,7 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { useEffect } from "react";
-import { languageProficiencyListQuery } from "../apis";
+import { languageProficiencyListQuery } from "../thunks";
 import { optionsCreator } from "@/lib/utils";
 
 export const useLoadLanguageProficiency = () => {

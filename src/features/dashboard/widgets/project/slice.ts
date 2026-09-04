@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { projectListQuery } from './apis';
+import { projectListQuery } from './thunks';
 import { dashboardHydrated } from '../../dashboard.hydration';
 import { ProjectState } from './types.project';
 import { userSkillListQuery } from '../skill';

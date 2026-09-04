@@ -1,6 +1,6 @@
 import { useAppDispatch } from "@/lib/store/hooks";
 import { EducationFormData } from "../schema";
-import { addEditEducation, educationListQuery } from "../apis";
+import { addEditEducation, educationListQuery } from "../thunks";
 import { EducationProps } from "../types.education";
 
 export const useHandleSubmit = ({ onClose } : EducationProps) => {

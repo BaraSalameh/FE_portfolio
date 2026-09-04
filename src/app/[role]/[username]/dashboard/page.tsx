@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
-import { getDashboard } from '@/features/dashboard/dashboard.service';
+import { getDashboard } from '@/features/dashboard/api';
 import DashboardStoreProvider from '@/features/dashboard/presentation/DashboardStoreProvider';
-import { ApiError } from '@/lib/definitions/api.definitions';
+import { ApiError } from '@/lib/api/types';
 import DashboardPageClient from './DashboardPageClient';
 
 const DASHBOARD_ROLES = new Set(['owner', 'client']);

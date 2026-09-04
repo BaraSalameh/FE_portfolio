@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { dashboardHydrated } from '../../../dashboard.hydration';
 import { UserChartPreferenceState } from './types.chart-preferences';
-import { chartTypeListQuery, editUserChartPreference, userChartPreferenceListQuery, widgetListQuery } from './apis';
+import { chartTypeListQuery, editUserChartPreference, userChartPreferenceListQuery, widgetListQuery } from './thunks';
 
 const initialState : UserChartPreferenceState = {
     lstUserChartPreferences: [],

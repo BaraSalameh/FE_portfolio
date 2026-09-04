@@ -1,0 +1,26 @@
+import { dashboardMutation } from "@/features/dashboard/requests";
+import { transformPayload } from "@/lib/utils";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { UserLanguageFormData } from "../schema";
+
+export const editDeleteUserLanguage = createAsyncThunk(
+    'userLanguage/editDeleteUserLanguage',
+    async (payload: UserLanguageFormData, thunkAPI) => {
+        try {
+            const request = transformPayload(payload);
+
+            await dashboardMutation({
+                method: 'POST',
+                url: '/Owner/EditDeleteUserLanguage',
+                data: request,
+                withCredentials: true
+            });
+            
+            return;
+
+        } catch (error) {
+            return thunkAPI.rejectWithValue(getApiErrorPayload(error));
+        }
+    }
+);
+import { getApiErrorPayload } from "@/lib/api/errors";

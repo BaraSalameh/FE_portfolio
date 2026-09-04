@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { dashboardHydrated } from '../../dashboard.hydration';
 import { ContactMessageState } from './types.contact-message';
-import { contactMessageListQuery, deleteMessage, signMessage } from './api';
+import { contactMessageListQuery, deleteMessage, signMessage } from './thunks';
 
 const initialState : ContactMessageState = {
     lstMessages: [],

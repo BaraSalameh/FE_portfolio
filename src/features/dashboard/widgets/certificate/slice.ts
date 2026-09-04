@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { dashboardHydrated } from '../../dashboard.hydration';
 import { CertificateState } from './types.certificate';
-import { addEditCertificate, certificateListQuery, deleteCertificate, lkp_CertificateListQuery } from './apis';
+import { addEditCertificate, certificateListQuery, deleteCertificate, lkp_CertificateListQuery } from './thunks';
 import { userSkillListQuery } from '../skill';
 import { syncParentFromUserSkill } from '@/lib/utils';
 

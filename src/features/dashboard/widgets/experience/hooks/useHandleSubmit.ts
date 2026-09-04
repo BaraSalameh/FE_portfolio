@@ -1,6 +1,6 @@
 import { useAppDispatch } from "@/lib/store/hooks";
 import { ExperienceFormData } from "../schema";
-import { addEditExperience, experienceListQuery } from "../apis";
+import { addEditExperience, experienceListQuery } from "../thunks";
 import { ExperienceProps } from "../types.experience";
 
 export const useHandleSubmit = ({ onClose } : ExperienceProps) => {

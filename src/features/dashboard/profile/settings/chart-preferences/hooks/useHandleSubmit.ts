@@ -1,7 +1,7 @@
 import { useAppDispatch } from "@/lib/store/hooks";
 import { UserChartPreferenceFormData } from "../schema";
 import { UserChartPreferenceProps } from "../types.chart-preferences";
-import { editUserChartPreference, userChartPreferenceListQuery } from "../apis";
+import { editUserChartPreference, userChartPreferenceListQuery } from "../thunks";
 
 export const useHandleSubmit = ({ onClose }: Partial<UserChartPreferenceProps>) => {
     const dispatch = useAppDispatch();

@@ -14,10 +14,10 @@ type AuthFrameProps = {
 export function AuthFrame({ children, alternateHref, alternateLabel, prompt }: AuthFrameProps) {
     return (
         <div className="grid flex-1 items-stretch lg:grid-cols-[minmax(0,1fr)_minmax(26rem,0.78fr)]">
-            <main className="flex items-center justify-center px-5 py-10 sm:px-8 sm:py-14 lg:px-12">
+            <main className="flex items-center justify-center px-5 py-8 sm:px-8 sm:py-10 lg:px-12">
                 <div className="w-full max-w-[31rem]">
                     {children}
-                    <div className="mt-7 flex flex-col items-center justify-between gap-3 border-t border-line pt-5 text-sm text-ink-muted sm:flex-row">
+                    <div className="mt-5 flex flex-col items-center justify-between gap-3 border-t border-line pt-4 text-sm text-ink-muted sm:flex-row">
                         <ActionLink href={paths.root.path()} intent="quiet" size="sm" className="px-2">
                             <ArrowLeft className="size-4" aria-hidden="true" /> Home
                         </ActionLink>

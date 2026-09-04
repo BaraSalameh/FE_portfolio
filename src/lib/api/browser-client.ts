@@ -1,10 +1,10 @@
 'use client';
 
-import { DynamicFetchOptions, ApiError, RefreshHandler } from '@/lib/definitions/api.definitions';
+import { DynamicFetchOptions, ApiError, RefreshHandler } from '@/lib/api/types';
 import { toApiError } from './errors';
 
 const refreshAccessToken: RefreshHandler = async () => {
-    const { refreshTokenClient } = await import('./refreshToken.client');
+    const { refreshTokenClient } = await import('./refresh');
     return refreshTokenClient();
 };
 
