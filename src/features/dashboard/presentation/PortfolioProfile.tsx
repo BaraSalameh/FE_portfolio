@@ -12,7 +12,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
-const ContactMessagePage = dynamic(() => import('../profile/contact-message/components/ContactMessagePage').then((module) => module.ContactMessagePage));
 const ProfileForm = dynamic(() => import('../profile/forms/ProfileForm').then((module) => module.ProfileForm));
 const ContactMessageForm = dynamic(() => import('../profile/contact-message/forms/ContactMessageForm').then((module) => module.ContactMessageForm));
 
@@ -51,10 +50,16 @@ export function PortfolioProfile({ user, unreadContactMessageCount = 0 }: Profil
                                 <Settings className="size-4" aria-hidden="true" />
                             </Link>
                         )}
-                        <div className="relative">
-                            <ActionDialog subTitle="Messages" icon={MessageCircle}><ContactMessagePage /></ActionDialog>
+                        {username && <div className="relative">
+                            <Link
+                                href={paths.root.messages('owner', username).path()}
+                                className="grid size-10 place-items-center rounded-xl text-white transition hover:bg-white/10"
+                                aria-label="Messages"
+                            >
+                                <MessageCircle className="size-4" aria-hidden="true" />
+                            </Link>
                             {unreadContactMessageCount > 0 && <span className="absolute right-1 top-1 size-2 rounded-full bg-highlight ring-2 ring-black/30" aria-label={`${unreadContactMessageCount} unread messages`} />}
-                        </div>
+                        </div>}
                     </div>
                 )}
             </div>

@@ -5,7 +5,31 @@ const genderPreference = {
     id: '11111111-1111-4111-8111-111111111111',
     name: 'show-gender',
 };
+const parseJsonBody = (body) => {
+    try { return body ? JSON.parse(body) : {}; }
+    catch { return {}; }
+};
 let userPreferences = [];
+let contactMessages = [
+    {
+        id: '22222222-2222-4222-8222-222222222222',
+        isRead: false,
+        emailTo: 'demo@example.com',
+        name: 'Alice Example',
+        email: 'alice@example.com',
+        subject: 'Project inquiry',
+        message: 'I would like to discuss a frontend project with you.',
+    },
+    {
+        id: '33333333-3333-4333-8333-333333333333',
+        isRead: true,
+        emailTo: 'demo@example.com',
+        name: 'Bob Example',
+        email: 'bob@example.com',
+        subject: 'Hello',
+        message: 'Your portfolio looks great. Thanks for sharing it.',
+    },
+];
 
 const dashboardFixture = () => ({
     user: {
@@ -29,7 +53,7 @@ const dashboardFixture = () => ({
     lstUserLanguages: [],
     lstProjects: [],
     lstUserSkills: [],
-    unreadContactMessageCount: 0,
+    unreadContactMessageCount: contactMessages.filter(message => !message.isRead).length,
 });
 
 const server = createServer((request, response) => {
@@ -56,6 +80,29 @@ const server = createServer((request, response) => {
 
         if (request.url === '/api/Owner/UserFullInfo') {
             response.end(JSON.stringify(dashboardFixture()));
+            return;
+        }
+
+        if (request.url?.startsWith('/api/Owner/ContactMessageList')) {
+            response.end(JSON.stringify({
+                items: contactMessages,
+                rowCount: contactMessages.length,
+                unreadContactMessageCount: contactMessages.filter(message => !message.isRead).length,
+            }));
+            return;
+        }
+
+        if (request.url === '/api/Owner/SignMessage' && request.method === 'POST') {
+            const payload = parseJsonBody(body);
+            if (payload.id) contactMessages = contactMessages.map(message => message.id === payload.id ? { ...message, isRead: true } : message);
+            response.end(JSON.stringify({}));
+            return;
+        }
+
+        if (request.url === '/api/Owner/DeleteMessage' && request.method === 'POST') {
+            const payload = parseJsonBody(body);
+            if (payload.id) contactMessages = contactMessages.filter(message => message.id !== payload.id);
+            response.end(JSON.stringify({}));
             return;
         }
 

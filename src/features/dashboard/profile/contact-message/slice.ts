@@ -17,8 +17,12 @@ const contactMessageSlice = createSlice({
     reducers: {
         removeMessage: (state, action) => {
             const id = action.payload;
+            const removedMessage = state.lstMessages.find(msg => msg.id === id);
             state.lstMessages = state.lstMessages.filter(msg => msg.id !== id);
-            state.rowCount = state.rowCount - 1;
+            state.rowCount = Math.max(0, state.rowCount - 1);
+            if (removedMessage && !removedMessage.isRead) {
+                state.unreadContactMessageCount = Math.max(0, state.unreadContactMessageCount - 1);
+            }
         },
 
         markMessage: (state, action) => {
@@ -27,7 +31,7 @@ const contactMessageSlice = createSlice({
 
             if (message && !message.isRead) {
                 message.isRead = true;
-                state.unreadContactMessageCount -= 1;
+                state.unreadContactMessageCount = Math.max(0, state.unreadContactMessageCount - 1);
             }
         }
     },
@@ -39,7 +43,7 @@ const contactMessageSlice = createSlice({
         })
 
         .addCase(contactMessageListQuery.pending, (state) => {
-            state.loading = false;
+            state.loading = true;
             state.error = null;
         })
         .addCase(contactMessageListQuery.fulfilled, (state, action) => {

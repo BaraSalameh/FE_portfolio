@@ -155,8 +155,34 @@ test('settings route is restricted to portfolio owners', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Settings not found' })).toBeVisible();
 });
 
+test('owner messages use a responsive list and detail page', async ({ context, page }) => {
+    await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/owner/demo/messages');
+    await expect(page.getByRole('heading', { name: 'Messages', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Inbox' })).toBeVisible();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+
+    await page.getByRole('button', { name: /Alice Example/ }).click();
+    await expect(page.getByRole('heading', { name: 'Project inquiry' })).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Selected message' }).getByText('I would like to discuss a frontend project with you.')).toBeVisible();
+    await page.getByRole('button', { name: 'Back to message list' }).click();
+    await expect(page.getByRole('heading', { name: 'Inbox' })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
+
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await expect(page.getByRole('heading', { name: 'Inbox' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Project inquiry' })).toBeVisible();
+});
+
+test('messages route is restricted to portfolio owners', async ({ page }) => {
+    await page.goto('/client/demo/messages');
+
+    await expect(page.getByRole('heading', { name: 'Messages not found' })).toBeVisible();
+});
+
 test('key routes pass baseline accessibility and responsive structure checks', async ({ page }) => {
-    const routes = ['/', '/auth/login', '/auth/register', '/auth/email', '/search', '/client/demo/dashboard', '/owner/demo/settings'];
+    const routes = ['/', '/auth/login', '/auth/register', '/auth/email', '/search', '/client/demo/dashboard', '/owner/demo/settings', '/owner/demo/messages'];
     const viewports = [
         { width: 390, height: 844 },
         { width: 1440, height: 900 },
@@ -171,6 +197,9 @@ test('key routes pass baseline accessibility and responsive structure checks', a
             }
             if (route.includes('/settings')) {
                 await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible();
+            }
+            if (route.includes('/messages')) {
+                await expect(page.getByRole('heading', { name: 'Messages', exact: true })).toBeVisible();
             }
 
             const audit = await page.evaluate(() => {

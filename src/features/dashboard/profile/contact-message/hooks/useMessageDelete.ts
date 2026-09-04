@@ -8,10 +8,12 @@ export const useMessageDelete = () => {
 
   return async (id: string) => {
         try {
-            await dispatch(deleteMessage(id));
+            await dispatch(deleteMessage(id)).unwrap();
             dispatch(removeMessage(id));
+            return true;
         } catch (err) {
             console.error('Failed to delete:', err);
+            return false;
         }
     }
 };
