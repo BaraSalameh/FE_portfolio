@@ -4,6 +4,7 @@ import { ActionDialog, ThemeSwitch } from '@/design-system';
 import type { ProfileProps } from '@/features/dashboard/profile/types.profile';
 import { useAppSelector } from '@/lib/store/hooks';
 import { checkWidgetPreferences, getClientLink, useUrlParams, widget_preferences } from '@/lib/utils';
+import { paths } from '@/lib/pathHelper';
 import dayjs from 'dayjs';
 import { Copy, Home, Link as LinkIcon, Mail, MessageCircle, Phone, Settings } from 'lucide-react';
 import dynamic from 'next/dynamic';
@@ -11,7 +12,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
-const SettingsPage = dynamic(() => import('../profile/settings/components/SettingsPage').then((module) => module.SettingsPage));
 const ContactMessagePage = dynamic(() => import('../profile/contact-message/components/ContactMessagePage').then((module) => module.ContactMessagePage));
 const ProfileForm = dynamic(() => import('../profile/forms/ProfileForm').then((module) => module.ProfileForm));
 const ContactMessageForm = dynamic(() => import('../profile/contact-message/forms/ContactMessageForm').then((module) => module.ContactMessageForm));
@@ -19,7 +19,7 @@ const ContactMessageForm = dynamic(() => import('../profile/contact-message/form
 const iconButton = 'grid size-10 place-items-center rounded-xl border border-line bg-surface-raised text-ink-muted shadow-sm transition hover:-translate-y-0.5 hover:border-accent/30 hover:text-ink';
 
 export function PortfolioProfile({ user, unreadContactMessageCount = 0 }: ProfileProps) {
-    const { role } = useUrlParams();
+    const { role, username } = useUrlParams();
     const clientLink = getClientLink() as Record<string, string>;
     const preferences = useAppSelector((state) => state.userWidgetPreference.lstUserPreferences);
     const [copyMessage, setCopyMessage] = useState('');
@@ -42,7 +42,15 @@ export function PortfolioProfile({ user, unreadContactMessageCount = 0 }: Profil
                 </div>
                 {role === 'owner' && (
                     <div className="absolute right-4 top-4 flex items-center gap-1 rounded-2xl border border-white/20 bg-black/25 p-1 text-white shadow-lg backdrop-blur-md sm:right-6 sm:top-6">
-                        <ActionDialog subTitle="Settings" icon={Settings}><SettingsPage /></ActionDialog>
+                        {username && (
+                            <Link
+                                href={paths.root.settings('owner', username).path()}
+                                className="grid size-10 place-items-center rounded-xl text-white transition hover:bg-white/10"
+                                aria-label="Settings"
+                            >
+                                <Settings className="size-4" aria-hidden="true" />
+                            </Link>
+                        )}
                         <div className="relative">
                             <ActionDialog subTitle="Messages" icon={MessageCircle}><ContactMessagePage /></ActionDialog>
                             {unreadContactMessageCount > 0 && <span className="absolute right-1 top-1 size-2 rounded-full bg-highlight ring-2 ring-black/30" aria-label={`${unreadContactMessageCount} unread messages`} />}

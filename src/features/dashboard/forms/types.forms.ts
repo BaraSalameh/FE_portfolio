@@ -87,6 +87,7 @@ export interface FormCheckboxProps extends InputHTMLAttributes<HTMLInputElement>
 
 export interface FormDropdownProps {
     label?: string;
+    ariaLabel?: string;
     options: Option[];
     value?: Option | MultiValue<Option>;
     onChange?: (value: MultiValue<Option> | SingleValue<Option>, actionMeta: ActionMeta<Option>) => void;

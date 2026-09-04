@@ -1,7 +1,7 @@
 'use client';
 
 import { FormInputProps } from './types.forms';
-import type { TextareaHTMLAttributes } from 'react';
+import { useId, type TextareaHTMLAttributes } from 'react';
 
 
 
@@ -12,7 +12,8 @@ export const FormInput = ({
     ...rest
 }: FormInputProps) => {
 
-    const inputId = rest.id ?? registration?.name ?? label;
+    const generatedId = useId();
+    const inputId = rest.id ?? `${registration?.name ?? label ?? 'field'}-${generatedId}`;
     const errorId = error && inputId ? `${inputId}-error` : undefined;
 
     const inputClasses = `

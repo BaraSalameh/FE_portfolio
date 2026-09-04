@@ -6,19 +6,17 @@ import { mapChartPreferenceToForm } from "@/lib/utils";
 import { ControlledForm } from '@/features/dashboard/forms';
 import { UserChartPreferenceProps } from "../types.chart-preferences";
 import { userChartPreferenceSchema } from "../schema";
-import { useHandleSubmit, useLoadChartType, useLoadWidget } from "../hooks";
+import { useHandleSubmit } from "../hooks";
 import { FormItem } from '@/features/dashboard/forms/types.forms';
 
 export const UserChartPreferenceForm = ({onClose, preferenceKeys, preferenceValues} : UserChartPreferenceProps) => {
 
-    const { loading, error, lstUserChartPreferences, widget, chartType } = useAppSelector((state) => state.userChartPreference);
+    const { lstUserChartPreferences, widget, chartType } = useAppSelector((state) => state.userChartPreference);
     const { lstWidgets } = widget;
     const { lstChartTypes } = chartType;
     const indicator = {when: 'Update', while: 'Updating...'};
 
-    useLoadWidget();
-    useLoadChartType();
-    const onSubmit = useHandleSubmit({ onClose });
+    const { onSubmit, isSaving, error, saved } = useHandleSubmit({ onClose });
     
     const resetItems = useMemo(
         () => mapChartPreferenceToForm(lstUserChartPreferences, preferenceKeys, lstWidgets, lstChartTypes, preferenceValues),
@@ -37,9 +35,11 @@ export const UserChartPreferenceForm = ({onClose, preferenceKeys, preferenceValu
             onSubmit={onSubmit}
             items={items}
             error={error}
-            loading={loading}
+            loading={isSaving}
             resetItems={resetItems}
             indicator={indicator}
-        />
+        >
+            {saved && <p role="status" className="text-sm font-semibold text-success">Chart preference saved.</p>}
+        </ControlledForm>
     );
 }

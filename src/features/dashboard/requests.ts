@@ -1,7 +1,6 @@
 import { browserApi } from '@/lib/api/browser-client';
 import { getApiErrorPayload } from '@/lib/api/errors';
 import { ApiError, DynamicFetchOptions } from '@/lib/api/types';
-import { executeDashboardMutation } from './actions';
 
 interface DynamicApiOptions extends DynamicFetchOptions {
     withCredentials?: boolean;
@@ -20,12 +19,12 @@ export interface DynamicApiResponse<T> {
 export { getApiErrorPayload };
 
 export const dashboardMutation = async (options: MutationApiOptions): Promise<void> => {
-    const result = await executeDashboardMutation({
-        method: options.method,
-        url: options.url,
-        data: options.data,
+    const { withCredentials, ...fetchOptions } = options;
+
+    await browserApi({
+        ...fetchOptions,
+        sendCredentials: withCredentials ?? options.sendCredentials,
     });
-    if (!result.success) throw new ApiError(result.error, 400);
 };
 
 /** Compatibility adapter for existing dashboard thunks. */

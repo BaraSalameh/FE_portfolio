@@ -21,7 +21,7 @@ export const getNavLinks = (username?: string | undefined, role?: 'owner' | 'cli
         { href: `/owner/${username}/language`, label: 'Languages', icon: Languages },
         { href: `/owner/${username}/blog-post`, label: 'Blog Post', icon: PenSquare },
         { href: `/owner/${username}/message`, label: 'Messages', icon: MessageSquare },
-        { href: `/owner/${username}/setting`, label: 'Settings', icon: Settings }
+        { href: `/owner/${username}/settings`, label: 'Settings', icon: Settings }
     ];
 
     return [{ href: '/', label: 'Home', icon: Home }];

@@ -6,6 +6,8 @@ export const paths = {
         search: route('/search'),
         dashboard: (role: string, username: string) =>
             route(`/${encodeURIComponent(role)}/${encodeURIComponent(username)}/dashboard`),
+        settings: (role: string, username: string) =>
+            route(`/${encodeURIComponent(role)}/${encodeURIComponent(username)}/settings`),
         auth: {
             login: route('/auth/login'),
             logout: route('/auth/logout'),

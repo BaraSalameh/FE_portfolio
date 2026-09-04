@@ -1,6 +1,11 @@
 import { createServer } from 'node:http';
 
 const port = Number(process.env.PLAYWRIGHT_API_PORT ?? 5055);
+const genderPreference = {
+    id: '11111111-1111-4111-8111-111111111111',
+    name: 'show-gender',
+};
+let userPreferences = [];
 
 const dashboardFixture = () => ({
     user: {
@@ -16,7 +21,7 @@ const dashboardFixture = () => ({
         gender: null,
         birthDate: null,
     },
-    lstUserPreferences: [],
+    lstUserPreferences: userPreferences,
     lstUserChartPreferences: [],
     lstCertificates: [],
     lstEducations: [],
@@ -51,6 +56,27 @@ const server = createServer((request, response) => {
 
         if (request.url === '/api/Owner/UserFullInfo') {
             response.end(JSON.stringify(dashboardFixture()));
+            return;
+        }
+
+        if (request.url === '/api/Owner/LKP_PreferenceList') {
+            response.end(JSON.stringify({ items: [genderPreference], rowCount: 1 }));
+            return;
+        }
+
+        if (request.url === '/api/Owner/UserPreferenceList') {
+            response.end(JSON.stringify({ items: userPreferences, rowCount: userPreferences.length }));
+            return;
+        }
+
+        if (request.url === '/api/Owner/EditUserPreference' && request.method === 'POST') {
+            const payload = JSON.parse(body);
+            userPreferences = [{
+                LKP_PreferenceID: payload.LKP_PreferenceID,
+                value: payload.value,
+                preference: genderPreference,
+            }];
+            response.end(JSON.stringify({}));
             return;
         }
 

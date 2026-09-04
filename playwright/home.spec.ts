@@ -112,29 +112,51 @@ test('public dashboard is responsive and its contact dialog supports Escape', as
     await expect(dialog).toBeHidden();
 });
 
-test('owner settings preserve the parent dialog when a nested preference closes', async ({ page }) => {
+test('owner settings open as a dedicated responsive page with clear categories', async ({ context, page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
+    await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
     await page.goto('/owner/demo/dashboard');
 
     await expect(page.getByRole('heading', { name: 'Demo Portfolio' })).toBeVisible();
-    await page.getByRole('button', { name: 'Settings' }).click();
-    const settingsDialog = page.getByRole('dialog', { name: 'Settings' });
-    await expect(settingsDialog).toBeVisible();
+    await page.getByRole('link', { name: 'Settings' }).click();
+    await expect(page).toHaveURL(/\/owner\/demo\/settings$/);
+    await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    const categoryDropdown = page.getByRole('combobox', { name: 'Settings category' });
+    await expect(categoryDropdown).toHaveValue('');
+    await expect(page.getByText('Preferences', { exact: true }).first()).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Profile' })).toBeVisible();
+    const genderToggle = page.getByRole('switch', { name: 'Hide gender' });
+    await expect(genderToggle).toBeEnabled();
+    await genderToggle.click();
+    await expect(page.getByRole('switch', { name: 'Show gender' })).toBeVisible();
+    await expect(page.getByText('Preference saved.').first()).toBeVisible();
 
-    await settingsDialog.getByRole('button', { name: 'Preferences', exact: true }).click();
-    await settingsDialog.getByRole('button', { name: 'Change theme' }).click();
-    const themeDialog = page.getByRole('dialog', { name: 'Change theme' });
-    await expect(themeDialog).toBeVisible();
+    await categoryDropdown.fill('Chart');
+    await page.getByRole('option', { name: 'Chart preferences' }).click();
+    await expect(page.getByRole('heading', { name: 'Chart preferences', exact: true })).toBeVisible();
 
-    await page.keyboard.press('Escape');
-    await expect(themeDialog).toBeHidden();
-    await expect(settingsDialog).toBeVisible();
-    await page.keyboard.press('Escape');
-    await expect(settingsDialog).toBeHidden();
+    await categoryDropdown.fill('General');
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('Enter');
+    await expect(page.getByRole('heading', { name: 'Appearance' })).toBeVisible();
+    await expect(page.getByRole('button', { name: /theme/i })).toBeVisible();
+
+    await categoryDropdown.focus();
+    await page.keyboard.press('Backspace');
+    await expect(page.getByRole('heading', { name: 'Profile' })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
+});
+
+test('settings route is restricted to portfolio owners', async ({ page }) => {
+    const response = await page.goto('/client/demo/settings');
+
+    expect(response?.status()).toBe(404);
+    await expect(page.getByRole('heading', { name: 'Settings not found' })).toBeVisible();
 });
 
 test('key routes pass baseline accessibility and responsive structure checks', async ({ page }) => {
-    const routes = ['/', '/auth/login', '/auth/register', '/auth/email', '/search', '/client/demo/dashboard'];
+    const routes = ['/', '/auth/login', '/auth/register', '/auth/email', '/search', '/client/demo/dashboard', '/owner/demo/settings'];
     const viewports = [
         { width: 390, height: 844 },
         { width: 1440, height: 900 },
@@ -146,6 +168,9 @@ test('key routes pass baseline accessibility and responsive structure checks', a
             await page.goto(route);
             if (route.includes('/dashboard')) {
                 await expect(page.getByRole('heading', { name: 'Demo Portfolio' })).toBeVisible();
+            }
+            if (route.includes('/settings')) {
+                await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible();
             }
 
             const audit = await page.evaluate(() => {

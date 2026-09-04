@@ -115,7 +115,7 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  :where(
+  :is(
     a[href],
     button,
     label[for],
@@ -140,7 +140,7 @@
     cursor: pointer;
   }
 
-  :where(:disabled, [aria-disabled="true"]) {
+  :is(:disabled, [aria-disabled="true"]) {
     cursor: not-allowed;
   }
 }
