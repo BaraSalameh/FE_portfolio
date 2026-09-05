@@ -11,7 +11,7 @@ import { useHandleSubmit } from "../hooks";
 import { FormItem } from '@/features/dashboard/forms/types.forms';
 import { Eye, EyeOff, LoaderCircle } from 'lucide-react';
 
-export const UserWidgetPreferenceForm = ({ onClose, preferenceKey, preferenceValues } : UserPreferenceProps) => {
+export const UserWidgetPreferenceForm = ({ onClose, preferenceKey, preferenceValues, compact = false } : UserPreferenceProps) => {
 
     const { lstUserPreferences, preference } = useAppSelector((state) => state.userWidgetPreference);
     const { lstPreferences, loading: isPreferenceLoading } = preference;
@@ -55,9 +55,9 @@ export const UserWidgetPreferenceForm = ({ onClose, preferenceKey, preferenceVal
 
     if (isToggle) {
         return (
-            <div className="space-y-2">
-                <div className="flex items-center justify-between gap-4 rounded-xl bg-canvas-subtle p-3">
-                    <span className="text-sm font-semibold text-ink">{isVisible ? 'Shown' : 'Hidden'}</span>
+            <div className={compact ? 'flex shrink-0 flex-col items-end gap-2' : 'space-y-2'}>
+                <div className={compact ? undefined : 'flex items-center justify-between gap-4 rounded-xl bg-canvas-subtle p-3'}>
+                    {!compact && <span className="text-sm font-semibold text-ink">{isVisible ? 'Shown' : 'Hidden'}</span>}
                     <button
                         type="button"
                         role="switch"

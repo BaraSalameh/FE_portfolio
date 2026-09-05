@@ -22,6 +22,7 @@ export interface UserPreferenceProps {
     onClose?: () => void;
     preferenceKey: string;
     preferenceValues?: PreferenceValue;
+    compact?: boolean;
 }
 
 export interface UserWidgetPreferenceResponse extends UserWidgetPreferenceFormData {
