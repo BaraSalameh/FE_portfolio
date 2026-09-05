@@ -38,7 +38,7 @@ export const CertificateForm = ({id, onClose} : CertificateProps) => {
             name: 'lstCertificateMedias',
             modal: {
                 as: 'update',
-                children: <ImageUploader preset="Cover_Photo"/>,
+                children: <ImageUploader preset="Certificate_Media"/>,
                 title:'Add Media',
                 subTitle: 'Choose a new media'
             }

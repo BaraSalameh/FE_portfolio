@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { dashboardHydrated } from '../dashboard.hydration';
 import { userInfoQuery } from "../profile/thunks";
-import { ProfileState } from "./types.profile";
+import type { ProfileImageField, ProfileState } from "./types.profile";
 
 const initialState: ProfileState = {
     user: null, 
@@ -12,7 +12,11 @@ const initialState: ProfileState = {
 const profileSlice = createSlice({
     name: 'profile',
     initialState,
-    reducers: {},
+    reducers: {
+        profileImageUpdated: (state, action: PayloadAction<{ field: ProfileImageField; url: string | null }>) => {
+            if (state.user) state.user[action.payload.field] = action.payload.url;
+        },
+    },
     extraReducers: (builder) => {
         builder
         .addCase(dashboardHydrated, (state, action) => {
@@ -34,4 +38,5 @@ const profileSlice = createSlice({
     },
 });
 
+export const { profileImageUpdated } = profileSlice.actions;
 export default profileSlice.reducer;

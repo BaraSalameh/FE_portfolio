@@ -109,6 +109,8 @@ export interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export interface ImageUploaderProps {
     preset: ImageType;
-    onAction?: (url: string) => void;
+    onAction?: (url: string) => void | Promise<void>;
+    uploadImage?: (file: Blob) => Promise<string>;
+    onRemove?: () => Promise<void>;
     onClose?: () => void;
 }

@@ -26,15 +26,16 @@ export const browserApiResponse: (
 
     let response: Response;
     try {
+        const isFormData = data instanceof FormData;
         response = await fetch(`/api${url.startsWith('/') ? url : `/${url}`}`, {
             ...requestInit,
             method: options.method,
             credentials: sendCredentials ? 'include' : 'omit',
             headers: {
-                'Content-Type': 'application/json',
+                ...(!isFormData ? { 'Content-Type': 'application/json' } : {}),
                 ...headers,
             },
-            body: data === undefined ? undefined : JSON.stringify(data),
+            body: data === undefined ? undefined : isFormData ? data : JSON.stringify(data),
         });
     } catch (error) {
         const message = error instanceof Error ? error.message : 'Unable to reach portfolio-api';

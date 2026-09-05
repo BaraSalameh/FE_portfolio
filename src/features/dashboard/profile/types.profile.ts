@@ -1,5 +1,13 @@
 import { ProfileFormData } from "./schema";
 
+export const profileImageKindByField = {
+    profilePicture: 'ProfilePicture',
+    coverPhoto: 'CoverPhoto',
+} as const;
+
+export type ProfileImageField = keyof typeof profileImageKindByField;
+export type ProfileImageKind = (typeof profileImageKindByField)[ProfileImageField];
+
 // slice
 export interface ProfileState {
     user: ProfileFormData | null;
