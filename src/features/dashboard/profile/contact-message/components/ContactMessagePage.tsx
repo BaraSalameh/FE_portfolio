@@ -13,6 +13,7 @@ import { contactMessageListQuery } from '../thunks';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import { paths } from '@/lib/pathHelper';
 import { cn } from '@/lib/ui/cn';
+import { OwnerHeaderActions } from '@/features/dashboard/profile/account';
 
 const getMessageId = (message: ContactMessageFormData) => message.id ?? '';
 
@@ -55,6 +56,7 @@ export const ContactMessagePage = () => {
     const dispatch = useAppDispatch();
     const { username } = useParams<{ username: string }>();
     const { lstMessages, unreadContactMessageCount, rowCount, loading, error } = useAppSelector(state => state.contactMessage);
+    const user = useAppSelector(state => state.profile.user);
     const [selectedId, setSelectedId] = useState<string>();
     const [mobileDetailsOpen, setMobileDetailsOpen] = useState(false);
     const isDesktop = useMediaQuery({ minWidth: 1024 });
@@ -92,7 +94,7 @@ export const ContactMessagePage = () => {
     };
 
     return <main className="min-h-svh bg-canvas px-4 py-5 text-ink sm:px-8 sm:py-8"><div className="mx-auto max-w-6xl">
-        <Link href={paths.root.dashboard('owner', username).path()} className="inline-flex min-h-10 items-center gap-2 rounded-full px-3 text-sm font-bold text-ink-muted transition hover:bg-surface hover:text-ink"><ArrowLeft className="size-4" aria-hidden="true" /> Back to dashboard</Link>
+        <div className="flex items-center justify-between gap-4"><Link href={paths.root.dashboard('owner', username).path()} className="inline-flex min-h-10 items-center gap-2 rounded-full px-3 text-sm font-bold text-ink-muted transition hover:bg-surface hover:text-ink"><ArrowLeft className="size-4" aria-hidden="true" /> Back to dashboard</Link>{user ? <OwnerHeaderActions user={user} unreadMessageCount={unreadContactMessageCount} /> : null}</div>
         <header className="mt-4 rounded-[1.75rem] border border-line bg-surface p-6 shadow-lg shadow-black/5 sm:p-8"><div className="flex items-start gap-4"><span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-accent text-white shadow-lg shadow-accent/20"><Inbox className="size-5" aria-hidden="true" /></span><div className="min-w-0"><p className="text-xs font-bold uppercase tracking-[0.16em] text-accent">Portfolio editor</p><h1 className="mt-1 text-3xl font-bold tracking-[-0.05em] sm:text-4xl">Messages</h1><p className="mt-2 max-w-2xl text-sm leading-6 text-ink-muted sm:text-base">Read and manage messages sent through your public portfolio.</p></div>{unreadContactMessageCount > 0 ? <span className="ml-auto shrink-0 rounded-full bg-accent-soft px-3 py-1.5 text-xs font-bold text-accent-strong">{unreadContactMessageCount} unread</span> : null}</div></header>
         <div className="mt-6 lg:grid lg:grid-cols-[22rem_minmax(0,1fr)] lg:items-start lg:gap-6">
             <section aria-labelledby="inbox-heading" className={cn('rounded-2xl border border-line bg-surface shadow-sm', mobileDetailsOpen && selectedMessage ? 'hidden lg:block' : 'block')}>

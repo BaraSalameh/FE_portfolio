@@ -1,6 +1,6 @@
 import {
     Home, LayoutDashboard, Book, Briefcase, Folder, BadgePercent,
-    Languages, PenSquare, MessageSquare, Settings
+    Languages, PenSquare, MessageSquare
 } from 'lucide-react';
 
 export const getNavLinks = (username?: string | undefined, role?: 'owner' | 'client' | 'admin' ) => {
@@ -20,8 +20,7 @@ export const getNavLinks = (username?: string | undefined, role?: 'owner' | 'cli
         { href: `/owner/${username}/skill`, label: 'Skills', icon: BadgePercent },
         { href: `/owner/${username}/language`, label: 'Languages', icon: Languages },
         { href: `/owner/${username}/blog-post`, label: 'Blog Post', icon: PenSquare },
-        { href: `/owner/${username}/messages`, label: 'Messages', icon: MessageSquare },
-        { href: `/owner/${username}/settings`, label: 'Settings', icon: Settings }
+        { href: `/owner/${username}/messages`, label: 'Messages', icon: MessageSquare }
     ];
 
     return [{ href: '/', label: 'Home', icon: Home }];

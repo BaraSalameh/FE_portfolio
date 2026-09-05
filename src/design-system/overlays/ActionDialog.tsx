@@ -21,9 +21,10 @@ export type ActionDialogProps = {
     children?: ReactNode;
     icon?: LucideIcon;
     className?: string;
+    triggerClassName?: string;
 };
 
-export function ActionDialog({ isLoading, idToDelete, onAction, onClose, as = 'create', title, subTitle = title, error, children, icon: Icon, className }: ActionDialogProps) {
+export function ActionDialog({ isLoading, idToDelete, onAction, onClose, as = 'create', title, subTitle = title, error, children, icon: Icon, className, triggerClassName }: ActionDialogProps) {
     const [open, setOpen] = useState(false);
     const titleId = useId();
     const dialogRef = useRef<HTMLDivElement>(null);
@@ -58,7 +59,7 @@ export function ActionDialog({ isLoading, idToDelete, onAction, onClose, as = 'c
 
     return (
         <>
-            <button type="button" onClick={() => setOpen(true)} className="inline-flex min-h-10 items-center gap-2 rounded-xl px-2.5 text-left text-sm font-semibold transition hover:bg-canvas-subtle hover:text-ink" aria-haspopup="dialog" aria-label={title ?? dialogTitle}>
+            <button type="button" onClick={() => setOpen(true)} className={cn('inline-flex min-h-10 items-center gap-2 rounded-xl px-2.5 text-left text-sm font-semibold transition hover:bg-canvas-subtle hover:text-ink', triggerClassName)} aria-haspopup="dialog" aria-label={title ?? dialogTitle}>
                 <TriggerIcon className="size-4 shrink-0" aria-hidden="true" />
                 {title ? <span>{title}</span> : null}
             </button>

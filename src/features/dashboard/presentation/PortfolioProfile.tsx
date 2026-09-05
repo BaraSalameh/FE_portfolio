@@ -1,24 +1,23 @@
 'use client';
 
 import { ActionDialog, ThemeSwitch } from '@/design-system';
+import { OwnerHeaderActions } from '@/features/dashboard/profile/account';
 import type { ProfileProps } from '@/features/dashboard/profile/types.profile';
 import { useAppSelector } from '@/lib/store/hooks';
 import { checkWidgetPreferences, getClientLink, useUrlParams, widget_preferences } from '@/lib/utils';
-import { paths } from '@/lib/pathHelper';
 import dayjs from 'dayjs';
-import { Copy, Home, Link as LinkIcon, Mail, MessageCircle, Phone, Settings } from 'lucide-react';
+import { Copy, Home, Link as LinkIcon, Mail, MessageCircle, Phone } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
-const ProfileForm = dynamic(() => import('../profile/forms/ProfileForm').then((module) => module.ProfileForm));
 const ContactMessageForm = dynamic(() => import('../profile/contact-message/forms/ContactMessageForm').then((module) => module.ContactMessageForm));
 
 const iconButton = 'grid size-10 place-items-center rounded-xl border border-line bg-surface-raised text-ink-muted shadow-sm transition hover:-translate-y-0.5 hover:border-accent/30 hover:text-ink';
 
 export function PortfolioProfile({ user, unreadContactMessageCount = 0 }: ProfileProps) {
-    const { role, username } = useUrlParams();
+    const { role } = useUrlParams();
     const clientLink = getClientLink() as Record<string, string>;
     const preferences = useAppSelector((state) => state.userWidgetPreference.lstUserPreferences);
     const [copyMessage, setCopyMessage] = useState('');
@@ -40,27 +39,7 @@ export function PortfolioProfile({ user, unreadContactMessageCount = 0 }: Profil
                     {role === 'client' && <ThemeSwitch className="rounded-xl" />}
                 </div>
                 {role === 'owner' && (
-                    <div className="absolute right-4 top-4 flex items-center gap-1 rounded-2xl border border-white/20 bg-black/25 p-1 text-white shadow-lg backdrop-blur-md sm:right-6 sm:top-6">
-                        {username && (
-                            <Link
-                                href={paths.root.settings('owner', username).path()}
-                                className="grid size-10 place-items-center rounded-xl text-white transition hover:bg-white/10"
-                                aria-label="Settings"
-                            >
-                                <Settings className="size-4" aria-hidden="true" />
-                            </Link>
-                        )}
-                        {username && <div className="relative">
-                            <Link
-                                href={paths.root.messages('owner', username).path()}
-                                className="grid size-10 place-items-center rounded-xl text-white transition hover:bg-white/10"
-                                aria-label="Messages"
-                            >
-                                <MessageCircle className="size-4" aria-hidden="true" />
-                            </Link>
-                            {unreadContactMessageCount > 0 && <span className="absolute right-1 top-1 size-2 rounded-full bg-highlight ring-2 ring-black/30" aria-label={`${unreadContactMessageCount} unread messages`} />}
-                        </div>}
-                    </div>
+                    <OwnerHeaderActions user={user} unreadMessageCount={unreadContactMessageCount} inverted className="absolute right-4 top-4 sm:right-6 sm:top-6" />
                 )}
             </div>
 
@@ -71,13 +50,7 @@ export function PortfolioProfile({ user, unreadContactMessageCount = 0 }: Profil
                             <div className="relative size-28 overflow-hidden rounded-[1.6rem] border-4 border-surface bg-canvas-subtle shadow-xl sm:size-32">
                                 <Image src={profilePicture} alt={`${user.firstname} ${user.lastname}'s profile picture`} fill className="object-cover" priority sizes="128px" />
                             </div>
-                            <div className="absolute -bottom-2 -right-2 rounded-xl border border-line bg-surface-raised shadow-md">
-                                {role === 'owner' ? (
-                                    <ActionDialog as="update" subTitle="Update profile"><ProfileForm /></ActionDialog>
-                                ) : (
-                                    <ActionDialog subTitle="Send Message" icon={MessageCircle}><ContactMessageForm /></ActionDialog>
-                                )}
-                            </div>
+                            {role !== 'owner' ? <div className="absolute -bottom-2 -right-2 rounded-xl border border-line bg-surface-raised shadow-md"><ActionDialog subTitle="Send Message" icon={MessageCircle}><ContactMessageForm /></ActionDialog></div> : null}
                         </div>
                         <div className="text-center sm:pb-1 sm:text-left">
                             <h1 className="text-2xl font-bold tracking-[-0.045em] sm:text-3xl">{user.firstname} {user.lastname}</h1>

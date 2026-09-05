@@ -1,10 +1,10 @@
 import { notFound } from 'next/navigation';
 import { getDashboard } from '@/features/dashboard/api';
 import DashboardStoreProvider from '@/features/dashboard/presentation/DashboardStoreProvider';
-import { ContactMessagePage } from '@/features/dashboard/profile/contact-message/components';
+import { ProfilePage } from '@/features/dashboard/profile/components';
 import { handlePageApiError } from '@/lib/api/page-errors';
 
-export default async function OwnerMessagesPage({ params }: { params: Promise<{ role: string; username: string }> }) {
+export default async function OwnerProfilePage({ params }: { params: Promise<{ role: string; username: string }> }) {
     const { role, username } = await params;
     if (role.toLowerCase() !== 'owner') notFound();
 
@@ -16,6 +16,5 @@ export default async function OwnerMessagesPage({ params }: { params: Promise<{ 
     }
 
     if (!dashboard) notFound();
-
-    return <DashboardStoreProvider dashboard={dashboard}><ContactMessagePage /></DashboardStoreProvider>;
+    return <DashboardStoreProvider dashboard={dashboard}><ProfilePage /></DashboardStoreProvider>;
 }
