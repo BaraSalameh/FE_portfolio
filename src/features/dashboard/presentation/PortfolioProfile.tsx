@@ -26,9 +26,11 @@ export function PortfolioProfile({ user, unreadContactMessageCount = 0, socialLi
 
     return (
         <section className="rounded-[1.75rem] border border-line bg-surface shadow-lg shadow-black/5">
-            <div className="relative h-40 overflow-hidden rounded-t-[1.7rem] sm:h-52">
-                <Image src={coverPhoto} alt="Portfolio cover" fill className="object-cover" priority sizes="(max-width: 1440px) 100vw, 88rem" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" aria-hidden="true" />
+            <div className="relative h-40 rounded-t-[1.7rem] sm:h-52">
+                <div className="absolute inset-0 overflow-hidden rounded-t-[1.7rem]">
+                    <Image src={coverPhoto} alt="Portfolio cover" fill className="object-cover" priority sizes="(max-width: 1440px) 100vw, 88rem" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" aria-hidden="true" />
+                </div>
                 <div className="absolute left-4 top-4 flex gap-2 sm:left-6 sm:top-6">
                     <Link href="/" className={iconButton} aria-label="Go to home page"><Home className="size-4" aria-hidden="true" /></Link>
                     {role === 'client' && <ThemeSwitch className="rounded-xl" />}
