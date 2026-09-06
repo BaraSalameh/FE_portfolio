@@ -2,7 +2,7 @@ import { getApiBaseUrl } from '@/lib/api/config';
 import { normalizeAuthCookiePath } from '@/lib/api/cookies';
 import { NextRequest } from 'next/server';
 
-const MAX_BODY_BYTES = 5_242_880;
+const MAX_BODY_BYTES = 6_291_456;
 const REQUEST_HEADERS = [
     'accept',
     'accept-language',

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+const addressRegex = /^\p{L}[\p{L}\p{M} .'-]* - \p{L}[\p{L}\p{M} .'-]*$/u;
 
 export const profileSchema = z.object({
     username: z
@@ -28,6 +29,31 @@ export const profileSchema = z.object({
     bio: z
         .string()
         .max(1000, 'Bio is too long')
+        .optional()
+        .nullable(),
+
+    address: z
+        .string()
+        .trim()
+        .max(120, 'Address is too long')
+        .optional()
+        .nullable()
+        .refine((val) => !val || addressRegex.test(val), {
+            message: 'Use the format City - Country (for example, Istanbul - Turkey)'
+        }),
+
+    whatsAppNumber: z
+        .string()
+        .optional()
+        .nullable()
+        .refine((val) => !val || /^\+[1-9]\d{7,14}$/.test(val), {
+            message: 'Use international format, for example +905551234567'
+        }),
+
+    cvUrl: z
+        .string()
+        .url()
+        .max(2048)
         .optional()
         .nullable(),
 

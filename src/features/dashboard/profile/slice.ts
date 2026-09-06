@@ -16,6 +16,9 @@ const profileSlice = createSlice({
         profileImageUpdated: (state, action: PayloadAction<{ field: ProfileImageField; url: string | null }>) => {
             if (state.user) state.user[action.payload.field] = action.payload.url;
         },
+        profileCvUpdated: (state, action: PayloadAction<string | null>) => {
+            if (state.user) state.user.cvUrl = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -38,5 +41,5 @@ const profileSlice = createSlice({
     },
 });
 
-export const { profileImageUpdated } = profileSlice.actions;
+export const { profileImageUpdated, profileCvUpdated } = profileSlice.actions;
 export default profileSlice.reducer;

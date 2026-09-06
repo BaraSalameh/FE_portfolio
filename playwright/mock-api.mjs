@@ -5,6 +5,14 @@ const genderPreference = {
     id: '11111111-1111-4111-8111-111111111111',
     name: 'show-gender',
 };
+const preference = (id, name) => ({ id, name });
+const publicPreferences = [
+    { preference: preference('44444444-4444-4444-8444-444444444441', 'show-email-address'), value: 'show' },
+    { preference: preference('44444444-4444-4444-8444-444444444442', 'show-phone-number'), value: 'show' },
+    { preference: preference('44444444-4444-4444-8444-444444444443', 'show-whatsapp'), value: 'show' },
+    { preference: preference('44444444-4444-4444-8444-444444444444', 'show-site-links'), value: 'show' },
+    { preference: preference('44444444-4444-4444-8444-444444444445', 'show-cv'), value: 'show' },
+];
 const parseJsonBody = (body) => {
     try { return body ? JSON.parse(body) : {}; }
     catch { return {}; }
@@ -31,7 +39,7 @@ let contactMessages = [
     },
 ];
 
-const dashboardFixture = () => ({
+const dashboardFixture = (preferences = userPreferences) => ({
     user: {
         username: 'demo',
         email: 'demo@example.com',
@@ -39,13 +47,16 @@ const dashboardFixture = () => ({
         lastname: 'Portfolio',
         title: 'Frontend developer',
         bio: 'A test portfolio used to verify the complete public experience.',
-        phone: null,
+        address: 'Istanbul - Turkey',
+        whatsAppNumber: '+905551234567',
+        cvUrl: 'https://res.cloudinary.com/demo/image/upload/fl_attachment:CV/v1/folio/cvs/demo/cv.pdf',
+        phone: '+905526436811',
         profilePicture: null,
         coverPhoto: null,
         gender: null,
         birthDate: null,
     },
-    lstUserPreferences: userPreferences,
+    lstUserPreferences: preferences,
     lstUserChartPreferences: [],
     lstCertificates: [],
     lstEducations: [],
@@ -53,6 +64,7 @@ const dashboardFixture = () => ({
     lstUserLanguages: [],
     lstProjects: [],
     lstUserSkills: [],
+    lstSocialLinks: [{ id: '55555555-5555-4555-8555-555555555555', platform: 'GitHub', url: 'https://github.com/demo', order: 1 }],
     unreadContactMessageCount: contactMessages.filter(message => !message.isRead).length,
 });
 
@@ -74,7 +86,7 @@ const server = createServer((request, response) => {
         }
 
         if (request.url === '/api/Client/UserByUsername?Username=demo') {
-            response.end(JSON.stringify(dashboardFixture()));
+            response.end(JSON.stringify(dashboardFixture(publicPreferences)));
             return;
         }
 

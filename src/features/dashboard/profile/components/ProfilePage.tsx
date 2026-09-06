@@ -1,11 +1,12 @@
 'use client';
 
 import { OwnerHeaderActions } from '@/features/dashboard/profile/account';
-import { ProfileForm } from '@/features/dashboard/profile/forms';
+import { ProfileCvSection, ProfileForm } from '@/features/dashboard/profile/forms';
 import { useAppSelector } from '@/lib/store/hooks';
 import { paths } from '@/lib/pathHelper';
 import { ArrowLeft, Contact, UserRound } from 'lucide-react';
 import Link from 'next/link';
+import { SocialLinksEditor } from '../social-links/SocialLinksEditor';
 
 export function ProfilePage() {
     const user = useAppSelector((state) => state.profile.user);
@@ -22,6 +23,8 @@ export function ProfilePage() {
             <section className="rounded-2xl border border-line bg-surface p-5 shadow-sm sm:p-7"><div className="flex items-start gap-3"><span className="grid size-10 shrink-0 place-items-center rounded-xl bg-accent-soft text-accent-strong"><Contact className="size-4" aria-hidden="true" /></span><div><h2 className="text-xl font-bold tracking-[-0.035em]">Profile information</h2><p className="mt-1 text-sm leading-6 text-ink-muted">Update the personal details shown on your public portfolio.</p></div></div>
                 <div className="mt-6 border-t border-line pt-6"><ProfileForm /></div>
             </section>
+            <ProfileCvSection />
+            <SocialLinksEditor />
         </div>
     </div></main>;
 }

@@ -9,6 +9,7 @@ import userWidgetPreferenceSlice from "@/features/dashboard/profile/settings/wid
 import userChartPreferenceSlice from "@/features/dashboard/profile/settings/chart-preferences/slice";
 import userSkillSlice from "@/features/dashboard/widgets/skill/slice";
 import certificateSlice from "@/features/dashboard/widgets/certificate/slice";
+import socialLinksSlice from '@/features/dashboard/profile/social-links/slice';
 
 const rootReducer = combineReducers({
     profile: profileSlice,
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
     userWidgetPreference: userWidgetPreferenceSlice,
     userChartPreference: userChartPreferenceSlice,
     userSkill: userSkillSlice,
-    certificate: certificateSlice
+    certificate: certificateSlice,
+    socialLinks: socialLinksSlice
 });
 
 export default rootReducer;

@@ -68,6 +68,8 @@ export const ProfileForm = ({ onClose }: { onClose?: () => void }) => {
         { as: 'Input', name: 'lastname', label: 'Last name', placeholder: 'Doe' },
         { as: 'Input', name: 'title', label: 'Title', placeholder: 'Sr. Next.js Developer' },
         { as: 'Input', name: 'bio', label: 'Bio', placeholder: 'Describe yourself', type: 'Textarea' },
+        { as: 'Input', name: 'address', label: 'Address', placeholder: 'Istanbul - Turkey' },
+        { as: 'Input', name: 'whatsAppNumber', label: 'WhatsApp number', placeholder: '+905551234567' },
         { as: 'Input', name: 'phone', label: 'Phone', placeholder: '+0 123456789' },
         { as: 'Dropdown', name: 'gender', label: 'Gender', options: genderOptions },
         { as: 'Input', name: 'birthDate', label: 'Birth date', type: 'Date' },

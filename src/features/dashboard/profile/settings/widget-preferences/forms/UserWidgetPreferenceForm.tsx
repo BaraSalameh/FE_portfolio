@@ -11,7 +11,7 @@ import { useHandleSubmit } from "../hooks";
 import { FormItem } from '@/features/dashboard/forms/types.forms';
 import { Eye, EyeOff, LoaderCircle } from 'lucide-react';
 
-export const UserWidgetPreferenceForm = ({ onClose, preferenceKey, preferenceValues, compact = false } : UserPreferenceProps) => {
+export const UserWidgetPreferenceForm = ({ onClose, preferenceKey, preferenceValues, compact = false, defaultValue } : UserPreferenceProps) => {
 
     const { lstUserPreferences, preference } = useAppSelector((state) => state.userWidgetPreference);
     const { lstPreferences, loading: isPreferenceLoading } = preference;
@@ -24,8 +24,8 @@ export const UserWidgetPreferenceForm = ({ onClose, preferenceKey, preferenceVal
 
     const { onSubmit, isSaving, error, saved } = useHandleSubmit({ onClose });
     const resetItems = useMemo(
-        () => mapPreferenceToForm(lstUserPreferences, preferenceKey, lstPreferences, valueOptions),
-    [lstUserPreferences, preferenceKey, lstPreferences, valueOptions]);
+        () => mapPreferenceToForm(lstUserPreferences, preferenceKey, lstPreferences, valueOptions, defaultValue),
+    [lstUserPreferences, preferenceKey, lstPreferences, valueOptions, defaultValue]);
 
     const items = useMemo<FormItem<typeof userWidgetPreferenceSchema>[]>(() => [
         {as: 'Input', name: 'LKP_PreferenceID', type: 'hidden', config: ['Disabled']},

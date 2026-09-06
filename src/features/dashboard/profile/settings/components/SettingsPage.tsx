@@ -10,13 +10,13 @@ import { useLoadChartType, useLoadWidget } from '../chart-preferences/hooks';
 import { useLoadWidgetPreference } from '../widget-preferences/hooks';
 import { useAppSelector } from '@/lib/store/hooks';
 import { chart_preferences, checkWidgetPreferences, useUrlParams, widget_preferences } from '@/lib/utils';
-import { ArrowLeft, BarChart3, BriefcaseBusiness, Calendar, Component, FolderKanban, GraduationCap, Languages, LayoutDashboard, Mail, Mars, Palette, Phone, PieChart, Radar, Settings2, SlidersHorizontal, Sparkles, UserRound, type LucideIcon } from 'lucide-react';
+import { ArrowLeft, BarChart3, BriefcaseBusiness, Calendar, Component, Download, FolderKanban, GraduationCap, Languages, LayoutDashboard, Link as LinkIcon, Mail, Mars, MessageCircle, Palette, Phone, PieChart, Radar, Settings2, SlidersHorizontal, Sparkles, UserRound, type LucideIcon } from 'lucide-react';
 import { paths } from '@/lib/pathHelper';
 import Link from 'next/link';
 import { useState, type ReactNode } from 'react';
 
 type Category = 'preferences' | 'charts' | 'appearance';
-type PreferenceItem = { key: string; title: string; icon: LucideIcon; parent?: string };
+type PreferenceItem = { key: string; title: string; icon: LucideIcon; parent?: string; defaultValue?: 'show' | 'hide' };
 
 const categories: Array<{ id: Category; label: string; description: string; icon: LucideIcon }> = [
     { id: 'preferences', label: 'Preferences', description: 'Choose what visitors see.', icon: SlidersHorizontal },
@@ -35,6 +35,9 @@ const preferenceSections: Array<{ title: string; description: string; icon: Luci
             { key: widget_preferences.key.show_birthdate, title: 'Birthdate', icon: Calendar },
             { key: widget_preferences.key.show_email_address, title: 'Email address', icon: Mail },
             { key: widget_preferences.key.show_phone_number, title: 'Phone number', icon: Phone },
+            { key: widget_preferences.key.show_whatsapp, title: 'WhatsApp', icon: MessageCircle, defaultValue: 'hide' },
+            { key: widget_preferences.key.show_site_links, title: 'Site links', icon: LinkIcon, defaultValue: 'hide' },
+            { key: widget_preferences.key.show_cv, title: 'CV download', icon: Download, defaultValue: 'hide' },
         ],
     },
     {
@@ -141,7 +144,7 @@ export const SettingsPage = () => {
 
             <section className="mt-6 min-w-0 lg:mt-0" aria-labelledby={`${activeCategory}-heading`}>
                 <div className="mb-6"><p className="text-xs font-bold uppercase tracking-[0.16em] text-accent">Settings category</p><h2 id={`${activeCategory}-heading`} className="mt-1 text-2xl font-bold tracking-[-0.04em]">{currentCategory.label}</h2><p className="mt-1 text-sm text-ink-muted">{currentCategory.description}</p></div>
-                {activeCategory === 'preferences' && <div className="space-y-5">{preferenceSections.map((section) => { const visibleItems = section.items.filter((item) => !item.parent || checkWidgetPreferences(lstUserPreferences, item.parent)); return <SettingsCard key={section.title} icon={section.icon} title={section.title} description={section.description}><div className="divide-y divide-line">{visibleItems.map((item) => { const Icon = item.icon; return <div key={item.key} className="flex min-h-16 items-center justify-between gap-4 py-3 first:pt-0 last:pb-0"><div className="flex min-w-0 items-center gap-3"><span className="grid size-9 shrink-0 place-items-center rounded-lg bg-canvas-subtle text-ink-muted"><Icon className="size-4" aria-hidden="true" /></span><h3 className="truncate text-sm font-bold tracking-[-0.01em] sm:text-base">{item.title}</h3></div><UserWidgetPreferenceForm preferenceKey={item.key} compact /></div>; })}</div></SettingsCard>; })}</div>}
+                {activeCategory === 'preferences' && <div className="space-y-5">{preferenceSections.map((section) => { const visibleItems = section.items.filter((item) => !item.parent || checkWidgetPreferences(lstUserPreferences, item.parent)); return <SettingsCard key={section.title} icon={section.icon} title={section.title} description={section.description}><div className="divide-y divide-line">{visibleItems.map((item) => { const Icon = item.icon; return <div key={item.key} className="flex min-h-16 items-center justify-between gap-4 py-3 first:pt-0 last:pb-0"><div className="flex min-w-0 items-center gap-3"><span className="grid size-9 shrink-0 place-items-center rounded-lg bg-canvas-subtle text-ink-muted"><Icon className="size-4" aria-hidden="true" /></span><h3 className="truncate text-sm font-bold tracking-[-0.01em] sm:text-base">{item.title}</h3></div><UserWidgetPreferenceForm preferenceKey={item.key} compact defaultValue={item.defaultValue} /></div>; })}</div></SettingsCard>; })}</div>}
                 {activeCategory === 'charts' && <div className="space-y-9">{chartSections.filter((section) => !section.parent || checkWidgetPreferences(lstUserPreferences, section.parent)).map((section) => { const charts = section.charts.filter((chart) => checkWidgetPreferences(lstUserPreferences, chart.visibilityKey)); const sectionKey = section.title.toLowerCase() as 'education' | 'experience' | 'project'; return <section key={section.title} className="space-y-4"><SectionHeading title={section.title} description={`Configure the visible charts in your ${section.title.toLowerCase()} section.`} />{charts.length > 0 ? <div className="grid gap-4 xl:grid-cols-2">{charts.map((chart) => <SettingsCard key={chart.type} icon={chart.icon} title={chart.label} description={`Choose how the ${section.title.toLowerCase()} ${chart.label.toLowerCase()} summarizes your data.`}><UserChartPreferenceForm preferenceKeys={{ widget: section.widget, chartType: chart_preferences.key.chart[chart.type] }} preferenceValues={{ groupBy: chart_preferences.values[sectionKey][chart.type], valueSource: valueSourceOptions }} /></SettingsCard>)}</div> : <div className="rounded-2xl border border-dashed border-line bg-canvas-subtle p-6 text-sm text-ink-muted">Enable a chart in Preferences to customize it here.</div>}</section>; })}</div>}
                 {activeCategory === 'appearance' && <section className="space-y-4"><SectionHeading title="Appearance" description="Choose the color scheme used across your portfolio editor." /><SettingsCard icon={Palette} title="Theme" description="Switch between light and dark mode. This change is applied immediately."><div className="flex items-center justify-between gap-4 rounded-xl bg-canvas-subtle p-3"><span className="text-sm font-semibold">Change theme</span><ThemeSwitch /></div></SettingsCard></section>}
             </section>

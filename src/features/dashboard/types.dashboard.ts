@@ -8,6 +8,14 @@ import { UserLanguageResponse } from './widgets/language/types.language';
 import { ProjectResponse } from './widgets/project/types.project';
 import { UserSkillResponse } from './widgets/skill/types.skill';
 
+export interface SocialLinkResponse {
+    id?: string;
+    platform: string;
+    url: string;
+    icon?: string | null;
+    order: number;
+}
+
 export interface DashboardResponse {
     user: ProfileFormData;
     lstUserPreferences: UserWidgetPreferenceResponse[];
@@ -18,5 +26,6 @@ export interface DashboardResponse {
     lstUserLanguages: UserLanguageResponse[];
     lstProjects: ProjectResponse[];
     lstUserSkills: UserSkillResponse[];
+    lstSocialLinks: SocialLinkResponse[];
     unreadContactMessageCount: number;
 }

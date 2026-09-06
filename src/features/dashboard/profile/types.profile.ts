@@ -1,4 +1,5 @@
 import { ProfileFormData } from "./schema";
+import type { SocialLinkResponse } from '../types.dashboard';
 
 export const profileImageKindByField = {
     profilePicture: 'ProfilePicture',
@@ -19,5 +20,6 @@ export interface ProfileState {
 export interface ProfileProps {
     user: ProfileFormData,
     unreadContactMessageCount?: number;
+    socialLinks?: SocialLinkResponse[];
     className?: string;
 }

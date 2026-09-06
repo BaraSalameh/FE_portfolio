@@ -112,13 +112,38 @@ test('public dashboard is responsive and its contact dialog supports Escape', as
     await expect(dialog).toBeHidden();
 });
 
+test('public contact cards expose email, phone, WhatsApp, contact, CV, and site actions', async ({ page }) => {
+    await page.goto('/client/demo/dashboard');
+
+    await page.getByRole('button', { name: /demo@example\.com/ }).click();
+    const emailMenu = page.getByRole('menu', { name: 'Email actions' });
+    await expect(emailMenu.getByRole('menuitem', { name: 'Send email' })).toHaveAttribute('href', 'mailto:demo@example.com');
+    await expect(emailMenu.getByRole('menuitem', { name: 'Copy' })).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(emailMenu).toBeHidden();
+
+    await page.getByRole('button', { name: /\+905526436811/ }).click();
+    const phoneMenu = page.getByRole('menu', { name: 'Phone actions' });
+    await expect(phoneMenu.getByRole('menuitem', { name: 'WhatsApp' })).toHaveAttribute('href', 'https://wa.me/905551234567');
+    await expect(phoneMenu.getByRole('menuitem', { name: 'Call' })).toHaveAttribute('href', 'tel:+905526436811');
+    const downloadPromise = page.waitForEvent('download');
+    await phoneMenu.getByRole('menuitem', { name: 'Add to contacts' }).click();
+    const download = await downloadPromise;
+    expect(download.suggestedFilename()).toBe('Demo-Portfolio.vcf');
+
+    await expect(page.getByRole('link', { name: 'Download CV' })).toHaveAttribute('href', /fl_attachment:CV/);
+    await expect(page.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/demo');
+    await expect(page.getByRole('region', { name: 'Sites & contact' }).getByRole('button', { name: 'Share portfolio' })).toBeVisible();
+});
+
 test('owner settings open as a dedicated responsive page with clear categories', async ({ context, page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
     await page.goto('/owner/demo/dashboard');
 
     await expect(page.getByRole('heading', { name: 'Demo Portfolio' })).toBeVisible();
-    await page.getByRole('link', { name: 'Settings' }).click();
+    await page.getByRole('button', { name: 'Open account menu' }).click();
+    await page.getByRole('menuitem', { name: 'Settings' }).click();
     await expect(page).toHaveURL(/\/owner\/demo\/settings$/);
     await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible();
     await expect(page.getByRole('dialog')).toHaveCount(0);
@@ -126,20 +151,19 @@ test('owner settings open as a dedicated responsive page with clear categories',
     await expect(categoryDropdown).toHaveValue('');
     await expect(page.getByText('Preferences', { exact: true }).first()).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Profile' })).toBeVisible();
-    const genderToggle = page.getByRole('switch', { name: 'Hide gender' });
+    const genderToggle = page.getByRole('switch', { name: /(?:Hide|Show) gender/ });
     await expect(genderToggle).toBeEnabled();
     await genderToggle.click();
-    await expect(page.getByRole('switch', { name: 'Show gender' })).toBeVisible();
+    await expect(page.getByRole('switch', { name: /(?:Hide|Show) gender/ })).toBeVisible();
     await expect(page.getByText('Preference saved.').first()).toBeVisible();
 
     await categoryDropdown.fill('Chart');
     await page.getByRole('option', { name: 'Chart preferences' }).click();
     await expect(page.getByRole('heading', { name: 'Chart preferences', exact: true })).toBeVisible();
 
-    await categoryDropdown.fill('General');
-    await page.keyboard.press('ArrowDown');
-    await page.keyboard.press('Enter');
-    await expect(page.getByRole('heading', { name: 'Appearance' })).toBeVisible();
+    await categoryDropdown.fill('Appearance');
+    await page.getByRole('option', { name: 'Appearance' }).click();
+    await expect(page.locator('#appearance-heading')).toBeVisible();
     await expect(page.getByRole('button', { name: /theme/i })).toBeVisible();
 
     await categoryDropdown.focus();

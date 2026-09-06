@@ -21,3 +21,18 @@ export const removeProfileImage = async (imageKind: ProfileImageKind) => {
         url: `/Owner/RemoveProfileImage?imageKind=${encodeURIComponent(imageKind)}`,
     });
 };
+
+export const uploadCv = async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    const response = await browserApi<{ url: string }>({
+        method: 'POST',
+        url: '/Owner/UpdateCv',
+        data: formData,
+    });
+    return response.data.url;
+};
+
+export const removeCv = async () => {
+    await browserApi({ method: 'DELETE', url: '/Owner/RemoveCv' });
+};

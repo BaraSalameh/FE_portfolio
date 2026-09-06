@@ -23,6 +23,7 @@ export interface UserPreferenceProps {
     preferenceKey: string;
     preferenceValues?: PreferenceValue;
     compact?: boolean;
+    defaultValue?: 'show' | 'hide';
 }
 
 export interface UserWidgetPreferenceResponse extends UserWidgetPreferenceFormData {

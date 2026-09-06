@@ -8,6 +8,9 @@ export const widget_preferences = {
         birthdate_format: 'birthdate-format',
         show_birthdate: 'show-birthdate',
         show_phone_number: 'show-phone-number',
+        show_whatsapp: 'show-whatsapp',
+        show_site_links: 'show-site-links',
+        show_cv: 'show-cv',
 
         // education widget
         show_education_bar_chart: 'show-education-bar-chart',

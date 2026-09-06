@@ -11,6 +11,7 @@ export default function DashboardPageClient() {
     const { error, loading, user } = useAppSelector(state => state.profile);
     const { unreadContactMessageCount } = useAppSelector(state => state.contactMessage);
     const { lstUserPreferences } = useAppSelector(state => state.userWidgetPreference);
+    const socialLinks = useAppSelector(state => state.socialLinks.items);
     const widgets = useWidgets();
     const overviewData = useOverviewWidget();
     const showOverview = checkWidgetPreferences(
@@ -38,6 +39,7 @@ export default function DashboardPageClient() {
                 <PortfolioProfile
                     user={user as ProfileFormData}
                     unreadContactMessageCount={unreadContactMessageCount}
+                    socialLinks={socialLinks}
                 />
                 {showOverview && <div className="mt-5"><DashboardWidget {...overviewData} /></div>}
                 <div className="mt-5 columns-1 gap-4 sm:columns-2 lg:columns-3">

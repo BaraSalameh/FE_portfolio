@@ -38,7 +38,7 @@ test('forwards trusted origin, body, cookies, and all auth cookies', async ({ re
 
 test('rejects API request bodies larger than portfolio-api accepts', async ({ request }) => {
     const response = await request.post('/api/Account/Login', {
-        data: 'x'.repeat(1_048_577),
+        data: 'x'.repeat(6_291_457),
     });
 
     expect(response.status()).toBe(413);
