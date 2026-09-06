@@ -39,7 +39,7 @@ export function PortfolioProfile({ user, unreadContactMessageCount = 0, socialLi
             </div>
 
             <div className="relative px-5 pb-7 sm:px-8 sm:pb-8">
-                <div className="-mt-12 flex flex-col gap-6 sm:-mt-14 sm:flex-row sm:items-start">
+                <div className="-mt-12 flex flex-col gap-6 sm:-mt-14 sm:flex-row sm:items-start sm:justify-between">
                     <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-5">
                         <div className="relative">
                             <div className="relative size-28 overflow-hidden rounded-[1.6rem] border-4 border-surface bg-canvas-subtle shadow-xl sm:size-32">
@@ -52,16 +52,16 @@ export function PortfolioProfile({ user, unreadContactMessageCount = 0, socialLi
                             <p className="mt-1 text-sm font-medium text-ink-muted sm:text-base">{user.title || 'Portfolio professional'}</p>
                         </div>
                     </div>
+                    <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-ink-muted sm:mt-16 sm:max-w-[45%] sm:justify-end sm:pt-2 sm:text-right">
+                        {user.address && <span className="inline-flex items-center gap-1.5"><MapPin className="size-3.5 text-accent" aria-hidden="true" />{user.address}</span>}
+                        {checkWidgetPreferences(preferences, widget_preferences.key.show_gender) && user.gender && <span>{user.gender.toString() === '1' ? 'Male' : 'Female'}</span>}
+                        {checkWidgetPreferences(preferences, widget_preferences.key.show_birthdate) && user.birthDate && <span>{dayjs().diff(user.birthDate, 'year')} years old</span>}
+                    </div>
                 </div>
 
                 <div className="mt-7 border-t border-line pt-6">
                     <div>
                         {user.bio && <p className="w-full whitespace-pre-wrap text-justify text-sm leading-7 text-ink-muted sm:text-[0.95rem]">{user.bio}</p>}
-                        <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-ink-muted">
-                            {user.address && <span className="inline-flex items-center gap-1.5"><MapPin className="size-3.5 text-accent" aria-hidden="true" />{user.address}</span>}
-                            {checkWidgetPreferences(preferences, widget_preferences.key.show_gender) && user.gender && <span>{user.gender.toString() === '1' ? 'Male' : 'Female'}</span>}
-                            {checkWidgetPreferences(preferences, widget_preferences.key.show_birthdate) && user.birthDate && <span>{dayjs().diff(user.birthDate, 'year')} years old</span>}
-                        </div>
                     </div>
                 </div>
                 <ContactLinksSection
