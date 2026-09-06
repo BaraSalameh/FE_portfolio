@@ -112,6 +112,28 @@ test('public dashboard is responsive and its contact dialog supports Escape', as
     await expect(dialog).toBeHidden();
 });
 
+test('profile picture opens an accessible lightbox for guests and owners', async ({ context, page }) => {
+    for (const role of ['client', 'owner'] as const) {
+        if (role === 'owner') {
+            await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
+        }
+
+        await page.goto(`/${role}/demo/dashboard`);
+        const trigger = page.getByRole('button', { name: 'Enlarge profile picture' });
+        await trigger.click();
+
+        const dialog = page.getByRole('dialog', { name: 'Profile picture preview' });
+        await expect(dialog).toBeVisible();
+        await expect(dialog.getByRole('img', { name: "Demo Portfolio's profile picture" })).toBeVisible();
+        await expect(dialog.getByRole('button', { name: 'Close profile picture preview' })).toBeFocused();
+        await expect(page.locator('body')).toHaveCSS('overflow', 'hidden');
+
+        await page.keyboard.press('Escape');
+        await expect(dialog).toBeHidden();
+        await expect(trigger).toBeFocused();
+    }
+});
+
 test('public contact cards expose email, phone, WhatsApp, contact, CV, and site actions', async ({ page }) => {
     await page.goto('/client/demo/dashboard');
 

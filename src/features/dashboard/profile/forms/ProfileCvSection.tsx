@@ -11,12 +11,13 @@ export function ProfileCvSection() {
     const cvUrl = useAppSelector((state) => state.profile.user?.cvUrl);
     const dispatch = useAppDispatch();
     const inputRef = useRef<HTMLInputElement>(null);
-    const [busy, setBusy] = useState(false);
+    const [pendingAction, setPendingAction] = useState<'upload' | 'remove' | null>(null);
     const [message, setMessage] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const isBusy = pendingAction !== null;
 
     const handleFile = async (file?: File) => {
-        if (!file) return;
+        if (!file || isBusy) return;
         setError(null);
         if (file.type !== 'application/pdf' || !file.name.toLowerCase().endsWith('.pdf')) {
             setError('Choose a PDF file.');
@@ -26,7 +27,7 @@ export function ProfileCvSection() {
             setError('The CV must be 5 MB or smaller.');
             return;
         }
-        setBusy(true);
+        setPendingAction('upload');
         try {
             const url = await uploadCv(file);
             dispatch(profileCvUpdated(url));
@@ -34,13 +35,14 @@ export function ProfileCvSection() {
         } catch (uploadError) {
             setError(getApiErrorPayload(uploadError));
         } finally {
-            setBusy(false);
+            setPendingAction(null);
             if (inputRef.current) inputRef.current.value = '';
         }
     };
 
     const handleRemove = async () => {
-        setBusy(true);
+        if (isBusy) return;
+        setPendingAction('remove');
         setError(null);
         try {
             await removeCv();
@@ -49,7 +51,7 @@ export function ProfileCvSection() {
         } catch (removeError) {
             setError(getApiErrorPayload(removeError));
         } finally {
-            setBusy(false);
+            setPendingAction(null);
         }
     };
 
@@ -59,8 +61,8 @@ export function ProfileCvSection() {
             <div className="flex flex-wrap gap-2">
                 {cvUrl ? <a href={cvUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-line px-4 text-sm font-bold text-ink-muted hover:text-ink"><FileText className="size-4" />Current CV</a> : null}
                 <input ref={inputRef} type="file" accept="application/pdf,.pdf" className="sr-only" onChange={(event) => void handleFile(event.target.files?.[0])} />
-                <button type="button" disabled={busy} onClick={() => inputRef.current?.click()} className="inline-flex min-h-10 items-center gap-2 rounded-xl bg-accent px-4 text-sm font-bold text-white disabled:opacity-60">{busy ? <LoaderCircle className="size-4 animate-spin" /> : <Upload className="size-4" />}{cvUrl ? 'Replace CV' : 'Upload CV'}</button>
-                {cvUrl ? <button type="button" disabled={busy} onClick={() => void handleRemove()} className="grid size-10 place-items-center rounded-xl border border-line text-danger disabled:opacity-60" aria-label="Remove CV"><Trash2 className="size-4" /></button> : null}
+                <button type="button" disabled={isBusy} onClick={() => inputRef.current?.click()} className="inline-flex min-h-10 items-center gap-2 rounded-xl bg-accent px-4 text-sm font-bold text-white disabled:opacity-60">{pendingAction === 'upload' ? <LoaderCircle className="size-4 animate-spin" /> : <Upload className="size-4" />}{cvUrl ? 'Replace CV' : 'Upload CV'}</button>
+                {cvUrl ? <button type="button" disabled={isBusy} onClick={() => void handleRemove()} className="grid size-10 place-items-center rounded-xl border border-line text-danger disabled:opacity-60" aria-label={pendingAction === 'remove' ? 'Removing CV' : 'Remove CV'}>{pendingAction === 'remove' ? <LoaderCircle className="size-4 animate-spin" /> : <Trash2 className="size-4" />}</button> : null}
             </div>
         </div>
         {message ? <p role="status" className="mt-3 text-sm font-semibold text-success">{message}</p> : null}

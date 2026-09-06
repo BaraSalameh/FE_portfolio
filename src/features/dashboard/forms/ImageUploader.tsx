@@ -12,8 +12,9 @@ export const ImageUploader = ({ preset, onAction, uploadImage, onRemove, onClose
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
     const [zoom, setZoom] = useState(1);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
-    const [isSaving, setIsSaving] = useState(false);
+    const [pendingAction, setPendingAction] = useState<'upload' | 'remove' | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const isBusy = pendingAction !== null;
 
     const onCropComplete = useCallback((_: Area, croppedAreaPixels: Area) => {
         setCroppedAreaPixels(croppedAreaPixels);
@@ -30,12 +31,12 @@ export const ImageUploader = ({ preset, onAction, uploadImage, onRemove, onClose
     };
 
     const handleUpload = async () => {
-        if (!imageSrc || !croppedAreaPixels || isSaving) return;
+        if (!imageSrc || !croppedAreaPixels || isBusy) return;
         if (!onAction) {
             setError('This image cannot be saved right now. Please try again.');
             return;
         }
-        setIsSaving(true);
+        setPendingAction('upload');
         setError(null);
 
         try {
@@ -65,13 +66,13 @@ export const ImageUploader = ({ preset, onAction, uploadImage, onRemove, onClose
         } catch (uploadError) {
             setError(uploadError instanceof Error ? uploadError.message : 'Could not save the image.');
         } finally {
-            setIsSaving(false);
+            setPendingAction(null);
         }
     };
 
     const handleRemove = async () => {
-        if (!onRemove || isSaving) return;
-        setIsSaving(true);
+        if (!onRemove || isBusy) return;
+        setPendingAction('remove');
         setError(null);
 
         try {
@@ -80,7 +81,7 @@ export const ImageUploader = ({ preset, onAction, uploadImage, onRemove, onClose
         } catch (removeError) {
             setError(removeError instanceof Error ? removeError.message : 'Could not remove the image.');
         } finally {
-            setIsSaving(false);
+            setPendingAction(null);
         }
     };
 
@@ -120,10 +121,10 @@ export const ImageUploader = ({ preset, onAction, uploadImage, onRemove, onClose
                 <button
                     onClick={handleUpload}
                     type="button"
-                    disabled={isSaving}
+                    disabled={isBusy}
                     className="inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-accent px-5 text-sm font-bold text-white transition hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                    {isSaving ? 'Saving photo…' : 'Save photo'}
+                    {pendingAction === 'upload' ? 'Saving photo…' : 'Save photo'}
                 </button>
                 
             )}
@@ -132,11 +133,11 @@ export const ImageUploader = ({ preset, onAction, uploadImage, onRemove, onClose
                 <button
                     onClick={handleRemove}
                     type="button"
-                    disabled={isSaving}
+                    disabled={isBusy}
                     className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-danger/30 px-5 text-sm font-bold text-danger transition hover:bg-danger/10 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     <Trash2 className="size-4" aria-hidden="true" />
-                    {isSaving ? 'Removing photo…' : 'Remove photo'}
+                    {pendingAction === 'remove' ? 'Removing photo…' : 'Remove photo'}
                 </button>
             ) : null}
         </div>

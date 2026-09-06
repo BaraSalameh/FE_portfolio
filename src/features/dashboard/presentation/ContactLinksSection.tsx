@@ -43,9 +43,11 @@ export function ContactLinksSection({ user, socialLinks, showEmail, showPhone, s
     const hasEmail = showEmail && Boolean(user.email);
     const hasPhone = showPhone && Boolean(user.phone);
     const hasWhatsApp = showWhatsApp && Boolean(user.whatsAppNumber);
+    const hasStandaloneWhatsApp = hasWhatsApp && !hasPhone;
     const hasCv = showCv && Boolean(user.cvUrl);
     const visibleSites = showSiteLinks ? socialLinks : [];
-    const hasItems = hasEmail || hasPhone || hasCv || visibleSites.length > 0 || Boolean(sharePath);
+    const contactCardCount = Number(hasEmail) + Number(hasPhone) + Number(hasStandaloneWhatsApp);
+    const hasItems = contactCardCount > 0 || hasCv || visibleSites.length > 0 || Boolean(sharePath);
     const hasQuickActions = hasCv || visibleSites.length > 0 || Boolean(sharePath);
 
     useEffect(() => {
@@ -124,7 +126,7 @@ export function ContactLinksSection({ user, socialLinks, showEmail, showPhone, s
             {sharePath ? <button type="button" onClick={() => void copy(new URL(sharePath, window.location.origin).href, 'Portfolio link copied')} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-surface-raised px-4 text-sm font-bold text-ink shadow-sm transition hover:-translate-y-0.5 hover:border-accent/40 hover:text-accent-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"><Share2 className="size-4 text-accent" aria-hidden="true" />Share portfolio</button> : null}
         </div> : null}
 
-        <div className={`mx-auto grid max-w-2xl gap-2.5 sm:grid-cols-2 ${hasQuickActions ? 'mt-5' : ''}`}>
+        {contactCardCount > 0 ? <div className={`mx-auto grid gap-2.5 ${contactCardCount === 1 ? 'max-w-sm' : 'max-w-2xl sm:grid-cols-2'} ${hasQuickActions ? 'mt-5' : ''}`}>
             {hasEmail && user.email ? <div className="relative min-w-0">
                 <button type="button" onClick={(event) => toggleMenu('email', event)} className={`${cardClass} w-full`} aria-haspopup="menu" aria-expanded={openMenu === 'email'} aria-controls={`${menuBaseId}-email`}>
                     <Mail className="size-4 shrink-0 text-accent" aria-hidden="true" />
@@ -152,7 +154,12 @@ export function ContactLinksSection({ user, socialLinks, showEmail, showPhone, s
                     <button role="menuitem" type="button" onClick={() => void copy(user.phone!, 'Phone number copied')} className={menuItemClass}><Copy className="size-4 text-accent" aria-hidden="true" />Copy</button>
                 </div> : null}
             </div> : null}
-        </div>
+
+            {hasStandaloneWhatsApp && user.whatsAppNumber ? <a href={`https://wa.me/${user.whatsAppNumber.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className={`${cardClass} w-full`}>
+                <MessageCircle className="size-4 shrink-0 text-accent" aria-hidden="true" />
+                <span className="min-w-0 flex-1 truncate">WhatsApp</span>
+            </a> : null}
+        </div> : null}
         <p className="sr-only" aria-live="polite">{status}</p>
     </section>;
 }

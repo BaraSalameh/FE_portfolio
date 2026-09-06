@@ -11,6 +11,7 @@ import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ContactLinksSection } from './ContactLinksSection';
+import { ProfileImageLightbox } from './ProfileImageLightbox';
 
 const ContactMessageForm = dynamic(() => import('../profile/contact-message/forms/ContactMessageForm').then((module) => module.ContactMessageForm));
 
@@ -44,9 +45,7 @@ export function PortfolioProfile({ user, unreadContactMessageCount = 0, socialLi
                 <div className="-mt-12 flex flex-col gap-6 sm:-mt-14 sm:flex-row sm:items-start sm:justify-between">
                     <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-5">
                         <div className="relative">
-                            <div className="relative size-28 overflow-hidden rounded-[1.6rem] border-4 border-surface bg-canvas-subtle shadow-xl sm:size-32">
-                                <Image src={profilePicture} alt={`${user.firstname} ${user.lastname}'s profile picture`} fill className="object-cover" priority sizes="128px" />
-                            </div>
+                            <ProfileImageLightbox src={profilePicture} alt={`${user.firstname} ${user.lastname}'s profile picture`} />
                             {role !== 'owner' ? <div className="absolute -bottom-2 -right-2 rounded-xl border border-line bg-surface-raised shadow-md"><ActionDialog subTitle="Send Message" icon={MessageCircle}><ContactMessageForm /></ActionDialog></div> : null}
                         </div>
                         <div className="text-center sm:mt-16 sm:pt-1 sm:text-left">
