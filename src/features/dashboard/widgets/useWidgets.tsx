@@ -1,4 +1,3 @@
-import { WidgetCardProps } from '@/features/dashboard/types.presentation';
 import { DashboardWidget } from '@/features/dashboard/presentation';
 import { checkWidgetPreferences } from "@/lib/utils";
 import { widget_preferences } from "@/lib/utils";
@@ -9,34 +8,48 @@ import { useProjectWidget } from "./project/hooks";
 import { useLanguageWidget } from "./language/hooks";
 import { useSkillWidget } from "./skill";
 import { useCertificateWidget } from "./certificate/hooks";
+import { memo } from 'react';
 
-export const useWidgets = () => {
+const ProjectWidget = memo(function ProjectWidget() {
+    return <DashboardWidget {...useProjectWidget()} />;
+});
+
+const EducationWidget = memo(function EducationWidget() {
+    return <DashboardWidget {...useEducationWidget()} />;
+});
+
+const ExperienceWidget = memo(function ExperienceWidget() {
+    return <DashboardWidget {...useExperienceWidget()} />;
+});
+
+const LanguageWidget = memo(function LanguageWidget() {
+    return <DashboardWidget {...useLanguageWidget()} />;
+});
+
+const SkillWidget = memo(function SkillWidget() {
+    return <DashboardWidget {...useSkillWidget()} />;
+});
+
+const CertificateWidget = memo(function CertificateWidget() {
+    return <DashboardWidget {...useCertificateWidget()} />;
+});
+
+export const PortfolioWidgets = memo(function PortfolioWidgets() {
 
     const { lstUserPreferences } = useAppSelector(state => state.userWidgetPreference);
-    const projectData = useProjectWidget();
-    const educationData = useEducationWidget();
-    const experienceData = useExperienceWidget();
-    const languageData = useLanguageWidget();
-    const skillData = useSkillWidget();
-    const certificateData = useCertificateWidget();
 
     const showProjectWidget = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_project_widget);
     const showSkillWidget = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_skill_widget);
     const showCertificateWidget = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_certificate_widget);
 
-    const widgets: WidgetCardProps[] = [
-        educationData,
-        experienceData,
-        languageData,
-    ];
-
-    if (showProjectWidget) widgets.splice(1, 0, projectData);
-    if (showSkillWidget) widgets.splice(1, 0, skillData);
-    if (showCertificateWidget) widgets.splice(1, 0, certificateData);
-
-    return widgets.map((widget, index) => (
-        <div key={widget?.header?.title || index} className="break-inside-avoid">
-            <DashboardWidget {...widget} />
-        </div>
-    ));
-};
+    return (
+        <>
+            <div className="break-inside-avoid"><EducationWidget /></div>
+            {showCertificateWidget && <div className="break-inside-avoid"><CertificateWidget /></div>}
+            {showSkillWidget && <div className="break-inside-avoid"><SkillWidget /></div>}
+            {showProjectWidget && <div className="break-inside-avoid"><ProjectWidget /></div>}
+            <div className="break-inside-avoid"><ExperienceWidget /></div>
+            <div className="break-inside-avoid"><LanguageWidget /></div>
+        </>
+    );
+});

@@ -9,7 +9,7 @@ import { useDebouncedSortExperience } from "./useDebouncedSortExperience";
 
 export const useExperienceWidget = (): WidgetCardProps => {
 
-    const { loading: experienceLoading, lstExperiences } = useAppSelector(state => state.experience);
+    const { loading: experienceLoading, error, lstExperiences } = useAppSelector(state => state.experience);
     const { lstUserPreferences } = useAppSelector(state => state.userWidgetPreference);
     const { lstUserChartPreferences } = useAppSelector(state => state.userChartPreference);
     const handleExperienceDelete = useHandleExperienceDelete();
@@ -52,8 +52,10 @@ export const useExperienceWidget = (): WidgetCardProps => {
     
     return {
         isLoading: experienceLoading,
+        error,
         items: lstExperiences,
-        header: { title: 'Experience', icon: Briefcase },
+        header: { title: 'Experience', icon: Briefcase, description: 'Roles, responsibilities, and career history' },
+        emptyState: { title: 'No experience added', description: 'Add a role to highlight where you worked and what you accomplished.' },
         bar: barData,
         pie: pieData,
         radar: radarData,
@@ -62,7 +64,7 @@ export const useExperienceWidget = (): WidgetCardProps => {
             { leftKey: 'location', icon: LocationEdit },
             { leftKey: 'startDate', between: '-', rightKey: 'endDate', icon: Clock, isTime: true }
         ],
-        create: { subTitle: 'Add Experience', form: <ExperienceForm /> },
+        create: { title: 'Add', subTitle: 'Add experience', form: <ExperienceForm /> },
         update: { subTitle: 'Update Experience', form: <ExperienceForm /> },
         del: { subTitle: 'Delete Experience', message: 'Are you sure?', onDelete: handleExperienceDelete },
         details: [

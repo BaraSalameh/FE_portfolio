@@ -12,7 +12,7 @@ type DialogMode = 'create' | 'update' | 'delete' | 'none';
 export type ActionDialogProps = {
     isLoading?: boolean;
     idToDelete?: string;
-    onAction?: (id: string) => void | Promise<void>;
+    onAction?: (id: string) => void | boolean | Promise<void | boolean>;
     onClose?: () => void;
     error?: FieldError;
     as?: DialogMode;
@@ -20,21 +20,24 @@ export type ActionDialogProps = {
     subTitle?: string;
     children?: ReactNode;
     icon?: LucideIcon;
+    iconOnly?: boolean;
     className?: string;
     triggerClassName?: string;
 };
 
-export function ActionDialog({ isLoading, idToDelete, onAction, onClose, as = 'create', title, subTitle = title, error, children, icon: Icon, className, triggerClassName }: ActionDialogProps) {
+export function ActionDialog({ isLoading, idToDelete, onAction, onClose, as = 'create', title, subTitle = title, error, children, icon: Icon, iconOnly = false, className, triggerClassName }: ActionDialogProps) {
     const [open, setOpen] = useState(false);
+    const [actionError, setActionError] = useState<string>();
     const titleId = useId();
     const dialogRef = useRef<HTMLDivElement>(null);
+    const triggerRef = useRef<HTMLButtonElement>(null);
     const dialogTitle = subTitle ?? title ?? `${as} item`;
     const TriggerIcon = Icon ?? (as === 'update' ? Edit3 : as === 'delete' ? Trash2 : Plus);
 
     useEffect(() => {
         if (!open) return;
         const previousOverflow = document.body.style.overflow;
-        const trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        const trigger = triggerRef.current;
         const handleKeyDown = (event: KeyboardEvent) => {
             const dialogs = document.querySelectorAll('[role="dialog"]');
             const isTop = dialogs.item(dialogs.length - 1) === dialogRef.current;
@@ -59,9 +62,9 @@ export function ActionDialog({ isLoading, idToDelete, onAction, onClose, as = 'c
 
     return (
         <>
-            <button type="button" onClick={() => setOpen(true)} className={cn('inline-flex min-h-10 items-center gap-2 rounded-xl px-2.5 text-left text-sm font-semibold transition hover:bg-canvas-subtle hover:text-ink', triggerClassName)} aria-haspopup="dialog" aria-label={title ?? dialogTitle}>
+            <button ref={triggerRef} type="button" onClick={() => { setActionError(undefined); setOpen(true); }} className={cn('responsive-action shrink-0 gap-2 rounded-xl text-sm font-semibold transition hover:bg-canvas-subtle hover:text-ink', triggerClassName)} aria-haspopup="dialog" aria-label={title ?? dialogTitle} title={title ?? dialogTitle}>
                 <TriggerIcon className="size-4 shrink-0" aria-hidden="true" />
-                {title ? <span>{title}</span> : null}
+                {title && !iconOnly ? <span className="responsive-action__label">{title}</span> : null}
             </button>
             {error && <p role="alert" className="mt-1 text-xs text-danger">{error.message}</p>}
             {open && typeof document !== 'undefined' && createPortal(
@@ -75,7 +78,22 @@ export function ActionDialog({ isLoading, idToDelete, onAction, onClose, as = 'c
                             {as !== 'delete' ? child : (
                                 <div className="space-y-5">
                                     <div className="rounded-xl border border-danger/20 bg-danger/8 p-4 text-sm leading-6 text-ink-muted">{children}</div>
-                                    <button type="button" disabled={isLoading} onClick={async () => { if (!onAction || !idToDelete) return; await onAction(idToDelete); onClose?.(); setOpen(false); }} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-danger px-5 text-sm font-bold text-white transition hover:brightness-95 disabled:opacity-60"><Trash2 className="size-4" aria-hidden="true" /> {isLoading ? 'Deleting…' : 'Delete'}</button>
+                                    {actionError ? <p role="alert" className="text-sm text-danger">{actionError}</p> : null}
+                                    <button type="button" disabled={isLoading} onClick={async () => {
+                                        if (!onAction || !idToDelete) return;
+                                        setActionError(undefined);
+                                        try {
+                                            const succeeded = await onAction(idToDelete);
+                                            if (succeeded === false) {
+                                                setActionError('The item could not be deleted. Review the error and try again.');
+                                                return;
+                                            }
+                                            onClose?.();
+                                            setOpen(false);
+                                        } catch {
+                                            setActionError('The item could not be deleted. Please try again.');
+                                        }
+                                    }} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-danger px-5 text-sm font-bold text-white transition hover:brightness-95 disabled:opacity-60"><Trash2 className="size-4" aria-hidden="true" /> {isLoading ? 'Deleting…' : 'Delete'}</button>
                                 </div>
                             )}
                         </div>

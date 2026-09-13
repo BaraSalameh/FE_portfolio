@@ -39,7 +39,64 @@ let contactMessages = [
     },
 ];
 
-const dashboardFixture = (preferences = userPreferences) => ({
+const populatedWidgets = {
+    lstEducations: [{
+        id: '60000000-0000-4000-8000-000000000001',
+        institution: { id: '61000000-0000-4000-8000-000000000001', name: 'Design University', logo: '' },
+        degree: { id: '62000000-0000-4000-8000-000000000001', name: 'Bachelor of Science', abbreviation: 'BSc' },
+        fieldOfStudy: { id: '63000000-0000-4000-8000-000000000001', name: 'Computer Science' },
+        startDate: '2018-09-01',
+        endDate: '2022-06-01',
+        description: 'Focused on accessible web applications.',
+        lstProjects: [],
+        lstSkills: [],
+    }],
+    lstExperiences: [{
+        id: '60000000-0000-4000-8000-000000000002',
+        jobTitle: 'Frontend Developer',
+        companyName: 'Example Studio',
+        startDate: '2022-07-01',
+        endDate: null,
+        location: 'Remote',
+        description: 'Built responsive product experiences.',
+        lstSkills: [],
+    }],
+    lstProjects: [{
+        id: '60000000-0000-4000-8000-000000000003',
+        title: 'Portfolio Platform',
+        liveLink: 'https://example.com/portfolio',
+        sourceCode: 'https://github.com/demo/portfolio',
+        imageUrl: null,
+        description: 'A fast, accessible portfolio builder.',
+        isFeatured: true,
+        education: null,
+        experience: null,
+        lstSkills: [],
+    }],
+    lstCertificates: [{
+        id: '60000000-0000-4000-8000-000000000004',
+        certificate: { id: '64000000-0000-4000-8000-000000000001', name: 'Web Accessibility' },
+        issueDate: '2024-01-01',
+        expirationDate: null,
+        credintialID: 'A11Y-2024',
+        credintialUrl: 'https://example.com/credential',
+        lstSkills: [],
+        lstCertificateMedias: [],
+    }],
+    lstUserLanguages: [{
+        language: { id: '65000000-0000-4000-8000-000000000001', name: 'English' },
+        languageProficiency: { id: '66000000-0000-4000-8000-000000000001', level: 'Advanced' },
+    }],
+    lstUserSkills: [{
+        skill: { id: '67000000-0000-4000-8000-000000000001', name: 'TypeScript', iconUrl: '' },
+        lstEducations: [],
+        lstExperiences: [],
+        lstProjects: [],
+        lstCertificates: [],
+    }],
+};
+
+const dashboardFixture = (preferences = userPreferences, widgets = {}) => ({
     user: {
         username: 'demo',
         email: 'demo@example.com',
@@ -58,12 +115,12 @@ const dashboardFixture = (preferences = userPreferences) => ({
     },
     lstUserPreferences: preferences,
     lstUserChartPreferences: [],
-    lstCertificates: [],
-    lstEducations: [],
-    lstExperiences: [],
-    lstUserLanguages: [],
-    lstProjects: [],
-    lstUserSkills: [],
+    lstCertificates: widgets.lstCertificates ?? [],
+    lstEducations: widgets.lstEducations ?? [],
+    lstExperiences: widgets.lstExperiences ?? [],
+    lstUserLanguages: widgets.lstUserLanguages ?? [],
+    lstProjects: widgets.lstProjects ?? [],
+    lstUserSkills: widgets.lstUserSkills ?? [],
     lstSocialLinks: [{ id: '55555555-5555-4555-8555-555555555555', platform: 'GitHub', url: 'https://github.com/demo', order: 1 }],
     unreadContactMessageCount: contactMessages.filter(message => !message.isRead).length,
 });
@@ -86,7 +143,7 @@ const server = createServer((request, response) => {
         }
 
         if (request.url === '/api/Client/UserByUsername?Username=demo') {
-            response.end(JSON.stringify(dashboardFixture(publicPreferences)));
+            response.end(JSON.stringify(dashboardFixture(publicPreferences, populatedWidgets)));
             return;
         }
 

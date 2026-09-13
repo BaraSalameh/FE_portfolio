@@ -24,6 +24,7 @@ export interface FormField {
     label: string;
     type?: Type;
     placeholder?: string;
+    description?: string;
     options?: Option[];
     fetchAction?: PaginatedAction;
     isLoading?: boolean;
@@ -35,6 +36,7 @@ export interface FormItem<T extends z.ZodTypeAny> {
     label?: string;
     type?: Type;
     placeholder?: string;
+    description?: string;
     name: Path<z.infer<T>>;
     options?: Option[];
     modal?: FormModal;
@@ -103,6 +105,7 @@ export interface FormDropdownProps {
 
 export interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
     label?: string;
+    description?: string;
     registration?: UseFormRegisterReturn;
     error?: FieldError;
 }

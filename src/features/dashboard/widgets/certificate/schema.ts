@@ -26,7 +26,7 @@ export const certificateSchema = z.object({
     ),
     credintialID: z.preprocess(
         val => val === '' ? null : val,
-        z.string()
+        z.string().trim().max(200, 'Credential ID is too long')
         .nullish()
     ),
     credintialUrl: optionalUrl.optional(),
@@ -35,13 +35,24 @@ export const certificateSchema = z.object({
         .union([z.array(z.string()), z.string()])
         .transform((val) => (Array.isArray(val) ? val : [val]))
         .nullish(),
+}).superRefine((data, ctx) => {
+    if (data.issueDate && Number.isNaN(Date.parse(data.issueDate))) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['issueDate'], message: 'Issue date is not valid' });
+    }
+    if (data.expirationDate && Number.isNaN(Date.parse(data.expirationDate))) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['expirationDate'], message: 'Expiration date is not valid' });
+    }
+    if (data.issueDate && data.expirationDate && new Date(data.expirationDate) < new Date(data.issueDate)) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['expirationDate'], message: 'Expiration date must be after the issue date' });
+    }
 });
 
 export const lkp_certificateSchema = z.object({
     id: z.string(),
     name: z
-        .string()
-        .min(3, 'Name is too short'),
+        .string().trim()
+        .min(2, 'Name is too short')
+        .max(160, 'Name is too long'),
 });
 
 export type CertificateFormData = z.infer<typeof certificateSchema>;

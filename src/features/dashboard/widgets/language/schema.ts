@@ -14,13 +14,22 @@ export const userLanguageSchema = z.object({
                 .regex(guidRegex, 'Proficiency ID must be a valid GUID'),
         })
     ),
+}).superRefine((data, ctx) => {
+    const seen = new Set<string>();
+    data.lstLanguages.forEach((item, index) => {
+        if (seen.has(item.lkP_LanguageID)) {
+            ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['lstLanguages', index, 'lkP_LanguageID'], message: 'Each language can only be added once' });
+        }
+        seen.add(item.lkP_LanguageID);
+    });
 });
 
 export const languageSchema = z.object({
     id: z.string(),
     name: z
-        .string()
-        .min(3, 'Name is too short'),
+        .string().trim()
+        .min(2, 'Name is too short')
+        .max(120, 'Name is too long'),
 });
 
 export const languageProficiencySchema = z.object({

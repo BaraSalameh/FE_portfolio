@@ -6,10 +6,11 @@ export const useHandleExperienceDelete = () => {
 
   return async (id: string) => {
         try {
-            await dispatch(deleteExperience(id));
-            await dispatch(experienceListQuery());
-        } catch (err) {
-            console.error('Failed to delete:', err);
+            await dispatch(deleteExperience(id)).unwrap();
+            await dispatch(experienceListQuery()).unwrap();
+            return true;
+        } catch {
+            return false;
         }
     }
 };

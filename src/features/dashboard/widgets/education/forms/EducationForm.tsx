@@ -37,6 +37,7 @@ export const EducationForm = ({id, onClose} : EducationProps) => {
         {as: 'Input', name: 'startDate', label: 'Start date', type: 'Date'},
         {as: 'Input', name: 'endDate', label: 'End date', type: 'Date'},
         {as: 'Checkbox', name: 'isStudying', label: 'Still studying?'},
+        {as: 'Input', name: 'description', label: 'Description', description: 'Optional. Summarize relevant coursework, activities, or achievements.', placeholder: 'Relevant coursework and achievements', type: 'Textarea'},
         {as: 'DropdownMulti', name: 'lstSkills', options: skillOptions, label: 'Skills', fetchAction: skillListQuery, isLoading: skillLoading}
     ], [ institutionOptions, degreeOptions, fieldOfStudyOptions, institutionLoading, degreeLoading, fieldLoading, skillOptions, skillLoading ]);
     

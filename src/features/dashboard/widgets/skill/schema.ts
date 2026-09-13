@@ -18,13 +18,22 @@ export const userSkillSchema = z.object({
             CertificateIDs: z.array(z.string()).nullish(),
         })
     ),
+}).superRefine((data, ctx) => {
+    const seen = new Set<string>();
+    data.lstUserSkills.forEach((item, index) => {
+        if (seen.has(item.LKP_SkillID)) {
+            ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['lstUserSkills', index, 'LKP_SkillID'], message: 'Each skill can only be added once' });
+        }
+        seen.add(item.LKP_SkillID);
+    });
 });
 
 export const skillSchema = z.object({
     id: z.string(),
     name: z
-        .string()
-        .min(3, 'Name is too short'),
+        .string().trim()
+        .min(2, 'Name is too short')
+        .max(120, 'Name is too long'),
     iconUrl: z
         .string()
         .max(1000, 'Image string is too long'),

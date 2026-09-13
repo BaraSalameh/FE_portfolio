@@ -29,7 +29,7 @@ export const UserLanguageForm = ({onClose} : UserLanguageProps) => {
         <ControlledForm
             schema={userLanguageSchema}
             onSubmit={onSubmit}
-            items={[{as: 'FieldArray', name: 'lstLanguages', fields: fieldConfigs}]}
+            items={[{as: 'FieldArray', name: 'lstLanguages', label: 'Languages', fields: fieldConfigs}]}
             error={error}
             loading={loading}
             resetItems={resetItems}

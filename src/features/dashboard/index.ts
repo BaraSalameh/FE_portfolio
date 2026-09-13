@@ -1,3 +1,3 @@
 export * from './hooks';
 export { PortfolioProfile } from './presentation';
-export { useWidgets } from './widgets/useWidgets';
+export { PortfolioWidgets } from './widgets/useWidgets';

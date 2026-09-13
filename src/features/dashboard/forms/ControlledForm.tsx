@@ -72,6 +72,7 @@ export const ControlledForm = <T extends z.ZodTypeAny> ({
                                 label={item.label}
                                 type={(item.type || 'text').toLowerCase()}
                                 placeholder={item.placeholder}
+                                description={item.description}
                                 registration={register(item.name)}
                                 error={fieldError}
                                 disabled={item.config?.includes('Disabled')}

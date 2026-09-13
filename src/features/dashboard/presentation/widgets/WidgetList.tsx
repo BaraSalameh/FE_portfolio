@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import dayjs from 'dayjs';
 import { cn } from '@/lib/ui/cn';
-import { closestCenter, DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { closestCenter, DndContext, DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { arrayMove, sortableKeyboardCoordinates, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { SortableItem } from './SortableItem';
 import { WidgetListProps } from '@/features/dashboard/types.presentation';
 import { extractPathValue } from '@/lib/utils';
@@ -21,9 +21,14 @@ export const WidgetList = ({
 
     const [sortedState, setSortedState] = useState<{ source: object[]; rows: object[] }>({ source: items, rows: items });
     const rows = sortedState.source === items ? sortedState.rows : items;
-    const sensors = useSensors(useSensor(PointerSensor));
+    const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }), useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }));
 
-    const getItemId = (item: object) => 'id' in item ? String(item.id) : undefined;
+    const getItemId = (item: object) => {
+        const id = extractPathValue(item, 'id')
+            ?? extractPathValue(item, 'skill.id')
+            ?? extractPathValue(item, 'language.id');
+        return id ? String(id) : undefined;
+    };
     const getIsRead = (item: object) => 'isRead' in item && Boolean(item.isRead);
 
     const handleDragEnd = async (event: DragEndEvent) => {
@@ -34,12 +39,18 @@ export const WidgetList = ({
         const oldIndex = rows.findIndex((item) => getItemId(item) === String(active.id));
         const newIndex = rows.findIndex((item) => getItemId(item) === String(over.id));
 
+        if (oldIndex < 0 || newIndex < 0) return;
+        const previousItems = rows;
         const newItems = arrayMove(rows, oldIndex, newIndex);
         setSortedState({ source: items, rows: newItems });
 
         const orderedIds = newItems.map(getItemId).filter((id): id is string => Boolean(id));
 
-        sort?.onSort?.(orderedIds);
+        try {
+            await sort?.onSort?.(orderedIds);
+        } catch {
+            setSortedState({ source: items, rows: previousItems });
+        }
     };
 
     const renderList = () => rows.map((item, idx) => {
@@ -68,10 +79,10 @@ export const WidgetList = ({
                     const rightRaw = cfg.rightKey ? extractPathValue(item, cfg.rightKey) : undefined;
                     const iconUrl = cfg.itemIcon ? extractPathValue(item, cfg.itemIcon) : undefined;
 
-                    const leftVal = cfg.isTime
+                    const leftVal = cfg.isTime && leftRaw
                             ? dayjs(String(leftRaw)).format('MMM YYYY')
                             : cfg.isLink
-                            ? <a href={String(leftRaw)} target='_blank' rel="noreferrer">{String(leftRaw)}</a>
+                            ? leftRaw ? <a href={String(leftRaw)} target="_blank" rel="noopener noreferrer" onClick={(event) => event.stopPropagation()} className="break-all font-medium text-accent-strong underline decoration-accent/35 underline-offset-4 hover:decoration-accent" aria-label={`${cfg.label ?? 'Open link'} (opens in a new tab)`}>{String(leftRaw)}</a> : null
                             : leftRaw as React.ReactNode;
                             
                     const rightVal = cfg.isTime
@@ -80,7 +91,7 @@ export const WidgetList = ({
 
                     const Icon = cfg.icon;
                     return (
-                        <p key={index} className="flex flex-wrap items-center gap-1.5 leading-6">
+                        <p key={index} className={cn('flex flex-wrap items-center gap-1.5 leading-6', cfg.size === 'lg' && 'text-[0.95rem] font-bold text-ink', cfg.size === 'sm' && 'text-xs leading-5')}>
                             {Icon && <Icon className="size-4 shrink-0 text-accent" aria-hidden="true" />}
 
                             {Array.isArray(leftVal)
@@ -92,10 +103,10 @@ export const WidgetList = ({
                                                     {idx !== leftVal.length - 1 && ' | '}
                                                 </React.Fragment>
                                             ))
-                                        :   'Empty'  
+                                        :   null
                                 :   typeof leftVal === 'boolean'
                                         ?   `${cfg.leftKey}: ${leftVal}`
-                                        :   cfg.icon && !leftRaw ? 'Empty' : leftVal
+                                        :   leftVal
                                             
                             }
                             {cfg.between && rightVal && ` ${cfg.between} `}
@@ -109,7 +120,7 @@ export const WidgetList = ({
 
         return sort?.sortable
             ?   (
-                    <SortableItem key={getItemId(item)} id={getItemId(item) ?? String(idx)}>{listItem}</SortableItem>
+                    <SortableItem key={getItemId(item)} id={getItemId(item) ?? String(idx)} label={`item ${idx + 1}`}>{listItem}</SortableItem>
                 )
             :   (
                     <div role="listitem" key={getItemId(item) ?? idx}>{listItem}</div>

@@ -1,1 +1,1 @@
-export { useWidgets } from './useWidgets'
+export { PortfolioWidgets } from './useWidgets'

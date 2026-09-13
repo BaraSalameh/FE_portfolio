@@ -6,10 +6,11 @@ export const useHandleCertificateDelete = () => {
 
   return async (id: string) => {
         try {
-            await dispatch(deleteCertificate(id));
-            await dispatch(certificateListQuery());
-        } catch (err) {
-            console.error('Failed to delete:', err);
+            await dispatch(deleteCertificate(id)).unwrap();
+            await dispatch(certificateListQuery()).unwrap();
+            return true;
+        } catch {
+            return false;
         }
     }
 };

@@ -102,6 +102,9 @@ test('public dashboard is responsive and its contact dialog supports Escape', as
     await page.goto('/client/demo/dashboard');
 
     await expect(page.getByRole('heading', { name: 'Demo Portfolio' })).toBeVisible();
+    for (const heading of ['Education', 'Experience', 'Projects', 'Skills', 'Certificates', 'Languages']) {
+        await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
+    }
     expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
 
     await page.getByRole('button', { name: 'Send Message' }).click();
@@ -191,6 +194,55 @@ test('owner settings open as a dedicated responsive page with clear categories',
     await categoryDropdown.focus();
     await page.keyboard.press('Backspace');
     await expect(page.getByRole('heading', { name: 'Profile' })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
+});
+
+test('owner portfolio widgets expose useful empty states and accessible actions', async ({ context, page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
+    await page.goto('/owner/demo/dashboard');
+
+    for (const heading of ['Education', 'Experience', 'Projects', 'Skills', 'Certificates', 'Languages']) {
+        await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
+    }
+    for (const emptyState of [
+        'No education added',
+        'No experience added',
+        'No projects added',
+        'No skills added',
+        'No certificates added',
+        'No languages added',
+    ]) {
+        await expect(page.getByRole('heading', { name: emptyState })).toBeVisible();
+    }
+
+    const actions = [
+        { widget: 'Education', action: 'Add', dialog: 'Add education', control: 'Institution', role: 'combobox', submit: 'Create' },
+        { widget: 'Experience', action: 'Add', dialog: 'Add experience', control: 'Company', role: 'textbox', submit: 'Create' },
+        { widget: 'Projects', action: 'Add', dialog: 'Add project', control: 'Title', role: 'textbox', submit: 'Create' },
+        { widget: 'Skills', action: 'Manage', dialog: 'Manage skills', control: 'Add skill', role: 'button', submit: 'Update' },
+        { widget: 'Certificates', action: 'Add', dialog: 'Add certificate', control: 'Certificate', role: 'combobox', submit: 'Create' },
+        { widget: 'Languages', action: 'Manage', dialog: 'Manage languages', control: 'Add language', role: 'button', submit: 'Update' },
+    ] as const;
+    for (const action of actions) {
+        const region = page.getByRole('region', { name: action.widget });
+        const trigger = region.getByRole('button', { name: action.action });
+        await expect(trigger.locator('span')).toHaveCount(0);
+        await trigger.click();
+        const dialog = page.getByRole('dialog', { name: action.dialog });
+        await expect(dialog).toBeVisible();
+        const primaryControl = dialog.getByRole(action.role, { name: action.control });
+        await expect(primaryControl).toBeVisible();
+        if (action.role === 'button') await primaryControl.click();
+        await dialog.getByRole('button', { name: action.submit }).click();
+        await expect(dialog.getByRole('alert').first()).toBeVisible();
+        await page.keyboard.press('Escape');
+        await expect(dialog).toBeHidden();
+        await expect(trigger).toBeFocused();
+    }
+
+    await expect(page.getByRole('button', { name: 'Reorder items' })).toHaveCount(0);
+
     expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
 });
 

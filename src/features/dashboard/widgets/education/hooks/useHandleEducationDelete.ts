@@ -6,10 +6,11 @@ export const useHandleEducationDelete = () => {
 
   return async (id: string) => {
         try {
-            await dispatch(deleteEducation(id));
-            await dispatch(educationListQuery());
-        } catch (err) {
-            console.error('Failed to delete:', err);
+            await dispatch(deleteEducation(id)).unwrap();
+            await dispatch(educationListQuery()).unwrap();
+            return true;
+        } catch {
+            return false;
         }
     }
 };

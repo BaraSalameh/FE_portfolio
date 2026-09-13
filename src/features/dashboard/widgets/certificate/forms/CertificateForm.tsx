@@ -31,8 +31,8 @@ export const CertificateForm = ({id, onClose} : CertificateProps) => {
         {as: 'Dropdown', name: 'LKP_CertificateID', options: certificateOptions, label: 'Certificate', fetchAction: lkp_CertificateListQuery, isLoading: certificateLoading},
         {as: 'Input', name: 'issueDate', label: 'Issue Date', type: 'Date'},
         {as: 'Input', name: 'expirationDate', label: 'Expiration Date', type: 'Date'},
-        {as: 'Input', name: 'credintialID', label: 'Credintial ID', placeholder: 'xxx-xxxx-xxx-xx'},
-        {as: 'Input', name: 'credintialUrl', label: 'Credintial Url', placeholder: 'https://MyCredintial'},
+        {as: 'Input', name: 'credintialID', label: 'Credential ID', placeholder: 'XXX-XXXX-XXX'},
+        {as: 'Input', name: 'credintialUrl', label: 'Credential URL', placeholder: 'https://example.com/credential'},
         {
             as: 'Modal',
             name: 'lstCertificateMedias',

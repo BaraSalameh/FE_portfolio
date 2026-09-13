@@ -6,16 +6,19 @@ export const educationSchema = z.object({
 
     LKP_InstitutionID: z
         .string()
+        .trim()
         .min(1, 'Institution is required')
         .regex(guidRegex, 'Institution ID must be a valid GUID'),
 
     LKP_DegreeID: z
         .string()
+        .trim()
         .min(1, 'Degree is required')
         .regex(guidRegex, 'Degree ID must be a valid GUID'),
 
     LKP_FieldOfStudyID: z
         .string()
+        .trim()
         .min(1, 'Field is required')
         .regex(guidRegex, 'Field ID must be a valid GUID'),
 
@@ -24,7 +27,7 @@ export const educationSchema = z.object({
 
     endDate: z.string().optional().nullable(),
 
-    description: z.string()
+    description: z.string().trim()
         .max(1000, 'Description is too long')
         .optional().nullable(),
 
@@ -89,8 +92,9 @@ export const educationSchema = z.object({
 export const institutionSchema = z.object({
     id: z.string(),
     name: z
-        .string()
-        .min(3, 'Name is too short'),
+        .string().trim()
+        .min(2, 'Name is too short')
+        .max(120, 'Name is too long'),
     logo: z
         .string()
         .max(1000, 'logo is too long'),
@@ -99,18 +103,20 @@ export const institutionSchema = z.object({
 export const degreeSchema = z.object({
     id: z.string(),
     name: z
-        .string()
-        .min(3, 'Name is too short'),
+        .string().trim()
+        .min(2, 'Name is too short')
+        .max(120, 'Name is too long'),
     abbreviation: z
-        .string()
-        .max(3, 'Abbreviation is too long'),
+        .string().trim()
+        .max(12, 'Abbreviation is too long'),
 });
 
 export const fieldOfStudySchema = z.object({
     id: z.string(),
     name: z
-        .string()
-        .min(3, 'Name is too short'),
+        .string().trim()
+        .min(2, 'Name is too short')
+        .max(120, 'Name is too long'),
 });
 
 export type EducationFormData = z.infer<typeof educationSchema>;

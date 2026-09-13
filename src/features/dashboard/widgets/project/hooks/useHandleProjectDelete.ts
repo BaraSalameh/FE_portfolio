@@ -11,8 +11,9 @@ export const useHandleProjectDelete = () => {
 
         if (!result.success) {
             dispatch(projectMutationFailed(result.error));
-            return;
+            return false;
         }
         dispatch(projectMutationSucceeded(result.data));
+        return true;
     }
 };

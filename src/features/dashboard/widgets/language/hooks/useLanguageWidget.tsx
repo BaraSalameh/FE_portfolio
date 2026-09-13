@@ -1,13 +1,13 @@
 import { ChartEntry, WidgetCardProps } from '@/features/dashboard/types.presentation';
 import { useAppSelector } from "@/lib/store/hooks";
-import { BadgePercent, Languages, ListPlusIcon } from "lucide-react";
+import { BadgePercent, Languages, ListTodo } from "lucide-react";
 import { checkWidgetPreferences } from "@/lib/utils";
 import { widget_preferences } from "@/lib/utils";
 import { UserLanguageForm } from "../forms";
 
 export const useLanguageWidget = (): WidgetCardProps => {
 
-    const { loading: languageLoading, lstUserLanguages } = useAppSelector(state => state.userLanguage);
+    const { loading: languageLoading, error, lstUserLanguages } = useAppSelector(state => state.userLanguage);
     const { lstUserPreferences } = useAppSelector(state => state.userWidgetPreference);
     
     const levelMap: Record<string, number> = {
@@ -37,8 +37,10 @@ export const useLanguageWidget = (): WidgetCardProps => {
 
     return {
         isLoading: languageLoading,
+        error,
         items: lstUserLanguages,
-        header: { title: 'Language', icon: Languages },
+        header: { title: 'Languages', icon: Languages, description: 'Languages and current proficiency levels' },
+        emptyState: { title: 'No languages added', description: 'Add the languages you use and your proficiency in each one.' },
         pie: pieData,
         bar: barData,
         radar: radarData,
@@ -46,6 +48,6 @@ export const useLanguageWidget = (): WidgetCardProps => {
             { leftKey: 'language.name', size: 'lg' },
             { leftKey: 'languageProficiency.level', icon: BadgePercent }
         ],
-        create: { subTitle: 'Modify Languages', form: <UserLanguageForm />, icon: ListPlusIcon},
+        create: { title: 'Manage', subTitle: 'Manage languages', form: <UserLanguageForm />, icon: ListTodo},
     }
 }
