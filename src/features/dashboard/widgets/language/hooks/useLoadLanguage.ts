@@ -8,8 +8,8 @@ export const useLoadLanguage = () => {
     const { lstUserLanguages, language } = useAppSelector((state) => state.userLanguage);
     const { lstLanguages } = language;
     return useMemo(() => {
-        const languagesFromEdit = optionsCreator({list: lstUserLanguages, labelKey: 'language.name', valueKey: 'language.id'});
-        const languagesStore = optionsCreator({list: lstLanguages});
+        const languagesFromEdit = optionsCreator({list: lstUserLanguages, labelKey: 'language.name', valueKey: 'language.id', badgeKey: 'language.code'});
+        const languagesStore = optionsCreator({list: lstLanguages, badgeKey: 'code'});
         return mergeOptions(languagesFromEdit, languagesStore);
     }, [ lstUserLanguages, lstLanguages ]);
 }

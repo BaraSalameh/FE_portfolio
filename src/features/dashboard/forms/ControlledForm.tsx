@@ -107,6 +107,9 @@ export const ControlledForm = <T extends z.ZodTypeAny> ({
                                     isMulti={item.as === 'DropdownMulti'}
                                     fetchAction={item.fetchAction}
                                     isLoading={item.isLoading}
+                                    minimumSearchLength={item.minimumSearchLength}
+                                    loadOptionsOnMount={item.loadOptionsOnMount}
+                                    createOption={item.createOption}
                                 />
                             )
                         case 'Modal':

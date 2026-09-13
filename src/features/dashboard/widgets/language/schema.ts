@@ -30,6 +30,7 @@ export const languageSchema = z.object({
         .string().trim()
         .min(2, 'Name is too short')
         .max(120, 'Name is too long'),
+    code: z.string().optional().nullable(),
 });
 
 export const languageProficiencySchema = z.object({

@@ -10,8 +10,8 @@ export const useLoadInstitution = (educationFromStore?: EducationResponse) => {
     return useMemo(() => {
         const { institution } = educationFromStore ?? {};
 
-        const institutionFromEdit = optionsCreator({list: institution });
-        const institutionFromStore = optionsCreator({list: lstInstitutions});
+        const institutionFromEdit = optionsCreator({list: institution, badgeKey: 'source', descriptionKey: 'countryName' });
+        const institutionFromStore = optionsCreator({list: lstInstitutions, badgeKey: 'source', descriptionKey: 'countryName'});
         return mergeOptions(institutionFromEdit, institutionFromStore);
     }, [ educationFromStore, lstInstitutions ]);
 }

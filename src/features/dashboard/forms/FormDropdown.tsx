@@ -1,7 +1,8 @@
 'use client';
 
-import { useCallback, useEffect, useId, useMemo } from 'react';
-import Select, { type InputActionMeta, type StylesConfig } from 'react-select';
+import { useCallback, useEffect, useId, useMemo, useState } from 'react';
+import { type InputActionMeta, type StylesConfig } from 'react-select';
+import CreatableSelect from 'react-select/creatable';
 import debounce from 'lodash.debounce';
 import { useAppDispatch } from '@/lib/store/hooks';
 import { CustomMultiValue, CustomOption, CustomSingleValue } from './CustomOption';
@@ -22,32 +23,68 @@ export const FormDropdown = ({
     isMulti = false,
     placeholder = 'Select...',
     fetchAction,
+    minimumSearchLength = fetchAction ? 3 : 0,
+    loadOptionsOnMount = false,
+    onCreateOption,
 }: FormDropdownProps) => {
     const selectId = useId();
     const errorId = `${selectId}-error`;
+    const searchStatusId = `${selectId}-search-status`;
     const dispatch = useAppDispatch();
+    const [inputValue, setInputValue] = useState('');
+    const [searchError, setSearchError] = useState<string | null>(null);
 
     const debouncedSearch = useMemo(
-        () => debounce((query: string) => {
+        () => debounce(async (query: string) => {
             if (fetchAction) {
-                dispatch(fetchAction({ query, page: 0 }));
+                const result = await dispatch(fetchAction({ query, page: 0 })) as unknown as {
+                    meta?: { requestStatus?: string };
+                    payload?: unknown;
+                    error?: { message?: string };
+                };
+                if (result.meta?.requestStatus === 'rejected') {
+                    const payloadMessage = typeof result.payload === 'string' ? result.payload : undefined;
+                    setSearchError(payloadMessage ?? result.error?.message ?? 'Search is temporarily unavailable.');
+                } else {
+                    setSearchError(null);
+                }
             }
-        }, 1000),
+        }, 400),
         [dispatch, fetchAction],
     );
 
     useEffect(() => () => debouncedSearch.cancel(), [debouncedSearch]);
 
+    useEffect(() => {
+        if (loadOptionsOnMount && fetchAction) {
+            dispatch(fetchAction({ query: '', page: 0, pageSize: 50 }));
+        }
+    }, [dispatch, fetchAction, loadOptionsOnMount]);
+
     const handleInputChange = useCallback((inputValue: string, actionMeta: InputActionMeta) => {
         if (actionMeta.action !== 'input-change') return;
 
         const query = inputValue.trim();
-        if (query.length > 0) {
+        setInputValue(inputValue);
+        setSearchError(null);
+        if (query.length >= minimumSearchLength) {
             debouncedSearch(query);
         } else {
             debouncedSearch.cancel();
         }
-    }, [debouncedSearch]);
+    }, [debouncedSearch, minimumSearchLength]);
+
+    const visibleOptions = fetchAction && inputValue.trim().length < minimumSearchLength && !loadOptionsOnMount ? [] : options;
+
+    const handleCreateOption = onCreateOption ? async (newValue: string) => {
+        setSearchError(null);
+        try {
+            await onCreateOption(newValue.trim());
+            setInputValue('');
+        } catch (createError) {
+            setSearchError(createError instanceof Error ? createError.message : 'Unable to create this option.');
+        }
+    } : undefined;
 
     const customStyles = useMemo<StylesConfig<Option, boolean>>(() => ({
         control: (base, state) => ({
@@ -127,18 +164,25 @@ export const FormDropdown = ({
     return (
         <div className="space-y-1.5">
             {label ? <label htmlFor={selectId} className="text-sm font-semibold text-ink">{label}</label> : null}
-            <Select
+            <CreatableSelect
                 inputId={selectId}
                 instanceId={selectId}
                 aria-label={ariaLabel ?? label}
                 aria-invalid={error ? true : undefined}
-                aria-describedby={error ? errorId : undefined}
-                options={options}
+                aria-describedby={error ? errorId : searchError ? searchStatusId : undefined}
+                options={visibleOptions}
                 components={{ Option: CustomOption, MultiValue: CustomMultiValue, SingleValue: CustomSingleValue }}
                 value={value}
                 onInputChange={handleInputChange}
                 onChange={onChange}
                 onBlur={onBlur}
+                onCreateOption={handleCreateOption}
+                isValidNewOption={(candidate, _selected, available) => Boolean(
+                    onCreateOption
+                    && candidate.trim().length >= 2
+                    && !available.some(option => option.label?.toLowerCase() === candidate.trim().toLowerCase()),
+                )}
+                formatCreateLabel={(candidate) => `Add “${candidate.trim()}”`}
                 styles={customStyles}
                 isSearchable={isSearchable}
                 isClearable={isClearable}
@@ -147,11 +191,16 @@ export const FormDropdown = ({
                 placeholder={fetchAction ? 'Search...' : placeholder}
                 closeMenuOnSelect={!isMulti}
                 loadingMessage={() => 'Loading...'}
-                noOptionsMessage={({ inputValue }) => inputValue ? 'No matching options.' : 'No options available.'}
+                noOptionsMessage={({ inputValue: currentInput }) => {
+                    if (searchError) return 'Search failed. Please try again.';
+                    if (fetchAction && currentInput.trim().length < minimumSearchLength && !loadOptionsOnMount) return `Type at least ${minimumSearchLength} characters to search.`;
+                    return currentInput ? 'No matching options.' : 'No options available.';
+                }}
                 className="mt-1 text-sm text-ink"
                 classNamePrefix="form-dropdown"
             />
             {error ? <p id={errorId} role="alert" className="text-xs text-danger">{error.message}</p> : null}
+            {!error && searchError ? <p id={searchStatusId} role="alert" className="text-xs text-danger">{searchError}</p> : null}
         </div>
     );
 };

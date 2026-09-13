@@ -19,13 +19,13 @@ export const useLoadUserSkill = (fromStore?: FromStore) => {
 
         if (Array.isArray(fromStore)) {
             // fromStore is UserSkillResponse[]
-            skillsFromEdit = optionsCreator({ list: fromStore.map(us => us.skill), iconKey: 'iconUrl' });
+            skillsFromEdit = optionsCreator({ list: fromStore.map(us => us.skill), iconKey: 'iconUrl', badgeKey: 'source' });
         } else if (fromStore && 'lstSkills' in fromStore) {
             // fromStore is one of the *Response* types with lstSkills property
-            skillsFromEdit = optionsCreator({ list: fromStore.lstSkills, iconKey: 'iconUrl' });
+            skillsFromEdit = optionsCreator({ list: fromStore.lstSkills, iconKey: 'iconUrl', badgeKey: 'source' });
         }
 
-        const skillsStore = optionsCreator({ list: lstSkills, iconKey: 'iconUrl' });
+        const skillsStore = optionsCreator({ list: lstSkills, iconKey: 'iconUrl', badgeKey: 'source' });
         return mergeOptions(skillsFromEdit, skillsStore);
     }, [fromStore, lstSkills]);
 };

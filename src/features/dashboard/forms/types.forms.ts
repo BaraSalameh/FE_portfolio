@@ -44,6 +44,9 @@ export interface FormItem<T extends z.ZodTypeAny> {
     config?: Config[];
     fetchAction?: PaginatedAction;
     isLoading?: boolean;
+    minimumSearchLength?: number;
+    loadOptionsOnMount?: boolean;
+    createOption?: (inputValue: string) => Promise<Option>;
 }
 
 interface FormItemWatch<T extends z.ZodTypeAny> {
@@ -79,6 +82,9 @@ export interface ControlledDropdownProps<T extends FieldValues>  {
     isMulti?: boolean;
     fetchAction?: PaginatedAction;
     isLoading?: boolean;
+    minimumSearchLength?: number;
+    loadOptionsOnMount?: boolean;
+    createOption?: (inputValue: string) => Promise<Option>;
 }
 
 export interface FormCheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -101,6 +107,9 @@ export interface FormDropdownProps {
     isMulti?: boolean;
     placeholder?: string;
     fetchAction?: PaginatedAction;
+    minimumSearchLength?: number;
+    loadOptionsOnMount?: boolean;
+    onCreateOption?: (inputValue: string) => Promise<void>;
 }
 
 export interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {

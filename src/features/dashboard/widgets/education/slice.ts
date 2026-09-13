@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { institutionListQuery, degreeListQuery, fieldOfStudyListQuery, educationListQuery, addEditEducation, deleteEducation } from '@/features/dashboard/widgets/education/thunks';
+import { institutionListQuery, degreeListQuery, fieldOfStudyListQuery, educationListQuery, addEditEducation, deleteEducation, createFieldOfStudy } from '@/features/dashboard/widgets/education/thunks';
 import { dashboardHydrated } from '../../dashboard.hydration';
 import { EducationState } from './types.education';
 import { userSkillListQuery } from '../skill';
@@ -112,6 +112,21 @@ const educationSlice = createSlice({
             state.fieldOfStudy.fieldRowCount = rowCount;
         })
         .addCase(fieldOfStudyListQuery.rejected, (state, action) => {
+            state.fieldOfStudy.loading = false;
+            state.fieldOfStudy.error = action.payload as string;
+        })
+
+        .addCase(createFieldOfStudy.pending, (state) => {
+            state.fieldOfStudy.loading = true;
+            state.fieldOfStudy.error = null;
+        })
+        .addCase(createFieldOfStudy.fulfilled, (state, action) => {
+            state.fieldOfStudy.loading = false;
+            if (!state.fieldOfStudy.lstFields.some(field => field.id === action.payload.id)) {
+                state.fieldOfStudy.lstFields.push(action.payload);
+            }
+        })
+        .addCase(createFieldOfStudy.rejected, (state, action) => {
             state.fieldOfStudy.loading = false;
             state.fieldOfStudy.error = action.payload as string;
         })

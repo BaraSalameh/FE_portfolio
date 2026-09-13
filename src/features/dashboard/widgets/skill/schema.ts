@@ -37,6 +37,7 @@ export const skillSchema = z.object({
     iconUrl: z
         .string()
         .max(1000, 'Image string is too long'),
+    source: z.string().optional().nullable(),
 });
 
 export const skillCategorySchema = z.object({

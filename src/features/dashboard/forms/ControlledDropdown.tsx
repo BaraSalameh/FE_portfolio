@@ -13,7 +13,10 @@ export const ControlledDropdown = <T extends FieldValues>({
     options,
     isMulti = false,
     fetchAction,
-    isLoading
+    isLoading,
+    minimumSearchLength,
+    loadOptionsOnMount,
+    createOption,
 }: ControlledDropdownProps<T>) => {
     return (
         <Controller
@@ -40,6 +43,12 @@ export const ControlledDropdown = <T extends FieldValues>({
                         isMulti={isMulti}
                         fetchAction={fetchAction}
                         isLoading={isLoading ?? false}
+                        minimumSearchLength={minimumSearchLength}
+                        loadOptionsOnMount={loadOptionsOnMount}
+                        onCreateOption={createOption ? async (inputValue) => {
+                            const created = await createOption(inputValue);
+                            field.onChange(created.value);
+                        } : undefined}
                     />
                 );
             }}

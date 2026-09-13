@@ -98,6 +98,9 @@ export const institutionSchema = z.object({
     logo: z
         .string()
         .max(1000, 'logo is too long'),
+    source: z.string().optional().nullable(),
+    countryCode: z.string().optional().nullable(),
+    countryName: z.string().optional().nullable(),
 });
 
 export const degreeSchema = z.object({
@@ -117,6 +120,7 @@ export const fieldOfStudySchema = z.object({
         .string().trim()
         .min(2, 'Name is too short')
         .max(120, 'Name is too long'),
+    source: z.string().optional().nullable(),
 });
 
 export type EducationFormData = z.infer<typeof educationSchema>;

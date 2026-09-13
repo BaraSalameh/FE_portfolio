@@ -28,6 +28,8 @@ export const DashboardWidget = memo(function DashboardWidget(props: WidgetCardPr
     const [selectedItem, setSelectedItem] = useState<object>();
     const [detailsOpen, setDetailsOpen] = useState(false);
     const isEmpty = !Array.isArray(items) || items.length === 0;
+    const canReorder = Boolean(onSort && Array.isArray(items) && items.length >= 2);
+    const isReordering = canReorder && sortable;
     const hasPresentation = Boolean(list || pie || bar || radar);
 
     if (!header || !hasPresentation || (isEmpty && !create)) return null;
@@ -48,17 +50,17 @@ export const DashboardWidget = memo(function DashboardWidget(props: WidgetCardPr
                         {header?.icon && <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-accent-soft text-accent-strong"><header.icon className="size-[1.05rem]" aria-hidden="true" /></span>}
                         <div className="min-w-0"><h2 id={`${header.title?.toLowerCase().replaceAll(' ', '-')}-widget-title`} className="truncate text-[0.95rem] font-bold tracking-[-0.025em]">{header.title}</h2>{header.description && <p className="mt-0.5 hidden truncate text-xs text-ink-muted sm:block">{header.description}</p>}</div>
                     </div>
-                    {(create || (onSort && !isEmpty)) && (
+                    {(create || canReorder) && (
                         <div className="flex shrink-0 items-center gap-2 text-ink-muted">
-                            {onSort && !isEmpty && (
+                            {canReorder && (
                                 <button
                                     type="button"
                                     onClick={() => setSortable((value) => !value)}
                                     className="responsive-action shrink-0 gap-2 rounded-xl text-sm font-semibold transition hover:bg-canvas-subtle hover:text-ink"
-                                    aria-label={sortable ? 'Finish reordering' : 'Reorder items'}
-                                    aria-pressed={sortable}
+                                    aria-label={isReordering ? 'Finish reordering' : 'Reorder items'}
+                                    aria-pressed={isReordering}
                                 >
-                                    {sortable ? <Check className="size-4 shrink-0" aria-hidden="true" /> : <ListOrdered className="size-4 shrink-0" aria-hidden="true" />}
+                                    {isReordering ? <Check className="size-4 shrink-0" aria-hidden="true" /> : <ListOrdered className="size-4 shrink-0" aria-hidden="true" />}
                                 </button>
                             )}
                             {create && (
@@ -87,8 +89,8 @@ export const DashboardWidget = memo(function DashboardWidget(props: WidgetCardPr
                         <WidgetList
                             items={items}
                             list={list}
-                            onItemClick={sortable ? undefined : openDetails}
-                            sort={{ sortable, onSort }}
+                            onItemClick={isReordering ? undefined : openDetails}
+                            sort={{ sortable: isReordering, onSort }}
                             pagination={pagination}
                             className="rounded-xl border border-transparent bg-canvas-subtle/65 px-3.5 py-3 text-sm transition hover:border-accent/20 hover:bg-accent-soft/45"
                         />
