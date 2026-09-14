@@ -15,6 +15,7 @@ export const ImageUploader = ({ preset, onAction, uploadImage, onRemove, onClose
     const [pendingAction, setPendingAction] = useState<'upload' | 'remove' | null>(null);
     const [error, setError] = useState<string | null>(null);
     const isBusy = pendingAction !== null;
+    const isCertificateMedia = preset === 'Certificate_Media';
 
     const onCropComplete = useCallback((_: Area, croppedAreaPixels: Area) => {
         setCroppedAreaPixels(croppedAreaPixels);
@@ -95,7 +96,7 @@ export const ImageUploader = ({ preset, onAction, uploadImage, onRemove, onClose
                         image={imageSrc}
                         crop={crop}
                         zoom={zoom}
-                        aspect={preset === 'Profile_Picture' ? 1 : preset === 'Cover_Photo' ? 3/1 : 1}
+                        aspect={preset === 'Profile_Picture' ? 1 : preset === 'Cover_Photo' ? 3/1 : 4/3}
                         onCropChange={setCrop}
                         onCropComplete={onCropComplete}
                         onZoomChange={setZoom}
@@ -124,7 +125,7 @@ export const ImageUploader = ({ preset, onAction, uploadImage, onRemove, onClose
                     disabled={isBusy}
                     className="inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-accent px-5 text-sm font-bold text-white transition hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                    {pendingAction === 'upload' ? 'Saving photo…' : 'Save photo'}
+                    {pendingAction === 'upload' ? `Saving ${isCertificateMedia ? 'attachment' : 'photo'}…` : `Save ${isCertificateMedia ? 'attachment' : 'photo'}`}
                 </button>
                 
             )}
@@ -137,7 +138,7 @@ export const ImageUploader = ({ preset, onAction, uploadImage, onRemove, onClose
                     className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-danger/30 px-5 text-sm font-bold text-danger transition hover:bg-danger/10 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     <Trash2 className="size-4" aria-hidden="true" />
-                    {pendingAction === 'remove' ? 'Removing photo…' : 'Remove photo'}
+                    {pendingAction === 'remove' ? `Removing ${isCertificateMedia ? 'attachment' : 'photo'}…` : `Remove ${isCertificateMedia ? 'attachment' : 'photo'}`}
                 </button>
             ) : null}
         </div>

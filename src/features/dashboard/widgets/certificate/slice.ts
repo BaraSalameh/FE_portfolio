@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { dashboardHydrated } from '../../dashboard.hydration';
 import { CertificateState } from './types.certificate';
-import { addEditCertificate, certificateListQuery, deleteCertificate, lkp_CertificateListQuery } from './thunks';
+import { addEditCertificate, certificateListQuery, createCertificate, deleteCertificate, lkp_CertificateListQuery } from './thunks';
 import { userSkillListQuery } from '../skill';
 import { syncParentFromUserSkill } from '@/lib/utils';
 
@@ -60,6 +60,21 @@ const certificateSlice = createSlice({
             state.certificate.certificatesRowCount = rowCount;
         })
         .addCase(lkp_CertificateListQuery.rejected, (state, action) => {
+            state.certificate.loading = false;
+            state.certificate.error = action.payload as string;
+        })
+
+        .addCase(createCertificate.pending, (state) => {
+            state.certificate.loading = true;
+            state.certificate.error = null;
+        })
+        .addCase(createCertificate.fulfilled, (state, action) => {
+            state.certificate.loading = false;
+            if (!state.certificate.lstCertificates.some(certificate => certificate.id === action.payload.id)) {
+                state.certificate.lstCertificates.push(action.payload);
+            }
+        })
+        .addCase(createCertificate.rejected, (state, action) => {
             state.certificate.loading = false;
             state.certificate.error = action.payload as string;
         })

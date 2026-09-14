@@ -14,6 +14,7 @@ type FromStore = UserSkillResponse[] | EducationResponse | ExperienceResponse | 
 
 export const useLoadUserSkill = (fromStore?: FromStore) => {
     const { lstSkills } = useAppSelector((state) => state.userSkill.skill);
+    const { lstUserSkills } = useAppSelector((state) => state.userSkill);
     return useMemo(() => {
         let skillsFromEdit: Option[] = [];
 
@@ -26,6 +27,7 @@ export const useLoadUserSkill = (fromStore?: FromStore) => {
         }
 
         const skillsStore = optionsCreator({ list: lstSkills, iconKey: 'iconUrl', badgeKey: 'source' });
-        return mergeOptions(skillsFromEdit, skillsStore);
-    }, [fromStore, lstSkills]);
+        const registeredSkills = optionsCreator({ list: lstUserSkills.map(item => item.skill), iconKey: 'iconUrl', badgeKey: 'source' });
+        return mergeOptions(registeredSkills, mergeOptions(skillsFromEdit, skillsStore));
+    }, [fromStore, lstSkills, lstUserSkills]);
 };

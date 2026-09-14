@@ -12,6 +12,7 @@ import { ActionDialog as CUDModal } from '@/design-system';
 import { FieldArray } from './FieldArray';
 import React from "react";
 import { extractPathValue } from "@/lib/utils";
+import { ControlledMediaUpload } from './ControlledMediaUpload';
 
 export const ControlledForm = <T extends z.ZodTypeAny> ({ 
     schema,
@@ -136,6 +137,18 @@ export const ControlledForm = <T extends z.ZodTypeAny> ({
                                     errors={errors}
                                     fields={item.fields ?? []}
                                     register={register}
+                                />
+                            )
+                        case 'MediaUpload':
+                            return (
+                                <ControlledMediaUpload
+                                    key={index}
+                                    control={control}
+                                    name={item.name}
+                                    label={item.label}
+                                    description={item.description}
+                                    media={item.media}
+                                    uploader={item.uploader}
                                 />
                             )
                         default: return null;

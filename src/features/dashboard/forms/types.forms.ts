@@ -5,7 +5,7 @@ import { ActionMeta, MultiValue, SingleValue } from "react-select";
 import { z } from "zod";
 import { Option } from '@/features/types.features';
 
-type ItemAs = 'Input' | 'Checkbox' | 'Dropdown' | 'DropdownMulti' | 'Modal' | 'FieldArray';
+type ItemAs = 'Input' | 'Checkbox' | 'Dropdown' | 'DropdownMulti' | 'Modal' | 'FieldArray' | 'MediaUpload';
 type Type = 'Password' | 'Email' | 'Text' | 'Number' | 'Date' | 'Textarea' | 'hidden';
 type ModalAs = 'create' | 'update' | 'delete' | 'none';
 type Config = 'Disabled';
@@ -47,6 +47,8 @@ export interface FormItem<T extends z.ZodTypeAny> {
     minimumSearchLength?: number;
     loadOptionsOnMount?: boolean;
     createOption?: (inputValue: string) => Promise<Option>;
+    media?: Record<string, string>[];
+    uploader?: React.ReactNode;
 }
 
 interface FormItemWatch<T extends z.ZodTypeAny> {

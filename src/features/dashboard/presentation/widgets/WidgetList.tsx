@@ -10,6 +10,13 @@ import { WidgetListProps } from '@/features/dashboard/types.presentation';
 import { extractPathValue } from '@/lib/utils';
 import { ControlledInfiniteScroll } from './ControlledInfiniteScroll';
 
+const hasDisplayValue = (value: unknown) => {
+    if (value === null || value === undefined) return false;
+    if (typeof value === 'string') return value.trim().length > 0;
+    if (Array.isArray(value)) return value.some(hasDisplayValue);
+    return true;
+};
+
 export const WidgetList = ({
     items,
     list,
@@ -78,6 +85,10 @@ export const WidgetList = ({
                     const leftRaw = cfg.leftKey ? extractPathValue(item, cfg.leftKey) : undefined;
                     const rightRaw = cfg.rightKey ? extractPathValue(item, cfg.rightKey) : undefined;
                     const iconUrl = cfg.itemIcon ? extractPathValue(item, cfg.itemIcon) : undefined;
+                    const hasLeftValue = hasDisplayValue(leftRaw);
+                    const hasRightValue = hasDisplayValue(rightRaw);
+
+                    if (!hasLeftValue && !hasRightValue) return null;
 
                     const leftVal = cfg.isTime && leftRaw
                             ? dayjs(String(leftRaw)).format('MMM YYYY')
@@ -109,7 +120,7 @@ export const WidgetList = ({
                                         :   leftVal
                                             
                             }
-                            {cfg.between && rightVal && ` ${cfg.between} `}
+                            {cfg.between && hasLeftValue && rightVal && ` ${cfg.between} `}
 
                             {rightVal}
                         </p>

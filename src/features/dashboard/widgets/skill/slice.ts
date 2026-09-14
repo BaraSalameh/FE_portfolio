@@ -4,7 +4,7 @@ import { educationListQuery } from '../education/thunks';
 import { experienceListQuery } from '../experience/thunks';
 import { projectListQuery } from '../project/thunks';
 import { UserSkillState } from './types.skill';
-import { editDeleteUserSkill, skillListQuery, userSkillListQuery } from './thunks';
+import { createSkill, editDeleteUserSkill, skillListQuery, userSkillListQuery } from './thunks';
 import { certificateListQuery } from '../certificate';
 import { EducationResponse } from '../education/types.education';
 import { syncUserSkillsFromParentList } from '@/lib/utils';
@@ -30,6 +30,20 @@ const userSkillSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+        .addCase(createSkill.pending, (state) => {
+            state.skill.loading = true;
+            state.skill.error = null;
+        })
+        .addCase(createSkill.fulfilled, (state, action) => {
+            state.skill.loading = false;
+            if (!state.skill.lstSkills.some(skill => skill.id === action.payload.id)) {
+                state.skill.lstSkills.push(action.payload);
+            }
+        })
+        .addCase(createSkill.rejected, (state, action) => {
+            state.skill.loading = false;
+            state.skill.error = action.payload as string;
+        })
         .addCase(dashboardHydrated, (state, action) => {
             state.lstUserSkills = action.payload.lstUserSkills;
         })
