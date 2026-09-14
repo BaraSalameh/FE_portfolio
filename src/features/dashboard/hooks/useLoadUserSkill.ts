@@ -14,18 +14,20 @@ type FromStore = UserSkillResponse[] | EducationResponse | ExperienceResponse | 
 
 export const useLoadUserSkill = (fromStore?: FromStore) => {
     const { lstSkills } = useAppSelector((state) => state.userSkill.skill);
+    const { lstUserSkills } = useAppSelector((state) => state.userSkill);
     return useMemo(() => {
         let skillsFromEdit: Option[] = [];
 
         if (Array.isArray(fromStore)) {
             // fromStore is UserSkillResponse[]
-            skillsFromEdit = optionsCreator({ list: fromStore.map(us => us.skill), iconKey: 'iconUrl' });
+            skillsFromEdit = optionsCreator({ list: fromStore.map(us => us.skill), iconKey: 'iconUrl', badgeKey: 'source' });
         } else if (fromStore && 'lstSkills' in fromStore) {
             // fromStore is one of the *Response* types with lstSkills property
-            skillsFromEdit = optionsCreator({ list: fromStore.lstSkills, iconKey: 'iconUrl' });
+            skillsFromEdit = optionsCreator({ list: fromStore.lstSkills, iconKey: 'iconUrl', badgeKey: 'source' });
         }
 
-        const skillsStore = optionsCreator({ list: lstSkills, iconKey: 'iconUrl' });
-        return mergeOptions(skillsFromEdit, skillsStore);
-    }, [fromStore, lstSkills]);
+        const skillsStore = optionsCreator({ list: lstSkills, iconKey: 'iconUrl', badgeKey: 'source' });
+        const registeredSkills = optionsCreator({ list: lstUserSkills.map(item => item.skill), iconKey: 'iconUrl', badgeKey: 'source' });
+        return mergeOptions(registeredSkills, mergeOptions(skillsFromEdit, skillsStore));
+    }, [fromStore, lstSkills, lstUserSkills]);
 };

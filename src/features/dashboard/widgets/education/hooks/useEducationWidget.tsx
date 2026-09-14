@@ -9,7 +9,7 @@ import { useDebouncedSortEducation } from "./useDebouncedSortEducation";
 
 export const useEducationWidget = (): WidgetCardProps => {
  
-    const { loading: educationLoading, lstEducations } = useAppSelector(state => state.education);
+    const { loading: educationLoading, error, lstEducations } = useAppSelector(state => state.education);
     const { lstUserPreferences } = useAppSelector(state => state.userWidgetPreference);
     const { lstUserChartPreferences } = useAppSelector(state => state.userChartPreference);
     const handleEducationDelete = useHandleEducationDelete();
@@ -52,8 +52,10 @@ export const useEducationWidget = (): WidgetCardProps => {
     
     return {
         isLoading: educationLoading,
+        error,
         items: lstEducations,
-        header: { title: 'Education', icon: GraduationCap },
+        header: { title: 'Education', icon: GraduationCap, description: 'Academic background and areas of study' },
+        emptyState: { title: 'No education added', description: 'Add a school, degree, and study period to introduce your academic background.' },
         bar: barData,
         pie: pieData,
         radar: radarData,
@@ -62,11 +64,11 @@ export const useEducationWidget = (): WidgetCardProps => {
             { leftKey: 'fieldOfStudy.name', icon: GraduationCap },
             { leftKey: 'startDate', between: '-', rightKey: 'endDate', icon: Clock, isTime: true }
         ],
-        create: { subTitle: 'Add Education', form: <EducationForm /> },
+        create: { title: 'Add', subTitle: 'Add education', form: <EducationForm /> },
         update: { subTitle: 'Update Education', form: <EducationForm /> },
         del: { subTitle: 'Delete education', message: 'Are you sure?', onDelete: handleEducationDelete },
         details: [
-            { leftKey: 'degree.name', between: 'at', rightKey: 'institutionname', size: 'lg' },
+            { leftKey: 'degree.name', between: 'at', rightKey: 'institution.name', size: 'lg' },
             { leftKey: 'fieldOfStudy.name', icon: GraduationCap },
             { leftKey: 'startDate', between: '-', rightKey: 'endDate', icon: Clock, isTime: true },
             { leftKey: 'description', size: 'sm' }

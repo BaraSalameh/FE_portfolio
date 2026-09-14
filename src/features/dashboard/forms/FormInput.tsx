@@ -1,19 +1,23 @@
 'use client';
 
 import { FormInputProps } from './types.forms';
-import type { TextareaHTMLAttributes } from 'react';
+import { useId, type TextareaHTMLAttributes } from 'react';
 
 
 
 export const FormInput = ({
     label,
+    description,
     registration,
     error,
     ...rest
 }: FormInputProps) => {
 
-    const inputId = rest.id ?? registration?.name ?? label;
-    const errorId = error && inputId ? `${inputId}-error` : undefined;
+    const generatedId = useId();
+    const inputId = rest.id ?? `${registration?.name ?? label ?? 'field'}-${generatedId}`;
+    const descriptionId = description ? `${inputId}-description` : undefined;
+    const errorId = error ? `${inputId}-error` : undefined;
+    const describedBy = [descriptionId, errorId].filter(Boolean).join(' ') || undefined;
 
     const inputClasses = `
         w-full
@@ -34,6 +38,7 @@ export const FormInput = ({
     return (
         <div className="space-y-1.5">
             {label ? <label htmlFor={inputId} className="block text-sm font-semibold text-ink">{label}</label> : null}
+            {description ? <p id={descriptionId} className="text-xs leading-5 text-ink-muted">{description}</p> : null}
             {(rest.type === 'textarea' || rest.type === 'Textarea') ? (
                 <textarea
                     id={inputId}
@@ -42,7 +47,7 @@ export const FormInput = ({
                     className={`${inputClasses} overflow-auto scrollbar-hide`}
                     rows={8}
                     aria-invalid={Boolean(error)}
-                    aria-describedby={errorId}
+                    aria-describedby={describedBy}
                 />
             ) : (
                 <input
@@ -51,7 +56,7 @@ export const FormInput = ({
                     {...rest}
                     className={inputClasses}
                     aria-invalid={Boolean(error)}
-                    aria-describedby={errorId}
+                    aria-describedby={describedBy}
                 />
             )}
             {error && <p id={errorId} role="alert" className="text-xs text-danger">{error.message}</p>}

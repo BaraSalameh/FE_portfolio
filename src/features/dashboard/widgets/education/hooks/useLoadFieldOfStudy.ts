@@ -10,8 +10,8 @@ export const useLoadFieldOfStudy = (educationFromStore?: EducationResponse) => {
     return useMemo(() => {
         const { fieldOfStudy } = educationFromStore ?? {};
 
-        const fieldOfStudyFromEdit = optionsCreator({list: fieldOfStudy});
-        const fieldOfStudyFromStore = optionsCreator({list: lstFields});
+        const fieldOfStudyFromEdit = optionsCreator({list: fieldOfStudy, badgeKey: 'source'});
+        const fieldOfStudyFromStore = optionsCreator({list: lstFields, badgeKey: 'source'});
         return mergeOptions(fieldOfStudyFromEdit, fieldOfStudyFromStore);
     }, [ educationFromStore, lstFields ]);
 }

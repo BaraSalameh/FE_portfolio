@@ -10,10 +10,13 @@ export const useSignMessage = () => {
         const currentMessage = lstMessages.find((message) => message.id === id);
         if(!currentMessage?.isRead)
             try {
-                await dispatch(signMessage(id));
+                await dispatch(signMessage(id)).unwrap();
                 dispatch(markMessage(id));
+                return true;
             } catch (err) {
-                console.error('Failed to delete:', err);
+                console.error('Failed to mark message as read:', err);
+                return false;
             }
+        return true;
         }
 };

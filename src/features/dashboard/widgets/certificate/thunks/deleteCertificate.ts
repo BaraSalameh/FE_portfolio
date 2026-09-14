@@ -11,6 +11,7 @@ export const deleteCertificate = createAsyncThunk(
                 data: {id},
                 withCredentials: true
             });
+            return id;
 
             return;
 

@@ -21,9 +21,29 @@ export const setCookies = async (response: Response) => {
 
     for (const rawCookie of setCookies) {
         const parsed = parseCookie(rawCookie);
+        const authPath = getAuthCookiePath(parsed.name);
+        if (authPath) parsed.options.path = authPath;
         cookieStore.set(parsed.name, parsed.value, parsed.options);
     }
 }
+
+const getAuthCookiePath = (name: string) => {
+    if (name === 'AccessToken') return '/';
+    if (name === 'RefreshToken') return '/api/Account';
+    return undefined;
+};
+
+export const normalizeAuthCookiePath = (rawCookie: string) => {
+    const name = rawCookie.slice(0, rawCookie.indexOf('=')).trim();
+    const path = getAuthCookiePath(name);
+    if (!path) return rawCookie;
+
+    if (/;\s*path=/i.test(rawCookie)) {
+        return rawCookie.replace(/;\s*path=[^;]*/i, `; Path=${path}`);
+    }
+
+    return `${rawCookie}; Path=${path}`;
+};
 
 // Utility to parse raw Set-Cookie header
 function parseCookie(str: string) {
@@ -61,7 +81,7 @@ function parseCookie(str: string) {
 
 export const forwardSetCookieHeaders = (source: Response, target: NextResponse) => {
     for (const cookie of source.headers.getSetCookie?.() ?? []) {
-        target.headers.append('set-cookie', cookie);
+        target.headers.append('set-cookie', normalizeAuthCookiePath(cookie));
     }
     return target;
 };
@@ -69,6 +89,6 @@ export const forwardSetCookieHeaders = (source: Response, target: NextResponse) 
 export const clearAuthCookies = (response: NextResponse) => {
     const expired = 'Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0; HttpOnly; Secure; SameSite=None';
     response.headers.append('set-cookie', `AccessToken=; Path=/; ${expired}`);
-    response.headers.append('set-cookie', `RefreshToken=; Path=/api; ${expired}`);
+    response.headers.append('set-cookie', `RefreshToken=; Path=/api/Account; ${expired}`);
     return response;
 };

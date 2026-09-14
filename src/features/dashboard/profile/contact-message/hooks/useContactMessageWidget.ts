@@ -26,11 +26,11 @@ export const useContactMessageWidget = (): WidgetCardProps => {
             { leftKey: 'subject', icon: SubtitlesIcon },
             { leftKey: 'message', icon: MessageCircleHeart },
         ],
-        del: { subTitle: 'Delete Message', message: 'Are you sure?', onDelete: handleMessageDelete },
+        del: { subTitle: 'Delete Message', message: 'Are you sure?', onDelete: async (id) => { await handleMessageDelete(id); } },
         pagination: {
             maxLength: rowCount,
             fetchAction: contactMessageListQuery,
         },
-        onModalAction: handleSignMessage
+        onModalAction: async (id) => { await handleSignMessage(id); }
     }
 }

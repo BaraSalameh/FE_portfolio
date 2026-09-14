@@ -11,6 +11,7 @@ export const deleteExperience = createAsyncThunk(
                 data: {id},
                 withCredentials: true
             });
+            return id;
 
             return;
 

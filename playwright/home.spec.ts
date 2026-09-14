@@ -102,6 +102,9 @@ test('public dashboard is responsive and its contact dialog supports Escape', as
     await page.goto('/client/demo/dashboard');
 
     await expect(page.getByRole('heading', { name: 'Demo Portfolio' })).toBeVisible();
+    for (const heading of ['Education', 'Experience', 'Projects', 'Skills', 'Certificates', 'Languages']) {
+        await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
+    }
     expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
 
     await page.getByRole('button', { name: 'Send Message' }).click();
@@ -112,29 +115,172 @@ test('public dashboard is responsive and its contact dialog supports Escape', as
     await expect(dialog).toBeHidden();
 });
 
-test('owner settings preserve the parent dialog when a nested preference closes', async ({ page }) => {
+test('profile picture opens an accessible lightbox for guests and owners', async ({ context, page }) => {
+    for (const role of ['client', 'owner'] as const) {
+        if (role === 'owner') {
+            await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
+        }
+
+        await page.goto(`/${role}/demo/dashboard`);
+        const trigger = page.getByRole('button', { name: 'Enlarge profile picture' });
+        await trigger.click();
+
+        const dialog = page.getByRole('dialog', { name: 'Profile picture preview' });
+        await expect(dialog).toBeVisible();
+        await expect(dialog.getByRole('img', { name: "Demo Portfolio's profile picture" })).toBeVisible();
+        await expect(dialog.getByRole('button', { name: 'Close profile picture preview' })).toBeFocused();
+        await expect(page.locator('body')).toHaveCSS('overflow', 'hidden');
+
+        await page.keyboard.press('Escape');
+        await expect(dialog).toBeHidden();
+        await expect(trigger).toBeFocused();
+    }
+});
+
+test('public contact cards expose email, phone, WhatsApp, contact, CV, and site actions', async ({ page }) => {
+    await page.goto('/client/demo/dashboard');
+
+    await page.getByRole('button', { name: /demo@example\.com/ }).click();
+    const emailMenu = page.getByRole('menu', { name: 'Email actions' });
+    await expect(emailMenu.getByRole('menuitem', { name: 'Send email' })).toHaveAttribute('href', 'mailto:demo@example.com');
+    await expect(emailMenu.getByRole('menuitem', { name: 'Copy' })).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(emailMenu).toBeHidden();
+
+    await page.getByRole('button', { name: /\+905526436811/ }).click();
+    const phoneMenu = page.getByRole('menu', { name: 'Phone actions' });
+    await expect(phoneMenu.getByRole('menuitem', { name: 'WhatsApp' })).toHaveAttribute('href', 'https://wa.me/905551234567');
+    await expect(phoneMenu.getByRole('menuitem', { name: 'Call' })).toHaveAttribute('href', 'tel:+905526436811');
+    const downloadPromise = page.waitForEvent('download');
+    await phoneMenu.getByRole('menuitem', { name: 'Add to contacts' }).click();
+    const download = await downloadPromise;
+    expect(download.suggestedFilename()).toBe('Demo-Portfolio.vcf');
+
+    await expect(page.getByRole('link', { name: 'Download CV' })).toHaveAttribute('href', /fl_attachment:CV/);
+    await expect(page.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/demo');
+    await expect(page.getByRole('region', { name: 'Sites & contact' }).getByRole('button', { name: 'Share portfolio' })).toBeVisible();
+});
+
+test('owner settings open as a dedicated responsive page with clear categories', async ({ context, page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
+    await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
     await page.goto('/owner/demo/dashboard');
 
     await expect(page.getByRole('heading', { name: 'Demo Portfolio' })).toBeVisible();
-    await page.getByRole('button', { name: 'Settings' }).click();
-    const settingsDialog = page.getByRole('dialog', { name: 'Settings' });
-    await expect(settingsDialog).toBeVisible();
+    await page.getByRole('button', { name: 'Open account menu' }).click();
+    await page.getByRole('menuitem', { name: 'Settings' }).click();
+    await expect(page).toHaveURL(/\/owner\/demo\/settings$/);
+    await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    const categoryDropdown = page.getByRole('combobox', { name: 'Settings category' });
+    await expect(categoryDropdown).toHaveValue('');
+    await expect(page.getByText('Preferences', { exact: true }).first()).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Profile' })).toBeVisible();
+    const genderToggle = page.getByRole('switch', { name: /(?:Hide|Show) gender/ });
+    await expect(genderToggle).toBeEnabled();
+    await genderToggle.click();
+    await expect(page.getByRole('switch', { name: /(?:Hide|Show) gender/ })).toBeVisible();
+    await expect(page.getByText('Preference saved.').first()).toBeVisible();
 
-    await settingsDialog.getByRole('button', { name: 'Preferences', exact: true }).click();
-    await settingsDialog.getByRole('button', { name: 'Change theme' }).click();
-    const themeDialog = page.getByRole('dialog', { name: 'Change theme' });
-    await expect(themeDialog).toBeVisible();
+    await categoryDropdown.fill('Chart');
+    await page.getByRole('option', { name: 'Chart preferences' }).click();
+    await expect(page.getByRole('heading', { name: 'Chart preferences', exact: true })).toBeVisible();
 
-    await page.keyboard.press('Escape');
-    await expect(themeDialog).toBeHidden();
-    await expect(settingsDialog).toBeVisible();
-    await page.keyboard.press('Escape');
-    await expect(settingsDialog).toBeHidden();
+    await categoryDropdown.fill('Appearance');
+    await page.getByRole('option', { name: 'Appearance' }).click();
+    await expect(page.locator('#appearance-heading')).toBeVisible();
+    await expect(page.getByRole('button', { name: /theme/i })).toBeVisible();
+
+    await categoryDropdown.focus();
+    await page.keyboard.press('Backspace');
+    await expect(page.getByRole('heading', { name: 'Profile' })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
+});
+
+test('owner portfolio widgets expose useful empty states and accessible actions', async ({ context, page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
+    await page.goto('/owner/demo/dashboard');
+
+    for (const heading of ['Education', 'Experience', 'Projects', 'Skills', 'Certificates', 'Languages']) {
+        await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
+    }
+    for (const emptyState of [
+        'No education added',
+        'No experience added',
+        'No projects added',
+        'No skills added',
+        'No certificates added',
+        'No languages added',
+    ]) {
+        await expect(page.getByRole('heading', { name: emptyState })).toBeVisible();
+    }
+
+    const actions = [
+        { widget: 'Education', action: 'Add', dialog: 'Add education', control: 'Institution', role: 'combobox', submit: 'Create' },
+        { widget: 'Experience', action: 'Add', dialog: 'Add experience', control: 'Company', role: 'textbox', submit: 'Create' },
+        { widget: 'Projects', action: 'Add', dialog: 'Add project', control: 'Title', role: 'textbox', submit: 'Create' },
+        { widget: 'Skills', action: 'Manage', dialog: 'Manage skills', control: 'Add skill', role: 'button', submit: 'Update' },
+        { widget: 'Certificates', action: 'Add', dialog: 'Add certificate', control: 'Certificate', role: 'combobox', submit: 'Create' },
+        { widget: 'Languages', action: 'Manage', dialog: 'Manage languages', control: 'Add language', role: 'button', submit: 'Update' },
+    ] as const;
+    for (const action of actions) {
+        const region = page.getByRole('region', { name: action.widget });
+        const trigger = region.getByRole('button', { name: action.action });
+        await expect(trigger.locator('span')).toHaveCount(0);
+        await trigger.click();
+        const dialog = page.getByRole('dialog', { name: action.dialog });
+        await expect(dialog).toBeVisible();
+        const primaryControl = dialog.getByRole(action.role, { name: action.control });
+        await expect(primaryControl).toBeVisible();
+        if (action.role === 'button') await primaryControl.click();
+        await dialog.getByRole('button', { name: action.submit }).click();
+        await expect(dialog.getByRole('alert').first()).toBeVisible();
+        await page.keyboard.press('Escape');
+        await expect(dialog).toBeHidden();
+        await expect(trigger).toBeFocused();
+    }
+
+    await expect(page.getByRole('button', { name: 'Reorder items' })).toHaveCount(0);
+
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
+});
+
+test('settings route is restricted to portfolio owners', async ({ page }) => {
+    const response = await page.goto('/client/demo/settings');
+
+    expect(response?.status()).toBe(404);
+    await expect(page.getByRole('heading', { name: 'Settings not found' })).toBeVisible();
+});
+
+test('owner messages use a responsive list and detail page', async ({ context, page }) => {
+    await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/owner/demo/messages');
+    await expect(page.getByRole('heading', { name: 'Messages', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Inbox' })).toBeVisible();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+
+    await page.getByRole('button', { name: /Alice Example/ }).click();
+    await expect(page.getByRole('heading', { name: 'Project inquiry' })).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Selected message' }).getByText('I would like to discuss a frontend project with you.')).toBeVisible();
+    await page.getByRole('button', { name: 'Back to message list' }).click();
+    await expect(page.getByRole('heading', { name: 'Inbox' })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
+
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await expect(page.getByRole('heading', { name: 'Inbox' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Project inquiry' })).toBeVisible();
+});
+
+test('messages route is restricted to portfolio owners', async ({ page }) => {
+    await page.goto('/client/demo/messages');
+
+    await expect(page.getByRole('heading', { name: 'Messages not found' })).toBeVisible();
 });
 
 test('key routes pass baseline accessibility and responsive structure checks', async ({ page }) => {
-    const routes = ['/', '/auth/login', '/auth/register', '/auth/email', '/search', '/client/demo/dashboard'];
+    const routes = ['/', '/auth/login', '/auth/register', '/auth/email', '/search', '/client/demo/dashboard', '/owner/demo/settings', '/owner/demo/messages'];
     const viewports = [
         { width: 390, height: 844 },
         { width: 1440, height: 900 },
@@ -146,6 +292,12 @@ test('key routes pass baseline accessibility and responsive structure checks', a
             await page.goto(route);
             if (route.includes('/dashboard')) {
                 await expect(page.getByRole('heading', { name: 'Demo Portfolio' })).toBeVisible();
+            }
+            if (route.includes('/settings')) {
+                await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible();
+            }
+            if (route.includes('/messages')) {
+                await expect(page.getByRole('heading', { name: 'Messages', exact: true })).toBeVisible();
             }
 
             const audit = await page.evaluate(() => {

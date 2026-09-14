@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { institutionListQuery, degreeListQuery, fieldOfStudyListQuery, educationListQuery, addEditEducation, deleteEducation } from '@/features/dashboard/widgets/education/thunks';
+import { institutionListQuery, degreeListQuery, fieldOfStudyListQuery, educationListQuery, addEditEducation, deleteEducation, createFieldOfStudy, sortEducation } from '@/features/dashboard/widgets/education/thunks';
 import { dashboardHydrated } from '../../dashboard.hydration';
 import { EducationState } from './types.education';
-import { userSkillListQuery } from '../skill';
+import { editDeleteUserSkill, userSkillListQuery } from '../skill';
 import { syncParentFromUserSkill } from '@/lib/utils';
 
 const initialState : EducationState = {
@@ -40,6 +40,9 @@ const educationSlice = createSlice({
         })
 
         .addCase(userSkillListQuery.fulfilled, (state, action) => {
+            syncParentFromUserSkill(state, action.payload, "lstEducations");
+        })
+        .addCase(editDeleteUserSkill.fulfilled, (state, action) => {
             syncParentFromUserSkill(state, action.payload, "lstEducations");
         })
 
@@ -116,12 +119,30 @@ const educationSlice = createSlice({
             state.fieldOfStudy.error = action.payload as string;
         })
 
+        .addCase(createFieldOfStudy.pending, (state) => {
+            state.fieldOfStudy.loading = true;
+            state.fieldOfStudy.error = null;
+        })
+        .addCase(createFieldOfStudy.fulfilled, (state, action) => {
+            state.fieldOfStudy.loading = false;
+            if (!state.fieldOfStudy.lstFields.some(field => field.id === action.payload.id)) {
+                state.fieldOfStudy.lstFields.push(action.payload);
+            }
+        })
+        .addCase(createFieldOfStudy.rejected, (state, action) => {
+            state.fieldOfStudy.loading = false;
+            state.fieldOfStudy.error = action.payload as string;
+        })
+
         .addCase(addEditEducation.pending, (state) => {
             state.loading = true;
             state.error = null;
         })
-        .addCase(addEditEducation.fulfilled, (state) => {
+        .addCase(addEditEducation.fulfilled, (state, action) => {
             state.loading = false;
+            const index = state.lstEducations.findIndex(item => item.id === action.payload.id);
+            if (index === -1) state.lstEducations.push(action.payload);
+            else state.lstEducations[index] = action.payload;
         })
         .addCase(addEditEducation.rejected, (state, action) => {
             state.loading = false;
@@ -132,10 +153,25 @@ const educationSlice = createSlice({
             state.loading = true;
             state.error = null;
         })
-        .addCase(deleteEducation.fulfilled, (state) => {
+        .addCase(deleteEducation.fulfilled, (state, action) => {
             state.loading = false;
+            state.lstEducations = state.lstEducations.filter(item => item.id !== action.payload);
         })
         .addCase(deleteEducation.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload as string;
+        })
+
+        .addCase(sortEducation.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        })
+        .addCase(sortEducation.fulfilled, (state, action) => {
+            state.loading = false;
+            const positions = new Map(action.payload.map((id, index) => [id, index]));
+            state.lstEducations.sort((a, b) => (positions.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (positions.get(b.id) ?? Number.MAX_SAFE_INTEGER));
+        })
+        .addCase(sortEducation.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload as string;
         });

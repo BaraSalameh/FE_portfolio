@@ -22,6 +22,8 @@ export interface UserPreferenceProps {
     onClose?: () => void;
     preferenceKey: string;
     preferenceValues?: PreferenceValue;
+    compact?: boolean;
+    defaultValue?: 'show' | 'hide';
 }
 
 export interface UserWidgetPreferenceResponse extends UserWidgetPreferenceFormData {

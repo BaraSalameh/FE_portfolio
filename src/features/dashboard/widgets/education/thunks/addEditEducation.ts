@@ -3,6 +3,7 @@ import { transformPayload } from "@/lib/utils";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { EducationFormData } from "../schema";
 import { dashboardMutation } from "@/features/dashboard/requests";
+import { EducationResponse } from "../types.education";
 
 export const addEditEducation = createAsyncThunk(
     'education/addEditEducation',
@@ -10,14 +11,18 @@ export const addEditEducation = createAsyncThunk(
         try {
             const request = transformPayload(payload);
 
-            await dashboardMutation({
+            const response = await dashboardMutation<EducationResponse>({
                 method: 'POST',
                 url: '/Owner/AddEditEducation',
                 data: request,
                 withCredentials: true
             });
 
-            return;
+            if (!response.data) {
+                return thunkAPI.rejectWithValue('Education API returned no saved record. Restart or update the backend.');
+            }
+
+            return response.data;
 
         } catch (error) {
             return thunkAPI.rejectWithValue(getApiErrorPayload(error));

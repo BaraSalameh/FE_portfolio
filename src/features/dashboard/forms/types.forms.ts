@@ -5,7 +5,7 @@ import { ActionMeta, MultiValue, SingleValue } from "react-select";
 import { z } from "zod";
 import { Option } from '@/features/types.features';
 
-type ItemAs = 'Input' | 'Checkbox' | 'Dropdown' | 'DropdownMulti' | 'Modal' | 'FieldArray';
+type ItemAs = 'Input' | 'Checkbox' | 'Dropdown' | 'DropdownMulti' | 'Modal' | 'FieldArray' | 'MediaUpload';
 type Type = 'Password' | 'Email' | 'Text' | 'Number' | 'Date' | 'Textarea' | 'hidden';
 type ModalAs = 'create' | 'update' | 'delete' | 'none';
 type Config = 'Disabled';
@@ -24,6 +24,7 @@ export interface FormField {
     label: string;
     type?: Type;
     placeholder?: string;
+    description?: string;
     options?: Option[];
     fetchAction?: PaginatedAction;
     isLoading?: boolean;
@@ -35,6 +36,7 @@ export interface FormItem<T extends z.ZodTypeAny> {
     label?: string;
     type?: Type;
     placeholder?: string;
+    description?: string;
     name: Path<z.infer<T>>;
     options?: Option[];
     modal?: FormModal;
@@ -42,6 +44,11 @@ export interface FormItem<T extends z.ZodTypeAny> {
     config?: Config[];
     fetchAction?: PaginatedAction;
     isLoading?: boolean;
+    minimumSearchLength?: number;
+    loadOptionsOnMount?: boolean;
+    createOption?: (inputValue: string) => Promise<Option>;
+    media?: Record<string, string>[];
+    uploader?: React.ReactNode;
 }
 
 interface FormItemWatch<T extends z.ZodTypeAny> {
@@ -77,6 +84,9 @@ export interface ControlledDropdownProps<T extends FieldValues>  {
     isMulti?: boolean;
     fetchAction?: PaginatedAction;
     isLoading?: boolean;
+    minimumSearchLength?: number;
+    loadOptionsOnMount?: boolean;
+    createOption?: (inputValue: string) => Promise<Option>;
 }
 
 export interface FormCheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -87,6 +97,7 @@ export interface FormCheckboxProps extends InputHTMLAttributes<HTMLInputElement>
 
 export interface FormDropdownProps {
     label?: string;
+    ariaLabel?: string;
     options: Option[];
     value?: Option | MultiValue<Option>;
     onChange?: (value: MultiValue<Option> | SingleValue<Option>, actionMeta: ActionMeta<Option>) => void;
@@ -98,16 +109,22 @@ export interface FormDropdownProps {
     isMulti?: boolean;
     placeholder?: string;
     fetchAction?: PaginatedAction;
+    minimumSearchLength?: number;
+    loadOptionsOnMount?: boolean;
+    onCreateOption?: (inputValue: string) => Promise<void>;
 }
 
 export interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
     label?: string;
+    description?: string;
     registration?: UseFormRegisterReturn;
     error?: FieldError;
 }
 
 export interface ImageUploaderProps {
     preset: ImageType;
-    onAction?: (url: string) => void;
+    onAction?: (url: string) => void | Promise<void>;
+    uploadImage?: (file: Blob) => Promise<string>;
+    onRemove?: () => Promise<void>;
     onClose?: () => void;
 }

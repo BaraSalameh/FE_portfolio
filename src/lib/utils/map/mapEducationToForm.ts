@@ -6,6 +6,9 @@ export const mapEducationToForm = (educationFromDb?: EducationResponse): Educati
         ...educationFromDb,
         startDate: educationFromDb?.startDate?.slice(0, 10) ?? '',
         endDate: educationFromDb?.endDate?.slice(0, 10) ?? '',
+        isStudying: educationFromDb
+            ? (educationFromDb.isStudying ?? educationFromDb.endDate == null)
+            : false,
         LKP_InstitutionID: educationFromDb?.institution.id ?? '',
         LKP_DegreeID: educationFromDb?.degree.id ?? '',
         LKP_FieldOfStudyID: educationFromDb?.fieldOfStudy?.id ?? '',

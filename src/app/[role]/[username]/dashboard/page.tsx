@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getDashboard } from '@/features/dashboard/api';
 import DashboardStoreProvider from '@/features/dashboard/presentation/DashboardStoreProvider';
-import { ApiError } from '@/lib/api/types';
+import { handlePageApiError } from '@/lib/api/page-errors';
 import DashboardPageClient from './DashboardPageClient';
 
 const DASHBOARD_ROLES = new Set(['owner', 'client']);
@@ -16,8 +16,7 @@ export default async function DashboardPage({
     try {
         dashboard = await getDashboard(role, username);
     } catch (error) {
-        if (error instanceof ApiError && error.status === 404) notFound();
-        throw error;
+        handlePageApiError(error);
     }
 
     if (!dashboard) notFound();

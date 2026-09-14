@@ -26,13 +26,19 @@ test('forwards trusted origin, body, cookies, and all auth cookies', async ({ re
         cookie: 'AccessToken=old-access; RefreshToken=old-refresh',
         origin: baseURL,
     });
-    expect(response.headersArray().filter(header => header.name.toLowerCase() === 'set-cookie'))
-        .toHaveLength(2);
+    const authCookies = response.headersArray()
+        .filter(header => header.name.toLowerCase() === 'set-cookie')
+        .map(header => header.value);
+    expect(authCookies).toHaveLength(2);
+    expect(authCookies).toEqual(expect.arrayContaining([
+        expect.stringMatching(/^AccessToken=.*; Path=\/(?:;|$)/i),
+        expect.stringMatching(/^RefreshToken=.*; Path=\/api\/Account(?:;|$)/i),
+    ]));
 });
 
 test('rejects API request bodies larger than portfolio-api accepts', async ({ request }) => {
     const response = await request.post('/api/Account/Login', {
-        data: 'x'.repeat(1_048_577),
+        data: 'x'.repeat(6_291_457),
     });
 
     expect(response.status()).toBe(413);

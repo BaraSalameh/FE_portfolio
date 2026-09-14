@@ -9,19 +9,21 @@ export type PaginationConfig = { maxLength: number; fetchAction: PaginatedAction
 export type ChartEntry = { name: string; value: number };
 export type ChartConfig = { title?: string; groupBy?: string | string[]; customData?: ChartEntry[] };
 export type DurationChartConfig = ChartConfig & { durationKeys?: { start?: string; end?: string } };
-export type ListItemConfig = { icon?: LucideIcon; leftKey?: string | string[]; between?: string; rightKey?: string | string[]; size?: 'lg' | 'md' | 'sm' | null; isTime?: boolean; isLink?: boolean; itemIcon?: string };
+export type ListItemConfig = { icon?: LucideIcon; leftKey?: string | string[]; between?: string; rightKey?: string | string[]; size?: 'lg' | 'md' | 'sm' | null; isTime?: boolean; isLink?: boolean; itemIcon?: string; label?: string };
 
 export interface WidgetCardProps {
     isLoading?: boolean;
-    header?: { title?: string; icon?: LucideIcon };
+    error?: string | null;
+    header?: { title?: string; icon?: LucideIcon; description?: string };
     items: object[];
+    emptyState?: { title: string; description: string };
     list?: ListItemConfig[];
     pie?: ChartConfig;
     bar?: DurationChartConfig;
     radar?: ChartConfig;
     create?: { title?: string; subTitle?: string; form?: ReactNode; icon?: LucideIcon };
     update?: { title?: string; subTitle?: string; form?: ReactNode };
-    del?: { title?: string; subTitle?: string; message?: string; onDelete: (id: string) => void | Promise<void> };
+    del?: { title?: string; subTitle?: string; message?: string; onDelete: (id: string) => void | boolean | Promise<void | boolean> };
     details?: ListItemConfig[];
     onSort?: (ids: string[]) => void | Promise<void>;
     pagination?: PaginationConfig;
@@ -33,4 +35,4 @@ export type ChartWidgetProps = { data: ChartEntry[]; colorMap?: Record<string, s
 export type WidgetChartsProps = { items?: object[]; pie?: ChartConfig; bar?: DurationChartConfig; radar?: ChartConfig };
 export type WidgetListProps = { items: object[]; list: ListItemConfig[]; onItemClick?: (item: object) => void; className?: string; sort?: { sortable: boolean; onSort?: (ids: string[]) => void | Promise<void> }; pagination?: PaginationConfig };
 export type WidgetModalProps = { isLoading?: boolean; isOpen: boolean; onClose: () => void; item?: object; update?: WidgetCardProps['update']; del?: WidgetCardProps['del']; details?: ListItemConfig[]; className?: string; onAction?: (id: string) => void | Promise<void> };
-export type SortableItemProps = { id: string; children: ReactNode };
+export type SortableItemProps = { id: string; children: ReactNode; label?: string };

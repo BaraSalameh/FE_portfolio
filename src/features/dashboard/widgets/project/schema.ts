@@ -11,8 +11,9 @@ export const projectSchema = z.object({
     id: z.string().optional(),
 
     title: z
-        .string()
-        .min(3, 'Title is too short'),
+        .string().trim()
+        .min(2, 'Title is too short')
+        .max(160, 'Title is too long'),
 
     liveLink: optionalUrl.optional(),
         
@@ -22,7 +23,7 @@ export const projectSchema = z.object({
 
     description: z.preprocess(
         val => val === '' ? null : val,
-        z.string().max(1000, 'Describtion is too long')
+        z.string().trim().max(1000, 'Description is too long')
         .nullable()
     ),
 
@@ -36,6 +37,11 @@ export const projectSchema = z.object({
         .nullable(),
     
     ExperienceID: z
+        .string()
+        .optional()
+        .nullable(),
+
+    CertificateID: z
         .string()
         .optional()
         .nullable(),

@@ -1,7 +1,8 @@
 import { useAppDispatch } from "@/lib/store/hooks";
 import { ExperienceFormData } from "../schema";
-import { addEditExperience, experienceListQuery } from "../thunks";
+import { addEditExperience } from "../thunks";
 import { ExperienceProps } from "../types.experience";
+import { parentRecordSaved } from "@/features/dashboard/dashboard.relationships";
 
 export const useHandleSubmit = ({ onClose } : ExperienceProps) => {
     const dispatch = useAppDispatch();
@@ -10,7 +11,7 @@ export const useHandleSubmit = ({ onClose } : ExperienceProps) => {
         const resultAction = await dispatch(addEditExperience(data));
         
         if (!addEditExperience.rejected.match(resultAction)) {
-            await dispatch(experienceListQuery());
+            dispatch(parentRecordSaved({ kind: 'experience', record: resultAction.payload }));
             onClose?.();
         }
     }

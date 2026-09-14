@@ -46,6 +46,7 @@ export interface EducationResponse {
     fieldOfStudy: FieldOfStudyFormData;
     startDate: string;
     endDate?: string;
+    isStudying: boolean;
     description?: string;
     lstProjects: Record<string, string>[];
     lstSkills: SkillFormData[];

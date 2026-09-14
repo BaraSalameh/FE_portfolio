@@ -4,12 +4,14 @@ export const experienceSchema = z.object({
     id: z.string().optional(),
 
     jobTitle: z
-        .string()
-        .min(3, 'Job title is too short'),
+        .string().trim()
+        .min(2, 'Job title is too short')
+        .max(120, 'Job title is too long'),
 
     companyName: z
-        .string()
-        .min(3, 'Company name is too short'),
+        .string().trim()
+        .min(2, 'Company name is too short')
+        .max(120, 'Company name is too long'),
 
     startDate: z
         .string()
@@ -21,10 +23,11 @@ export const experienceSchema = z.object({
         .nullable(),
 
     location: z
-        .string()
-        .min(3, 'Location is too short'),
+        .string().trim()
+        .min(2, 'Location is too short')
+        .max(160, 'Location is too long'),
 
-    description: z.string()
+    description: z.string().trim()
         .max(1000, 'Description is too long')
         .optional().nullable(),
 

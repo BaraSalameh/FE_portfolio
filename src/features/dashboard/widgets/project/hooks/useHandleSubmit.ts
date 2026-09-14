@@ -1,19 +1,18 @@
 import { useAppDispatch } from "@/lib/store/hooks";
 import { ProjectFormData } from "../schema";
 import { ProjectProps } from "../types.project";
-import { saveProjectAction } from '../project.actions';
-import { projectMutationFailed, projectMutationStarted, projectMutationSucceeded } from '../slice';
+import { parentRecordSaved } from '@/features/dashboard/dashboard.relationships';
+import { addEditProject } from '../thunks';
 
 export const useHandleSubmit = ({ onClose } : ProjectProps) => {
     const dispatch = useAppDispatch();
 
     return async (data: ProjectFormData) => {
-        dispatch(projectMutationStarted());
-        const result = await saveProjectAction(data);
+        const resultAction = await dispatch(addEditProject(data));
 
-        if (!result.success) return dispatch(projectMutationFailed(result.error));
+        if (addEditProject.rejected.match(resultAction)) return;
 
-        dispatch(projectMutationSucceeded(result.data));
+        dispatch(parentRecordSaved({ kind: 'project', record: resultAction.payload }));
         onClose?.();
     }
 }

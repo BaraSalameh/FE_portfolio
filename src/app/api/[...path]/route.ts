@@ -1,7 +1,8 @@
 import { getApiBaseUrl } from '@/lib/api/config';
+import { normalizeAuthCookiePath } from '@/lib/api/cookies';
 import { NextRequest } from 'next/server';
 
-const MAX_BODY_BYTES = 1_048_576;
+const MAX_BODY_BYTES = 6_291_456;
 const REQUEST_HEADERS = [
     'accept',
     'accept-language',
@@ -73,7 +74,7 @@ async function relay(
             if (value) responseHeaders.set(name, value);
         }
         for (const cookie of upstream.headers.getSetCookie()) {
-            responseHeaders.append('set-cookie', cookie);
+            responseHeaders.append('set-cookie', normalizeAuthCookiePath(cookie));
         }
 
         return new Response(upstream.body, {

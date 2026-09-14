@@ -3,7 +3,7 @@
 import { ProfileFormData } from '@/features/dashboard/profile/schema';
 import { DashboardWidget, PortfolioLoading, PortfolioProfile } from '@/features/dashboard/presentation';
 import { useOverviewWidget } from '@/features/dashboard/widgets/overview/hooks';
-import { useWidgets } from '@/features/dashboard/widgets/useWidgets';
+import { PortfolioWidgets } from '@/features/dashboard/widgets/useWidgets';
 import { useAppSelector } from '@/lib/store/hooks';
 import { checkWidgetPreferences, widget_preferences } from '@/lib/utils';
 
@@ -11,7 +11,7 @@ export default function DashboardPageClient() {
     const { error, loading, user } = useAppSelector(state => state.profile);
     const { unreadContactMessageCount } = useAppSelector(state => state.contactMessage);
     const { lstUserPreferences } = useAppSelector(state => state.userWidgetPreference);
-    const widgets = useWidgets();
+    const socialLinks = useAppSelector(state => state.socialLinks.items);
     const overviewData = useOverviewWidget();
     const showOverview = checkWidgetPreferences(
         lstUserPreferences,
@@ -38,10 +38,11 @@ export default function DashboardPageClient() {
                 <PortfolioProfile
                     user={user as ProfileFormData}
                     unreadContactMessageCount={unreadContactMessageCount}
+                    socialLinks={socialLinks}
                 />
                 {showOverview && <div className="mt-5"><DashboardWidget {...overviewData} /></div>}
                 <div className="mt-5 columns-1 gap-4 sm:columns-2 lg:columns-3">
-                    {widgets}
+                    <PortfolioWidgets />
                 </div>
             </div>
         </main>

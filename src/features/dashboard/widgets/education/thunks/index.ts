@@ -5,3 +5,4 @@ export { educationListQuery } from './educationListQuery';
 export { fieldOfStudyListQuery } from './fieldOfStudyListQuery';
 export { institutionListQuery } from './institutionListQuery';
 export { sortEducation } from './sortEducation';
+export { createFieldOfStudy } from './createFieldOfStudy';

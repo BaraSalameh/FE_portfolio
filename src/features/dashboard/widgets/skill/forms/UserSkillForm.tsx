@@ -53,7 +53,7 @@ export const UserSkillForm = ({ onClose } : SkillProps) => {
         <ControlledForm
             schema={userSkillSchema}
             onSubmit={onSubmit}
-            items={[{as: 'FieldArray', name: 'lstUserSkills', fields: fieldConfigs}]}
+            items={[{as: 'FieldArray', name: 'lstUserSkills', label: 'Skills', fields: fieldConfigs}]}
             error={error}
             loading={loading}
             resetItems={resetItems}

@@ -8,6 +8,7 @@ export const mapProjectToForm = (projectFromDb?: ProjectResponse): ProjectFormDa
         description: projectFromDb?.description ?? '',
         EducationID: projectFromDb?.education?.id,
         ExperienceID: projectFromDb?.experience?.id,
+        CertificateID: projectFromDb?.certificate?.id,
         lstSkills: projectFromDb?.lstSkills?.map(s => s.id) ?? []
     }
 }

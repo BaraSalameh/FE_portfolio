@@ -115,7 +115,7 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  :where(
+  :is(
     a[href],
     button,
     label[for],
@@ -140,7 +140,7 @@
     cursor: pointer;
   }
 
-  :where(:disabled, [aria-disabled="true"]) {
+  :is(:disabled, [aria-disabled="true"]) {
     cursor: not-allowed;
   }
 }
@@ -157,4 +157,30 @@
 .scrollbar-hide {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+/* Action labels are desktop-first so card density cannot accidentally hide them. */
+.responsive-action {
+  display: inline-flex;
+  width: auto;
+  height: 2.5rem;
+  min-width: 2.5rem;
+  padding-inline: 0.75rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.responsive-action__label {
+  display: inline;
+}
+
+@media (max-width: 639px) {
+  .responsive-action {
+    width: 2.5rem;
+    padding-inline: 0;
+  }
+
+  .responsive-action__label {
+    display: none;
+  }
 }

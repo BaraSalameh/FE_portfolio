@@ -3,7 +3,6 @@
 import { getSelectedOption } from "@/lib/utils";
 import { Controller, FieldValues } from "react-hook-form";
 import { FormDropdown } from "./FormDropdown";
-import { useState } from "react";
 import { ControlledDropdownProps } from "./types.forms";
 import { Option } from "@/features/types.features";
 
@@ -14,11 +13,11 @@ export const ControlledDropdown = <T extends FieldValues>({
     options,
     isMulti = false,
     fetchAction,
-    isLoading
+    isLoading,
+    minimumSearchLength,
+    loadOptionsOnMount,
+    createOption,
 }: ControlledDropdownProps<T>) => {
-
-    const [values, setValues] = useState<Option[]>();
-
     return (
         <Controller
             name={name}
@@ -30,10 +29,9 @@ export const ControlledDropdown = <T extends FieldValues>({
                     <FormDropdown
                         label={label}
                         options={options}
-                        value={values ?? selectedValue}
+                        value={selectedValue}
                         onChange={(option) => {
                             if (isMulti) {
-                                setValues(option as Option[]);
                                 const selectedIds = (option as Option[])?.map(opt => opt.value) ?? [];
                                 field.onChange(selectedIds);
                             } else {
@@ -44,7 +42,13 @@ export const ControlledDropdown = <T extends FieldValues>({
                         error={fieldState.error}
                         isMulti={isMulti}
                         fetchAction={fetchAction}
-                        isLoading={isLoading ?? options.length === 0}
+                        isLoading={isLoading ?? false}
+                        minimumSearchLength={minimumSearchLength}
+                        loadOptionsOnMount={loadOptionsOnMount}
+                        onCreateOption={createOption ? async (inputValue) => {
+                            const created = await createOption(inputValue);
+                            field.onChange(created.value);
+                        } : undefined}
                     />
                 );
             }}

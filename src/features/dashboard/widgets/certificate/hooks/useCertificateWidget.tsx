@@ -9,7 +9,7 @@ import { CertificateForm } from "../forms";
 
 export const useCertificateWidget = (): WidgetCardProps => {
  
-    const { loading: certificateLoading, lstCertificates } = useAppSelector(state => state.certificate);
+    const { loading: certificateLoading, error, lstCertificates } = useAppSelector(state => state.certificate);
     const { lstUserPreferences } = useAppSelector(state => state.userWidgetPreference);
     const handleCertificateDelete = useHandleCertificateDelete();
     const debouncedSortCertificate = useDebouncedSortCertificate();
@@ -28,8 +28,10 @@ export const useCertificateWidget = (): WidgetCardProps => {
     
     return {
         isLoading: certificateLoading,
+        error,
         items: lstCertificates,
-        header: { title: 'Certificate', icon: Award },
+        header: { title: 'Certificates', icon: Award, description: 'Credentials and professional achievements' },
+        emptyState: { title: 'No certificates added', description: 'Add a credential to showcase verified learning and achievements.' },
         bar: barData,
         pie: pieData,
         radar: radarData,
@@ -39,11 +41,11 @@ export const useCertificateWidget = (): WidgetCardProps => {
         details: [
             { leftKey: 'certificate.name', size: 'lg' },
             { leftKey: 'credintialID', icon: Link },
-            { leftKey: 'credintialUrl', icon: SearchCodeIcon , isLink: true},
+            { leftKey: 'credintialUrl', icon: SearchCodeIcon, isLink: true, label: 'View credential' },
             { leftKey: 'lstSkills.name', icon: WandSparklesIcon, itemIcon: 'lstSkills.iconUrl' },
             { leftKey: 'issueDate', between: '-', rightKey: 'expirationDate', icon: Clock, isTime: true }
         ],
-        create: { subTitle: 'Add Certificate', form: <CertificateForm />},
+        create: { title: 'Add', subTitle: 'Add certificate', form: <CertificateForm />},
         update: { subTitle: 'Update Certificate', form: <CertificateForm /> },
         del: { subTitle: 'Delete certificate', message: 'Are you sure?', onDelete: handleCertificateDelete },
         onSort: debouncedSortCertificate

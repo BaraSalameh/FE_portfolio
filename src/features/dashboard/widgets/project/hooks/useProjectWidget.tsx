@@ -9,7 +9,7 @@ import { ProjectForm } from "../forms";
 
 export const useProjectWidget = (): WidgetCardProps => {
     
-    const { loading: projectTechnologyLoading, lstProjects } = useAppSelector(state => state.project);
+    const { loading: projectTechnologyLoading, error, lstProjects } = useAppSelector(state => state.project);
     const { lstUserPreferences } = useAppSelector(state => state.userWidgetPreference);
     const { lstUserChartPreferences } = useAppSelector(state => state.userChartPreference);
     const handleProjectDelete = useHandleProjectDelete();
@@ -52,8 +52,10 @@ export const useProjectWidget = (): WidgetCardProps => {
 
     return {
         isLoading: projectTechnologyLoading,
+        error,
         items: lstProjects,
-        header: { title: 'Project', icon: Folder },
+        header: { title: 'Projects', icon: Folder, description: 'Selected work, outcomes, and technologies' },
+        emptyState: { title: 'No projects added', description: 'Add a project to demonstrate your work, process, and technical impact.' },
         bar: barData,
         radar: radarData,
         pie: pieData,
@@ -61,13 +63,13 @@ export const useProjectWidget = (): WidgetCardProps => {
             { leftKey: 'title', between: '-', rightKey: ['experience.companyName', 'education.institution.name'], size: 'lg' },
             { leftKey: 'isFeatured' }
         ],
-        create: { subTitle: 'Add Project & technologis', form: <ProjectForm /> },
+        create: { title: 'Add', subTitle: 'Add project', form: <ProjectForm /> },
         update: { subTitle: 'Update Project & technologies', form: <ProjectForm /> },
         del: { subTitle: 'Delete Project', message: 'Are you sure?', onDelete: handleProjectDelete },
         details: [
             { leftKey: 'title', size: 'lg' },
-            { leftKey: 'liveLink', icon: Link, isLink: true },
-            { leftKey: 'sourceCode', icon: SearchCodeIcon , isLink: true},
+            { leftKey: 'liveLink', icon: Link, isLink: true, label: 'View live project' },
+            { leftKey: 'sourceCode', icon: SearchCodeIcon, isLink: true, label: 'View source code' },
             { leftKey: 'lstSkills.name', icon: WandSparklesIcon, itemIcon: 'lstSkills.iconUrl' },
             { leftKey: 'description', size: 'sm' }
         ],
