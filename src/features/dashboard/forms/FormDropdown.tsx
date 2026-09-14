@@ -62,6 +62,10 @@ export const FormDropdown = ({
     }, [dispatch, fetchAction, loadOptionsOnMount]);
 
     const handleInputChange = useCallback((inputValue: string, actionMeta: InputActionMeta) => {
+        if (actionMeta.action === 'set-value') {
+            setInputValue('');
+            return;
+        }
         if (actionMeta.action !== 'input-change') return;
 
         const query = inputValue.trim();
@@ -173,6 +177,7 @@ export const FormDropdown = ({
                 options={visibleOptions}
                 components={{ Option: CustomOption, MultiValue: CustomMultiValue, SingleValue: CustomSingleValue }}
                 value={value}
+                inputValue={inputValue}
                 onInputChange={handleInputChange}
                 onChange={onChange}
                 onBlur={onBlur}

@@ -1,5 +1,6 @@
 import { useAppDispatch } from "@/lib/store/hooks";
-import { deleteExperience, experienceListQuery } from "../thunks";
+import { parentRecordDeleted } from '@/features/dashboard/dashboard.relationships';
+import { deleteExperience } from "../thunks";
 
 export const useHandleExperienceDelete = () => {
   const dispatch = useAppDispatch();
@@ -7,7 +8,7 @@ export const useHandleExperienceDelete = () => {
   return async (id: string) => {
         try {
             await dispatch(deleteExperience(id)).unwrap();
-            await dispatch(experienceListQuery()).unwrap();
+            dispatch(parentRecordDeleted({ kind: 'experience', id }));
             return true;
         } catch {
             return false;

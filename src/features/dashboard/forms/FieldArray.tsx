@@ -37,8 +37,8 @@ export const FieldArray = <T extends FieldValues>({
                 type="button"
                 className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-line bg-surface-raised px-3.5 text-sm font-semibold text-ink shadow-sm transition hover:border-accent/30 hover:bg-canvas-subtle"
                 onClick={() => prepend(
-                    fieldConfigs.reduce<Record<string, string>>((acc, config) => {
-                        acc[config.name] = '';
+                    fieldConfigs.reduce<Record<string, string | string[]>>((acc, config) => {
+                        acc[config.name] = config.as === 'DropdownMulti' ? [] : '';
                         return acc;
                     }, {}) as FieldArrayValue<T, FieldArrayPath<T>>
                 )}

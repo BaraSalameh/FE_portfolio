@@ -1,5 +1,6 @@
 import { useAppDispatch } from "@/lib/store/hooks";
-import { certificateListQuery, deleteCertificate } from "../thunks";
+import { parentRecordDeleted } from '@/features/dashboard/dashboard.relationships';
+import { deleteCertificate } from "../thunks";
 
 export const useHandleCertificateDelete = () => {
   const dispatch = useAppDispatch();
@@ -7,7 +8,7 @@ export const useHandleCertificateDelete = () => {
   return async (id: string) => {
         try {
             await dispatch(deleteCertificate(id)).unwrap();
-            await dispatch(certificateListQuery()).unwrap();
+            dispatch(parentRecordDeleted({ kind: 'certificate', id }));
             return true;
         } catch {
             return false;

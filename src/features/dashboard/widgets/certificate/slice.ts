@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { dashboardHydrated } from '../../dashboard.hydration';
 import { CertificateState } from './types.certificate';
-import { addEditCertificate, certificateListQuery, createCertificate, deleteCertificate, lkp_CertificateListQuery } from './thunks';
-import { userSkillListQuery } from '../skill';
+import { addEditCertificate, certificateListQuery, createCertificate, deleteCertificate, lkp_CertificateListQuery, sortCertificate } from './thunks';
+import { editDeleteUserSkill, userSkillListQuery } from '../skill';
 import { syncParentFromUserSkill } from '@/lib/utils';
 
 const initialState : CertificateState = {
@@ -28,6 +28,9 @@ const certificateSlice = createSlice({
         })
 
         .addCase(userSkillListQuery.fulfilled, (state, action) => {
+            syncParentFromUserSkill(state, action.payload, "lstCertificates");
+        })
+        .addCase(editDeleteUserSkill.fulfilled, (state, action) => {
             syncParentFromUserSkill(state, action.payload, "lstCertificates");
         })
 
@@ -83,8 +86,11 @@ const certificateSlice = createSlice({
             state.loading = true;
             state.error = null;
         })
-        .addCase(addEditCertificate.fulfilled, (state) => {
+        .addCase(addEditCertificate.fulfilled, (state, action) => {
             state.loading = false;
+            const index = state.lstCertificates.findIndex(item => item.id === action.payload.id);
+            if (index === -1) state.lstCertificates.push(action.payload);
+            else state.lstCertificates[index] = action.payload;
         })
         .addCase(addEditCertificate.rejected, (state, action) => {
             state.loading = false;
@@ -95,10 +101,25 @@ const certificateSlice = createSlice({
             state.loading = true;
             state.error = null;
         })
-        .addCase(deleteCertificate.fulfilled, (state) => {
+        .addCase(deleteCertificate.fulfilled, (state, action) => {
             state.loading = false;
+            state.lstCertificates = state.lstCertificates.filter(item => item.id !== action.payload);
         })
         .addCase(deleteCertificate.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload as string;
+        })
+
+        .addCase(sortCertificate.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        })
+        .addCase(sortCertificate.fulfilled, (state, action) => {
+            state.loading = false;
+            const positions = new Map(action.payload.map((id, index) => [id, index]));
+            state.lstCertificates.sort((a, b) => (positions.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (positions.get(b.id) ?? Number.MAX_SAFE_INTEGER));
+        })
+        .addCase(sortCertificate.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload as string;
         });

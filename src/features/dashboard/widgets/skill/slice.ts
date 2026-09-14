@@ -11,6 +11,8 @@ import { syncUserSkillsFromParentList } from '@/lib/utils';
 import { CertificateResponse } from '../certificate/types.certificate';
 import { ExperienceResponse } from '../experience/types.experience';
 import { ProjectResponse } from '../project/types.project';
+import { parentRecordDeleted, parentRecordSaved } from '../../dashboard.relationships';
+import { syncUserSkillsFromParent } from '@/lib/utils';
 
 const initialState : UserSkillState = {
     lstUserSkills: [],
@@ -46,6 +48,28 @@ const userSkillSlice = createSlice({
         })
         .addCase(dashboardHydrated, (state, action) => {
             state.lstUserSkills = action.payload.lstUserSkills;
+        })
+        .addCase(parentRecordSaved, (state, action) => {
+            const { kind, record } = action.payload;
+            if (kind === 'education') syncUserSkillsFromParent(record, state, item => item.institution, 'lstEducations');
+            if (kind === 'experience') syncUserSkillsFromParent(record, state, item => item.companyName, 'lstExperiences');
+            if (kind === 'project') syncUserSkillsFromParent(record, state, item => item.title, 'lstProjects');
+            if (kind === 'certificate') syncUserSkillsFromParent(record, state, item => item.certificate, 'lstCertificates');
+        })
+        .addCase(parentRecordDeleted, (state, action) => {
+            const parentField = {
+                education: 'lstEducations',
+                experience: 'lstExperiences',
+                project: 'lstProjects',
+                certificate: 'lstCertificates',
+            }[action.payload.kind] as 'lstEducations' | 'lstExperiences' | 'lstProjects' | 'lstCertificates';
+
+            state.lstUserSkills.forEach(userSkill => {
+                const parents = userSkill[parentField];
+                if (Array.isArray(parents)) {
+                    userSkill[parentField] = parents.filter(parent => parent.id !== action.payload.id) as never;
+                }
+            });
         })
 
         .addCase(educationListQuery.fulfilled, (state, action) => {
@@ -129,8 +153,9 @@ const userSkillSlice = createSlice({
             state.loading = true;
             state.error = null;
         })
-        .addCase(editDeleteUserSkill.fulfilled, (state) => {
+        .addCase(editDeleteUserSkill.fulfilled, (state, action) => {
             state.loading = false;
+            state.lstUserSkills = action.payload;
         })
         .addCase(editDeleteUserSkill.rejected, (state, action) => {
             state.loading = false;

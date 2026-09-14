@@ -1,19 +1,17 @@
 import { useAppDispatch } from "@/lib/store/hooks";
-import { deleteProjectAction } from '../project.actions';
-import { projectMutationFailed, projectMutationStarted, projectMutationSucceeded } from '../slice';
+import { parentRecordDeleted } from '@/features/dashboard/dashboard.relationships';
+import { deleteProject } from '../thunks';
 
 export const useHandleProjectDelete = () => {
   const dispatch = useAppDispatch();
 
   return async (id: string) => {
-        dispatch(projectMutationStarted());
-        const result = await deleteProjectAction(id);
-
-        if (!result.success) {
-            dispatch(projectMutationFailed(result.error));
+        try {
+            await dispatch(deleteProject(id)).unwrap();
+            dispatch(parentRecordDeleted({ kind: 'project', id }));
+            return true;
+        } catch {
             return false;
         }
-        dispatch(projectMutationSucceeded(result.data));
-        return true;
     }
 };

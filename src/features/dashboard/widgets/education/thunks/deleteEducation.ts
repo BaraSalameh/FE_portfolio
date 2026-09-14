@@ -11,6 +11,7 @@ export const deleteEducation = createAsyncThunk(
                 data: {id},
                 withCredentials: true
             });
+            return id;
 
             return;
 

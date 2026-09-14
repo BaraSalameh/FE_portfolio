@@ -1,6 +1,11 @@
 import { guidRegex } from '@/lib/utils';
 import { z } from 'zod';
 
+const optionalIdList = z.preprocess(
+    value => value === '' ? [] : value,
+    z.array(z.string()).nullish(),
+);
+
 export const userSkillSchema = z.object({
     lstUserSkills: z.array(
         z.object({
@@ -9,13 +14,13 @@ export const userSkillSchema = z.object({
                 .min(1, 'Skill is required')
                 .regex(guidRegex, 'Skill ID must be a valid GUID'),
 
-            EducationIDs: z.array(z.string()).nullish(),
+            EducationIDs: optionalIdList,
 
-            ExperienceIDs: z.array(z.string()).nullish(),
+            ExperienceIDs: optionalIdList,
 
-            ProjectIDs: z.array(z.string()).nullish(),
+            ProjectIDs: optionalIdList,
             
-            CertificateIDs: z.array(z.string()).nullish(),
+            CertificateIDs: optionalIdList,
         })
     ),
 }).superRefine((data, ctx) => {

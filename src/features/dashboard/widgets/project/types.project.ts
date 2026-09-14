@@ -24,5 +24,6 @@ export interface ProjectResponse {
     isFeatured?: boolean;
     education: Record<string, string>;
     experience: Record<string, string>;
+    certificate?: Record<string, string>;
     lstSkills: SkillFormData[];
 }

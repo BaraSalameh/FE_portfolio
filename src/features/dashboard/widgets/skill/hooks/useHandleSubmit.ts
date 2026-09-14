@@ -1,6 +1,6 @@
 import { useAppDispatch } from "@/lib/store/hooks";
 import { UserSkillFormData } from "../schema";
-import { editDeleteUserSkill, userSkillListQuery } from "../thunks";
+import { editDeleteUserSkill } from "../thunks";
 import { SkillProps } from "../types.skill";
 
 export const useHandleSubmit = ({ onClose } : SkillProps) => {
@@ -10,7 +10,6 @@ export const useHandleSubmit = ({ onClose } : SkillProps) => {
         const resultAction = await dispatch(editDeleteUserSkill(data));
                 
         if (!editDeleteUserSkill.rejected.match(resultAction)) {
-            await dispatch(userSkillListQuery());
             onClose?.();
         }
     }

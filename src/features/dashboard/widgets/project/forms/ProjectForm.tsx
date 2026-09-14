@@ -17,6 +17,7 @@ export const ProjectForm = ({id, onClose} : ProjectProps) => {
     const { loading: skillLoading } = useAppSelector((state) => state.userSkill.skill);
     const { lstEducations } = useAppSelector(state => state.education);
     const { lstExperiences } = useAppSelector(state => state.experience);
+    const { lstCertificates } = useAppSelector(state => state.certificate);
 
     const projectToHandle = useMemo(() => lstProjects.find(p => p.id === id), [id, lstProjects]);
     const indicator = id ? {when: 'Update', while: 'Updating...'} : {when: 'Create', while: 'creating...'};
@@ -30,21 +31,26 @@ export const ProjectForm = ({id, onClose} : ProjectProps) => {
         optionsCreator({list: lstExperiences, labelKey: 'companyName'})
     , [lstExperiences]);
 
+    const certificateOptions = useMemo(() =>
+        optionsCreator({list: lstCertificates, labelKey: 'certificate.name'})
+    , [lstCertificates]);
+
     const skillOptions = useLoadUserSkill(projectToHandle);
     const onSubmit = useHandleSubmit({onClose});
     const resetItems = useMemo(() => mapProjectToForm(projectToHandle), [projectToHandle]);
 
     const items = useMemo<FormItem<typeof projectSchema>[]>(() => [
-        {as: 'DropdownMulti', name: 'lstSkills', options: skillOptions, label: 'Skills', fetchAction: skillListQuery, isLoading: skillLoading},
-        {as: 'Dropdown', name: 'EducationID', options: educationOptions, label: 'Corresponding education'},
-        {as: 'Dropdown', name: 'ExperienceID', options: experienceOptions, label: 'Corresponding experience'},
         {as: 'Input', name: 'title', label: 'Title', placeholder: 'MyProject'},
         {as: 'Input', name: 'liveLink', label: 'Live link', placeholder: 'https://MyProject.com'},
         {as: 'Input', name: 'sourceCode', label: 'Source code', placeholder: 'https://github.com/'},
         {as: 'Input', name: 'imageUrl', label: 'Image URL', placeholder: 'https://Image'},
+        {as: 'DropdownMulti', name: 'lstSkills', options: skillOptions, label: 'Skills', fetchAction: skillListQuery, isLoading: skillLoading},
+        {as: 'Dropdown', name: 'EducationID', options: educationOptions, label: 'Corresponding education'},
+        {as: 'Dropdown', name: 'ExperienceID', options: experienceOptions, label: 'Corresponding experience'},
+        {as: 'Dropdown', name: 'CertificateID', options: certificateOptions, label: 'Corresponding certificate'},
         {as: 'Checkbox', name: 'isFeatured', label: 'Is featured?'},
         {as: 'Input', name: 'description', label: 'Description', placeholder: 'Description', type: 'Textarea'}
-    ], [skillLoading, skillOptions, educationOptions, experienceOptions]);
+    ], [skillLoading, skillOptions, educationOptions, experienceOptions, certificateOptions]);
     
     return (
         <ControlledForm

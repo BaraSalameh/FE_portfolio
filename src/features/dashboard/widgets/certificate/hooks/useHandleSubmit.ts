@@ -1,7 +1,8 @@
 import { useAppDispatch } from "@/lib/store/hooks";
-import { addEditCertificate, certificateListQuery } from "../thunks";
+import { addEditCertificate } from "../thunks";
 import { CertificateProps } from "../types.certificate";
 import { CertificateFormData } from "../schema";
+import { parentRecordSaved } from "@/features/dashboard/dashboard.relationships";
 
 export const useHandleSubmit = ({ onClose } : CertificateProps) => {
     const dispatch = useAppDispatch();
@@ -10,7 +11,7 @@ export const useHandleSubmit = ({ onClose } : CertificateProps) => {
         const resultAction = await dispatch(addEditCertificate(data));
         
         if (!addEditCertificate.rejected.match(resultAction)) {
-            await dispatch(certificateListQuery());
+            dispatch(parentRecordSaved({ kind: 'certificate', record: resultAction.payload }));
             onClose?.();
         }
     }

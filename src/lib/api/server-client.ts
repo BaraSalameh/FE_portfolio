@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { cookies } from 'next/headers';
+import { cookies, headers as requestHeaders } from 'next/headers';
 import { ApiError, DynamicFetchOptions } from '@/lib/api/types';
 import { getApiBaseUrl } from './config';
 import { toApiError } from './errors';
@@ -21,6 +21,10 @@ export const serverApiResponse = async (options: DynamicFetchOptions): Promise<R
     const { url, data, headers, sendCredentials = true, ...requestInit } = options;
     delete requestInit.retryOn401;
     const cookie = sendCredentials ? await serializeCookies() : '';
+    const isMutation = options.method !== 'GET';
+    const origin = isMutation && sendCredentials
+        ? (await requestHeaders()).get('origin')
+        : null;
 
     let response: Response;
     try {
@@ -31,6 +35,7 @@ export const serverApiResponse = async (options: DynamicFetchOptions): Promise<R
             headers: {
                 'Content-Type': 'application/json',
                 ...(cookie ? { cookie } : {}),
+                ...(origin ? { origin } : {}),
                 ...headers,
             },
             body: data === undefined ? undefined : JSON.stringify(data),

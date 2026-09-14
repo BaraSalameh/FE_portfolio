@@ -40,6 +40,11 @@ export const projectSchema = z.object({
         .string()
         .optional()
         .nullable(),
+
+    CertificateID: z
+        .string()
+        .optional()
+        .nullable(),
     
     lstSkills: z.array(z.string()).nullish(),
 });

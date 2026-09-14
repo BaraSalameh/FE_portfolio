@@ -1,6 +1,6 @@
 import { useAppDispatch } from "@/lib/store/hooks";
 import { UserLanguageFormData } from "../schema";
-import { editDeleteUserLanguage, userLanguageListQuery } from "../thunks";
+import { editDeleteUserLanguage } from "../thunks";
 import { UserLanguageProps } from "../types.language";
 
 export const useHandleSubmit = ({ onClose } : UserLanguageProps) => {
@@ -10,7 +10,6 @@ export const useHandleSubmit = ({ onClose } : UserLanguageProps) => {
         const resultAction = await dispatch(editDeleteUserLanguage(data));
         
         if (!editDeleteUserLanguage.rejected.match(resultAction)) {
-            await dispatch(userLanguageListQuery());
             onClose?.();
         }
     }

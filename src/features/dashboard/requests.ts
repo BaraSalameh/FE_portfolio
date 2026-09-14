@@ -18,10 +18,10 @@ export interface DynamicApiResponse<T> {
 
 export { getApiErrorPayload };
 
-export const dashboardMutation = async (options: MutationApiOptions): Promise<void> => {
+export const dashboardMutation = async <T = unknown>(options: MutationApiOptions): Promise<DynamicApiResponse<T>> => {
     const { withCredentials, ...fetchOptions } = options;
 
-    await browserApi({
+    return browserApi<T>({
         ...fetchOptions,
         sendCredentials: withCredentials ?? options.sendCredentials,
     });

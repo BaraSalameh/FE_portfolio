@@ -12,7 +12,7 @@ export const sortEducation = createAsyncThunk(
                 withCredentials: true
             });
 
-            return;
+            return payload;
 
         } catch (error) {
             return thunkAPI.rejectWithValue(getApiErrorPayload(error));

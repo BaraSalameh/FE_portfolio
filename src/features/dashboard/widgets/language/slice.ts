@@ -80,8 +80,9 @@ const userLanguageSlice = createSlice({
             state.loading = true;
             state.error = null;
         })
-        .addCase(editDeleteUserLanguage.fulfilled, (state) => {
+        .addCase(editDeleteUserLanguage.fulfilled, (state, action) => {
             state.loading = false;
+            state.lstUserLanguages = action.payload;
         })
         .addCase(editDeleteUserLanguage.rejected, (state, action) => {
             state.loading = false;
