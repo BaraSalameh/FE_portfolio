@@ -24,9 +24,12 @@ Copy `.env.example` to `.env.local` and configure at least:
 
 ```dotenv
 API_URL=https://localhost:5001
+SERVER_ACTION_ALLOWED_ORIGINS=portfolio.example.com,www.portfolio.example.com
 ```
 
 `API_URL` is server-only and may include `/api`; the server client normalizes it. Browser requests use the same-origin `/api/*` backend-for-frontend route, which relays requests to `portfolio-api` and preserves its `HttpOnly` authentication cookies. The API signing secret is never shared with the frontend.
+
+`SERVER_ACTION_ALLOWED_ORIGINS` is a comma-separated list of public frontend hosts (with or without a scheme). Set it when production traffic passes through a reverse proxy or CDN whose public host differs from the host seen by Next.js. Vercel's production, branch, and deployment hosts are included automatically from its system environment variables.
 
 Authentication uses `HttpOnly` cookies issued by `portfolio-api`. Configure the frontend's public origin in the API's `CORS_ALLOWED_ORIGINS`/`Security.AllowedOrigins` setting because the BFF supplies that origin for the API's cookie-CSRF checks. Use HTTPS in production.
 
@@ -52,4 +55,4 @@ The Playwright suite starts both the frontend and an isolated mock API automatic
 
 ## Deployment
 
-Set the variables from `.env.example` in the hosting environment and run `npm run build`. Do not expose `API_URL` or certificate paths with the `NEXT_PUBLIC_` prefix. The API only needs to be reachable from the Next.js runtime; browsers communicate with the frontend origin.
+Set the variables from `.env.example` in the hosting environment and run `npm run build`. `SERVER_ACTION_ALLOWED_ORIGINS` must contain every custom production frontend host that submits Server Actions. Do not expose these server settings or certificate paths with the `NEXT_PUBLIC_` prefix. The API only needs to be reachable from the Next.js runtime; browsers communicate with the frontend origin.
