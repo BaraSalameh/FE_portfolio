@@ -197,6 +197,11 @@ test('owner settings open as a dedicated responsive page with clear categories',
     await page.getByRole('option', { name: 'Chart preferences' }).click();
     await expect(page.getByRole('heading', { name: 'Chart preferences', exact: true })).toBeVisible();
 
+    await categoryDropdown.fill('Preferences');
+    await page.getByRole('option', { name: 'Preferences' }).click();
+    await expect(page.getByRole('switch', { name: /(?:Hide|Show) certificate widget/ })).toBeEnabled();
+    await expect(page.getByRole('switch', { name: /(?:Hide|Show) certificate bar chart/ })).toBeEnabled();
+
     await categoryDropdown.fill('Appearance');
     await page.getByRole('option', { name: 'Appearance' }).click();
     await expect(page.locator('#appearance-heading')).toBeVisible();
@@ -288,6 +293,33 @@ test('messages route is restricted to portfolio owners', async ({ page }) => {
     await page.goto('/client/demo/messages');
 
     await expect(page.getByRole('heading', { name: 'Messages not found' })).toBeVisible();
+});
+
+test('portfolio charts use guided responsive and accessible views', async ({ page }) => {
+    const hydrationErrors: string[] = [];
+    page.on('console', (message) => {
+        if (message.type() === 'error' && /hydrat|server rendered html/i.test(message.text())) hydrationErrors.push(message.text());
+    });
+    await page.setViewportSize({ width: 320, height: 800 });
+    await page.goto('/client/demo/dashboard');
+
+    await expect(page.getByRole('region', { name: 'Overview' }).getByText('Education', { exact: true }).first()).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Education timeline' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Career timeline' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Skill evidence matrix' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Language proficiency' })).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Languages' }).getByText('80%')).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Skills' }).getByLabel('No projects evidence')).toHaveText('-');
+    await expect(page.getByRole('heading', { name: /radar|degrees duration/i })).toHaveCount(0);
+
+    const overview = page.getByRole('region', { name: 'Overview' });
+    await overview.getByRole('tab', { name: 'Composition' }).click();
+    await expect(overview.getByRole('heading', { name: 'Portfolio composition' })).toBeVisible();
+    await overview.getByText('View chart data').click();
+    await expect(overview.getByRole('table')).toBeVisible();
+
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
+    expect(hydrationErrors).toEqual([]);
 });
 
 test('key routes pass baseline accessibility and responsive structure checks', async ({ page }) => {

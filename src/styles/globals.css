@@ -71,6 +71,14 @@
     --ds-accent-strong: oklch(45% 0.2 274);
     --ds-accent-soft: oklch(91% 0.045 276);
     --ds-highlight: oklch(76% 0.15 65);
+    --chart-1: oklch(58% 0.19 274);
+    --chart-2: oklch(64% 0.17 38);
+    --chart-3: oklch(60% 0.14 164);
+    --chart-4: oklch(62% 0.15 235);
+    --chart-5: oklch(63% 0.16 325);
+    --chart-6: oklch(67% 0.14 92);
+    --chart-grid: oklch(82% 0.02 264);
+    --chart-axis: oklch(43% 0.035 263);
   }
 
   .dark {
@@ -85,6 +93,14 @@
     --ds-accent-strong: oklch(80% 0.11 276);
     --ds-accent-soft: oklch(28% 0.08 274);
     --ds-highlight: oklch(79% 0.14 69);
+    --chart-1: oklch(75% 0.13 276);
+    --chart-2: oklch(76% 0.13 45);
+    --chart-3: oklch(75% 0.11 164);
+    --chart-4: oklch(76% 0.11 235);
+    --chart-5: oklch(76% 0.12 325);
+    --chart-6: oklch(79% 0.11 92);
+    --chart-grid: oklch(36% 0.03 264);
+    --chart-axis: oklch(78% 0.025 264);
   }
 
   * {

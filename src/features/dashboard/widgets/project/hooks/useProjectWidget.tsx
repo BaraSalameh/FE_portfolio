@@ -15,40 +15,36 @@ export const useProjectWidget = (): WidgetCardProps => {
     const handleProjectDelete = useHandleProjectDelete();
     const debouncedSortProject = useDebouncedSortProject();
 
-    const barData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_project_bar_chart)
-        ?   { 
+    const showComparison = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_project_bar_chart);
+    const barData = showComparison
+        ?   {
+                title: 'Projects by technology or context',
+                description: 'Project count for the selected grouping.',
                 groupBy: checkChartPreferences(
                     lstUserChartPreferences,
                     {
                         widget: chart_preferences.key.widget.project,
                         chartType: chart_preferences.key.chart.bar
                     }
-                )?.groupBy ?? chart_preferences.values.project.bar[0].value}
-        :   {};
+                )?.groupBy ?? chart_preferences.values.project.bar[0].value,
+                measure: 'count' as const,
+                unit: 'items' as const}
+        :   undefined;
     
         const pieData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_project_pie_chart)
         ?   { 
-                title: 'technologies Overview',
+                title: 'Project composition',
+                description: 'Share of projects across the selected grouping.',
                 groupBy: checkChartPreferences(
                     lstUserChartPreferences,
                     {
                         widget: chart_preferences.key.widget.project,
                         chartType: chart_preferences.key.chart.pie
                     }
-                )?.groupBy ?? chart_preferences.values.project.pie[0].value }
-        :   {};
-    
-        const radarData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_project_radar_chart)
-        ?   { 
-                title: 'Degrees Duration Overview',
-                groupBy: checkChartPreferences(
-                    lstUserChartPreferences,
-                    {
-                        widget: chart_preferences.key.widget.project,
-                        chartType: chart_preferences.key.chart.radar
-                    }
-                )?.groupBy ?? chart_preferences.values.project.radar[0].value}
-        :   {};
+                )?.groupBy ?? chart_preferences.values.project.pie[0].value,
+                measure: 'count' as const,
+                unit: 'items' as const }
+        :   undefined;
 
     return {
         isLoading: projectTechnologyLoading,
@@ -57,7 +53,6 @@ export const useProjectWidget = (): WidgetCardProps => {
         header: { title: 'Projects', icon: Folder, description: 'Selected work, outcomes, and technologies' },
         emptyState: { title: 'No projects added', description: 'Add a project to demonstrate your work, process, and technical impact.' },
         bar: barData,
-        radar: radarData,
         pie: pieData,
         list: [
             { leftKey: 'title', between: '-', rightKey: ['experience.companyName', 'education.institution.name'], size: 'lg' },

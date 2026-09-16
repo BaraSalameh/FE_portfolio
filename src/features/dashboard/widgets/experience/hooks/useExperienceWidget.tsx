@@ -15,40 +15,24 @@ export const useExperienceWidget = (): WidgetCardProps => {
     const handleExperienceDelete = useHandleExperienceDelete();
     const debouncedSortExperience = useDebouncedSortExperience();
 
-    const barData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_experience_bar_chart)
+    const showTimeline = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_experience_bar_chart);
+    const showComparison = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_experience_pie_chart);
+    const comparisonPreference = checkChartPreferences(
+        lstUserChartPreferences,
+        { widget: chart_preferences.key.widget.experience, chartType: chart_preferences.key.chart.pie }
+    );
+    const groupBy = comparisonPreference?.groupBy ?? chart_preferences.values.experience.pie[0].value;
+    const comparisonIsCount = comparisonPreference?.valueSource === 'count';
+    const barData = showComparison
         ?   { 
-                groupBy: checkChartPreferences(
-                    lstUserChartPreferences,
-                    {
-                        widget: chart_preferences.key.widget.experience,
-                        chartType: chart_preferences.key.chart.bar
-                    }
-                )?.groupBy ?? chart_preferences.values.experience.bar[0].value}
-        :   {};
-    
-        const pieData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_experience_pie_chart)
-        ?   { 
-                title: 'Experience Overview',
-                groupBy: checkChartPreferences(
-                    lstUserChartPreferences,
-                    {
-                        widget: chart_preferences.key.widget.experience,
-                        chartType: chart_preferences.key.chart.pie
-                    }
-                )?.groupBy ?? chart_preferences.values.experience.pie[0].value }
-        :   {};
-    
-        const radarData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_experience_radar_chart)
-        ?   { 
-                title: 'Experience Duration Overview',
-                groupBy: checkChartPreferences(
-                    lstUserChartPreferences,
-                    {
-                        widget: chart_preferences.key.widget.experience,
-                        chartType: chart_preferences.key.chart.radar
-                    }
-                )?.groupBy ?? chart_preferences.values.experience.radar[0].value}
-        :   {};
+                title: comparisonIsCount ? 'Experience entries by role' : 'Experience duration by role',
+                description: comparisonIsCount ? 'Number of experience entries for each selected grouping.' : 'Total recorded duration for each selected grouping.',
+                groupBy, measure: comparisonIsCount ? 'count' as const : 'duration' as const, unit: comparisonIsCount ? 'items' as const : 'months' as const }
+        :   undefined;
+    const timeline = showTimeline ? {
+        title: 'Career timeline',
+        data: lstExperiences.map((item) => ({ id: item.id, name: item.jobTitle, detail: item.companyName, start: item.startDate, end: item.endDate, ongoing: !item.endDate }))
+    } : undefined;
     
     return {
         isLoading: experienceLoading,
@@ -57,8 +41,7 @@ export const useExperienceWidget = (): WidgetCardProps => {
         header: { title: 'Experience', icon: Briefcase, description: 'Roles, responsibilities, and career history' },
         emptyState: { title: 'No experience added', description: 'Add a role to highlight where you worked and what you accomplished.' },
         bar: barData,
-        pie: pieData,
-        radar: radarData,
+        timeline,
         list: [
             { leftKey: 'jobTitle', between: 'at', rightKey: 'companyName', size: 'lg' },
             { leftKey: 'location', icon: LocationEdit },

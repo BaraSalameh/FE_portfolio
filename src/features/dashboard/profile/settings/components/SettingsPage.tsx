@@ -10,7 +10,7 @@ import { useLoadChartType, useLoadWidget } from '../chart-preferences/hooks';
 import { useLoadWidgetPreference } from '../widget-preferences/hooks';
 import { useAppSelector } from '@/lib/store/hooks';
 import { chart_preferences, checkWidgetPreferences, useUrlParams, widget_preferences } from '@/lib/utils';
-import { ArrowLeft, BarChart3, BriefcaseBusiness, Calendar, Component, Download, FolderKanban, GraduationCap, Languages, LayoutDashboard, Link as LinkIcon, Mail, Mars, MessageCircle, Palette, Phone, PieChart, Radar, Settings2, SlidersHorizontal, Sparkles, UserRound, type LucideIcon } from 'lucide-react';
+import { ArrowLeft, Award, BarChart3, BriefcaseBusiness, Calendar, CalendarRange, Component, Download, FolderKanban, GraduationCap, Grid3X3, Languages, LayoutDashboard, Link as LinkIcon, Mail, Mars, MessageCircle, Palette, Phone, PieChart, Radar, Settings2, SlidersHorizontal, Sparkles, UserRound, type LucideIcon } from 'lucide-react';
 import { paths } from '@/lib/pathHelper';
 import Link from 'next/link';
 import { useState, type ReactNode } from 'react';
@@ -46,58 +46,63 @@ const preferenceSections: Array<{ title: string; description: string; icon: Luci
         icon: LayoutDashboard,
         items: [
             { key: widget_preferences.key.show_overview_widget, title: 'Overview widget', icon: Component },
-            { key: widget_preferences.key.show_overview_bar_chart, title: 'Bar chart', icon: BarChart3, parent: widget_preferences.key.show_overview_widget },
-            { key: widget_preferences.key.show_overview_pie_chart, title: 'Pie chart', icon: PieChart, parent: widget_preferences.key.show_overview_widget },
-            { key: widget_preferences.key.show_overview_radar_chart, title: 'Radar chart', icon: Radar, parent: widget_preferences.key.show_overview_widget },
+            { key: widget_preferences.key.show_overview_bar_chart, title: 'Section comparison', icon: BarChart3, parent: widget_preferences.key.show_overview_widget },
+            { key: widget_preferences.key.show_overview_pie_chart, title: 'Composition donut', icon: PieChart, parent: widget_preferences.key.show_overview_widget },
         ],
     },
-    ...([['Education', 'education'], ['Experience', 'experience'], ['Language', 'language']] as const).map(([title, key]) => ({
-        title,
-        description: `Choose which charts appear in the ${title.toLowerCase()} section.`,
-        icon: key === 'education' ? GraduationCap : key === 'experience' ? BriefcaseBusiness : Languages,
+    {
+        title: 'Education', description: 'Choose between a timeline and duration comparison.', icon: GraduationCap,
         items: [
-            { key: widget_preferences.key[`show_${key}_bar_chart`], title: 'Bar chart', icon: BarChart3 },
-            { key: widget_preferences.key[`show_${key}_pie_chart`], title: 'Pie chart', icon: PieChart },
-            { key: widget_preferences.key[`show_${key}_radar_chart`], title: 'Radar chart', icon: Radar },
+            { key: widget_preferences.key.show_education_bar_chart, title: 'Education timeline', icon: CalendarRange },
+            { key: widget_preferences.key.show_education_pie_chart, title: 'Duration comparison', icon: BarChart3 },
         ],
-    })),
-    ...([['Project', 'project'], ['Skill', 'skill']] as const).map(([title, key]) => ({
+    },
+    {
+        title: 'Experience', description: 'Choose between a career timeline and duration comparison.', icon: BriefcaseBusiness,
+        items: [
+            { key: widget_preferences.key.show_experience_bar_chart, title: 'Career timeline', icon: CalendarRange },
+            { key: widget_preferences.key.show_experience_pie_chart, title: 'Duration comparison', icon: BarChart3 },
+        ],
+    },
+    {
+        title: 'Language', description: 'Choose valid views of normalized language proficiency.', icon: Languages,
+        items: [
+            { key: widget_preferences.key.show_language_bar_chart, title: 'Proficiency bars', icon: BarChart3 },
+            { key: widget_preferences.key.show_language_radar_chart, title: 'Radar proficiency', icon: Radar },
+        ],
+    },
+    ...([['Project', 'project'], ['Skill', 'skill'], ['Certificate', 'certificate']] as const).map(([title, key]) => ({
         title,
-        description: `Manage the ${title.toLowerCase()} widget and its charts.`,
-        icon: key === 'project' ? FolderKanban : Sparkles,
+        description: `Manage the ${title.toLowerCase()} widget and its valid visualizations.`,
+        icon: key === 'project' ? FolderKanban : key === 'skill' ? Sparkles : Award,
         items: [
             { key: widget_preferences.key[`show_${key}_widget`], title: `${title} widget`, icon: Component },
-            { key: widget_preferences.key[`show_${key}_bar_chart`], title: 'Bar chart', icon: BarChart3, parent: widget_preferences.key[`show_${key}_widget`] },
-            { key: widget_preferences.key[`show_${key}_pie_chart`], title: 'Pie chart', icon: PieChart, parent: widget_preferences.key[`show_${key}_widget`] },
-            { key: widget_preferences.key[`show_${key}_radar_chart`], title: 'Radar chart', icon: Radar, parent: widget_preferences.key[`show_${key}_widget`] },
+            { key: widget_preferences.key[`show_${key}_bar_chart`], title: key === 'project' ? 'Technology comparison' : key === 'skill' ? 'Evidence matrix' : 'Certificate timeline', icon: key === 'skill' ? Grid3X3 : key === 'certificate' ? CalendarRange : BarChart3, parent: widget_preferences.key[`show_${key}_widget`] },
+            { key: widget_preferences.key[`show_${key}_pie_chart`], title: key === 'project' ? 'Composition donut' : key === 'skill' ? 'Evidence comparison' : 'Credential comparison', icon: key === 'project' ? PieChart : BarChart3, parent: widget_preferences.key[`show_${key}_widget`] },
         ],
     })),
 ];
 
 const valueSourceOptions = [{ label: 'Duration', value: 'duration' }, { label: 'Count', value: 'count' }];
+const countValueSourceOptions = [{ label: 'Count', value: 'count' }];
 const chartSections = [
     {
         title: 'Education', widget: chart_preferences.key.widget.education,
         charts: [
-            { type: 'bar' as const, label: 'Bar chart', icon: BarChart3, visibilityKey: widget_preferences.key.show_education_bar_chart },
-            { type: 'pie' as const, label: 'Pie chart', icon: PieChart, visibilityKey: widget_preferences.key.show_education_pie_chart },
-            { type: 'radar' as const, label: 'Radar chart', icon: Radar, visibilityKey: widget_preferences.key.show_education_radar_chart },
+            { type: 'pie' as const, label: 'Duration comparison', icon: BarChart3, visibilityKey: widget_preferences.key.show_education_pie_chart, valueSources: valueSourceOptions },
         ],
     },
     {
         title: 'Experience', widget: chart_preferences.key.widget.experience,
         charts: [
-            { type: 'bar' as const, label: 'Bar chart', icon: BarChart3, visibilityKey: widget_preferences.key.show_experience_bar_chart },
-            { type: 'pie' as const, label: 'Pie chart', icon: PieChart, visibilityKey: widget_preferences.key.show_experience_pie_chart },
-            { type: 'radar' as const, label: 'Radar chart', icon: Radar, visibilityKey: widget_preferences.key.show_experience_radar_chart },
+            { type: 'pie' as const, label: 'Duration comparison', icon: BarChart3, visibilityKey: widget_preferences.key.show_experience_pie_chart, valueSources: valueSourceOptions },
         ],
     },
     {
         title: 'Project', widget: chart_preferences.key.widget.project, parent: widget_preferences.key.show_project_widget,
         charts: [
-            { type: 'bar' as const, label: 'Bar chart', icon: BarChart3, visibilityKey: widget_preferences.key.show_project_bar_chart },
-            { type: 'pie' as const, label: 'Pie chart', icon: PieChart, visibilityKey: widget_preferences.key.show_project_pie_chart },
-            { type: 'radar' as const, label: 'Radar chart', icon: Radar, visibilityKey: widget_preferences.key.show_project_radar_chart },
+            { type: 'bar' as const, label: 'Technology comparison', icon: BarChart3, visibilityKey: widget_preferences.key.show_project_bar_chart, valueSources: countValueSourceOptions },
+            { type: 'pie' as const, label: 'Composition donut', icon: PieChart, visibilityKey: widget_preferences.key.show_project_pie_chart, valueSources: countValueSourceOptions },
         ],
     },
 ];
@@ -145,7 +150,7 @@ export const SettingsPage = () => {
             <section className="mt-6 min-w-0 lg:mt-0" aria-labelledby={`${activeCategory}-heading`}>
                 <div className="mb-6"><p className="text-xs font-bold uppercase tracking-[0.16em] text-accent">Settings category</p><h2 id={`${activeCategory}-heading`} className="mt-1 text-2xl font-bold tracking-[-0.04em]">{currentCategory.label}</h2><p className="mt-1 text-sm text-ink-muted">{currentCategory.description}</p></div>
                 {activeCategory === 'preferences' && <div className="space-y-5">{preferenceSections.map((section) => { const visibleItems = section.items.filter((item) => !item.parent || checkWidgetPreferences(lstUserPreferences, item.parent)); return <SettingsCard key={section.title} icon={section.icon} title={section.title} description={section.description}><div className="divide-y divide-line">{visibleItems.map((item) => { const Icon = item.icon; return <div key={item.key} className="flex min-h-16 items-center justify-between gap-4 py-3 first:pt-0 last:pb-0"><div className="flex min-w-0 items-center gap-3"><span className="grid size-9 shrink-0 place-items-center rounded-lg bg-canvas-subtle text-ink-muted"><Icon className="size-4" aria-hidden="true" /></span><h3 className="truncate text-sm font-bold tracking-[-0.01em] sm:text-base">{item.title}</h3></div><UserWidgetPreferenceForm preferenceKey={item.key} compact defaultValue={item.defaultValue} /></div>; })}</div></SettingsCard>; })}</div>}
-                {activeCategory === 'charts' && <div className="space-y-9">{chartSections.filter((section) => !section.parent || checkWidgetPreferences(lstUserPreferences, section.parent)).map((section) => { const charts = section.charts.filter((chart) => checkWidgetPreferences(lstUserPreferences, chart.visibilityKey)); const sectionKey = section.title.toLowerCase() as 'education' | 'experience' | 'project'; return <section key={section.title} className="space-y-4"><SectionHeading title={section.title} description={`Configure the visible charts in your ${section.title.toLowerCase()} section.`} />{charts.length > 0 ? <div className="grid gap-4 xl:grid-cols-2">{charts.map((chart) => <SettingsCard key={chart.type} icon={chart.icon} title={chart.label} description={`Choose how the ${section.title.toLowerCase()} ${chart.label.toLowerCase()} summarizes your data.`}><UserChartPreferenceForm preferenceKeys={{ widget: section.widget, chartType: chart_preferences.key.chart[chart.type] }} preferenceValues={{ groupBy: chart_preferences.values[sectionKey][chart.type], valueSource: valueSourceOptions }} /></SettingsCard>)}</div> : <div className="rounded-2xl border border-dashed border-line bg-canvas-subtle p-6 text-sm text-ink-muted">Enable a chart in Preferences to customize it here.</div>}</section>; })}</div>}
+                {activeCategory === 'charts' && <div className="space-y-9">{chartSections.filter((section) => !section.parent || checkWidgetPreferences(lstUserPreferences, section.parent)).map((section) => { const charts = section.charts.filter((chart) => checkWidgetPreferences(lstUserPreferences, chart.visibilityKey)); const sectionKey = section.title.toLowerCase() as 'education' | 'experience' | 'project'; return <section key={section.title} className="space-y-4"><SectionHeading title={section.title} description={`Configure the visible charts in your ${section.title.toLowerCase()} section.`} />{charts.length > 0 ? <div className="grid gap-4 xl:grid-cols-2">{charts.map((chart) => <SettingsCard key={chart.type} icon={chart.icon} title={chart.label} description={`Choose how the ${section.title.toLowerCase()} ${chart.label.toLowerCase()} summarizes your data.`}><UserChartPreferenceForm preferenceKeys={{ widget: section.widget, chartType: chart_preferences.key.chart[chart.type] }} preferenceValues={{ groupBy: chart_preferences.values[sectionKey][chart.type], valueSource: chart.valueSources }} /></SettingsCard>)}</div> : <div className="rounded-2xl border border-dashed border-line bg-canvas-subtle p-6 text-sm text-ink-muted">Enable a chart in Preferences to customize it here.</div>}</section>; })}</div>}
                 {activeCategory === 'appearance' && <section className="space-y-4"><SectionHeading title="Appearance" description="Choose the color scheme used across your portfolio editor." /><SettingsCard icon={Palette} title="Theme" description="Switch between light and dark mode. This change is applied immediately."><div className="flex items-center justify-between gap-4 rounded-xl bg-canvas-subtle p-3"><span className="text-sm font-semibold">Change theme</span><ThemeSwitch /></div></SettingsCard></section>}
             </section>
         </div>

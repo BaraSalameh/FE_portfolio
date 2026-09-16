@@ -15,13 +15,15 @@ export const generateDurationData = (
         const endDate = extractPathValue(item, endDateKey);
         const start = startDate ? dayjs(String(startDate)) : null;
         const end = endDate ? dayjs(String(endDate)) : dayjs();
-        const value = start ? end.diff(start, unit) : null;
+        const value = start?.isValid() && end.isValid() ? Math.max(0, end.diff(start, unit)) : null;
 
         const names = normalizeFieldValue(extractPathValue(item, nameKey ?? '')) || ['Unknown'];
 
+        if (value === null) return;
+
         names.forEach(name => {
             const total = durations.get(name) ?? 0;
-            durations.set(name, total + (value !== null ? value : 1));
+            durations.set(name, total + value);
         });
     });
 
