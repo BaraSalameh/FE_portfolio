@@ -107,7 +107,12 @@ test('public dashboard is responsive and its contact dialog supports Escape', as
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
 
-    await page.getByRole('button', { name: 'Send Message' }).click();
+    const portfolioActions = page.getByRole('group', { name: 'Portfolio actions' });
+    await expect(portfolioActions.getByRole('link', { name: 'Go to home page' })).toBeVisible();
+    await expect(portfolioActions.getByTestId('theme-toggle-button')).toBeVisible();
+    const sendMessageButton = portfolioActions.getByRole('button', { name: 'Send Message' });
+    await expect(sendMessageButton).toBeVisible();
+    await sendMessageButton.click();
     const dialog = page.getByRole('dialog', { name: 'Send Message' });
     await expect(dialog).toBeVisible();
     await expect(dialog.getByLabel('Full name')).toBeVisible();

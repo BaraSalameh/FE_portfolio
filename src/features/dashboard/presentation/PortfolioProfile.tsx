@@ -32,9 +32,10 @@ export function PortfolioProfile({ user, unreadContactMessageCount = 0, socialLi
                     <Image src={coverPhoto} alt="Portfolio cover" fill className="object-cover" priority sizes="(max-width: 1440px) 100vw, 88rem" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" aria-hidden="true" />
                 </div>
-                <div className="absolute left-4 top-4 flex gap-2 sm:left-6 sm:top-6">
+                <div role="group" aria-label="Portfolio actions" className="absolute left-4 top-4 flex gap-2 sm:left-6 sm:top-6">
                     <Link href="/" className={iconButton} aria-label="Go to home page"><Home className="size-4" aria-hidden="true" /></Link>
                     {role === 'client' && <ThemeSwitch className="rounded-xl" />}
+                    {role !== 'owner' ? <ActionDialog subTitle="Send Message" icon={MessageCircle} triggerClassName={`${iconButton} !size-10 !p-0`}><ContactMessageForm /></ActionDialog> : null}
                 </div>
                 {role === 'owner' && (
                     <OwnerHeaderActions user={user} unreadMessageCount={unreadContactMessageCount} inverted className="absolute right-4 top-4 sm:right-6 sm:top-6" />
@@ -46,7 +47,6 @@ export function PortfolioProfile({ user, unreadContactMessageCount = 0, socialLi
                     <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-5">
                         <div className="relative">
                             <ProfileImageLightbox src={profilePicture} alt={`${user.firstname} ${user.lastname}'s profile picture`} />
-                            {role !== 'owner' ? <div className="absolute -bottom-2 -right-2 rounded-xl border border-line bg-surface-raised shadow-md"><ActionDialog subTitle="Send Message" icon={MessageCircle}><ContactMessageForm /></ActionDialog></div> : null}
                         </div>
                         <div className="text-center sm:mt-16 sm:pt-1 sm:text-left">
                             <h1 className="text-2xl font-bold tracking-[-0.045em] sm:text-3xl">{user.firstname} {user.lastname}</h1>
