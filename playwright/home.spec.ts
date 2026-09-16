@@ -107,7 +107,12 @@ test('public dashboard is responsive and its contact dialog supports Escape', as
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
 
-    await page.getByRole('button', { name: 'Send Message' }).click();
+    const portfolioActions = page.getByRole('group', { name: 'Portfolio actions' });
+    await expect(portfolioActions.getByRole('link', { name: 'Go to home page' })).toBeVisible();
+    await expect(portfolioActions.getByTestId('theme-toggle-button')).toBeVisible();
+    const sendMessageButton = portfolioActions.getByRole('button', { name: 'Send Message' });
+    await expect(sendMessageButton).toBeVisible();
+    await sendMessageButton.click();
     const dialog = page.getByRole('dialog', { name: 'Send Message' });
     await expect(dialog).toBeVisible();
     await expect(dialog.getByLabel('Full name')).toBeVisible();
@@ -143,22 +148,28 @@ test('public contact cards expose email, phone, WhatsApp, contact, CV, and site 
     await page.getByRole('button', { name: /demo@example\.com/ }).click();
     const emailMenu = page.getByRole('menu', { name: 'Email actions' });
     await expect(emailMenu.getByRole('menuitem', { name: 'Send email' })).toHaveAttribute('href', 'mailto:demo@example.com');
-    await expect(emailMenu.getByRole('menuitem', { name: 'Copy' })).toBeVisible();
-    await page.keyboard.press('Escape');
+    await emailMenu.getByRole('menuitem', { name: 'Copy' }).click();
+    await expect(page.getByRole('status').filter({ hasText: 'Email address copied' })).toBeVisible();
     await expect(emailMenu).toBeHidden();
 
     await page.getByRole('button', { name: /\+905526436811/ }).click();
     const phoneMenu = page.getByRole('menu', { name: 'Phone actions' });
     await expect(phoneMenu.getByRole('menuitem', { name: 'WhatsApp' })).toHaveAttribute('href', 'https://wa.me/905551234567');
     await expect(phoneMenu.getByRole('menuitem', { name: 'Call' })).toHaveAttribute('href', 'tel:+905526436811');
+    await phoneMenu.getByRole('menuitem', { name: 'Copy' }).click();
+    await expect(page.getByRole('status').filter({ hasText: 'Phone number copied' })).toBeVisible();
+
+    await page.getByRole('button', { name: /\+905526436811/ }).click();
     const downloadPromise = page.waitForEvent('download');
     await phoneMenu.getByRole('menuitem', { name: 'Add to contacts' }).click();
     const download = await downloadPromise;
     expect(download.suggestedFilename()).toBe('Demo-Portfolio.vcf');
+    await expect(page.getByRole('status').filter({ hasText: 'Contact download started' })).toBeVisible();
 
     await expect(page.getByRole('link', { name: 'Download CV' })).toHaveAttribute('href', /fl_attachment:CV/);
     await expect(page.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/demo');
-    await expect(page.getByRole('region', { name: 'Sites & contact' }).getByRole('button', { name: 'Share portfolio' })).toBeVisible();
+    await page.getByRole('region', { name: 'Sites & contact' }).getByRole('button', { name: 'Share portfolio' }).click();
+    await expect(page.getByRole('status').filter({ hasText: 'Portfolio link copied' })).toBeVisible();
 });
 
 test('owner settings open as a dedicated responsive page with clear categories', async ({ context, page }) => {
@@ -185,6 +196,11 @@ test('owner settings open as a dedicated responsive page with clear categories',
     await categoryDropdown.fill('Chart');
     await page.getByRole('option', { name: 'Chart preferences' }).click();
     await expect(page.getByRole('heading', { name: 'Chart preferences', exact: true })).toBeVisible();
+
+    await categoryDropdown.fill('Preferences');
+    await page.getByRole('option', { name: 'Preferences' }).click();
+    await expect(page.getByRole('switch', { name: /(?:Hide|Show) certificate widget/ })).toBeEnabled();
+    await expect(page.getByRole('switch', { name: /(?:Hide|Show) certificate bar chart/ })).toBeEnabled();
 
     await categoryDropdown.fill('Appearance');
     await page.getByRole('option', { name: 'Appearance' }).click();
@@ -277,6 +293,33 @@ test('messages route is restricted to portfolio owners', async ({ page }) => {
     await page.goto('/client/demo/messages');
 
     await expect(page.getByRole('heading', { name: 'Messages not found' })).toBeVisible();
+});
+
+test('portfolio charts use guided responsive and accessible views', async ({ page }) => {
+    const hydrationErrors: string[] = [];
+    page.on('console', (message) => {
+        if (message.type() === 'error' && /hydrat|server rendered html/i.test(message.text())) hydrationErrors.push(message.text());
+    });
+    await page.setViewportSize({ width: 320, height: 800 });
+    await page.goto('/client/demo/dashboard');
+
+    await expect(page.getByRole('region', { name: 'Overview' }).getByText('Education', { exact: true }).first()).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Education timeline' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Career timeline' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Skill evidence matrix' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Language proficiency' })).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Languages' }).getByText('80%')).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Skills' }).getByLabel('No projects evidence')).toHaveText('-');
+    await expect(page.getByRole('heading', { name: /radar|degrees duration/i })).toHaveCount(0);
+
+    const overview = page.getByRole('region', { name: 'Overview' });
+    await overview.getByRole('tab', { name: 'Composition' }).click();
+    await expect(overview.getByRole('heading', { name: 'Portfolio composition' })).toBeVisible();
+    await overview.getByText('View chart data').click();
+    await expect(overview.getByRole('table')).toBeVisible();
+
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
+    expect(hydrationErrors).toEqual([]);
 });
 
 test('key routes pass baseline accessibility and responsive structure checks', async ({ page }) => {

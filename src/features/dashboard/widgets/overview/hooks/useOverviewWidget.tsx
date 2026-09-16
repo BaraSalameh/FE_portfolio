@@ -33,22 +33,18 @@ export const useOverviewWidget = (): WidgetCardProps => {
     }
 
     const barData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_overview_bar_chart)
-    ?   { title: '', customData: customData}
-    :   {};
+    ?   { title: 'Portfolio entries by section', description: 'A count of published entries in each visible portfolio section.', customData, measure: 'count' as const, unit: 'items' as const }
+    :   undefined;
 
     const pieData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_overview_pie_chart)
-    ?   { title: '', customData: customData}
-    :   {};
-
-    const radarData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_overview_radar_chart)
-    ?   { title: '', customData: customData}
-    :   {};
+    ?   { title: 'Portfolio composition', description: 'How visible portfolio entries are distributed across sections.', customData, measure: 'count' as const, unit: 'items' as const }
+    :   undefined;
 
     return {
         header: { title: 'Overview', icon:  BarChart3},
         items: [{}],
         bar: barData,
         pie: pieData,
-        radar: radarData,
+        kpis: customData.map((item) => ({ label: item.name, value: item.value })),
     }
 }

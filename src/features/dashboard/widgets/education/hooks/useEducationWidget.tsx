@@ -15,40 +15,25 @@ export const useEducationWidget = (): WidgetCardProps => {
     const handleEducationDelete = useHandleEducationDelete();
     const debouncedSortEducation = useDebouncedSortEducation();
 
-    const barData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_education_bar_chart)
-    ?   { 
-            groupBy: checkChartPreferences(
-                lstUserChartPreferences,
-                {
-                    widget: chart_preferences.key.widget.education,
-                    chartType: chart_preferences.key.chart.bar
-                }
-            )?.groupBy ?? chart_preferences.values.education.bar[0].value}
-    :   {};
+    const showTimeline = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_education_bar_chart);
+    const showComparison = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_education_pie_chart);
+    const comparisonPreference = checkChartPreferences(
+        lstUserChartPreferences,
+        { widget: chart_preferences.key.widget.education, chartType: chart_preferences.key.chart.pie }
+    );
+    const groupBy = comparisonPreference?.groupBy ?? chart_preferences.values.education.pie[0].value;
+    const comparisonIsCount = comparisonPreference?.valueSource === 'count';
 
-    const pieData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_education_pie_chart)
+    const barData = showComparison
     ?   { 
-            title: 'Degrees Overview',
-            groupBy: checkChartPreferences(
-                lstUserChartPreferences,
-                {
-                    widget: chart_preferences.key.widget.education,
-                    chartType: chart_preferences.key.chart.pie
-                }
-            )?.groupBy ?? chart_preferences.values.education.pie[0].value }
-    :   {};
-
-    const radarData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_education_radar_chart)
-    ?   { 
-            title: 'Degrees Duration Overview',
-            groupBy: checkChartPreferences(
-                lstUserChartPreferences,
-                {
-                    widget: chart_preferences.key.widget.education,
-                    chartType: chart_preferences.key.chart.radar
-                }
-            )?.groupBy ?? chart_preferences.values.education.radar[0].value}
-    :   {};
+            title: comparisonIsCount ? 'Education entries by qualification' : 'Study duration by qualification',
+            description: comparisonIsCount ? 'Number of education entries for each selected grouping.' : 'Total recorded study duration for each selected grouping.',
+            groupBy, measure: comparisonIsCount ? 'count' as const : 'duration' as const, unit: comparisonIsCount ? 'items' as const : 'months' as const }
+    :   undefined;
+    const timeline = showTimeline ? {
+        title: 'Education timeline',
+        data: lstEducations.map((item) => ({ id: item.id, name: item.degree.abbreviation || item.degree.name, detail: item.institution.name, start: item.startDate, end: item.endDate, ongoing: item.isStudying }))
+    } : undefined;
     
     return {
         isLoading: educationLoading,
@@ -57,8 +42,7 @@ export const useEducationWidget = (): WidgetCardProps => {
         header: { title: 'Education', icon: GraduationCap, description: 'Academic background and areas of study' },
         emptyState: { title: 'No education added', description: 'Add a school, degree, and study period to introduce your academic background.' },
         bar: barData,
-        pie: pieData,
-        radar: radarData,
+        timeline,
         list: [
             { leftKey: 'degree.abbreviation', between: 'at', rightKey: 'institution.name', size: 'lg' },
             { leftKey: 'fieldOfStudy.name', icon: GraduationCap },

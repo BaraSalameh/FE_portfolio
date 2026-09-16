@@ -6,6 +6,20 @@ const genderPreference = {
     name: 'show-gender',
 };
 const preference = (id, name) => ({ id, name });
+const profilePreferenceDefinitions = Array.from({ length: 10 }, (_, index) => preference(
+    `66666666-6666-4666-8666-${String(index + 1).padStart(12, '0')}`,
+    `profile-preference-${index + 1}`,
+));
+const chartPreferenceDefinitions = [
+    preference('77777777-7777-4777-8777-777777777701', 'show-education-bar-chart'),
+    preference('77777777-7777-4777-8777-777777777702', 'show-project-bar-chart'),
+    preference('77777777-7777-4777-8777-777777777703', 'show-skill-bar-chart'),
+    preference('77777777-7777-4777-8777-777777777704', 'show-language-bar-chart'),
+    preference('77777777-7777-4777-8777-777777777705', 'show-certificate-widget'),
+    preference('77777777-7777-4777-8777-777777777706', 'show-certificate-bar-chart'),
+    preference('77777777-7777-4777-8777-777777777707', 'show-certificate-pie-chart'),
+];
+const preferenceDefinitions = [genderPreference, ...profilePreferenceDefinitions, ...chartPreferenceDefinitions];
 const publicPreferences = [
     { preference: preference('44444444-4444-4444-8444-444444444441', 'show-email-address'), value: 'show' },
     { preference: preference('44444444-4444-4444-8444-444444444442', 'show-phone-number'), value: 'show' },
@@ -175,8 +189,15 @@ const server = createServer((request, response) => {
             return;
         }
 
-        if (request.url === '/api/Owner/LKP_PreferenceList') {
-            response.end(JSON.stringify({ items: [genderPreference], rowCount: 1 }));
+        if (request.url?.startsWith('/api/Owner/LKP_PreferenceList')) {
+            const url = new URL(request.url, `http://${request.headers.host}`);
+            const pageNumber = Number(url.searchParams.get('PageNumber') ?? 0);
+            const pageSize = Number(url.searchParams.get('PageSize') ?? 10);
+            const start = pageNumber * pageSize;
+            response.end(JSON.stringify({
+                items: preferenceDefinitions.slice(start, start + pageSize),
+                rowCount: preferenceDefinitions.length,
+            }));
             return;
         }
 
@@ -187,11 +208,15 @@ const server = createServer((request, response) => {
 
         if (request.url === '/api/Owner/EditUserPreference' && request.method === 'POST') {
             const payload = JSON.parse(body);
-            userPreferences = [{
-                LKP_PreferenceID: payload.LKP_PreferenceID,
-                value: payload.value,
-                preference: genderPreference,
-            }];
+            const definition = preferenceDefinitions.find(item => item.id === payload.LKP_PreferenceID);
+            userPreferences = [
+                ...userPreferences.filter(item => item.LKP_PreferenceID !== payload.LKP_PreferenceID),
+                {
+                    LKP_PreferenceID: payload.LKP_PreferenceID,
+                    value: payload.value,
+                    preference: definition ?? genderPreference,
+                },
+            ];
             response.end(JSON.stringify({}));
             return;
         }

@@ -22,7 +22,7 @@ export const DashboardWidget = memo(function DashboardWidget(props: WidgetCardPr
     const update = isOwner ? props.update : undefined;
     const del = isOwner ? props.del : undefined;
     const onSort = isOwner ? props.onSort : undefined;
-    const { isLoading, error, header, items, emptyState, list, pie, bar, radar, details, pagination, onModalAction, className } = props;
+    const { isLoading, error, header, items, emptyState, list, pie, bar, radar, timeline, matrix, kpis, details, pagination, onModalAction, className } = props;
     const HeaderIcon = header?.icon;
     const [sortable, setSortable] = useState(false);
     const [selectedItem, setSelectedItem] = useState<object>();
@@ -30,7 +30,7 @@ export const DashboardWidget = memo(function DashboardWidget(props: WidgetCardPr
     const isEmpty = !Array.isArray(items) || items.length === 0;
     const canReorder = Boolean(onSort && Array.isArray(items) && items.length >= 2);
     const isReordering = canReorder && sortable;
-    const hasPresentation = Boolean(list || pie || bar || radar);
+    const hasPresentation = Boolean(list || pie || bar || radar || timeline || matrix || kpis);
 
     if (!header || !hasPresentation || (isEmpty && !create)) return null;
 
@@ -79,9 +79,9 @@ export const DashboardWidget = memo(function DashboardWidget(props: WidgetCardPr
                         <p className="mx-auto mt-1 max-w-sm text-sm leading-6 text-ink-muted">{emptyState?.description ?? `Add your first entry to start building this section.`}</p>
                     </div>
                 )}
-                {!isEmpty && (pie || bar || radar) && (
+                {!isEmpty && (pie || bar || radar || timeline || matrix || kpis) && (
                     <div className="px-3 py-5 sm:px-5">
-                        <WidgetCharts items={items} pie={pie} bar={bar} radar={radar} />
+                        <WidgetCharts items={items} pie={pie} bar={bar} radar={radar} timeline={timeline} matrix={matrix} kpis={kpis} />
                     </div>
                 )}
                 {!isEmpty && list && (

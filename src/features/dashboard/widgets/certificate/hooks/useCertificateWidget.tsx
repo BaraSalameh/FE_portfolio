@@ -14,17 +14,14 @@ export const useCertificateWidget = (): WidgetCardProps => {
     const handleCertificateDelete = useHandleCertificateDelete();
     const debouncedSortCertificate = useDebouncedSortCertificate();
 
-    const barData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_certificate_bar_chart)
-    ?   { groupBy: 'certificate.name'}
-    :   {};
-
-    const pieData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_certificate_pie_chart)
-    ?   { groupBy: 'certificate.name'}
-    :   {};
-
-    const radarData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_certificate_radar_chart)
-    ?   { groupBy: 'certificate.name'}
-    :   {};
+    const showTimeline = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_certificate_bar_chart);
+    const barData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_certificate_pie_chart)
+        ? { title: 'Certificates by credential', description: 'Count of earned credentials by name.', groupBy: 'certificate.name', measure: 'count' as const, unit: 'items' as const }
+        : undefined;
+    const timeline = showTimeline ? {
+        title: 'Certificate timeline',
+        data: lstCertificates.filter((item) => item.issueDate).map((item) => ({ id: item.id, name: item.certificate.name, start: item.issueDate!, end: item.expirationDate ?? item.issueDate, ongoing: false }))
+    } : undefined;
     
     return {
         isLoading: certificateLoading,
@@ -33,8 +30,7 @@ export const useCertificateWidget = (): WidgetCardProps => {
         header: { title: 'Certificates', icon: Award, description: 'Credentials and professional achievements' },
         emptyState: { title: 'No certificates added', description: 'Add a credential to showcase verified learning and achievements.' },
         bar: barData,
-        pie: pieData,
-        radar: radarData,
+        timeline,
         list: [
             { leftKey: 'certificate.name', size: 'lg' }
         ],
