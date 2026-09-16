@@ -47,6 +47,17 @@
   --color-light-border-hover: oklch(87% 0 0);
 }
 
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 @layer base {
   :root {
     --ds-canvas: oklch(98.2% 0.012 87);

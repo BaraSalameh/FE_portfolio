@@ -10,6 +10,7 @@ import { userWidgetPreferenceSchema } from "../schema";
 import { useHandleSubmit } from "../hooks";
 import { FormItem } from '@/features/dashboard/forms/types.forms';
 import { Eye, EyeOff, LoaderCircle } from 'lucide-react';
+import { Toast } from '@/design-system';
 
 export const UserWidgetPreferenceForm = ({ onClose, preferenceKey, preferenceValues, compact = false, defaultValue } : UserPreferenceProps) => {
 
@@ -75,7 +76,7 @@ export const UserWidgetPreferenceForm = ({ onClose, preferenceKey, preferenceVal
                                 : <EyeOff className="size-[1.05rem]" aria-hidden="true" />}
                     </button>
                 </div>
-                {saved ? <p role="status" className="text-sm font-semibold text-success">Preference saved.</p> : null}
+                {saved ? <Toast message="Preference saved." onDismiss={() => undefined} /> : null}
                 {Array.isArray(error)
                     ? <ul role="alert" className="list-disc space-y-1 pl-5 text-sm text-danger">{error.map((message) => <li key={message}>{message}</li>)}</ul>
                     : error ? <p role="alert" className="text-sm text-danger">{error}</p> : null}
@@ -93,7 +94,7 @@ export const UserWidgetPreferenceForm = ({ onClose, preferenceKey, preferenceVal
             resetItems={resetItems}
             indicator={indicator}
         >
-            {saved && <p role="status" className="text-sm font-semibold text-success">Preference saved.</p>}
+            {saved ? <Toast message="Preference saved." onDismiss={() => undefined} /> : null}
         </ControlledForm>
     );
 }

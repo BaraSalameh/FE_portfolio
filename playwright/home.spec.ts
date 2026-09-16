@@ -148,22 +148,28 @@ test('public contact cards expose email, phone, WhatsApp, contact, CV, and site 
     await page.getByRole('button', { name: /demo@example\.com/ }).click();
     const emailMenu = page.getByRole('menu', { name: 'Email actions' });
     await expect(emailMenu.getByRole('menuitem', { name: 'Send email' })).toHaveAttribute('href', 'mailto:demo@example.com');
-    await expect(emailMenu.getByRole('menuitem', { name: 'Copy' })).toBeVisible();
-    await page.keyboard.press('Escape');
+    await emailMenu.getByRole('menuitem', { name: 'Copy' }).click();
+    await expect(page.getByRole('status').filter({ hasText: 'Email address copied' })).toBeVisible();
     await expect(emailMenu).toBeHidden();
 
     await page.getByRole('button', { name: /\+905526436811/ }).click();
     const phoneMenu = page.getByRole('menu', { name: 'Phone actions' });
     await expect(phoneMenu.getByRole('menuitem', { name: 'WhatsApp' })).toHaveAttribute('href', 'https://wa.me/905551234567');
     await expect(phoneMenu.getByRole('menuitem', { name: 'Call' })).toHaveAttribute('href', 'tel:+905526436811');
+    await phoneMenu.getByRole('menuitem', { name: 'Copy' }).click();
+    await expect(page.getByRole('status').filter({ hasText: 'Phone number copied' })).toBeVisible();
+
+    await page.getByRole('button', { name: /\+905526436811/ }).click();
     const downloadPromise = page.waitForEvent('download');
     await phoneMenu.getByRole('menuitem', { name: 'Add to contacts' }).click();
     const download = await downloadPromise;
     expect(download.suggestedFilename()).toBe('Demo-Portfolio.vcf');
+    await expect(page.getByRole('status').filter({ hasText: 'Contact download started' })).toBeVisible();
 
     await expect(page.getByRole('link', { name: 'Download CV' })).toHaveAttribute('href', /fl_attachment:CV/);
     await expect(page.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/demo');
-    await expect(page.getByRole('region', { name: 'Sites & contact' }).getByRole('button', { name: 'Share portfolio' })).toBeVisible();
+    await page.getByRole('region', { name: 'Sites & contact' }).getByRole('button', { name: 'Share portfolio' }).click();
+    await expect(page.getByRole('status').filter({ hasText: 'Portfolio link copied' })).toBeVisible();
 });
 
 test('owner settings open as a dedicated responsive page with clear categories', async ({ context, page }) => {

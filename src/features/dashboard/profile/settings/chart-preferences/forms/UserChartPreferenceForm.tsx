@@ -8,6 +8,7 @@ import { UserChartPreferenceProps } from "../types.chart-preferences";
 import { userChartPreferenceSchema } from "../schema";
 import { useHandleSubmit } from "../hooks";
 import { FormItem } from '@/features/dashboard/forms/types.forms';
+import { Toast } from '@/design-system';
 
 export const UserChartPreferenceForm = ({onClose, preferenceKeys, preferenceValues} : UserChartPreferenceProps) => {
 
@@ -39,7 +40,7 @@ export const UserChartPreferenceForm = ({onClose, preferenceKeys, preferenceValu
             resetItems={resetItems}
             indicator={indicator}
         >
-            {saved && <p role="status" className="text-sm font-semibold text-success">Chart preference saved.</p>}
+            {saved ? <Toast message="Chart preference saved." onDismiss={() => undefined} /> : null}
         </ControlledForm>
     );
 }

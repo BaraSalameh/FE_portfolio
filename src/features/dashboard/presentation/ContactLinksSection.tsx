@@ -2,6 +2,7 @@
 
 import type { ProfileFormData } from '@/features/dashboard/profile/schema';
 import type { SocialLinkResponse } from '@/features/dashboard/types.dashboard';
+import { Toast } from '@/design-system';
 import { AtSign, ContactRound, Copy, Download, Github, Globe2, Link as LinkIcon, Linkedin, Mail, MessageCircle, MoreHorizontal, Phone, PhoneCall, Share2 } from 'lucide-react';
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type MouseEvent } from 'react';
 
@@ -17,6 +18,7 @@ type ContactLinksSectionProps = {
 };
 
 type OpenMenu = 'email' | 'phone' | null;
+type Notification = { id: number; message: string; variant: 'success' | 'error' };
 
 const cardClass = 'relative flex min-h-14 min-w-0 items-center gap-3 rounded-2xl border border-line bg-surface-raised px-4 text-left text-sm font-semibold text-ink shadow-sm transition hover:border-accent/35 hover:bg-canvas-subtle';
 const menuItemClass = 'flex min-h-10 w-full items-center gap-3 rounded-xl px-3 text-left text-sm font-semibold text-ink-muted transition hover:bg-canvas-subtle hover:text-ink focus-visible:bg-canvas-subtle focus-visible:text-ink focus-visible:outline-none';
@@ -35,7 +37,7 @@ function socialIcon(platform: string) {
 
 export function ContactLinksSection({ user, socialLinks, showEmail, showPhone, showWhatsApp, showCv, showSiteLinks, sharePath }: ContactLinksSectionProps) {
     const [openMenu, setOpenMenu] = useState<OpenMenu>(null);
-    const [status, setStatus] = useState('');
+    const [notification, setNotification] = useState<Notification | null>(null);
     const sectionRef = useRef<HTMLDivElement>(null);
     const triggerRef = useRef<HTMLButtonElement | null>(null);
     const menuBaseId = useId();
@@ -80,10 +82,10 @@ export function ContactLinksSection({ user, socialLinks, showEmail, showPhone, s
     const copy = async (value: string, message: string) => {
         try {
             await navigator.clipboard.writeText(value);
-            setStatus(message);
+            setNotification({ id: Date.now(), message, variant: 'success' });
             setOpenMenu(null);
         } catch {
-            setStatus('Unable to copy. Please copy the value manually.');
+            setNotification({ id: Date.now(), message: 'Unable to copy. Please copy the value manually.', variant: 'error' });
         }
     };
 
@@ -113,7 +115,7 @@ export function ContactLinksSection({ user, socialLinks, showEmail, showPhone, s
         anchor.download = `${fullName.replace(/[^A-Za-z0-9_-]+/g, '-') || 'portfolio-contact'}.vcf`;
         anchor.click();
         setTimeout(() => URL.revokeObjectURL(url), 0);
-        setStatus('Contact file downloaded');
+        setNotification({ id: Date.now(), message: 'Contact download started', variant: 'success' });
         setOpenMenu(null);
     };
 
@@ -160,6 +162,6 @@ export function ContactLinksSection({ user, socialLinks, showEmail, showPhone, s
                 <span className="min-w-0 flex-1 truncate">WhatsApp</span>
             </a> : null}
         </div> : null}
-        <p className="sr-only" aria-live="polite">{status}</p>
+        {notification ? <Toast key={notification.id} message={notification.message} variant={notification.variant} onDismiss={() => setNotification(null)} /> : null}
     </section>;
 }

@@ -9,3 +9,5 @@ export { BrandMark } from './primitives/BrandMark';
 export { PageContainer } from './primitives/PageContainer';
 export { ActionDialog } from './overlays/ActionDialog';
 export type { ActionDialogProps } from './overlays/ActionDialog';
+export { Toast } from './overlays/Toast';
+export type { ToastProps } from './overlays/Toast';
