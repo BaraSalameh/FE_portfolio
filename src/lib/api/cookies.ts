@@ -2,6 +2,10 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
+const LEGACY_REFRESH_COOKIE_PATH = '/api/Account';
+export const LEGACY_REFRESH_COOKIE_DELETION =
+    'RefreshToken=; Path=/api/Account; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0; HttpOnly; Secure; SameSite=None';
+
 export const getCookies = async () => {
     const cookieStore = await cookies();
     const all = cookieStore.getAll();
@@ -23,13 +27,26 @@ export const setCookies = async (response: Response) => {
         const parsed = parseCookie(rawCookie);
         const authPath = getAuthCookiePath(parsed.name);
         if (authPath) parsed.options.path = authPath;
+        if (parsed.name === 'RefreshToken') {
+            // Remove cookies issued by the previous, API-only path. Leaving both
+            // paths alive can send two RefreshToken values to the API.
+            cookieStore.set(parsed.name, '', {
+                ...parsed.options,
+                path: LEGACY_REFRESH_COOKIE_PATH,
+                expires: new Date(0),
+                maxAge: 0,
+            });
+        }
         cookieStore.set(parsed.name, parsed.value, parsed.options);
     }
 }
 
 const getAuthCookiePath = (name: string) => {
     if (name === 'AccessToken') return '/';
-    if (name === 'RefreshToken') return '/api/Account';
+    // Server Components and Server Actions are requested at page URLs, not at
+    // /api/Account. Keep this HttpOnly credential available to those server
+    // entry points so they can renew an expired access token.
+    if (name === 'RefreshToken') return '/';
     return undefined;
 };
 
@@ -89,6 +106,7 @@ export const forwardSetCookieHeaders = (source: Response, target: NextResponse) 
 export const clearAuthCookies = (response: NextResponse) => {
     const expired = 'Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0; HttpOnly; Secure; SameSite=None';
     response.headers.append('set-cookie', `AccessToken=; Path=/; ${expired}`);
-    response.headers.append('set-cookie', `RefreshToken=; Path=/api/Account; ${expired}`);
+    response.headers.append('set-cookie', `RefreshToken=; Path=/; ${expired}`);
+    response.headers.append('set-cookie', LEGACY_REFRESH_COOKIE_DELETION);
     return response;
 };

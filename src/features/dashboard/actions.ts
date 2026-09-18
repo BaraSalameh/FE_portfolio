@@ -11,7 +11,7 @@ import { contactMessageSchema } from '@/features/dashboard/profile/contact-messa
 import { userWidgetPreferenceSchema } from '@/features/dashboard/profile/settings/widget-preferences/schema';
 import { userChartPreferenceSchema } from '@/features/dashboard/profile/settings/chart-preferences/schema';
 import { getApiErrorPayload } from '@/lib/api/errors';
-import { requireAuthenticatedRequest, serverApi } from '@/lib/api/server-client';
+import { serverApi, serverApiWithRefresh } from '@/lib/api/server-client';
 import { ActionResult } from '@/lib/definitions/actions.definitions';
 
 const idPayloadSchema = z.object({ id: z.string().trim().min(1) });
@@ -53,8 +53,8 @@ export const executeDashboardMutation = async (
     }
 
     try {
-        if (request.url !== '/Client/SendEmail') await requireAuthenticatedRequest();
-        await serverApi({
+        const api = request.url === '/Client/SendEmail' ? serverApi : serverApiWithRefresh;
+        await api({
             ...request,
             data: parsed.data,
             sendCredentials: request.url !== '/Client/SendEmail',

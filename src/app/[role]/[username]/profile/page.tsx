@@ -12,7 +12,7 @@ export default async function OwnerProfilePage({ params }: { params: Promise<{ r
     try {
         dashboard = await getDashboard(role, username);
     } catch (error) {
-        handlePageApiError(error);
+        handlePageApiError(error, `/${role}/${username}/profile`);
     }
 
     if (!dashboard) notFound();
