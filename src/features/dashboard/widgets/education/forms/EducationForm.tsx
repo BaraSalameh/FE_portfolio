@@ -37,11 +37,11 @@ export const EducationForm = ({id, onClose} : EducationProps) => {
     }, [dispatch]);
 
     const items = useMemo<FormItem<typeof educationSchema>[]>(() => [
-        {as: 'Dropdown', name: 'LKP_InstitutionID', options: institutionOptions, label: 'Institution', fetchAction: institutionListQuery, isLoading: institutionLoading},
-        {as: 'Dropdown', name: 'LKP_DegreeID', options: degreeOptions, label: 'Degree', fetchAction: degreeListQuery, isLoading: degreeLoading, minimumSearchLength: 0, loadOptionsOnMount: true},
-        {as: 'Dropdown', name: 'LKP_FieldOfStudyID', options: fieldOfStudyOptions, label: 'Field of study', fetchAction: fieldOfStudyListQuery, isLoading: fieldLoading, minimumSearchLength: 0, loadOptionsOnMount: true, createOption: createFieldOption},
-        {as: 'Input', name: 'startDate', label: 'Start date', type: 'Date'},
-        {as: 'Input', name: 'endDate', label: 'End date', type: 'Date'},
+        {as: 'Dropdown', name: 'LKP_InstitutionID', options: institutionOptions, label: 'Institution', fetchAction: institutionListQuery, isLoading: institutionLoading, required: true},
+        {as: 'Dropdown', name: 'LKP_DegreeID', options: degreeOptions, label: 'Degree', fetchAction: degreeListQuery, isLoading: degreeLoading, minimumSearchLength: 0, loadOptionsOnMount: true, required: true},
+        {as: 'Dropdown', name: 'LKP_FieldOfStudyID', options: fieldOfStudyOptions, label: 'Field of study', fetchAction: fieldOfStudyListQuery, isLoading: fieldLoading, minimumSearchLength: 0, loadOptionsOnMount: true, createOption: createFieldOption, required: true},
+        {as: 'Input', name: 'startDate', label: 'Start date', type: 'Date', required: true},
+        {as: 'Input', name: 'endDate', label: 'End date', type: 'Date', required: true},
         {as: 'Checkbox', name: 'isStudying', label: 'Still studying?'},
         {as: 'Input', name: 'description', label: 'Description', description: 'Optional. Summarize relevant coursework, activities, or achievements.', placeholder: 'Relevant coursework and achievements', type: 'Textarea'},
         {as: 'DropdownMulti', name: 'lstSkills', options: skillOptions, label: 'Skills', fetchAction: skillListQuery, isLoading: skillLoading}
@@ -62,6 +62,7 @@ export const EducationForm = ({id, onClose} : EducationProps) => {
             }}
             resetItems={resetItems}
             indicator={indicator}
+            stickySubmit
         />
     );
 }

@@ -17,6 +17,7 @@ export const ControlledDropdown = <T extends FieldValues>({
     minimumSearchLength,
     loadOptionsOnMount,
     createOption,
+    required,
 }: ControlledDropdownProps<T>) => {
     return (
         <Controller
@@ -28,6 +29,7 @@ export const ControlledDropdown = <T extends FieldValues>({
                 return (
                     <FormDropdown
                         label={label}
+                        required={required}
                         options={options}
                         value={selectedValue}
                         onChange={(option) => {

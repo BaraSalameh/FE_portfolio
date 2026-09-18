@@ -69,6 +69,7 @@ export const FieldArray = <T extends FieldValues>({
                                             description={config.description}
                                             registration={register(fieldPath)}
                                             error={fieldError}
+                                            required={config.required}
                                             disabled={config?.config?.includes('Disabled')}
                                         />
                                     )
@@ -84,6 +85,7 @@ export const FieldArray = <T extends FieldValues>({
                                             isMulti={config.as === 'DropdownMulti'}
                                             fetchAction={config.fetchAction}
                                             isLoading={config.isLoading}
+                                            required={config.required}
                                         />
                                     )
                                 default: return null;

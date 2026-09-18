@@ -262,6 +262,69 @@ test('owner portfolio widgets expose useful empty states and accessible actions'
     expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
 });
 
+test('widget update modal keeps its action visible without covering fields and marks required labels', async ({ context, page }) => {
+    await page.setViewportSize({ width: 390, height: 700 });
+    await context.addCookies([
+        { name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' },
+        { name: 'WidgetFixture', value: 'populated', domain: 'localhost', path: '/' },
+    ]);
+    await page.goto('/owner/demo/dashboard');
+
+    const education = page.getByRole('region', { name: 'Education' });
+    await education.getByRole('button', { name: 'Show entries (1)' }).click();
+    await education.getByRole('button', { name: 'View item details' }).click();
+    await page.getByRole('dialog', { name: 'Entry details' }).getByRole('button', { name: 'Edit' }).click();
+
+    const dialog = page.getByRole('dialog', { name: 'Update Education' });
+    const updateButton = dialog.getByRole('button', { name: 'Update' });
+    const scrollRegion = dialog.getByTestId('controlled-form-scroll');
+    const footer = dialog.getByTestId('controlled-form-footer');
+    await expect(updateButton).toBeVisible();
+
+    for (const label of ['Institution', 'Degree', 'Field of study', 'Start date', 'End date']) {
+        const fieldLabel = dialog.locator('label', { hasText: label });
+        await expect(fieldLabel.locator('span[aria-hidden="true"]')).toHaveText('*');
+    }
+    await expect(dialog.locator('label', { hasText: 'Description' }).locator('span[aria-hidden="true"]')).toHaveCount(0);
+    await expect(dialog.getByRole('combobox', { name: 'Institution' })).toHaveAttribute('aria-required', 'true');
+    await expect(dialog.getByLabel('Start date')).toHaveAttribute('required', '');
+
+    const initialButtonBox = await updateButton.boundingBox();
+    await scrollRegion.evaluate((element) => { element.scrollTop = element.scrollHeight; });
+    const scrolledButtonBox = await updateButton.boundingBox();
+    expect(scrolledButtonBox?.y).toBe(initialButtonBox?.y);
+
+    const lastFieldBox = await dialog.getByRole('combobox', { name: 'Skills' }).boundingBox();
+    const footerBox = await footer.boundingBox();
+    expect(lastFieldBox).not.toBeNull();
+    expect(footerBox).not.toBeNull();
+    expect((lastFieldBox?.y ?? 0) + (lastFieldBox?.height ?? 0)).toBeLessThanOrEqual(footerBox?.y ?? 0);
+});
+
+test('widget create modal keeps its action visible without covering fields', async ({ context, page }) => {
+    await page.setViewportSize({ width: 390, height: 700 });
+    await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
+    await page.goto('/owner/demo/dashboard');
+
+    await page.getByRole('region', { name: 'Education' }).getByRole('button', { name: 'Add' }).click();
+    const dialog = page.getByRole('dialog', { name: 'Add education' });
+    const createButton = dialog.getByRole('button', { name: 'Create' });
+    const scrollRegion = dialog.getByTestId('controlled-form-scroll');
+    const footer = dialog.getByTestId('controlled-form-footer');
+    await expect(createButton).toBeVisible();
+
+    const initialButtonBox = await createButton.boundingBox();
+    await scrollRegion.evaluate((element) => { element.scrollTop = element.scrollHeight; });
+    const scrolledButtonBox = await createButton.boundingBox();
+    expect(scrolledButtonBox?.y).toBe(initialButtonBox?.y);
+
+    const lastFieldBox = await dialog.getByRole('combobox', { name: 'Skills' }).boundingBox();
+    const footerBox = await footer.boundingBox();
+    expect(lastFieldBox).not.toBeNull();
+    expect(footerBox).not.toBeNull();
+    expect((lastFieldBox?.y ?? 0) + (lastFieldBox?.height ?? 0)).toBeLessThanOrEqual(footerBox?.y ?? 0);
+});
+
 test('settings route is restricted to portfolio owners', async ({ page }) => {
     const response = await page.goto('/client/demo/settings');
 

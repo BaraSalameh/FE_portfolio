@@ -24,12 +24,12 @@ export const ExperienceForm = ({id, onClose} : ExperienceProps) => {
     const resetItems = useMemo(() => mapExperienceToForm(experienceToHandle), [experienceToHandle]);
      
     const items = useMemo<FormItem<typeof experienceSchema>[]>(() => [
-        {as: 'Input', name: 'companyName', label: 'Company', placeholder: 'Google'},
-        {as: 'Input', name: 'jobTitle', label: 'Job title', placeholder: 'Software Developer'},
-        {as: 'Input', name: 'startDate', label: 'Start date', type: 'Date'},
-        {as: 'Input', name: 'endDate', label: 'End date', type: 'Date'},
+        {as: 'Input', name: 'companyName', label: 'Company', placeholder: 'Google', required: true},
+        {as: 'Input', name: 'jobTitle', label: 'Job title', placeholder: 'Software Developer', required: true},
+        {as: 'Input', name: 'startDate', label: 'Start date', type: 'Date', required: true},
+        {as: 'Input', name: 'endDate', label: 'End date', type: 'Date', required: true},
         {as: 'Checkbox', name: 'isWorking', label: 'Still working?'},
-        {as: 'Input', name: 'location', label: 'Location', placeholder: 'Champs-Élysées St - Paris'},
+        {as: 'Input', name: 'location', label: 'Location', placeholder: 'Champs-Élysées St - Paris', required: true},
         {as: 'Input', name: 'description', label: 'Description', placeholder: 'Description', type: 'Textarea'},
         {as: 'DropdownMulti', name: 'lstSkills', options: skillOptions, label: 'Skills', fetchAction: skillListQuery, isLoading: skillLoading}
     ], [skillLoading, skillOptions]);
@@ -49,6 +49,7 @@ export const ExperienceForm = ({id, onClose} : ExperienceProps) => {
             }}
             resetItems={resetItems}
             indicator={indicator}
+            stickySubmit
         />
     );
 }

@@ -37,7 +37,9 @@ export const FormInput = ({
 
     return (
         <div className="space-y-1.5">
-            {label ? <label htmlFor={inputId} className="block text-sm font-semibold text-ink">{label}</label> : null}
+            {label ? <label htmlFor={inputId} className="block text-sm font-semibold text-ink">
+                {label}{rest.required ? <span aria-hidden="true" className="ml-0.5 text-danger">*</span> : null}
+            </label> : null}
             {description ? <p id={descriptionId} className="text-xs leading-5 text-ink-muted">{description}</p> : null}
             {(rest.type === 'textarea' || rest.type === 'Textarea') ? (
                 <textarea
