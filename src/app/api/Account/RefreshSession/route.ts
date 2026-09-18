@@ -1,6 +1,6 @@
-import { redirect } from 'next/navigation';
-import { NextRequest } from 'next/server';
-import { refreshServerSession } from '@/lib/api/server-client';
+import { NextRequest, NextResponse } from 'next/server';
+import { requestServerSessionRefresh } from '@/lib/api/server-client';
+import { LEGACY_REFRESH_COOKIE_DELETION, normalizeAuthCookiePath } from '@/lib/api/cookies';
 import { paths } from '@/lib/pathHelper';
 
 const safeReturnPath = (request: NextRequest) => {
@@ -17,12 +17,21 @@ const safeReturnPath = (request: NextRequest) => {
 
 export async function GET(request: NextRequest) {
     const returnTo = safeReturnPath(request);
+    let refreshResponse: Response;
 
     try {
-        await refreshServerSession();
+        // Top-level GET navigations do not carry an Origin header. The refresh
+        // call is an authenticated POST, so explicitly forward this route's
+        // same-origin URL for the API's CSRF origin validation.
+        refreshResponse = await requestServerSessionRefresh(request.nextUrl.origin);
     } catch {
-        redirect(paths.root.auth.login.path());
+        return NextResponse.redirect(new URL(paths.root.auth.login.path(), request.url));
     }
 
-    redirect(returnTo);
+    const response = NextResponse.redirect(new URL(returnTo, request.url));
+    for (const cookie of refreshResponse.headers.getSetCookie()) {
+        response.headers.append('set-cookie', normalizeAuthCookiePath(cookie));
+    }
+    response.headers.append('set-cookie', LEGACY_REFRESH_COOKIE_DELETION);
+    return response;
 }

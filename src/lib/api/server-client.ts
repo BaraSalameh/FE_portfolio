@@ -47,14 +47,17 @@ export const serverApiResponse = async (options: DynamicFetchOptions): Promise<R
     return response;
 };
 
-export const refreshServerSession = async () => {
-    const response = await serverApiResponse({
+export const requestServerSessionRefresh = (origin?: string) => serverApiResponse({
         method: 'POST',
         url: '/Account/ValidateToken',
         data: {},
         sendCredentials: true,
         retryOn401: false,
+        headers: origin ? { origin } : undefined,
     });
+
+export const refreshServerSession = async (origin?: string) => {
+    const response = await requestServerSessionRefresh(origin);
     await setCookies(response);
     return response;
 };

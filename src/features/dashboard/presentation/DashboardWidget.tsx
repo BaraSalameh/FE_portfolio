@@ -5,10 +5,10 @@ import { WidgetList } from './widgets/WidgetList';
 import { WidgetModal } from './widgets/WidgetModal';
 import type { WidgetCardProps } from '@/features/dashboard/types.presentation';
 import { cn } from '@/lib/ui/cn';
-import { Check, ListOrdered, Plus } from 'lucide-react';
+import { Check, ChevronDown, ListOrdered, Plus } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import { memo, useState } from 'react';
+import { memo, useId, useState } from 'react';
 
 const WidgetCharts = dynamic(
     () => import('./widgets/WidgetCharts').then(module => module.WidgetCharts),
@@ -25,12 +25,16 @@ export const DashboardWidget = memo(function DashboardWidget(props: WidgetCardPr
     const { isLoading, error, header, items, emptyState, list, pie, bar, radar, timeline, matrix, kpis, details, pagination, onModalAction, className } = props;
     const HeaderIcon = header?.icon;
     const [sortable, setSortable] = useState(false);
+    const [entriesExpanded, setEntriesExpanded] = useState(false);
     const [selectedItem, setSelectedItem] = useState<object>();
     const [detailsOpen, setDetailsOpen] = useState(false);
+    const entriesId = useId();
     const isEmpty = !Array.isArray(items) || items.length === 0;
     const canReorder = Boolean(onSort && Array.isArray(items) && items.length >= 2);
     const isReordering = canReorder && sortable;
-    const hasPresentation = Boolean(list || pie || bar || radar || timeline || matrix || kpis);
+    const hasVisualization = Boolean(pie || bar || radar || timeline || matrix || kpis);
+    const hasPresentation = Boolean(list || hasVisualization);
+    const showEntries = Boolean(list && (!hasVisualization || entriesExpanded || isReordering));
 
     if (!header || !hasPresentation || (isEmpty && !create)) return null;
 
@@ -55,7 +59,10 @@ export const DashboardWidget = memo(function DashboardWidget(props: WidgetCardPr
                             {canReorder && (
                                 <button
                                     type="button"
-                                    onClick={() => setSortable((value) => !value)}
+                                    onClick={() => {
+                                        setSortable((value) => !value);
+                                        setEntriesExpanded(true);
+                                    }}
                                     className="responsive-action shrink-0 gap-2 rounded-xl text-sm font-semibold transition hover:bg-canvas-subtle hover:text-ink"
                                     aria-label={isReordering ? 'Finish reordering' : 'Reorder items'}
                                     aria-pressed={isReordering}
@@ -84,8 +91,22 @@ export const DashboardWidget = memo(function DashboardWidget(props: WidgetCardPr
                         <WidgetCharts items={items} pie={pie} bar={bar} radar={radar} timeline={timeline} matrix={matrix} kpis={kpis} />
                     </div>
                 )}
-                {!isEmpty && list && (
-                    <div className="p-3">
+                {!isEmpty && list && hasVisualization && !isReordering && (
+                    <div className="border-t border-line px-3 py-2.5">
+                        <button
+                            type="button"
+                            onClick={() => setEntriesExpanded((value) => !value)}
+                            className="flex min-h-11 w-full items-center justify-between gap-3 rounded-xl px-3.5 py-2 text-left text-sm font-bold text-ink transition hover:bg-canvas-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                            aria-expanded={entriesExpanded}
+                            aria-controls={entriesId}
+                        >
+                            <span>{entriesExpanded ? 'Hide' : 'Show'} entries ({items.length})</span>
+                            <ChevronDown className={cn('size-4 shrink-0 text-ink-muted transition-transform', entriesExpanded && 'rotate-180')} aria-hidden="true" />
+                        </button>
+                    </div>
+                )}
+                {!isEmpty && showEntries && list && (
+                    <div id={entriesId} className={cn('p-3', hasVisualization && 'pt-0')}>
                         <WidgetList
                             items={items}
                             list={list}

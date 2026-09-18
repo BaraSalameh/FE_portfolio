@@ -308,7 +308,7 @@ test('portfolio charts use guided responsive and accessible views', async ({ pag
     await expect(page.getByRole('heading', { name: 'Career timeline' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Skill evidence matrix' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Language proficiency' })).toBeVisible();
-    await expect(page.getByRole('region', { name: 'Languages' }).getByText('80%')).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Languages' }).getByText('80%').first()).toBeVisible();
     await expect(page.getByRole('region', { name: 'Skills' }).getByLabel('No projects evidence')).toHaveText('-');
     await expect(page.getByRole('heading', { name: /radar|degrees duration/i })).toHaveCount(0);
 
@@ -320,6 +320,58 @@ test('portfolio charts use guided responsive and accessible views', async ({ pag
 
     expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
     expect(hydrationErrors).toEqual([]);
+});
+
+test('portfolio widgets prioritize visualizations and disclose entry cards independently', async ({ page }) => {
+    await page.goto('/client/demo/dashboard');
+
+    const education = page.getByRole('region', { name: 'Education' });
+    const experience = page.getByRole('region', { name: 'Experience' });
+    const educationToggle = education.getByRole('button', { name: 'Show entries (1)' });
+    const experienceToggle = experience.getByRole('button', { name: 'Show entries (1)' });
+
+    await expect(education.getByRole('heading', { name: 'Education timeline' })).toBeVisible();
+    await expect(education.getByText('BSc at Design University')).toHaveCount(0);
+    await expect(educationToggle).toHaveAttribute('aria-expanded', 'false');
+    await educationToggle.focus();
+    await page.keyboard.press('Enter');
+
+    await expect(education.getByText('BSc at Design University')).toBeVisible();
+    await expect(education.getByRole('button', { name: 'Hide entries (1)' })).toHaveAttribute('aria-expanded', 'true');
+    await expect(experience.getByText('Frontend Developer at Example Studio')).toHaveCount(0);
+    await expect(experienceToggle).toHaveAttribute('aria-expanded', 'false');
+
+    await education.getByRole('button', { name: 'Hide entries (1)' }).click();
+    await expect(education.getByText('BSc at Design University')).toHaveCount(0);
+});
+
+test('widgets show entry cards automatically when visualizations are disabled', async ({ context, page }) => {
+    await context.addCookies([
+        { name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' },
+        { name: 'WidgetFixture', value: 'populated', domain: 'localhost', path: '/' },
+        { name: 'HideVisualizations', value: 'true', domain: 'localhost', path: '/' },
+    ]);
+    await page.goto('/owner/demo/dashboard');
+
+    const education = page.getByRole('region', { name: 'Education' });
+    await expect(education.getByText('BSc at Design University')).toBeVisible();
+    await expect(education.getByRole('button', { name: /entries/ })).toHaveCount(0);
+});
+
+test('owner reordering expands collapsed entry cards and leaves them open', async ({ context, page }) => {
+    await context.addCookies([
+        { name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' },
+        { name: 'WidgetFixture', value: 'reorderable', domain: 'localhost', path: '/' },
+    ]);
+    await page.goto('/owner/demo/dashboard');
+
+    const education = page.getByRole('region', { name: 'Education' });
+    await expect(education.getByText('BSc at Design University')).toHaveCount(0);
+    await education.getByRole('button', { name: 'Reorder items' }).click();
+    await expect(education.getByText('BSc at Design University')).toBeVisible();
+    await education.getByRole('button', { name: 'Finish reordering' }).click();
+    await expect(education.getByText('BSc at Design University')).toBeVisible();
+    await expect(education.getByRole('button', { name: 'Hide entries (2)' })).toHaveAttribute('aria-expanded', 'true');
 });
 
 test('key routes pass baseline accessibility and responsive structure checks', async ({ page }) => {
