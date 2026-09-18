@@ -173,7 +173,7 @@ export const ControlledForm = <T extends z.ZodTypeAny> ({
             )}
             </div>
 
-            <div data-testid={stickySubmit ? 'controlled-form-footer' : undefined} className={stickySubmit ? 'shrink-0 border-t border-line bg-surface pt-4' : undefined}>
+            <div data-testid={stickySubmit ? 'controlled-form-footer' : undefined} className={stickySubmit ? 'shrink-0 border-t border-line bg-surface pt-4' : 'mt-5'}>
                 <button type="submit" disabled={loading} className="inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-accent px-5 text-sm font-bold text-white shadow-[0_10px_24px_-14px_var(--ds-accent)] transition hover:bg-accent-strong disabled:opacity-60 sm:w-auto">
                     {loading ? indicator?.while || 'Submitting…' : indicator?.when || 'Submit'}
                 </button>

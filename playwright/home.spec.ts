@@ -198,7 +198,7 @@ test('owner settings open as a dedicated responsive page with clear categories',
     await expect(page.getByRole('heading', { name: 'Chart preferences', exact: true })).toBeVisible();
 
     await categoryDropdown.fill('Preferences');
-    await page.getByRole('option', { name: 'Preferences' }).click();
+    await page.getByRole('option', { name: 'Preferences', exact: true }).click();
     await expect(page.getByRole('switch', { name: /(?:Hide|Show) certificate widget/ })).toBeEnabled();
     await expect(page.getByRole('switch', { name: /(?:Hide|Show) certificate bar chart/ })).toBeEnabled();
 
@@ -211,6 +211,39 @@ test('owner settings open as a dedicated responsive page with clear categories',
     await page.keyboard.press('Backspace');
     await expect(page.getByRole('heading', { name: 'Profile' })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
+});
+
+test('profile and settings toolbars stay visible and settings navigation clears the toolbar', async ({ context, page }) => {
+    await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
+    await page.setViewportSize({ width: 1440, height: 500 });
+
+    await page.goto('/owner/demo/profile');
+    const profileToolbar = page.getByTestId('owner-page-toolbar');
+    await expect(page.getByLabel('Birth date')).toBeVisible();
+    const birthDateBox = await page.getByLabel('Birth date').boundingBox();
+    const profileUpdateBox = await page.getByRole('button', { name: 'Update', exact: true }).boundingBox();
+    expect(birthDateBox).not.toBeNull();
+    expect(profileUpdateBox).not.toBeNull();
+    expect((profileUpdateBox?.y ?? 0) - ((birthDateBox?.y ?? 0) + (birthDateBox?.height ?? 0))).toBeGreaterThanOrEqual(16);
+    await page.evaluate(() => window.scrollTo(0, 500));
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThanOrEqual(400);
+    await expect(profileToolbar).toBeVisible();
+    expect((await profileToolbar.boundingBox())?.y ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(1);
+
+    await page.goto('/owner/demo/settings');
+    const settingsToolbar = page.getByTestId('owner-page-toolbar');
+    const settingsNavigation = page.getByRole('navigation', { name: 'Settings categories' });
+    await expect(settingsNavigation).toBeVisible();
+    await page.evaluate(() => window.scrollTo(0, 500));
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThanOrEqual(400);
+    await expect(settingsToolbar).toBeVisible();
+    await expect(settingsNavigation).toBeVisible();
+
+    const toolbarBox = await settingsToolbar.boundingBox();
+    const navigationBox = await settingsNavigation.boundingBox();
+    expect(toolbarBox?.y ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(1);
+    expect(navigationBox).not.toBeNull();
+    expect(navigationBox?.y ?? 0).toBeGreaterThanOrEqual((toolbarBox?.y ?? 0) + (toolbarBox?.height ?? 0));
 });
 
 test('owner portfolio widgets expose useful empty states and accessible actions', async ({ context, page }) => {
