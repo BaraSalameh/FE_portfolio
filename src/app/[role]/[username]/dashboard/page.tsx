@@ -16,7 +16,7 @@ export default async function DashboardPage({
     try {
         dashboard = await getDashboard(role, username);
     } catch (error) {
-        handlePageApiError(error);
+        handlePageApiError(error, `/${role}/${username}/dashboard`);
     }
 
     if (!dashboard) notFound();

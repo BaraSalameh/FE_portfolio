@@ -27,6 +27,23 @@ const publicPreferences = [
     { preference: preference('44444444-4444-4444-8444-444444444444', 'show-site-links'), value: 'show' },
     { preference: preference('44444444-4444-4444-8444-444444444445', 'show-cv'), value: 'show' },
 ];
+const hiddenVisualizationPreferences = [
+    'show-education-bar-chart',
+    'show-education-pie-chart',
+    'show-experience-bar-chart',
+    'show-experience-pie-chart',
+    'show-project-bar-chart',
+    'show-project-pie-chart',
+    'show-skill-bar-chart',
+    'show-skill-pie-chart',
+    'show-certificate-bar-chart',
+    'show-certificate-pie-chart',
+    'show-language-bar-chart',
+    'show-language-radar-chart',
+].map((name, index) => ({
+    preference: preference(`88888888-8888-4888-8888-${String(index + 1).padStart(12, '0')}`, name),
+    value: 'hide',
+}));
 const parseJsonBody = (body) => {
     try { return body ? JSON.parse(body) : {}; }
     catch { return {}; }
@@ -109,6 +126,19 @@ const populatedWidgets = {
         lstCertificates: [],
     }],
 };
+const reorderableWidgets = {
+    ...populatedWidgets,
+    lstEducations: [
+        ...populatedWidgets.lstEducations,
+        {
+            ...populatedWidgets.lstEducations[0],
+            id: '60000000-0000-4000-8000-000000000005',
+            degree: { ...populatedWidgets.lstEducations[0].degree, name: 'Master of Science', abbreviation: 'MSc' },
+            startDate: '2022-09-01',
+            endDate: '2024-06-01',
+        },
+    ],
+};
 
 const dashboardFixture = (preferences = userPreferences, widgets = {}) => ({
     user: {
@@ -162,7 +192,14 @@ const server = createServer((request, response) => {
         }
 
         if (request.url === '/api/Owner/UserFullInfo') {
-            response.end(JSON.stringify(dashboardFixture()));
+            const widgetFixture = request.headers.cookie?.match(/(?:^|;\s*)WidgetFixture=([^;]+)/)?.[1];
+            const hideVisualizations = request.headers.cookie?.includes('HideVisualizations=true');
+            response.end(JSON.stringify(dashboardFixture(
+                hideVisualizations ? hiddenVisualizationPreferences : userPreferences,
+                widgetFixture === 'reorderable'
+                    ? reorderableWidgets
+                    : widgetFixture === 'populated' ? populatedWidgets : {},
+            )));
             return;
         }
 
@@ -228,6 +265,11 @@ const server = createServer((request, response) => {
         }
 
         if (request.url === '/api/Account/ValidateToken' && request.method === 'POST') {
+            if (!request.headers.origin) {
+                response.statusCode = 403;
+                response.end(JSON.stringify({ title: 'Cross-site request rejected.', status: 403 }));
+                return;
+            }
             response.setHeader('set-cookie', [
                 'AccessToken=new-access; Path=/; HttpOnly; SameSite=None; Secure',
                 'RefreshToken=new-refresh; Path=/api/Account; HttpOnly; SameSite=None; Secure',

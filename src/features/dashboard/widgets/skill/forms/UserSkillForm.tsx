@@ -42,7 +42,7 @@ export const UserSkillForm = ({ onClose } : SkillProps) => {
     const resetItems = useMemo(() => mapUserSkillToForm(lstUserSkills), [lstUserSkills]);
 
     const fieldConfigs: FormField[] = useMemo(() => [
-        {as: 'Dropdown', label: 'Skills', name: 'LKP_SkillID', options: skillOptions, fetchAction: skillListQuery, isLoading: skillLoading},
+        {as: 'Dropdown', label: 'Skills', name: 'LKP_SkillID', options: skillOptions, fetchAction: skillListQuery, isLoading: skillLoading, required: true},
         {as: 'DropdownMulti', label: 'Corresponding education', name: 'EducationIDs', options: educationOptions},
         {as: 'DropdownMulti', label: 'Corresponding experience', name: 'ExperienceIDs', options: experienceOptions},
         {as: 'DropdownMulti', label: 'Corresponding Project', name: 'ProjectIDs', options: projectOptions},
@@ -58,6 +58,7 @@ export const UserSkillForm = ({ onClose } : SkillProps) => {
             loading={loading}
             resetItems={resetItems}
             indicator={{when: 'Update', while: 'Updating...'}}
+            stickySubmit
         />
     );
 }

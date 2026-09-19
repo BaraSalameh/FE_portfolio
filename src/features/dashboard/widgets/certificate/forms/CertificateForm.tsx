@@ -37,7 +37,7 @@ export const CertificateForm = ({id, onClose} : CertificateProps) => {
     }, [dispatch]);
 
     const items = useMemo<FormItem<typeof certificateSchema>[]>(() => [
-        {as: 'Dropdown', name: 'LKP_CertificateID', options: certificateOptions, label: 'Certificate', fetchAction: lkp_CertificateListQuery, isLoading: certificateLoading, minimumSearchLength: 3, createOption: createCertificateOption},
+        {as: 'Dropdown', name: 'LKP_CertificateID', options: certificateOptions, label: 'Certificate', fetchAction: lkp_CertificateListQuery, isLoading: certificateLoading, minimumSearchLength: 3, createOption: createCertificateOption, required: true},
         {as: 'Input', name: 'issueDate', label: 'Issue Date', type: 'Date'},
         {as: 'Input', name: 'expirationDate', label: 'Expiration Date', type: 'Date'},
         {as: 'Input', name: 'credintialID', label: 'Credential ID', placeholder: 'XXX-XXXX-XXX'},
@@ -62,6 +62,7 @@ export const CertificateForm = ({id, onClose} : CertificateProps) => {
             loading={loading}
             resetItems={resetItems}
             indicator={indicator}
+            stickySubmit
         />
     );
 }

@@ -21,8 +21,8 @@ export const UserLanguageForm = ({onClose} : UserLanguageProps) => {
     const resetItems = useMemo(() => mapUserLanguageToForm(lstUserLanguages), [lstUserLanguages]);
 
     const fieldConfigs: FormField[] = useMemo(() => [
-        {as: 'Dropdown' , label: 'Language', name: 'lkP_LanguageID', options: languageOptions, fetchAction: languageListQuery, isLoading: languageLoading},
-        {as: 'Dropdown', label: 'Proficiency', name: 'lkP_LanguageProficiencyID', options: languageProficiencyOptions}
+        {as: 'Dropdown' , label: 'Language', name: 'lkP_LanguageID', options: languageOptions, fetchAction: languageListQuery, isLoading: languageLoading, required: true},
+        {as: 'Dropdown', label: 'Proficiency', name: 'lkP_LanguageProficiencyID', options: languageProficiencyOptions, required: true}
     ], [ languageOptions, languageProficiencyOptions, languageLoading ]);
 
     return (
@@ -34,6 +34,7 @@ export const UserLanguageForm = ({onClose} : UserLanguageProps) => {
             loading={loading}
             resetItems={resetItems}
             indicator={{when: 'Update', while: 'Updating...'}}
+            stickySubmit
         />
     );
 }

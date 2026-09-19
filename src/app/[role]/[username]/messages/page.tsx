@@ -12,7 +12,7 @@ export default async function OwnerMessagesPage({ params }: { params: Promise<{ 
     try {
         dashboard = await getDashboard(role, username);
     } catch (error) {
-        handlePageApiError(error);
+        handlePageApiError(error, `/${role}/${username}/messages`);
     }
 
     if (!dashboard) notFound();

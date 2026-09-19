@@ -26,6 +26,7 @@ export const FormDropdown = ({
     minimumSearchLength = fetchAction ? 3 : 0,
     loadOptionsOnMount = false,
     onCreateOption,
+    required = false,
 }: FormDropdownProps) => {
     const selectId = useId();
     const errorId = `${selectId}-error`;
@@ -167,11 +168,15 @@ export const FormDropdown = ({
 
     return (
         <div className="space-y-1.5">
-            {label ? <label htmlFor={selectId} className="text-sm font-semibold text-ink">{label}</label> : null}
+            {label ? <label htmlFor={selectId} className="text-sm font-semibold text-ink">
+                {label}{required ? <span aria-hidden="true" className="ml-0.5 text-danger">*</span> : null}
+            </label> : null}
             <CreatableSelect
                 inputId={selectId}
                 instanceId={selectId}
                 aria-label={ariaLabel ?? label}
+                aria-required={required || undefined}
+                required={required}
                 aria-invalid={error ? true : undefined}
                 aria-describedby={error ? errorId : searchError ? searchStatusId : undefined}
                 options={visibleOptions}

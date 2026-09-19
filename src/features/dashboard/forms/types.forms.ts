@@ -29,6 +29,7 @@ export interface FormField {
     fetchAction?: PaginatedAction;
     isLoading?: boolean;
     config?: Config[];
+    required?: boolean;
 }
 
 export interface FormItem<T extends z.ZodTypeAny> {
@@ -49,6 +50,7 @@ export interface FormItem<T extends z.ZodTypeAny> {
     createOption?: (inputValue: string) => Promise<Option>;
     media?: Record<string, string>[];
     uploader?: React.ReactNode;
+    required?: boolean;
 }
 
 interface FormItemWatch<T extends z.ZodTypeAny> {
@@ -74,6 +76,7 @@ export interface ControlledFormProps<T extends z.ZodTypeAny> {
     resetItems?: Partial<z.infer<T>>;
     indicator?: Indicator;
     children?: React.ReactNode;
+    stickySubmit?: boolean;
 }
 
 export interface ControlledDropdownProps<T extends FieldValues>  {
@@ -87,6 +90,7 @@ export interface ControlledDropdownProps<T extends FieldValues>  {
     minimumSearchLength?: number;
     loadOptionsOnMount?: boolean;
     createOption?: (inputValue: string) => Promise<Option>;
+    required?: boolean;
 }
 
 export interface FormCheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -112,6 +116,7 @@ export interface FormDropdownProps {
     minimumSearchLength?: number;
     loadOptionsOnMount?: boolean;
     onCreateOption?: (inputValue: string) => Promise<void>;
+    required?: boolean;
 }
 
 export interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {

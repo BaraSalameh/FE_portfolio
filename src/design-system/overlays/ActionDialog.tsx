@@ -69,12 +69,12 @@ export function ActionDialog({ isLoading, idToDelete, onAction, onClose, as = 'c
             {error && <p role="alert" className="mt-1 text-xs text-danger">{error.message}</p>}
             {open && typeof document !== 'undefined' && createPortal(
                 <div className="fixed inset-0 z-50 grid place-items-center bg-black/55 p-4 backdrop-blur-sm" onMouseDown={() => setOpen(false)}>
-                    <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={titleId} onMouseDown={(event) => event.stopPropagation()} className={cn('max-h-[min(90svh,52rem)] w-full max-w-2xl overflow-y-auto rounded-[1.5rem] border border-line bg-surface text-ink shadow-2xl shadow-black/25', className)}>
+                    <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={titleId} onMouseDown={(event) => event.stopPropagation()} className={cn('flex max-h-[min(90svh,52rem)] w-full max-w-2xl flex-col overflow-hidden rounded-[1.5rem] border border-line bg-surface text-ink shadow-2xl shadow-black/25', className)}>
                         <header className="sticky top-0 z-10 flex min-h-16 items-center justify-between gap-4 border-b border-line bg-surface/95 px-5 py-3 backdrop-blur-xl">
                             <div><p className="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-accent">Portfolio editor</p><h2 id={titleId} className="mt-0.5 text-lg font-bold tracking-[-0.03em]">{dialogTitle}</h2></div>
                             <button type="button" onClick={() => setOpen(false)} autoFocus className="grid size-10 place-items-center rounded-xl text-ink-muted transition hover:bg-canvas-subtle hover:text-ink" aria-label="Close dialog"><X className="size-4" aria-hidden="true" /></button>
                         </header>
-                        <div className="p-5 sm:p-6">
+                        <div className="min-h-0 overflow-y-auto p-5 sm:p-6">
                             {as !== 'delete' ? child : (
                                 <div className="space-y-5">
                                     <div className="rounded-xl border border-danger/20 bg-danger/8 p-4 text-sm leading-6 text-ink-muted">{children}</div>

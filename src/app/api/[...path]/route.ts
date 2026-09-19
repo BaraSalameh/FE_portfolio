@@ -1,5 +1,5 @@
 import { getApiBaseUrl } from '@/lib/api/config';
-import { normalizeAuthCookiePath } from '@/lib/api/cookies';
+import { LEGACY_REFRESH_COOKIE_DELETION, normalizeAuthCookiePath } from '@/lib/api/cookies';
 import { NextRequest } from 'next/server';
 
 const MAX_BODY_BYTES = 6_291_456;
@@ -75,6 +75,9 @@ async function relay(
         }
         for (const cookie of upstream.headers.getSetCookie()) {
             responseHeaders.append('set-cookie', normalizeAuthCookiePath(cookie));
+            if (cookie.trimStart().toLowerCase().startsWith('refreshtoken=')) {
+                responseHeaders.append('set-cookie', LEGACY_REFRESH_COOKIE_DELETION);
+            }
         }
 
         return new Response(upstream.body, {

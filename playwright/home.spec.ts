@@ -198,7 +198,7 @@ test('owner settings open as a dedicated responsive page with clear categories',
     await expect(page.getByRole('heading', { name: 'Chart preferences', exact: true })).toBeVisible();
 
     await categoryDropdown.fill('Preferences');
-    await page.getByRole('option', { name: 'Preferences' }).click();
+    await page.getByRole('option', { name: 'Preferences', exact: true }).click();
     await expect(page.getByRole('switch', { name: /(?:Hide|Show) certificate widget/ })).toBeEnabled();
     await expect(page.getByRole('switch', { name: /(?:Hide|Show) certificate bar chart/ })).toBeEnabled();
 
@@ -211,6 +211,39 @@ test('owner settings open as a dedicated responsive page with clear categories',
     await page.keyboard.press('Backspace');
     await expect(page.getByRole('heading', { name: 'Profile' })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
+});
+
+test('profile and settings toolbars stay visible and settings navigation clears the toolbar', async ({ context, page }) => {
+    await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
+    await page.setViewportSize({ width: 1440, height: 500 });
+
+    await page.goto('/owner/demo/profile');
+    const profileToolbar = page.getByTestId('owner-page-toolbar');
+    await expect(page.getByLabel('Birth date')).toBeVisible();
+    const birthDateBox = await page.getByLabel('Birth date').boundingBox();
+    const profileUpdateBox = await page.getByRole('button', { name: 'Update', exact: true }).boundingBox();
+    expect(birthDateBox).not.toBeNull();
+    expect(profileUpdateBox).not.toBeNull();
+    expect((profileUpdateBox?.y ?? 0) - ((birthDateBox?.y ?? 0) + (birthDateBox?.height ?? 0))).toBeGreaterThanOrEqual(16);
+    await page.evaluate(() => window.scrollTo(0, 500));
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThanOrEqual(400);
+    await expect(profileToolbar).toBeVisible();
+    expect((await profileToolbar.boundingBox())?.y ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(1);
+
+    await page.goto('/owner/demo/settings');
+    const settingsToolbar = page.getByTestId('owner-page-toolbar');
+    const settingsNavigation = page.getByRole('navigation', { name: 'Settings categories' });
+    await expect(settingsNavigation).toBeVisible();
+    await page.evaluate(() => window.scrollTo(0, 500));
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThanOrEqual(400);
+    await expect(settingsToolbar).toBeVisible();
+    await expect(settingsNavigation).toBeVisible();
+
+    const toolbarBox = await settingsToolbar.boundingBox();
+    const navigationBox = await settingsNavigation.boundingBox();
+    expect(toolbarBox?.y ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(1);
+    expect(navigationBox).not.toBeNull();
+    expect(navigationBox?.y ?? 0).toBeGreaterThanOrEqual((toolbarBox?.y ?? 0) + (toolbarBox?.height ?? 0));
 });
 
 test('owner portfolio widgets expose useful empty states and accessible actions', async ({ context, page }) => {
@@ -262,6 +295,69 @@ test('owner portfolio widgets expose useful empty states and accessible actions'
     expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
 });
 
+test('widget update modal keeps its action visible without covering fields and marks required labels', async ({ context, page }) => {
+    await page.setViewportSize({ width: 390, height: 700 });
+    await context.addCookies([
+        { name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' },
+        { name: 'WidgetFixture', value: 'populated', domain: 'localhost', path: '/' },
+    ]);
+    await page.goto('/owner/demo/dashboard');
+
+    const education = page.getByRole('region', { name: 'Education' });
+    await education.getByRole('button', { name: 'Show entries (1)' }).click();
+    await education.getByRole('button', { name: 'View item details' }).click();
+    await page.getByRole('dialog', { name: 'Entry details' }).getByRole('button', { name: 'Edit' }).click();
+
+    const dialog = page.getByRole('dialog', { name: 'Update Education' });
+    const updateButton = dialog.getByRole('button', { name: 'Update' });
+    const scrollRegion = dialog.getByTestId('controlled-form-scroll');
+    const footer = dialog.getByTestId('controlled-form-footer');
+    await expect(updateButton).toBeVisible();
+
+    for (const label of ['Institution', 'Degree', 'Field of study', 'Start date', 'End date']) {
+        const fieldLabel = dialog.locator('label', { hasText: label });
+        await expect(fieldLabel.locator('span[aria-hidden="true"]')).toHaveText('*');
+    }
+    await expect(dialog.locator('label', { hasText: 'Description' }).locator('span[aria-hidden="true"]')).toHaveCount(0);
+    await expect(dialog.getByRole('combobox', { name: 'Institution' })).toHaveAttribute('aria-required', 'true');
+    await expect(dialog.getByLabel('Start date')).toHaveAttribute('required', '');
+
+    const initialButtonBox = await updateButton.boundingBox();
+    await scrollRegion.evaluate((element) => { element.scrollTop = element.scrollHeight; });
+    const scrolledButtonBox = await updateButton.boundingBox();
+    expect(scrolledButtonBox?.y).toBe(initialButtonBox?.y);
+
+    const lastFieldBox = await dialog.getByRole('combobox', { name: 'Skills' }).boundingBox();
+    const footerBox = await footer.boundingBox();
+    expect(lastFieldBox).not.toBeNull();
+    expect(footerBox).not.toBeNull();
+    expect((lastFieldBox?.y ?? 0) + (lastFieldBox?.height ?? 0)).toBeLessThanOrEqual(footerBox?.y ?? 0);
+});
+
+test('widget create modal keeps its action visible without covering fields', async ({ context, page }) => {
+    await page.setViewportSize({ width: 390, height: 700 });
+    await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
+    await page.goto('/owner/demo/dashboard');
+
+    await page.getByRole('region', { name: 'Education' }).getByRole('button', { name: 'Add' }).click();
+    const dialog = page.getByRole('dialog', { name: 'Add education' });
+    const createButton = dialog.getByRole('button', { name: 'Create' });
+    const scrollRegion = dialog.getByTestId('controlled-form-scroll');
+    const footer = dialog.getByTestId('controlled-form-footer');
+    await expect(createButton).toBeVisible();
+
+    const initialButtonBox = await createButton.boundingBox();
+    await scrollRegion.evaluate((element) => { element.scrollTop = element.scrollHeight; });
+    const scrolledButtonBox = await createButton.boundingBox();
+    expect(scrolledButtonBox?.y).toBe(initialButtonBox?.y);
+
+    const lastFieldBox = await dialog.getByRole('combobox', { name: 'Skills' }).boundingBox();
+    const footerBox = await footer.boundingBox();
+    expect(lastFieldBox).not.toBeNull();
+    expect(footerBox).not.toBeNull();
+    expect((lastFieldBox?.y ?? 0) + (lastFieldBox?.height ?? 0)).toBeLessThanOrEqual(footerBox?.y ?? 0);
+});
+
 test('settings route is restricted to portfolio owners', async ({ page }) => {
     const response = await page.goto('/client/demo/settings');
 
@@ -308,7 +404,7 @@ test('portfolio charts use guided responsive and accessible views', async ({ pag
     await expect(page.getByRole('heading', { name: 'Career timeline' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Skill evidence matrix' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Language proficiency' })).toBeVisible();
-    await expect(page.getByRole('region', { name: 'Languages' }).getByText('80%')).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Languages' }).getByText('80%').first()).toBeVisible();
     await expect(page.getByRole('region', { name: 'Skills' }).getByLabel('No projects evidence')).toHaveText('-');
     await expect(page.getByRole('heading', { name: /radar|degrees duration/i })).toHaveCount(0);
 
@@ -320,6 +416,58 @@ test('portfolio charts use guided responsive and accessible views', async ({ pag
 
     expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
     expect(hydrationErrors).toEqual([]);
+});
+
+test('portfolio widgets prioritize visualizations and disclose entry cards independently', async ({ page }) => {
+    await page.goto('/client/demo/dashboard');
+
+    const education = page.getByRole('region', { name: 'Education' });
+    const experience = page.getByRole('region', { name: 'Experience' });
+    const educationToggle = education.getByRole('button', { name: 'Show entries (1)' });
+    const experienceToggle = experience.getByRole('button', { name: 'Show entries (1)' });
+
+    await expect(education.getByRole('heading', { name: 'Education timeline' })).toBeVisible();
+    await expect(education.getByText('BSc at Design University')).toHaveCount(0);
+    await expect(educationToggle).toHaveAttribute('aria-expanded', 'false');
+    await educationToggle.focus();
+    await page.keyboard.press('Enter');
+
+    await expect(education.getByText('BSc at Design University')).toBeVisible();
+    await expect(education.getByRole('button', { name: 'Hide entries (1)' })).toHaveAttribute('aria-expanded', 'true');
+    await expect(experience.getByText('Frontend Developer at Example Studio')).toHaveCount(0);
+    await expect(experienceToggle).toHaveAttribute('aria-expanded', 'false');
+
+    await education.getByRole('button', { name: 'Hide entries (1)' }).click();
+    await expect(education.getByText('BSc at Design University')).toHaveCount(0);
+});
+
+test('widgets show entry cards automatically when visualizations are disabled', async ({ context, page }) => {
+    await context.addCookies([
+        { name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' },
+        { name: 'WidgetFixture', value: 'populated', domain: 'localhost', path: '/' },
+        { name: 'HideVisualizations', value: 'true', domain: 'localhost', path: '/' },
+    ]);
+    await page.goto('/owner/demo/dashboard');
+
+    const education = page.getByRole('region', { name: 'Education' });
+    await expect(education.getByText('BSc at Design University')).toBeVisible();
+    await expect(education.getByRole('button', { name: /entries/ })).toHaveCount(0);
+});
+
+test('owner reordering expands collapsed entry cards and leaves them open', async ({ context, page }) => {
+    await context.addCookies([
+        { name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' },
+        { name: 'WidgetFixture', value: 'reorderable', domain: 'localhost', path: '/' },
+    ]);
+    await page.goto('/owner/demo/dashboard');
+
+    const education = page.getByRole('region', { name: 'Education' });
+    await expect(education.getByText('BSc at Design University')).toHaveCount(0);
+    await education.getByRole('button', { name: 'Reorder items' }).click();
+    await expect(education.getByText('BSc at Design University')).toBeVisible();
+    await education.getByRole('button', { name: 'Finish reordering' }).click();
+    await expect(education.getByText('BSc at Design University')).toBeVisible();
+    await expect(education.getByRole('button', { name: 'Hide entries (2)' })).toHaveAttribute('aria-expanded', 'true');
 });
 
 test('key routes pass baseline accessibility and responsive structure checks', async ({ page }) => {

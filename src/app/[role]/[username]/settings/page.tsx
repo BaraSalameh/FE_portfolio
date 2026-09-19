@@ -11,7 +11,7 @@ export default async function OwnerSettingsPage({ params }: { params: Promise<{ 
     try {
         dashboard = await getDashboard(role, username);
     } catch (error) {
-        handlePageApiError(error);
+        handlePageApiError(error, `/${role}/${username}/settings`);
     }
     if (!dashboard) notFound();
     return <DashboardStoreProvider dashboard={dashboard}><SettingsPage /></DashboardStoreProvider>;

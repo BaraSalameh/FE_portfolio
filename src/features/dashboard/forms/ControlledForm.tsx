@@ -25,7 +25,8 @@ export const ControlledForm = <T extends z.ZodTypeAny> ({
     watch,
     resetItems,
     indicator,
-    children
+    children,
+    stickySubmit = false,
 }: ControlledFormProps<T>) => {
 
     const methods = useForm<z.infer<T>>({
@@ -57,7 +58,8 @@ export const ControlledForm = <T extends z.ZodTypeAny> ({
 
     return (
         <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)} className={`relative space-y-5 ${className ?? ''}`} aria-busy={loading}>
+        <form noValidate onSubmit={handleSubmit(onSubmit)} className={`${stickySubmit ? 'flex max-h-[calc(min(90svh,52rem)-7rem)] min-h-0 flex-col' : 'relative space-y-5'} ${className ?? ''}`} aria-busy={loading}>
+            <div data-testid={stickySubmit ? 'controlled-form-scroll' : undefined} className={stickySubmit ? 'min-h-0 flex-1 space-y-5 overflow-y-auto px-1 pb-5' : 'contents'}>
             {children}
             <fieldset disabled={loading} className="space-y-4">
             {
@@ -76,6 +78,7 @@ export const ControlledForm = <T extends z.ZodTypeAny> ({
                                 description={item.description}
                                 registration={register(item.name)}
                                 error={fieldError}
+                                required={item.required}
                                 disabled={item.config?.includes('Disabled')}
                                 autoComplete={
                                     item.name === 'email' || item.name === 'reEmail' ? 'email'
@@ -108,6 +111,7 @@ export const ControlledForm = <T extends z.ZodTypeAny> ({
                                     isMulti={item.as === 'DropdownMulti'}
                                     fetchAction={item.fetchAction}
                                     isLoading={item.isLoading}
+                                    required={item.required}
                                     minimumSearchLength={item.minimumSearchLength}
                                     loadOptionsOnMount={item.loadOptionsOnMount}
                                     createOption={item.createOption}
@@ -167,10 +171,13 @@ export const ControlledForm = <T extends z.ZodTypeAny> ({
             ) : (
                 error && <p role="alert" className="text-sm text-danger">{error}</p>
             )}
+            </div>
 
-            <button type="submit" disabled={loading} className="inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-accent px-5 text-sm font-bold text-white shadow-[0_10px_24px_-14px_var(--ds-accent)] transition hover:bg-accent-strong disabled:opacity-60 sm:w-auto">
-                {loading ? indicator?.while || 'Submitting…' : indicator?.when || 'Submit'}
-            </button>
+            <div data-testid={stickySubmit ? 'controlled-form-footer' : undefined} className={stickySubmit ? 'shrink-0 border-t border-line bg-surface pt-4' : 'mt-5'}>
+                <button type="submit" disabled={loading} className="inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-accent px-5 text-sm font-bold text-white shadow-[0_10px_24px_-14px_var(--ds-accent)] transition hover:bg-accent-strong disabled:opacity-60 sm:w-auto">
+                    {loading ? indicator?.while || 'Submitting…' : indicator?.when || 'Submit'}
+                </button>
+            </div>
         </form>
         </FormProvider>
     )

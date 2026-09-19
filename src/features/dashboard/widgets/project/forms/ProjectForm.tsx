@@ -40,7 +40,7 @@ export const ProjectForm = ({id, onClose} : ProjectProps) => {
     const resetItems = useMemo(() => mapProjectToForm(projectToHandle), [projectToHandle]);
 
     const items = useMemo<FormItem<typeof projectSchema>[]>(() => [
-        {as: 'Input', name: 'title', label: 'Title', placeholder: 'MyProject'},
+        {as: 'Input', name: 'title', label: 'Title', placeholder: 'MyProject', required: true},
         {as: 'Input', name: 'liveLink', label: 'Live link', placeholder: 'https://MyProject.com'},
         {as: 'Input', name: 'sourceCode', label: 'Source code', placeholder: 'https://github.com/'},
         {as: 'Input', name: 'imageUrl', label: 'Image URL', placeholder: 'https://Image'},
@@ -62,6 +62,7 @@ export const ProjectForm = ({id, onClose} : ProjectProps) => {
             defaultValues={{isFeatured: false}}
             resetItems={resetItems}
             indicator={indicator}
+            stickySubmit
         />
     );
 }

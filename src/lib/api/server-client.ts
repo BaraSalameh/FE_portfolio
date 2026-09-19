@@ -3,18 +3,12 @@ import 'server-only';
 import { cookies, headers as requestHeaders } from 'next/headers';
 import { ApiError, DynamicFetchOptions } from '@/lib/api/types';
 import { getApiBaseUrl } from './config';
+import { setCookies } from './cookies';
 import { toApiError } from './errors';
 
 const serializeCookies = async () => {
     const cookieStore = await cookies();
     return cookieStore.getAll().map(({ name, value }) => `${name}=${value}`).join('; ');
-};
-
-export const requireAuthenticatedRequest = async () => {
-    const cookieStore = await cookies();
-    if (!cookieStore.has('AccessToken')) {
-        throw new ApiError('Unauthorized', 401);
-    }
 };
 
 export const serverApiResponse = async (options: DynamicFetchOptions): Promise<Response> => {
@@ -53,9 +47,35 @@ export const serverApiResponse = async (options: DynamicFetchOptions): Promise<R
     return response;
 };
 
+export const requestServerSessionRefresh = (origin?: string) => serverApiResponse({
+        method: 'POST',
+        url: '/Account/ValidateToken',
+        data: {},
+        sendCredentials: true,
+        retryOn401: false,
+        headers: origin ? { origin } : undefined,
+    });
+
+export const refreshServerSession = async (origin?: string) => {
+    const response = await requestServerSessionRefresh(origin);
+    await setCookies(response);
+    return response;
+};
+
 export const serverApi = async <T = unknown>(options: DynamicFetchOptions) => {
     const response = await serverApiResponse(options);
     const data = response.status === 204 ? undefined : await response.json();
 
     return { data: data as T, status: response.status, headers: response.headers };
+};
+
+/** Use only from Server Functions/Route Handlers, where rotating cookies is legal. */
+export const serverApiWithRefresh = async <T = unknown>(options: DynamicFetchOptions) => {
+    try {
+        return await serverApi<T>(options);
+    } catch (error) {
+        if (!(error instanceof ApiError) || error.status !== 401) throw error;
+        await refreshServerSession();
+        return serverApi<T>({ ...options, retryOn401: false });
+    }
 };
