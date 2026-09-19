@@ -1,5 +1,4 @@
 import { getApiBaseUrl } from '@/lib/api/config';
-import { LEGACY_REFRESH_COOKIE_DELETION, normalizeAuthCookiePath } from '@/lib/api/cookies';
 import { NextRequest } from 'next/server';
 
 const MAX_BODY_BYTES = 6_291_456;
@@ -10,7 +9,6 @@ const REQUEST_HEADERS = [
     'cookie',
     'user-agent',
     'x-correlation-id',
-    'x-retry',
 ] as const;
 const RESPONSE_HEADERS = [
     'cache-control',
@@ -29,6 +27,11 @@ async function relay(
     request: NextRequest,
     context: RouteContext<'/api/[...path]'>,
 ) {
+    // Do not turn an untrusted browser Origin into a trusted backend request.
+    const origin = request.headers.get('origin');
+    if ((origin && origin !== request.nextUrl.origin) || request.headers.get('sec-fetch-site') === 'cross-site') {
+        return Response.json({ title: 'Cross-site request rejected.', status: 403 }, { status: 403 });
+    }
     const { path } = await context.params;
     const target = new URL(`${getApiBaseUrl()}/${path.map(encodeURIComponent).join('/')}`);
     target.search = request.nextUrl.search;
@@ -74,10 +77,7 @@ async function relay(
             if (value) responseHeaders.set(name, value);
         }
         for (const cookie of upstream.headers.getSetCookie()) {
-            responseHeaders.append('set-cookie', normalizeAuthCookiePath(cookie));
-            if (cookie.trimStart().toLowerCase().startsWith('refreshtoken=')) {
-                responseHeaders.append('set-cookie', LEGACY_REFRESH_COOKIE_DELETION);
-            }
+            responseHeaders.append('set-cookie', cookie);
         }
 
         return new Response(upstream.body, {

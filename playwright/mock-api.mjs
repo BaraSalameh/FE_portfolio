@@ -1,4 +1,5 @@
 import { createServer } from 'node:http';
+import { randomUUID } from 'node:crypto';
 
 const port = Number(process.env.PLAYWRIGHT_API_PORT ?? 5055);
 const genderPreference = {
@@ -48,6 +49,28 @@ const parseJsonBody = (body) => {
     try { return body ? JSON.parse(body) : {}; }
     catch { return {}; }
 };
+const accessToken = (expiresInSeconds = 3600) => {
+    const header = Buffer.from(JSON.stringify({ alg: 'none' })).toString('base64url');
+    const payload = Buffer.from(JSON.stringify({
+        exp: Math.floor(Date.now() / 1000) + expiresInSeconds,
+        role: 'Owner',
+        unique_name: 'demo',
+        IsConfirmed: 'True',
+        jti: randomUUID(),
+    })).toString('base64url');
+    return `${header}.${payload}.`;
+};
+const sessions = new Map();
+const issuedCookies = (access, refresh) => [
+    `AccessToken=${access}; Path=/; HttpOnly; SameSite=None; Secure`,
+    'RefreshToken=; Path=/api; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=None; Secure',
+    'RefreshToken=; Path=/api/Account; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=None; Secure',
+    `RefreshToken=${refresh}; Path=/; HttpOnly; SameSite=None; Secure`,
+];
+const clearedCookies = () => [
+    'AccessToken=; Path=/; Max-Age=0; HttpOnly; SameSite=None; Secure',
+    'RefreshToken=; Path=/; Max-Age=0; HttpOnly; SameSite=None; Secure',
+];
 let userPreferences = [];
 let contactMessages = [
     {
@@ -192,6 +215,11 @@ const server = createServer((request, response) => {
         }
 
         if (request.url === '/api/Owner/UserFullInfo') {
+            if (!request.headers.cookie?.includes('AccessToken=') || request.headers.cookie?.includes('RejectAccess=true')) {
+                response.statusCode = 401;
+                response.end(JSON.stringify({ title: 'Unauthorized', status: 401 }));
+                return;
+            }
             const widgetFixture = request.headers.cookie?.match(/(?:^|;\s*)WidgetFixture=([^;]+)/)?.[1];
             const hideVisualizations = request.headers.cookie?.includes('HideVisualizations=true');
             response.end(JSON.stringify(dashboardFixture(
@@ -244,6 +272,11 @@ const server = createServer((request, response) => {
         }
 
         if (request.url === '/api/Owner/EditUserPreference' && request.method === 'POST') {
+            if (!request.headers.cookie?.includes('AccessToken=') || request.headers.cookie?.includes('RejectMutation=true')) {
+                response.statusCode = 401;
+                response.end(JSON.stringify({ title: 'Unauthorized', status: 401 }));
+                return;
+            }
             const payload = JSON.parse(body);
             const definition = preferenceDefinitions.find(item => item.id === payload.LKP_PreferenceID);
             userPreferences = [
@@ -259,6 +292,14 @@ const server = createServer((request, response) => {
         }
 
         if (request.url === '/api/Account/Login' && request.method === 'POST') {
+            const payload = parseJsonBody(body);
+            if (payload.email === 'success@example.com') {
+                const refresh = `session-${randomUUID()}`;
+                sessions.set(refresh, { revoked: false });
+                response.setHeader('set-cookie', issuedCookies(accessToken(), refresh));
+                response.end(JSON.stringify({ username: 'demo', role: 'Owner' }));
+                return;
+            }
             response.statusCode = 404;
             response.end(JSON.stringify(['Wrong username/password']));
             return;
@@ -270,10 +311,37 @@ const server = createServer((request, response) => {
                 response.end(JSON.stringify({ title: 'Cross-site request rejected.', status: 403 }));
                 return;
             }
-            response.setHeader('set-cookie', [
-                'AccessToken=new-access; Path=/; HttpOnly; SameSite=None; Secure',
-                'RefreshToken=new-refresh; Path=/api/Account; HttpOnly; SameSite=None; Secure',
-            ]);
+            if (!request.headers.cookie?.includes('RefreshToken=')) {
+                response.statusCode = 401;
+                response.end(JSON.stringify({ title: 'Refresh token is missing.', status: 401 }));
+                return;
+            }
+            const receivedRefresh = request.headers.cookie
+                ?.match(/(?:^|;\s*)RefreshToken=([^;]+)/)?.[1];
+            if (receivedRefresh === 'invalid-refresh') {
+                response.statusCode = 401;
+                response.end(JSON.stringify({ title: 'Refresh token is invalid.', status: 401 }));
+                return;
+            }
+            if (receivedRefresh === 'temporary-error') {
+                response.statusCode = 503;
+                response.end(JSON.stringify({ title: 'Temporarily unavailable.', status: 503 }));
+                return;
+            }
+            let nextRefresh = 'new-refresh';
+            if (receivedRefresh?.startsWith('session-')) {
+                const session = sessions.get(receivedRefresh);
+                if (!session || session.revoked) {
+                    response.statusCode = 401;
+                    response.setHeader('set-cookie', clearedCookies());
+                    response.end(JSON.stringify({ title: 'Refresh token reuse.', status: 401 }));
+                    return;
+                }
+                session.revoked = true;
+                nextRefresh = `session-${randomUUID()}`;
+                sessions.set(nextRefresh, { revoked: false });
+            }
+            response.setHeader('set-cookie', issuedCookies(accessToken(), nextRefresh));
             response.end(JSON.stringify({
                 body,
                 cookie: request.headers.cookie ?? '',

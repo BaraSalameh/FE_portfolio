@@ -2,6 +2,7 @@
 
 import { DynamicFetchOptions, ApiError, RefreshHandler } from '@/lib/api/types';
 import { toApiError } from './errors';
+import { normalizeHeaders } from './headers';
 
 const refreshAccessToken: RefreshHandler = async () => {
     const { refreshTokenClient } = await import('./refresh');
@@ -32,8 +33,8 @@ export const browserApiResponse: (
             method: options.method,
             credentials: sendCredentials ? 'include' : 'omit',
             headers: {
-                ...(!isFormData ? { 'Content-Type': 'application/json' } : {}),
-                ...headers,
+                ...(!isFormData ? { 'content-type': 'application/json' } : {}),
+                ...normalizeHeaders(headers),
             },
             body: data === undefined ? undefined : isFormData ? data : JSON.stringify(data),
         });
@@ -42,17 +43,13 @@ export const browserApiResponse: (
         throw new ApiError(message, 0);
     }
 
-    if (response.status === 401 && retryOn401) {
-        try {
+    if (response.status === 401 && sendCredentials) {
+        if (retryOn401) {
             await refresh();
-            return browserApiResponse({
-                ...options,
-                retryOn401: false,
-                headers: { ...headers, 'x-retry': 'true' },
-            }, refresh);
-        } catch {
-            throw new ApiError('Unauthorized', response.status);
+            return browserApiResponse({ ...options, retryOn401: false }, refresh);
         }
+        const { endBrowserSession } = await import('./refresh');
+        await endBrowserSession();
     }
 
     if (!response.ok) throw await toApiError(response);

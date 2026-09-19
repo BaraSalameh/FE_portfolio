@@ -2,27 +2,34 @@
 
 import { redirect } from "next/navigation";
 import { setCookies } from "@/lib/api/cookies";
-import { LoginFormData } from "@/lib/schemas/loginSchema";
+import { loginSchema, LoginFormData } from "@/lib/schemas/loginSchema";
 import { RegisterFormData } from "@/lib/schemas/registerSchema";
 import { paths } from "@/lib/pathHelper";
 import { LoginResponse } from "@/lib/definitions/auth.definitions";
 import { ActionResult } from "@/lib/definitions/actions.definitions";
 import { serverApiResponse } from '@/lib/api/server-client';
 import { ApiError } from '@/lib/api/types';
+import { safeAppPath } from '@/lib/api/auth-navigation';
 
 export const authenticate = async (
+    requestedReturnTo: string | undefined,
     _prevState: ActionResult | undefined,
     formData: LoginFormData
 ): Promise<ActionResult> => {
-    let response;
+    let identity: LoginResponse;
     try {
-        response = await serverApiResponse({
+        const parsed = loginSchema.safeParse(formData);
+        if (!parsed.success) return { success: false, error: 'Please check your email and password.' };
+        const response = await serverApiResponse({
             method: "POST",
             url: "/Account/Login",
-            data: formData,
+            data: parsed.data,
             sendCredentials: false,
         });
-        
+        identity = await response.json() as LoginResponse;
+        if (typeof identity?.role !== 'string' || !identity.role || typeof identity?.username !== 'string' || !identity.username) {
+            return { success: false, error: 'The sign-in response was invalid. Please try again.' };
+        }
         await setCookies(response);
 
     } catch (error) {
@@ -34,8 +41,10 @@ export const authenticate = async (
         return {success: false, error: errorMessage};
     }
 
-    const { role, username } = await response.json() as LoginResponse;
-    redirect(`/${role}/${username}/dashboard`.toLowerCase());
+    const returnTo = safeAppPath(requestedReturnTo);
+    if (returnTo) redirect(returnTo);
+
+    redirect(`/${encodeURIComponent(identity.role.toLowerCase())}/${encodeURIComponent(identity.username)}/dashboard`);
 }
 
 export const register = async (

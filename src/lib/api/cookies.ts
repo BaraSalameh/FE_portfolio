@@ -1,21 +1,30 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
+import { createHash } from 'node:crypto';
 
-const LEGACY_REFRESH_COOKIE_PATH = '/api/Account';
-export const LEGACY_REFRESH_COOKIE_DELETION =
-    'RefreshToken=; Path=/api/Account; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0; HttpOnly; Secure; SameSite=None';
+const REFRESH_ATTEMPT_COOKIE = 'AuthRefreshAttempt';
+const fingerprint = (token: string) => createHash('sha256').update(token).digest('hex');
 
-export const getCookies = async () => {
-    const cookieStore = await cookies();
-    const all = cookieStore.getAll();
+// Carries the one-retry budget across the document redirect. It is only a
+// loop guard, never authentication; a missing/deleted access token can refresh.
+export const wasJustRefreshed = (accessToken?: string, marker?: string) =>
+    Boolean(accessToken && marker === fingerprint(accessToken));
 
-    const header = all
-        .map(c => `${c.name}=${c.value}`)
-        .join("; ");
+export const getRefreshAttempt = async () => (await cookies()).get(REFRESH_ATTEMPT_COOKIE)?.value;
 
-    return header;
-}
+export const markRefreshAttempt = (upstream: Response, target: NextResponse, previousAccess?: string) => {
+    const access = upstream.headers.getSetCookie()
+        .map(parseCookie).find(cookie => cookie.name === 'AccessToken' && cookie.value)?.value ?? previousAccess;
+    if (access) target.cookies.set(REFRESH_ATTEMPT_COOKIE, fingerprint(access), {
+        httpOnly: true, secure: true, sameSite: 'lax', path: '/', maxAge: 60,
+    });
+};
+
+export const clearServerAuthCookies = async () => {
+    const store = await cookies();
+    for (const name of ['AccessToken', 'RefreshToken', REFRESH_ATTEMPT_COOKIE]) store.delete(name);
+};
 
 export const setCookies = async (response: Response) => {
     // forward cookies to the browser
@@ -25,42 +34,9 @@ export const setCookies = async (response: Response) => {
 
     for (const rawCookie of setCookies) {
         const parsed = parseCookie(rawCookie);
-        const authPath = getAuthCookiePath(parsed.name);
-        if (authPath) parsed.options.path = authPath;
-        if (parsed.name === 'RefreshToken') {
-            // Remove cookies issued by the previous, API-only path. Leaving both
-            // paths alive can send two RefreshToken values to the API.
-            cookieStore.set(parsed.name, '', {
-                ...parsed.options,
-                path: LEGACY_REFRESH_COOKIE_PATH,
-                expires: new Date(0),
-                maxAge: 0,
-            });
-        }
         cookieStore.set(parsed.name, parsed.value, parsed.options);
     }
 }
-
-const getAuthCookiePath = (name: string) => {
-    if (name === 'AccessToken') return '/';
-    // Server Components and Server Actions are requested at page URLs, not at
-    // /api/Account. Keep this HttpOnly credential available to those server
-    // entry points so they can renew an expired access token.
-    if (name === 'RefreshToken') return '/';
-    return undefined;
-};
-
-export const normalizeAuthCookiePath = (rawCookie: string) => {
-    const name = rawCookie.slice(0, rawCookie.indexOf('=')).trim();
-    const path = getAuthCookiePath(name);
-    if (!path) return rawCookie;
-
-    if (/;\s*path=/i.test(rawCookie)) {
-        return rawCookie.replace(/;\s*path=[^;]*/i, `; Path=${path}`);
-    }
-
-    return `${rawCookie}; Path=${path}`;
-};
 
 // Utility to parse raw Set-Cookie header
 function parseCookie(str: string) {
@@ -98,7 +74,7 @@ function parseCookie(str: string) {
 
 export const forwardSetCookieHeaders = (source: Response, target: NextResponse) => {
     for (const cookie of source.headers.getSetCookie?.() ?? []) {
-        target.headers.append('set-cookie', normalizeAuthCookiePath(cookie));
+        target.headers.append('set-cookie', cookie);
     }
     return target;
 };
@@ -106,7 +82,9 @@ export const forwardSetCookieHeaders = (source: Response, target: NextResponse) 
 export const clearAuthCookies = (response: NextResponse) => {
     const expired = 'Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0; HttpOnly; Secure; SameSite=None';
     response.headers.append('set-cookie', `AccessToken=; Path=/; ${expired}`);
-    response.headers.append('set-cookie', `RefreshToken=; Path=/; ${expired}`);
-    response.headers.append('set-cookie', LEGACY_REFRESH_COOKIE_DELETION);
+    for (const path of ['/', '/api', '/api/Account']) {
+        response.headers.append('set-cookie', `RefreshToken=; Path=${path}; ${expired}`);
+    }
+    response.headers.append('set-cookie', `${REFRESH_ATTEMPT_COOKIE}=; Path=/; ${expired}`);
     return response;
 };

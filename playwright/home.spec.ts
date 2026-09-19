@@ -81,6 +81,79 @@ test('an unconfirmed token does not trap users on the email page', async ({ cont
     await expect(page).toHaveURL(/\/auth\/login$/);
 });
 
+const confirmedAccessToken = () => {
+    const payload = Buffer.from(JSON.stringify({
+        exp: Math.floor(Date.now() / 1000) + 3600,
+        role: 'owner',
+        unique_name: 'demo',
+        IsConfirmed: 'True',
+    })).toString('base64url');
+    return `eyJhbGciOiJub25lIn0.${payload}.`;
+};
+
+test('login redirects a valid session and rejects unsafe return destinations', async ({ context, page }) => {
+    await context.addCookies([{
+        name: 'AccessToken',
+        value: confirmedAccessToken(),
+        domain: 'localhost',
+        path: '/',
+    }]);
+
+    await page.goto('/auth/login?returnTo=https%3A%2F%2Fevil.example%2Fsteal');
+    await expect(page).toHaveURL(/\/owner\/demo\/dashboard$/);
+});
+
+test('login refreshes a refresh-only session and redirects to the dashboard', async ({ context, page }) => {
+    await context.addCookies([{
+        name: 'RefreshToken',
+        value: 'old-refresh',
+        domain: 'localhost',
+        path: '/',
+    }]);
+
+    await page.goto('/auth/login');
+    await expect(page).toHaveURL(/\/owner\/demo\/dashboard$/);
+    await expect(page.getByRole('heading', { name: 'Demo Portfolio' })).toBeVisible();
+});
+
+test('a refresh-only protected navigation resumes the exact requested page', async ({ context, page }) => {
+    await context.addCookies([{
+        name: 'RefreshToken',
+        value: 'old-refresh',
+        domain: 'localhost',
+        path: '/',
+    }]);
+
+    await page.goto('/owner/demo/settings?section=profile');
+    await expect(page).toHaveURL(/\/owner\/demo\/settings\?section=profile$/);
+    await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible();
+});
+
+test('manual login resumes a validated requested page', async ({ page }) => {
+    await page.goto('/auth/login?returnTo=%2Fowner%2Fdemo%2Fsettings%3Fsection%3Dprofile');
+    await page.getByLabel('Email').fill('success@example.com');
+    await page.getByLabel('Password').fill('ValidPassword1!');
+    await page.getByRole('button', { name: 'Sign in' }).click();
+
+    await expect(page).toHaveURL(/\/owner\/demo\/settings\?section=profile$/);
+    await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible();
+});
+
+test('failed session refresh reaches login once and removes stale cookies', async ({ context, page }) => {
+    await context.addCookies([{
+        name: 'RefreshToken',
+        value: 'invalid-refresh',
+        domain: 'localhost',
+        path: '/',
+    }]);
+
+    await page.goto('/owner/demo/settings');
+    await expect(page).toHaveURL(/\/auth\/login\?returnTo=%2Fowner%2Fdemo%2Fsettings&refreshFailed=1$/);
+    await expect(page.getByRole('heading', { name: 'Sign in to your portfolio' })).toBeVisible();
+    const cookies = await context.cookies();
+    expect(cookies.some(cookie => cookie.name === 'AccessToken' || cookie.name === 'RefreshToken')).toBe(false);
+});
+
 test('login rejects short and incorrect passwords without redirecting to email', async ({ page }) => {
     await page.goto('/auth/login');
     await page.getByLabel('Email').fill('demo@example.com');
@@ -142,7 +215,8 @@ test('profile picture opens an accessible lightbox for guests and owners', async
     }
 });
 
-test('public contact cards expose email, phone, WhatsApp, contact, CV, and site actions', async ({ page }) => {
+test('public contact cards expose email, phone, WhatsApp, contact, CV, and site actions', async ({ context, page, baseURL }) => {
+    await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: baseURL });
     await page.goto('/client/demo/dashboard');
 
     await page.getByRole('button', { name: /demo@example\.com/ }).click();
@@ -470,7 +544,7 @@ test('owner reordering expands collapsed entry cards and leaves them open', asyn
     await expect(education.getByRole('button', { name: 'Hide entries (2)' })).toHaveAttribute('aria-expanded', 'true');
 });
 
-test('key routes pass baseline accessibility and responsive structure checks', async ({ page }) => {
+test('key routes pass baseline accessibility and responsive structure checks', async ({ context, page }) => {
     const routes = ['/', '/auth/login', '/auth/register', '/auth/email', '/search', '/client/demo/dashboard', '/owner/demo/settings', '/owner/demo/messages'];
     const viewports = [
         { width: 390, height: 844 },
@@ -480,6 +554,10 @@ test('key routes pass baseline accessibility and responsive structure checks', a
     for (const viewport of viewports) {
         await page.setViewportSize(viewport);
         for (const route of routes) {
+            await context.clearCookies();
+            if (route.startsWith('/owner/')) {
+                await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
+            }
             await page.goto(route);
             if (route.includes('/dashboard')) {
                 await expect(page.getByRole('heading', { name: 'Demo Portfolio' })).toBeVisible();

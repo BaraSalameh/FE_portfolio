@@ -8,8 +8,9 @@ import { startTransition, useActionState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-export function LoginForm() {
-    const [result, formAction, isPending] = useActionState(authenticate, undefined);
+export function LoginForm({ returnTo }: { returnTo?: string }) {
+    const loginAction = authenticate.bind(null, returnTo);
+    const [result, formAction, isPending] = useActionState(loginAction, undefined);
     const { register, handleSubmit, formState: { errors } } = useForm<z.input<typeof loginSchema>, unknown, LoginFormData>({
         resolver: zodResolver(loginSchema),
         defaultValues: { email: '', password: '', rememberMe: false },

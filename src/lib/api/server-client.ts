@@ -3,8 +3,9 @@ import 'server-only';
 import { cookies, headers as requestHeaders } from 'next/headers';
 import { ApiError, DynamicFetchOptions } from '@/lib/api/types';
 import { getApiBaseUrl } from './config';
-import { setCookies } from './cookies';
+import { clearServerAuthCookies, setCookies } from './cookies';
 import { toApiError } from './errors';
+import { normalizeHeaders } from './headers';
 
 const serializeCookies = async () => {
     const cookieStore = await cookies();
@@ -27,10 +28,10 @@ export const serverApiResponse = async (options: DynamicFetchOptions): Promise<R
             method: options.method,
             cache: options.cache ?? 'no-store',
             headers: {
-                'Content-Type': 'application/json',
+                'content-type': 'application/json',
                 ...(cookie ? { cookie } : {}),
                 ...(origin ? { origin } : {}),
-                ...headers,
+                ...normalizeHeaders(headers),
             },
             body: data === undefined ? undefined : JSON.stringify(data),
             signal: options.signal ?? AbortSignal.timeout(30_000),
@@ -74,8 +75,13 @@ export const serverApiWithRefresh = async <T = unknown>(options: DynamicFetchOpt
     try {
         return await serverApi<T>(options);
     } catch (error) {
-        if (!(error instanceof ApiError) || error.status !== 401) throw error;
-        await refreshServerSession();
-        return serverApi<T>({ ...options, retryOn401: false });
+        if (!(error instanceof ApiError) || error.status !== 401 || options.sendCredentials === false || options.retryOn401 === false) throw error;
+        try {
+            await refreshServerSession();
+            return await serverApi<T>({ ...options, retryOn401: false });
+        } catch (retryError) {
+            if (retryError instanceof ApiError && retryError.status === 401) await clearServerAuthCookies();
+            throw retryError;
+        }
     }
 };
