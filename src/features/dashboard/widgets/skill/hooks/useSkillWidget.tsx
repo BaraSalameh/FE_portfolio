@@ -32,7 +32,7 @@ export const useSkillWidget = (): WidgetCardProps => {
 
     const showMatrix = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_skill_bar_chart);
     const barData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_skill_pie_chart)
-        ? { title: 'Skill evidence by source', description: 'Number of skills connected to each portfolio evidence source.', customData, measure: 'count' as const, unit: 'items' as const }
+        ? { title: 'Skill evidence by source', description: 'Number of skills connected to each portfolio evidence source.', metricLabel: 'Skill connections', customData, measure: 'count' as const, unit: 'items' as const }
         : undefined;
     const matrix = showMatrix ? {
         title: 'Skill evidence matrix',

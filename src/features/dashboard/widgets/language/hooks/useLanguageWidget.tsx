@@ -18,11 +18,11 @@ export const useLanguageWidget = (): WidgetCardProps => {
 
     const showBars = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_language_bar_chart);
     const barData = showBars
-    ?   { title: 'Language proficiency', description: 'Self-reported proficiency on a shared 0–100 scale.', customData: customBarData, measure: 'proficiency' as const, unit: 'percent' as const }
+    ?   { title: 'Language proficiency', description: 'Self-reported proficiency on a shared 0–100 scale.', metricLabel: 'Proficiency', customData: customBarData, measure: 'proficiency' as const, unit: 'percent' as const }
     :   undefined;
 
     const radarData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_language_radar_chart)
-    ?   { title: 'Language proficiency profile', description: 'A normalized comparison across languages.', customData: customBarData, measure: 'proficiency' as const, unit: 'percent' as const }
+    ?   { title: 'Language proficiency profile', description: 'A normalized comparison across languages.', metricLabel: 'Proficiency', customData: customBarData, measure: 'proficiency' as const, unit: 'percent' as const }
     :   undefined;
 
     return {

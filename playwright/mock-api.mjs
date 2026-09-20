@@ -151,6 +151,12 @@ const populatedWidgets = {
     lstUserLanguages: [{
         language: { id: '65000000-0000-4000-8000-000000000001', name: 'English' },
         languageProficiency: { id: '66000000-0000-4000-8000-000000000001', level: 'Advanced' },
+    }, {
+        language: { id: '65000000-0000-4000-8000-000000000002', name: 'Spanish' },
+        languageProficiency: { id: '66000000-0000-4000-8000-000000000002', level: 'Intermediate' },
+    }, {
+        language: { id: '65000000-0000-4000-8000-000000000003', name: 'German' },
+        languageProficiency: { id: '66000000-0000-4000-8000-000000000003', level: 'Beginner' },
     }],
     lstUserSkills: [{
         skill: { id: '67000000-0000-4000-8000-000000000001', name: 'TypeScript', iconUrl: '' },

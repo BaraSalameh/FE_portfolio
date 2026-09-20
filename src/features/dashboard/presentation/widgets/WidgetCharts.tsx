@@ -32,15 +32,18 @@ export const WidgetCharts = ({ items, pie, bar, radar, timeline, matrix, kpis }:
     }, [items, bar]);
     const pieData = useMemo(() => hasConfig(pie) ? limitData(pie?.customData ?? generatePieData(items ?? [], pie?.groupBy), 5) : [], [items, pie]);
     const radarData = useMemo(() => hasConfig(radar) ? limitData(radar?.customData ?? [], 8) : [], [radar]);
+    const barTotal = barData.reduce((sum, item) => sum + item.value, 0);
+    const pieTotal = pieData.reduce((sum, item) => sum + item.value, 0);
+    const radarTotal = radarData.reduce((sum, item) => sum + item.value, 0);
     const barColors = useMemo(() => generateColorMap(barData), [barData]);
     const pieColors = useMemo(() => generateColorMap(pieData), [pieData]);
 
     const views = [
         timeline?.data.length ? { key: 'timeline', label: 'Timeline', node: <TimelineChart config={timeline} /> } : null,
         matrix?.rows.length ? { key: 'matrix', label: 'Evidence', node: <EvidenceMatrix config={matrix} /> } : null,
-        barData.length ? { key: 'bar', label: 'Comparison', node: <ChartFrame title={bar?.title ?? 'Comparison'} description={bar?.description} data={barData} unit={bar?.unit}><BarChartWidget data={barData} colorMap={barColors} unit={bar?.unit} /></ChartFrame> } : null,
-        pieData.length ? { key: 'pie', label: 'Composition', node: <ChartFrame title={pie?.title ?? 'Composition'} description={pie?.description} data={pieData} unit={pie?.unit}><PieChartWidget data={pieData} colorMap={pieColors} unit={pie?.unit} /></ChartFrame> } : null,
-        radarData.length ? { key: 'radar', label: 'Profile', node: <ChartFrame title={radar?.title ?? 'Profile'} description={radar?.description} data={radarData} unit={radar?.unit}><RadarChartWidget data={radarData} unit={radar?.unit} /></ChartFrame> } : null,
+        barData.length ? { key: 'bar', label: 'Comparison', node: <ChartFrame title={bar?.title ?? 'Comparison'} description={bar?.description} data={barData} unit={bar?.unit}><BarChartWidget data={barData} colorMap={barColors} unit={bar?.unit} measure={bar?.measure} metricLabel={bar?.metricLabel} total={barTotal} /></ChartFrame> } : null,
+        pieData.length ? { key: 'pie', label: 'Composition', node: <ChartFrame title={pie?.title ?? 'Composition'} description={pie?.description} data={pieData} unit={pie?.unit}><PieChartWidget data={pieData} colorMap={pieColors} unit={pie?.unit} measure={pie?.measure} metricLabel={pie?.metricLabel} total={pieTotal} /></ChartFrame> } : null,
+        radarData.length ? { key: 'radar', label: 'Profile', node: <ChartFrame title={radar?.title ?? 'Profile'} description={radar?.description} data={radarData} unit={radar?.unit}><RadarChartWidget data={radarData} unit={radar?.unit} measure={radar?.measure} metricLabel={radar?.metricLabel} total={radarTotal} /></ChartFrame> } : null,
     ].filter((view): view is NonNullable<typeof view> => Boolean(view)).slice(0, 2);
     const [selected, setSelected] = useState(0);
     const selectedIndex = Math.min(selected, Math.max(views.length - 1, 0));

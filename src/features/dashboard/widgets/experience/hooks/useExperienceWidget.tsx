@@ -27,6 +27,7 @@ export const useExperienceWidget = (): WidgetCardProps => {
         ?   { 
                 title: comparisonIsCount ? 'Experience entries by role' : 'Experience duration by role',
                 description: comparisonIsCount ? 'Number of experience entries for each selected grouping.' : 'Total recorded duration for each selected grouping.',
+                metricLabel: comparisonIsCount ? 'Experience entries' : 'Career duration',
                 groupBy, measure: comparisonIsCount ? 'count' as const : 'duration' as const, unit: comparisonIsCount ? 'items' as const : 'months' as const }
         :   undefined;
     const timeline = showTimeline ? {

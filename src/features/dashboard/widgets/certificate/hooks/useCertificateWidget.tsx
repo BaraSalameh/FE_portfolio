@@ -16,7 +16,7 @@ export const useCertificateWidget = (): WidgetCardProps => {
 
     const showTimeline = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_certificate_bar_chart);
     const barData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_certificate_pie_chart)
-        ? { title: 'Certificates by credential', description: 'Count of earned credentials by name.', groupBy: 'certificate.name', measure: 'count' as const, unit: 'items' as const }
+        ? { title: 'Certificates by credential', description: 'Count of earned credentials by name.', metricLabel: 'Certificates', groupBy: 'certificate.name', measure: 'count' as const, unit: 'items' as const }
         : undefined;
     const timeline = showTimeline ? {
         title: 'Certificate timeline',

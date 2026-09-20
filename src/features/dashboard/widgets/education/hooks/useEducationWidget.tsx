@@ -28,6 +28,7 @@ export const useEducationWidget = (): WidgetCardProps => {
     ?   { 
             title: comparisonIsCount ? 'Education entries by qualification' : 'Study duration by qualification',
             description: comparisonIsCount ? 'Number of education entries for each selected grouping.' : 'Total recorded study duration for each selected grouping.',
+            metricLabel: comparisonIsCount ? 'Education entries' : 'Study duration',
             groupBy, measure: comparisonIsCount ? 'count' as const : 'duration' as const, unit: comparisonIsCount ? 'items' as const : 'months' as const }
     :   undefined;
     const timeline = showTimeline ? {

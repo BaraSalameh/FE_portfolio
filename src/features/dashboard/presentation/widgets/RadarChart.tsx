@@ -6,7 +6,10 @@ import { ChartWidgetProps } from '@/features/dashboard/types.presentation';
 
 export const RadarChartWidget = ({
     data,
-    unit
+    unit,
+    measure,
+    metricLabel,
+    total
 }: ChartWidgetProps) => {
     if (data.length < 3) {
         return (
@@ -28,7 +31,7 @@ export const RadarChartWidget = ({
                     fillOpacity={0.35}
                     isAnimationActive={false}
                 />
-                <Tooltip content={<ChartTooltip unit={unit} />} />
+                <Tooltip content={<ChartTooltip unit={unit} measure={measure} metricLabel={metricLabel} total={total} />} />
             </RadarChart>
       </ResponsiveContainer>
     );

@@ -11,6 +11,7 @@ export type ChartMeasure = 'count' | 'duration' | 'percentage' | 'proficiency';
 export type ChartConfig = {
     title?: string;
     description?: string;
+    metricLabel?: string;
     groupBy?: string | string[];
     customData?: ChartEntry[];
     measure?: ChartMeasure;
@@ -51,7 +52,14 @@ export interface WidgetCardProps {
     className?: string;
 }
 
-export type ChartWidgetProps = { data: ChartEntry[]; colorMap?: Record<string, string>; unit?: ChartConfig['unit'] };
+export type ChartWidgetProps = {
+    data: ChartEntry[];
+    colorMap?: Record<string, string>;
+    unit?: ChartConfig['unit'];
+    measure?: ChartMeasure;
+    metricLabel?: string;
+    total?: number;
+};
 export type WidgetChartsProps = { items?: object[]; pie?: ChartConfig; bar?: DurationChartConfig; radar?: ChartConfig; timeline?: TimelineConfig; matrix?: MatrixConfig; kpis?: KpiEntry[] };
 export type WidgetListProps = { items: object[]; list: ListItemConfig[]; onItemClick?: (item: object) => void; className?: string; sort?: { sortable: boolean; onSort?: (ids: string[]) => void | Promise<void> }; pagination?: PaginationConfig; entryPresentation?: EntryPresentation };
 export type WidgetModalProps = { isLoading?: boolean; isOpen: boolean; onClose: () => void; item?: object; update?: WidgetCardProps['update']; del?: WidgetCardProps['del']; details?: ListItemConfig[]; entryPresentation?: EntryPresentation; className?: string; onAction?: (id: string) => void | Promise<void> };

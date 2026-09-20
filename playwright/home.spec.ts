@@ -1,4 +1,4 @@
-import { test, expect, Page } from "@playwright/test";
+import { test, expect, Locator, Page } from "@playwright/test";
 
 const getHtml = (page: Page) => page.locator("html");
 
@@ -6,6 +6,25 @@ const isDarkTheme = async (page: Page) => {
     const html = getHtml(page);
     return await html.evaluate(el => el.classList.contains('dark'));
 }
+
+const hoverSvgShape = async (page: Page, locator: Locator) => {
+    const point = await locator.evaluate((element) => {
+        const shape = element as SVGGeometryElement;
+        const bounds = shape.getBoundingClientRect();
+        const matrix = shape.getScreenCTM();
+        if (!matrix) return { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 };
+
+        for (let y = bounds.top + 2; y < bounds.bottom; y += Math.max(2, bounds.height / 12)) {
+            for (let x = bounds.left + 2; x < bounds.right; x += Math.max(2, bounds.width / 12)) {
+                const localPoint = new DOMPoint(x, y).matrixTransform(matrix.inverse());
+                if (shape.isPointInFill(localPoint)) return { x, y };
+            }
+        }
+
+        return { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 };
+    });
+    await page.mouse.move(point.x, point.y);
+};
 
 test("Page load", async ({ page }) => {
     const response = await page.goto('/', { waitUntil: 'networkidle'});
@@ -490,6 +509,65 @@ test('portfolio charts use guided responsive and accessible views', async ({ pag
 
     expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
     expect(hydrationErrors).toEqual([]);
+});
+
+test('chart tooltips are solid and explain bar, donut, and radar values', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/client/demo/dashboard');
+    await page.evaluate(() => {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
+    });
+
+    const overview = page.getByRole('region', { name: 'Overview' });
+    const bars = overview.locator('.recharts-bar-rectangle .recharts-rectangle');
+    await bars.first().hover();
+
+    const barTooltip = overview.getByTestId('chart-tooltip');
+    await expect(barTooltip).toBeVisible();
+    await expect(barTooltip).toContainText(/Portfolio entries: \d+ items/);
+    await expect(barTooltip).toContainText(/Accounts for \d+% of the portfolio entries shown in this chart\./);
+    await expect(barTooltip).toHaveClass(/bg-surface-raised/);
+    await expect(barTooltip).toHaveClass(/opacity-100/);
+
+    await bars.nth(2).hover();
+    await expect(barTooltip).toContainText('Portfolio entries: 1 item');
+
+    await overview.getByRole('tab', { name: 'Composition' }).click();
+    const firstSector = overview.locator('.recharts-pie-sector .recharts-sector').first();
+    await hoverSvgShape(page, firstSector);
+
+    const donutTooltip = overview.getByTestId('chart-tooltip');
+    await expect(donutTooltip).toBeVisible();
+    await expect(donutTooltip).toContainText(/Portfolio entries: \d+ items/);
+    await expect(donutTooltip).toContainText(/Accounts for \d+% of the portfolio entries shown in this chart\./);
+    const lightBackground = await donutTooltip.evaluate((element) => getComputedStyle(element).backgroundColor);
+    expect(lightBackground).not.toBe('transparent');
+    expect(lightBackground).not.toBe('rgba(0, 0, 0, 0)');
+
+    await page.evaluate(() => {
+        document.documentElement.classList.remove('light');
+        document.documentElement.classList.add('dark');
+    });
+    await hoverSvgShape(page, firstSector);
+    await expect(donutTooltip).toBeVisible();
+    const darkBackground = await donutTooltip.evaluate((element) => getComputedStyle(element).backgroundColor);
+    expect(darkBackground).not.toBe('transparent');
+    expect(darkBackground).not.toBe('rgba(0, 0, 0, 0)');
+    expect(darkBackground).not.toBe(lightBackground);
+
+    const languages = page.getByRole('region', { name: 'Languages' });
+    await languages.getByRole('tab', { name: 'Profile' }).click();
+    const radar = languages.locator('.recharts-radar-polygon .recharts-polygon');
+    await hoverSvgShape(page, radar);
+
+    const radarTooltip = languages.getByTestId('chart-tooltip');
+    await expect(radarTooltip).toBeVisible();
+    await expect(radarTooltip).toContainText('Proficiency: 80%');
+    await expect(radarTooltip).toContainText('Self-reported proficiency on a 0–100 scale.');
+    await expect(radarTooltip).not.toContainText('Accounts for');
+
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
 });
 
 test('portfolio widgets prioritize visualizations and disclose entry cards independently', async ({ page }) => {

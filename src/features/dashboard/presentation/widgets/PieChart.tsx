@@ -8,10 +8,13 @@ import { ChartWidgetProps } from '@/features/dashboard/types.presentation';
 export const PieChartWidget = ({
     data,
     colorMap,
-    unit
+    unit,
+    measure,
+    metricLabel,
+    total
 }: ChartWidgetProps) => {
     const internalColorMap = colorMap ?? generateColorMap(data);
-    const total = data.reduce((sum, item) => sum + item.value, 0);
+    const chartTotal = total ?? data.reduce((sum, item) => sum + item.value, 0);
 
     return (
         <ResponsiveContainer width="100%" height="100%">
@@ -33,8 +36,8 @@ export const PieChartWidget = ({
                     ))}
                 </Pie>
                 <text x="50%" y="48%" textAnchor="middle" dominantBaseline="middle" fill="var(--chart-axis)" fontSize="12">Total</text>
-                <text x="50%" y="57%" textAnchor="middle" dominantBaseline="middle" fill="var(--ds-ink)" fontSize="20" fontWeight="700">{total}</text>
-                <Tooltip content={<ChartTooltip unit={unit} />} />
+                <text x="50%" y="57%" textAnchor="middle" dominantBaseline="middle" fill="var(--ds-ink)" fontSize="20" fontWeight="700">{chartTotal}</text>
+                <Tooltip content={<ChartTooltip unit={unit} measure={measure} metricLabel={metricLabel} total={chartTotal} />} />
             </PieChart>
         </ResponsiveContainer>
     );

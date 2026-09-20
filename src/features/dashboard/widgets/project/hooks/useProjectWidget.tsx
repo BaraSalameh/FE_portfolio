@@ -20,6 +20,7 @@ export const useProjectWidget = (): WidgetCardProps => {
         ?   {
                 title: 'Projects by technology or context',
                 description: 'Project count for the selected grouping.',
+                metricLabel: 'Projects',
                 groupBy: checkChartPreferences(
                     lstUserChartPreferences,
                     {
@@ -35,6 +36,7 @@ export const useProjectWidget = (): WidgetCardProps => {
         ?   { 
                 title: 'Project composition',
                 description: 'Share of projects across the selected grouping.',
+                metricLabel: 'Projects',
                 groupBy: checkChartPreferences(
                     lstUserChartPreferences,
                     {
