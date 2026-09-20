@@ -50,6 +50,7 @@ export const useProjectWidget = (): WidgetCardProps => {
         isLoading: projectTechnologyLoading,
         error,
         items: lstProjects,
+        entryPresentation: { variant: 'project', singularLabel: 'Project' },
         header: { title: 'Projects', icon: Folder, description: 'Selected work, outcomes, and technologies' },
         emptyState: { title: 'No projects added', description: 'Add a project to demonstrate your work, process, and technical impact.' },
         bar: barData,

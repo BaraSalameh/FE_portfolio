@@ -39,6 +39,7 @@ export const useEducationWidget = (): WidgetCardProps => {
         isLoading: educationLoading,
         error,
         items: lstEducations,
+        entryPresentation: { variant: 'education', singularLabel: 'Education' },
         header: { title: 'Education', icon: GraduationCap, description: 'Academic background and areas of study' },
         emptyState: { title: 'No education added', description: 'Add a school, degree, and study period to introduce your academic background.' },
         bar: barData,

@@ -27,6 +27,7 @@ export const useCertificateWidget = (): WidgetCardProps => {
         isLoading: certificateLoading,
         error,
         items: lstCertificates,
+        entryPresentation: { variant: 'certificate', singularLabel: 'Certificate' },
         header: { title: 'Certificates', icon: Award, description: 'Credentials and professional achievements' },
         emptyState: { title: 'No certificates added', description: 'Add a credential to showcase verified learning and achievements.' },
         bar: barData,

@@ -38,6 +38,7 @@ export const useExperienceWidget = (): WidgetCardProps => {
         isLoading: experienceLoading,
         error,
         items: lstExperiences,
+        entryPresentation: { variant: 'experience', singularLabel: 'Experience' },
         header: { title: 'Experience', icon: Briefcase, description: 'Roles, responsibilities, and career history' },
         emptyState: { title: 'No experience added', description: 'Add a role to highlight where you worked and what you accomplished.' },
         bar: barData,

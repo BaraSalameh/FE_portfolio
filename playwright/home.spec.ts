@@ -379,8 +379,8 @@ test('widget update modal keeps its action visible without covering fields and m
 
     const education = page.getByRole('region', { name: 'Education' });
     await education.getByRole('button', { name: 'Show entries (1)' }).click();
-    await education.getByRole('button', { name: 'View item details' }).click();
-    await page.getByRole('dialog', { name: 'Entry details' }).getByRole('button', { name: 'Edit' }).click();
+    await education.getByRole('button', { name: /View education details/ }).click();
+    await page.getByRole('dialog', { name: 'Education details' }).getByRole('button', { name: 'Edit' }).click();
 
     const dialog = page.getByRole('dialog', { name: 'Update Education' });
     const updateButton = dialog.getByRole('button', { name: 'Update' });
@@ -501,18 +501,18 @@ test('portfolio widgets prioritize visualizations and disclose entry cards indep
     const experienceToggle = experience.getByRole('button', { name: 'Show entries (1)' });
 
     await expect(education.getByRole('heading', { name: 'Education timeline' })).toBeVisible();
-    await expect(education.getByText('BSc at Design University')).toHaveCount(0);
+    await expect(education.getByRole('button', { name: /View education details: Bachelor of Science/ })).toHaveCount(0);
     await expect(educationToggle).toHaveAttribute('aria-expanded', 'false');
     await educationToggle.focus();
     await page.keyboard.press('Enter');
 
-    await expect(education.getByText('BSc at Design University')).toBeVisible();
+    await expect(education.getByRole('button', { name: /View education details: Bachelor of Science/ })).toBeVisible();
     await expect(education.getByRole('button', { name: 'Hide entries (1)' })).toHaveAttribute('aria-expanded', 'true');
-    await expect(experience.getByText('Frontend Developer at Example Studio')).toHaveCount(0);
+    await expect(experience.getByRole('button', { name: /View experience details: Frontend Developer/ })).toHaveCount(0);
     await expect(experienceToggle).toHaveAttribute('aria-expanded', 'false');
 
     await education.getByRole('button', { name: 'Hide entries (1)' }).click();
-    await expect(education.getByText('BSc at Design University')).toHaveCount(0);
+    await expect(education.getByRole('button', { name: /View education details: Bachelor of Science/ })).toHaveCount(0);
 });
 
 test('widgets show entry cards automatically when visualizations are disabled', async ({ context, page }) => {
@@ -524,8 +524,64 @@ test('widgets show entry cards automatically when visualizations are disabled', 
     await page.goto('/owner/demo/dashboard');
 
     const education = page.getByRole('region', { name: 'Education' });
-    await expect(education.getByText('BSc at Design University')).toBeVisible();
+    await expect(education.getByRole('button', { name: /View education details: Bachelor of Science/ })).toBeVisible();
     await expect(education.getByRole('button', { name: /entries/ })).toHaveCount(0);
+});
+
+test('semantic entry cards expose distinct content and opaque contextual details', async ({ context, page }) => {
+    await context.addCookies([
+        { name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' },
+        { name: 'WidgetFixture', value: 'populated', domain: 'localhost', path: '/' },
+        { name: 'HideVisualizations', value: 'true', domain: 'localhost', path: '/' },
+    ]);
+    await page.goto('/owner/demo/dashboard');
+
+    const education = page.getByRole('region', { name: 'Education' });
+    const experience = page.getByRole('region', { name: 'Experience' });
+    const projects = page.getByRole('region', { name: 'Projects' });
+    const certificates = page.getByRole('region', { name: 'Certificates' });
+    const skills = page.getByRole('region', { name: 'Skills' });
+    const languages = page.getByRole('region', { name: 'Languages' });
+
+    await expect(education.getByRole('button', { name: /View education details: Bachelor of Science/ })).toContainText('Design University');
+    await expect(experience.getByRole('button', { name: /View experience details: Frontend Developer/ })).toContainText('Current');
+    await expect(certificates.getByRole('button', { name: /View certificate details: Web Accessibility/ })).toContainText('No expiration');
+    await expect(skills.getByText('TypeScript', { exact: true })).toBeVisible();
+    await expect(languages.getByRole('progressbar', { name: 'English proficiency' })).toHaveAttribute('aria-valuenow', '80');
+
+    const projectCard = projects.getByRole('button', { name: /View project details: Portfolio Platform/ });
+    const projectImage = projectCard.getByRole('img', { name: 'Portfolio Platform preview' });
+    await expect(projectImage).toBeVisible();
+    const projectWithoutImage = projects.getByRole('button', { name: /View project details: API Playground/ });
+    await expect(projectWithoutImage.getByTestId('project-image-fallback')).toBeVisible();
+
+    await projectCard.focus();
+    await page.keyboard.press('Enter');
+    const projectDialog = page.getByRole('dialog', { name: 'Project details' });
+    await expect(projectDialog).toBeVisible();
+    const lightBackground = await projectDialog.evaluate((element) => getComputedStyle(element).backgroundColor);
+    expect(lightBackground).not.toBe('transparent');
+    expect(lightBackground).not.toBe('rgba(0, 0, 0, 0)');
+    await page.keyboard.press('Escape');
+    await expect(projectDialog).toBeHidden();
+    await expect(projectCard).toBeFocused();
+
+    await page.evaluate(() => document.documentElement.classList.add('dark'));
+    await projectCard.click();
+    const darkDialog = page.getByRole('dialog', { name: 'Project details' });
+    const darkBackground = await darkDialog.evaluate((element) => getComputedStyle(element).backgroundColor);
+    expect(darkBackground).not.toBe('transparent');
+    expect(darkBackground).not.toBe('rgba(0, 0, 0, 0)');
+    await page.mouse.click(2, 2);
+    await expect(darkDialog).toBeHidden();
+
+    const experienceCard = experience.getByRole('button', { name: /View experience details: Frontend Developer/ });
+    await experienceCard.focus();
+    await page.keyboard.press('Space');
+    await expect(page.getByRole('dialog', { name: 'Experience details' })).toBeVisible();
+    await page.keyboard.press('Escape');
+
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
 });
 
 test('owner reordering expands collapsed entry cards and leaves them open', async ({ context, page }) => {
@@ -536,11 +592,11 @@ test('owner reordering expands collapsed entry cards and leaves them open', asyn
     await page.goto('/owner/demo/dashboard');
 
     const education = page.getByRole('region', { name: 'Education' });
-    await expect(education.getByText('BSc at Design University')).toHaveCount(0);
+    await expect(education.getByText('Bachelor of Science')).toHaveCount(0);
     await education.getByRole('button', { name: 'Reorder items' }).click();
-    await expect(education.getByText('BSc at Design University')).toBeVisible();
+    await expect(education.getByText('Bachelor of Science')).toBeVisible();
     await education.getByRole('button', { name: 'Finish reordering' }).click();
-    await expect(education.getByText('BSc at Design University')).toBeVisible();
+    await expect(education.getByText('Bachelor of Science')).toBeVisible();
     await expect(education.getByRole('button', { name: 'Hide entries (2)' })).toHaveAttribute('aria-expanded', 'true');
 });
 

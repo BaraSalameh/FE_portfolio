@@ -49,6 +49,7 @@ export const useSkillWidget = (): WidgetCardProps => {
         isLoading: loading,
         error,
         items: lstUserSkills,
+        entryPresentation: { variant: 'skill', singularLabel: 'Skill' },
         header: { title: 'Skills', icon: StarIcon, description: 'Capabilities connected to your portfolio work' },
         emptyState: { title: 'No skills added', description: 'Add skills and connect them to projects, experience, education, or certificates.' },
         bar: barData,
