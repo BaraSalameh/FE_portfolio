@@ -7,7 +7,8 @@ export const generatePieData = (
     const counts = new Map<string, number>();
 
     list.forEach(item => {
-        const names = normalizeFieldValue(extractPathValue(item, key ?? ''));
+        const normalizedNames = normalizeFieldValue(extractPathValue(item, key ?? ''));
+        const names = normalizedNames.length ? normalizedNames : ['Unknown'];
 
         names.forEach(name => {
             counts.set(name, (counts.get(name) ?? 0) + 1);

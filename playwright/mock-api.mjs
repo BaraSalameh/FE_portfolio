@@ -20,7 +20,27 @@ const chartPreferenceDefinitions = [
     preference('77777777-7777-4777-8777-777777777706', 'show-certificate-bar-chart'),
     preference('77777777-7777-4777-8777-777777777707', 'show-certificate-pie-chart'),
 ];
-const preferenceDefinitions = [genderPreference, ...profilePreferenceDefinitions, ...chartPreferenceDefinitions];
+const defaultChartPreferenceDefinitions = [
+    'overview',
+    'education',
+    'experience',
+    'project',
+    'skill',
+    'language',
+    'certificate',
+].map((name, index) => preference(
+    `99999999-9999-4999-8999-${String(index + 1).padStart(12, '0')}`,
+    `default-${name}-chart`,
+));
+const preferenceDefinitions = [genderPreference, ...profilePreferenceDefinitions, ...chartPreferenceDefinitions, ...defaultChartPreferenceDefinitions];
+const widgetDefinitions = ['Overview', 'Education', 'Experience', 'Project', 'Skill', 'Language', 'Certificate'].map((name, index) => ({
+    id: `aaaaaaaa-aaaa-4aaa-8aaa-${String(index + 1).padStart(12, '0')}`,
+    name,
+}));
+const chartTypeDefinitions = ['Bar', 'Pie', 'Radar'].map((name, index) => ({
+    id: `bbbbbbbb-bbbb-4bbb-8bbb-${String(index + 1).padStart(12, '0')}`,
+    name,
+}));
 const publicPreferences = [
     { preference: preference('44444444-4444-4444-8444-444444444441', 'show-email-address'), value: 'show' },
     { preference: preference('44444444-4444-4444-8444-444444444442', 'show-phone-number'), value: 'show' },
@@ -72,6 +92,7 @@ const clearedCookies = () => [
     'RefreshToken=; Path=/; Max-Age=0; HttpOnly; SameSite=None; Secure',
 ];
 let userPreferences = [];
+let userChartPreferences = [];
 let contactMessages = [
     {
         id: '22222222-2222-4222-8222-222222222222',
@@ -198,7 +219,7 @@ const dashboardFixture = (preferences = userPreferences, widgets = {}) => ({
         birthDate: null,
     },
     lstUserPreferences: preferences,
-    lstUserChartPreferences: [],
+    lstUserChartPreferences: userChartPreferences,
     lstCertificates: widgets.lstCertificates ?? [],
     lstEducations: widgets.lstEducations ?? [],
     lstExperiences: widgets.lstExperiences ?? [],
@@ -227,7 +248,8 @@ const server = createServer((request, response) => {
         }
 
         if (request.url === '/api/Client/UserByUsername?Username=demo') {
-            response.end(JSON.stringify(dashboardFixture(publicPreferences, populatedWidgets)));
+            const savedChartDefaults = userPreferences.filter((item) => item.preference.name.startsWith('default-'));
+            response.end(JSON.stringify(dashboardFixture([...publicPreferences, ...savedChartDefaults], populatedWidgets)));
             return;
         }
 
@@ -288,6 +310,21 @@ const server = createServer((request, response) => {
             return;
         }
 
+        if (request.url === '/api/Owner/LKP_WidgetList') {
+            response.end(JSON.stringify({ items: widgetDefinitions, rowCount: widgetDefinitions.length }));
+            return;
+        }
+
+        if (request.url === '/api/Owner/LKP_ChartTypeList') {
+            response.end(JSON.stringify({ items: chartTypeDefinitions, rowCount: chartTypeDefinitions.length }));
+            return;
+        }
+
+        if (request.url === '/api/Owner/UserChartPreferenceList') {
+            response.end(JSON.stringify({ items: userChartPreferences, rowCount: userChartPreferences.length }));
+            return;
+        }
+
         if (request.url === '/api/Owner/EditUserPreference' && request.method === 'POST') {
             if (!request.headers.cookie?.includes('AccessToken=') || request.headers.cookie?.includes('RejectMutation=true')) {
                 response.statusCode = 401;
@@ -303,6 +340,18 @@ const server = createServer((request, response) => {
                     value: payload.value,
                     preference: definition ?? genderPreference,
                 },
+            ];
+            response.end(JSON.stringify({}));
+            return;
+        }
+
+        if (request.url === '/api/Owner/EditUserChartPreference' && request.method === 'POST') {
+            const payload = parseJsonBody(body);
+            const widget = widgetDefinitions.find((item) => item.id === payload.LKP_WidgetID);
+            const chartType = chartTypeDefinitions.find((item) => item.id === payload.LKP_ChartTypeID);
+            userChartPreferences = [
+                ...userChartPreferences.filter((item) => item.LKP_WidgetID !== payload.LKP_WidgetID || item.LKP_ChartTypeID !== payload.LKP_ChartTypeID),
+                { ...payload, widget, chartType },
             ];
             response.end(JSON.stringify({}));
             return;

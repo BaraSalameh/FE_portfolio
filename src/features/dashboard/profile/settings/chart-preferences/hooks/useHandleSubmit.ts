@@ -1,7 +1,7 @@
 import { useAppDispatch } from "@/lib/store/hooks";
 import { UserChartPreferenceFormData } from "../schema";
 import { UserChartPreferenceProps } from "../types.chart-preferences";
-import { editUserChartPreference, userChartPreferenceListQuery } from "../thunks";
+import { editUserChartPreference } from "../thunks";
 import { useState } from "react";
 
 export const useHandleSubmit = ({ onClose }: Partial<UserChartPreferenceProps>) => {
@@ -20,7 +20,6 @@ export const useHandleSubmit = ({ onClose }: Partial<UserChartPreferenceProps>) 
                 setError((resultAction.payload as string | string[] | undefined) ?? 'Could not update this chart preference.');
                 return;
             }
-            await dispatch(userChartPreferenceListQuery());
             setSaved(true);
             onClose?.();
         } finally {

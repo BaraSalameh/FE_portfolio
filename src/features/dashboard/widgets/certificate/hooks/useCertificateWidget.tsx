@@ -1,22 +1,29 @@
 import { WidgetCardProps } from '@/features/dashboard/types.presentation';
 import { useAppSelector } from "@/lib/store/hooks";
 import { Award, Clock, Link, SearchCodeIcon, WandSparklesIcon } from "lucide-react";
-import { checkWidgetPreferences } from "@/lib/utils";
-import {widget_preferences} from "@/lib/utils";
+import { checkChartPreferences, checkWidgetPreferences } from "@/lib/utils";
+import { chart_preferences, widget_preferences } from "@/lib/utils";
 import { useHandleCertificateDelete } from "./useHandleCertificateDelete";
 import { useDebouncedSortCertificate } from "./useDebouncedSortCertificate";
 import { CertificateForm } from "../forms";
+import { getChartOption, getWidgetDefaultView } from '@/features/dashboard/chartPolicies';
 
 export const useCertificateWidget = (): WidgetCardProps => {
  
     const { loading: certificateLoading, error, lstCertificates } = useAppSelector(state => state.certificate);
     const { lstUserPreferences } = useAppSelector(state => state.userWidgetPreference);
+    const { lstUserChartPreferences } = useAppSelector(state => state.userChartPreference);
     const handleCertificateDelete = useHandleCertificateDelete();
     const debouncedSortCertificate = useDebouncedSortCertificate();
 
     const showTimeline = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_certificate_bar_chart);
+    const comparisonPreference = checkChartPreferences(
+        lstUserChartPreferences,
+        { widget: chart_preferences.key.widget.certificate, chartType: chart_preferences.key.chart.pie }
+    );
+    const groupOption = getChartOption('certificate', 'comparison', 'groupBy', comparisonPreference?.groupBy);
     const barData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_certificate_pie_chart)
-        ? { title: 'Certificates by credential', description: 'Count of earned credentials by name.', metricLabel: 'Certificates', groupBy: 'certificate.name', measure: 'count' as const, unit: 'items' as const }
+        ? { title: `Certificates by ${groupOption.label.toLowerCase()}`, description: 'Count of earned credentials for the selected grouping.', metricLabel: 'Certificates', groupBy: groupOption.value, measure: 'count' as const, unit: 'items' as const }
         : undefined;
     const timeline = showTimeline ? {
         title: 'Certificate timeline',
@@ -32,6 +39,7 @@ export const useCertificateWidget = (): WidgetCardProps => {
         emptyState: { title: 'No certificates added', description: 'Add a credential to showcase verified learning and achievements.' },
         bar: barData,
         timeline,
+        defaultView: getWidgetDefaultView(lstUserPreferences, 'certificate'),
         list: [
             { leftKey: 'certificate.name', size: 'lg' }
         ],

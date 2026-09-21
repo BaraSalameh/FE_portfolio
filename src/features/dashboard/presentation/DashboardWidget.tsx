@@ -22,7 +22,7 @@ export const DashboardWidget = memo(function DashboardWidget(props: WidgetCardPr
     const update = isOwner ? props.update : undefined;
     const del = isOwner ? props.del : undefined;
     const onSort = isOwner ? props.onSort : undefined;
-    const { isLoading, error, header, items, emptyState, list, pie, bar, radar, timeline, matrix, kpis, details, pagination, onModalAction, entryPresentation, className } = props;
+    const { isLoading, error, header, items, emptyState, list, pie, bar, radar, timeline, matrix, kpis, details, pagination, onModalAction, entryPresentation, defaultView, className } = props;
     const HeaderIcon = header?.icon;
     const [sortable, setSortable] = useState(false);
     const [entriesExpanded, setEntriesExpanded] = useState(false);
@@ -88,7 +88,7 @@ export const DashboardWidget = memo(function DashboardWidget(props: WidgetCardPr
                 )}
                 {!isEmpty && (pie || bar || radar || timeline || matrix || kpis) && (
                     <div className="px-3 py-5 sm:px-5">
-                        <WidgetCharts items={items} pie={pie} bar={bar} radar={radar} timeline={timeline} matrix={matrix} kpis={kpis} />
+                        <WidgetCharts items={items} pie={pie} bar={bar} radar={radar} timeline={timeline} matrix={matrix} kpis={kpis} defaultView={defaultView} />
                     </div>
                 )}
                 {!isEmpty && list && hasVisualization && !isReordering && (

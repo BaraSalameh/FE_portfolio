@@ -3,6 +3,7 @@ import { widget_preferences } from "@/lib/utils";
 import { useAppSelector } from "@/lib/store/hooks";
 import { checkWidgetPreferences } from "@/lib/utils";
 import { BarChart3 } from "lucide-react";
+import { getWidgetDefaultView } from '@/features/dashboard/chartPolicies';
 
 export const useOverviewWidget = (): WidgetCardProps => {
 
@@ -46,5 +47,6 @@ export const useOverviewWidget = (): WidgetCardProps => {
         bar: barData,
         pie: pieData,
         kpis: customData.map((item) => ({ label: item.name, value: item.value })),
+        defaultView: getWidgetDefaultView(lstUserPreferences, 'overview'),
     }
 }

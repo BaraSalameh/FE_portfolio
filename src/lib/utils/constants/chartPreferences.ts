@@ -1,10 +1,13 @@
 export const chart_preferences = {
     key: {
         widget: {
+            overview: 'Overview',
             education: 'Education',
             experience: 'Experience',
             project: 'Project',
-            language: 'Language'
+            skill: 'Skill',
+            language: 'Language',
+            certificate: 'Certificate'
         },
         chart: {
             bar: 'Bar',
@@ -16,58 +19,64 @@ export const chart_preferences = {
         education: {
             bar: [
                 {label: 'Degree name', value: 'degree.name'},
-                {label: 'Degree abbreviation', value: 'degree.abbreviation'},
                 {label: 'Field of study', value: 'fieldOfStudy.name'},
+                {label: 'Institution', value: 'institution.name'},
             ],
             pie: [
                 {label: 'Degree name', value: 'degree.name'},
-                {label: 'Degree abbreviation', value: 'degree.abbreviation'},
                 {label: 'Field of study', value: 'fieldOfStudy.name'},
+                {label: 'Institution', value: 'institution.name'},
             ],
             radar: [
                 {label: 'Degree name', value: 'degree.name'},
-                {label: 'Degree abbreviation', value: 'degree.abbreviation'},
                 {label: 'Field of study', value: 'fieldOfStudy.name'},
+                {label: 'Institution', value: 'institution.name'},
             ]
         },
         experience: {
             bar: [
-                {label: 'Job title', value: 'jobTitle'},
                 {label: 'Company name', value: 'companyName'},
+                {label: 'Job title', value: 'jobTitle'},
                 {label: 'Location', value: 'location'},
             ],
             pie: [
-                {label: 'Job title', value: 'jobTitle'},
                 {label: 'Company name', value: 'companyName'},
+                {label: 'Job title', value: 'jobTitle'},
                 {label: 'Location', value: 'location'},
             ],
             radar: [
-                {label: 'Job title', value: 'jobTitle'},
                 {label: 'Company name', value: 'companyName'},
+                {label: 'Job title', value: 'jobTitle'},
                 {label: 'Location', value: 'location'}
             ]
         },
         project: {
             bar: [
-                {label: 'Title', value: 'title'},
-                {label: 'Featured?', value: 'isFeatured'},
+                {label: 'Technology or skill', value: 'lstSkills.name'},
                 {label: 'Experience', value: 'experience.companyName'},
                 {label: 'Education', value: 'education.institution.name'},
-                {label: 'Skills', value: 'lstSkills.name'}
+                {label: 'Featured status', value: 'isFeatured'}
             ],
             pie: [
-                {label: 'Title', value: 'title'},
-                {label: 'Featured?', value: 'isFeatured'},
+                {label: 'Technology or skill', value: 'lstSkills.name'},
                 {label: 'Experience', value: 'experience.companyName'},
                 {label: 'Education', value: 'education.institution.name'},
-                {label: 'Skills', value: 'lstSkills.name'}
+                {label: 'Featured status', value: 'isFeatured'}
             ],
             radar: [
-                {label: 'Title', value: 'title'},
-                {label: 'Featured?', value: 'isFeatured'},
+                {label: 'Technology or skill', value: 'lstSkills.name'},
                 {label: 'Experience', value: 'experience.companyName'},
                 {label: 'Education', value: 'education.institution.name'},
-                {label: 'Skills', value: 'lstSkills.name'}
+                {label: 'Featured status', value: 'isFeatured'}
+            ]
+        },
+        skill: {
+            pie: [{label: 'Evidence source', value: 'evidenceSource'}]
+        },
+        certificate: {
+            pie: [
+                {label: 'Credential', value: 'certificate.name'},
+                {label: 'Associated skill', value: 'lstSkills.name'}
             ]
         }
     }

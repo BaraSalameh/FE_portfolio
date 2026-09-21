@@ -5,6 +5,7 @@ import { checkWidgetPreferences } from "@/lib/utils";
 import { widget_preferences } from "@/lib/utils";
 import { UserLanguageForm } from "../forms";
 import { proficiencyToPercent } from '@/features/dashboard/presentation/widgets/entryPresentation';
+import { getWidgetDefaultView } from '@/features/dashboard/chartPolicies';
 
 export const useLanguageWidget = (): WidgetCardProps => {
 
@@ -34,6 +35,7 @@ export const useLanguageWidget = (): WidgetCardProps => {
         emptyState: { title: 'No languages added', description: 'Add the languages you use and your proficiency in each one.' },
         bar: barData,
         radar: radarData,
+        defaultView: getWidgetDefaultView(lstUserPreferences, 'language'),
         list: [
             { leftKey: 'language.name', size: 'lg' },
             { leftKey: 'languageProficiency.level', icon: BadgePercent }

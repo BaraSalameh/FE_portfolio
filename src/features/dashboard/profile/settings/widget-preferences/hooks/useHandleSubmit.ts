@@ -1,6 +1,6 @@
 import { useAppDispatch } from "@/lib/store/hooks";
 import { UserWidgetPreferenceFormData } from "../schema"
-import { editUserWidgetPreference, userWidgetPreferenceListQuery } from "../thunks";
+import { editUserWidgetPreference } from "../thunks";
 import { UserPreferenceProps } from "../types.widget-preferences";
 import { useState } from "react";
 
@@ -20,7 +20,6 @@ export const useHandleSubmit = ({ onClose }: Partial<UserPreferenceProps>) => {
                 setError((resultAction.payload as string | string[] | undefined) ?? 'Could not update this preference.');
                 return false;
             }
-            await dispatch(userWidgetPreferenceListQuery());
             setSaved(true);
             onClose?.();
             return true;

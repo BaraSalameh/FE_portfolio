@@ -306,6 +306,50 @@ test('owner settings open as a dedicated responsive page with clear categories',
     expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
 });
 
+test('chart preferences persist a public default and expose guided widget options', async ({ context, page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
+    await page.goto('/owner/demo/settings');
+    await page.getByRole('button', { name: /Chart preferences/ }).click();
+
+    for (const heading of ['Overview', 'Education', 'Experience', 'Projects', 'Skills', 'Languages', 'Certificates']) {
+        await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
+    }
+
+    const overviewSection = page.getByRole('heading', { name: 'Overview', exact: true }).locator('xpath=ancestor::section[1]');
+    await expect(overviewSection.getByText('Grouped by portfolio section and measured by entry count.')).toBeVisible();
+    const defaultChart = overviewSection.getByRole('combobox', { name: 'Default chart' });
+    await defaultChart.fill('Composition');
+    await page.getByRole('option', { name: 'Composition', exact: true }).click();
+    await overviewSection.getByRole('button', { name: 'Update', exact: true }).click();
+    await expect(overviewSection.getByText('Preference saved.')).toBeVisible();
+
+    const educationSection = page.getByRole('heading', { name: 'Education', exact: true }).locator('xpath=ancestor::section[1]');
+    await expect(educationSection.getByRole('combobox', { name: 'Group by' })).toBeVisible();
+    await expect(educationSection.getByRole('combobox', { name: 'Value source' })).toBeVisible();
+
+    const skillsSection = page.getByRole('heading', { name: 'Skills', exact: true }).locator('xpath=ancestor::section[1]');
+    await expect(skillsSection.getByText('Grouping: Evidence source')).toBeVisible();
+    await expect(skillsSection.getByRole('combobox', { name: 'Value source' })).toBeVisible();
+
+    await context.clearCookies();
+    await page.goto('/client/demo/dashboard');
+    const overviewWidget = page.getByRole('region', { name: 'Overview' });
+    await expect(overviewWidget.getByRole('tab', { name: 'Composition' })).toHaveAttribute('aria-selected', 'true');
+    await expect(overviewWidget.getByRole('heading', { name: 'Portfolio composition' })).toBeVisible();
+
+    // Restore the system default so this server-backed fixture remains isolated for later tests.
+    await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
+    await page.goto('/owner/demo/settings');
+    await page.getByRole('button', { name: /Chart preferences/ }).click();
+    const restoredOverview = page.getByRole('heading', { name: 'Overview', exact: true }).locator('xpath=ancestor::section[1]');
+    const restoredDefault = restoredOverview.getByRole('combobox', { name: 'Default chart' });
+    await restoredDefault.fill('Section comparison');
+    await page.getByRole('option', { name: 'Section comparison', exact: true }).click();
+    await restoredOverview.getByRole('button', { name: 'Update', exact: true }).click();
+    await expect(restoredOverview.getByText('Preference saved.')).toBeVisible();
+});
+
 test('profile and settings toolbars stay visible and settings navigation clears the toolbar', async ({ context, page }) => {
     await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
     await page.setViewportSize({ width: 1440, height: 500 });

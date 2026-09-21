@@ -14,6 +14,8 @@ import { ArrowLeft, Award, BarChart3, BriefcaseBusiness, Calendar, CalendarRange
 import { paths } from '@/lib/pathHelper';
 import Link from 'next/link';
 import { useState, type ReactNode } from 'react';
+import { widgetChartPolicies, type ChartWidgetKey } from '@/features/dashboard/chartPolicies';
+import type { ChartViewKey } from '@/features/dashboard/types.presentation';
 
 type Category = 'preferences' | 'charts' | 'appearance';
 type PreferenceItem = { key: string; title: string; icon: LucideIcon; parent?: string; defaultValue?: 'show' | 'hide' };
@@ -83,29 +85,30 @@ const preferenceSections: Array<{ title: string; description: string; icon: Luci
     })),
 ];
 
-const valueSourceOptions = [{ label: 'Duration', value: 'duration' }, { label: 'Count', value: 'count' }];
-const countValueSourceOptions = [{ label: 'Count', value: 'count' }];
-const chartSections = [
-    {
-        title: 'Education', widget: chart_preferences.key.widget.education,
-        charts: [
-            { type: 'pie' as const, label: 'Duration comparison', icon: BarChart3, visibilityKey: widget_preferences.key.show_education_pie_chart, valueSources: valueSourceOptions },
-        ],
-    },
-    {
-        title: 'Experience', widget: chart_preferences.key.widget.experience,
-        charts: [
-            { type: 'pie' as const, label: 'Duration comparison', icon: BarChart3, visibilityKey: widget_preferences.key.show_experience_pie_chart, valueSources: valueSourceOptions },
-        ],
-    },
-    {
-        title: 'Project', widget: chart_preferences.key.widget.project, parent: widget_preferences.key.show_project_widget,
-        charts: [
-            { type: 'bar' as const, label: 'Technology comparison', icon: BarChart3, visibilityKey: widget_preferences.key.show_project_bar_chart, valueSources: countValueSourceOptions },
-            { type: 'pie' as const, label: 'Composition donut', icon: PieChart, visibilityKey: widget_preferences.key.show_project_pie_chart, valueSources: countValueSourceOptions },
-        ],
-    },
-];
+const chartSectionParents: Partial<Record<ChartWidgetKey, string>> = {
+    overview: widget_preferences.key.show_overview_widget,
+    project: widget_preferences.key.show_project_widget,
+    skill: widget_preferences.key.show_skill_widget,
+    certificate: widget_preferences.key.show_certificate_widget,
+};
+
+const chartSectionIcons: Record<ChartWidgetKey, LucideIcon> = {
+    overview: LayoutDashboard,
+    education: GraduationCap,
+    experience: BriefcaseBusiness,
+    project: FolderKanban,
+    skill: Sparkles,
+    language: Languages,
+    certificate: Award,
+};
+
+const chartViewIcons: Record<ChartViewKey, LucideIcon> = {
+    timeline: CalendarRange,
+    comparison: BarChart3,
+    composition: PieChart,
+    matrix: Grid3X3,
+    profile: Radar,
+};
 
 function SettingsCard({ icon: Icon, title, description, children }: { icon: LucideIcon; title: string; description: string; children: ReactNode }) {
     return <article className="rounded-2xl border border-line bg-surface p-5 shadow-sm shadow-black/5">
@@ -122,7 +125,11 @@ export const SettingsPage = () => {
     const { username } = useUrlParams();
     const { user } = useAppSelector((state) => state.profile);
     const { unreadContactMessageCount } = useAppSelector((state) => state.contactMessage);
-    const { lstUserPreferences } = useAppSelector((state) => state.userWidgetPreference);
+    const { lstUserPreferences, preference } = useAppSelector((state) => state.userWidgetPreference);
+    const { widget, chartType } = useAppSelector((state) => state.userChartPreference);
+    const { lstPreferences } = preference;
+    const { lstWidgets } = widget;
+    const { lstChartTypes } = chartType;
     const [activeCategory, setActiveCategory] = useState<Category>('preferences');
     const currentCategory = categories.find((category) => category.id === activeCategory) ?? categories[0];
     const selectedCategory = categoryOptions.find((option) => option.value === activeCategory);
@@ -150,7 +157,73 @@ export const SettingsPage = () => {
             <section className="mt-6 min-w-0 lg:mt-0" aria-labelledby={`${activeCategory}-heading`}>
                 <div className="mb-6"><p className="text-xs font-bold uppercase tracking-[0.16em] text-accent">Settings category</p><h2 id={`${activeCategory}-heading`} className="mt-1 text-2xl font-bold tracking-[-0.04em]">{currentCategory.label}</h2><p className="mt-1 text-sm text-ink-muted">{currentCategory.description}</p></div>
                 {activeCategory === 'preferences' && <div className="space-y-5">{preferenceSections.map((section) => { const visibleItems = section.items.filter((item) => !item.parent || checkWidgetPreferences(lstUserPreferences, item.parent)); return <SettingsCard key={section.title} icon={section.icon} title={section.title} description={section.description}><div className="divide-y divide-line">{visibleItems.map((item) => { const Icon = item.icon; return <div key={item.key} className="flex min-h-16 items-center justify-between gap-4 py-3 first:pt-0 last:pb-0"><div className="flex min-w-0 items-center gap-3"><span className="grid size-9 shrink-0 place-items-center rounded-lg bg-canvas-subtle text-ink-muted"><Icon className="size-4" aria-hidden="true" /></span><h3 className="truncate text-sm font-bold tracking-[-0.01em] sm:text-base">{item.title}</h3></div><UserWidgetPreferenceForm preferenceKey={item.key} compact defaultValue={item.defaultValue} /></div>; })}</div></SettingsCard>; })}</div>}
-                {activeCategory === 'charts' && <div className="space-y-9">{chartSections.filter((section) => !section.parent || checkWidgetPreferences(lstUserPreferences, section.parent)).map((section) => { const charts = section.charts.filter((chart) => checkWidgetPreferences(lstUserPreferences, chart.visibilityKey)); const sectionKey = section.title.toLowerCase() as 'education' | 'experience' | 'project'; return <section key={section.title} className="space-y-4"><SectionHeading title={section.title} description={`Configure the visible charts in your ${section.title.toLowerCase()} section.`} />{charts.length > 0 ? <div className="grid gap-4 xl:grid-cols-2">{charts.map((chart) => <SettingsCard key={chart.type} icon={chart.icon} title={chart.label} description={`Choose how the ${section.title.toLowerCase()} ${chart.label.toLowerCase()} summarizes your data.`}><UserChartPreferenceForm preferenceKeys={{ widget: section.widget, chartType: chart_preferences.key.chart[chart.type] }} preferenceValues={{ groupBy: chart_preferences.values[sectionKey][chart.type], valueSource: chart.valueSources }} /></SettingsCard>)}</div> : <div className="rounded-2xl border border-dashed border-line bg-canvas-subtle p-6 text-sm text-ink-muted">Enable a chart in Preferences to customize it here.</div>}</section>; })}</div>}
+                {activeCategory === 'charts' && (
+                    <div className="space-y-9">
+                        {(Object.entries(widgetChartPolicies) as Array<[ChartWidgetKey, (typeof widgetChartPolicies)[ChartWidgetKey]]>)
+                            .filter(([key]) => !chartSectionParents[key] || checkWidgetPreferences(lstUserPreferences, chartSectionParents[key]!))
+                            .map(([key, policy]) => {
+                                const enabledViews = policy.views.filter((view) => checkWidgetPreferences(lstUserPreferences, view.visibilityKey));
+                                const enabledViewKeys = new Set(enabledViews.map((view) => view.key));
+                                const defaultPreferenceAvailable = lstPreferences.some((item) => item.name === policy.preferenceKey);
+                                const availableEditors = policy.editors.filter((editor) => enabledViewKeys.has(editor.view));
+                                const widgetLookupAvailable = lstWidgets.some((item) => item.name === policy.widgetName);
+
+                                return (
+                                    <section key={key} className="space-y-4">
+                                        <SectionHeading title={policy.title} description={`Configure the visible charts in your ${policy.title.toLowerCase()} section.`} />
+                                        {enabledViews.length ? (
+                                            <div className="grid gap-4 xl:grid-cols-2">
+                                                <SettingsCard icon={chartSectionIcons[key]} title="Default chart" description="Choose the chart visitors see first.">
+                                                    {enabledViews.length === 1 ? (
+                                                        <p className="rounded-xl bg-canvas-subtle px-3.5 py-3 text-sm text-ink-muted">
+                                                            <span className="font-semibold text-ink">Only enabled view:</span> {enabledViews[0].label}
+                                                        </p>
+                                                    ) : defaultPreferenceAvailable ? (
+                                                        <UserWidgetPreferenceForm
+                                                            preferenceKey={policy.preferenceKey}
+                                                            preferenceValues={enabledViews.map(({ key: value, label }) => ({ value, label }))}
+                                                            label="Default chart"
+                                                        />
+                                                    ) : (
+                                                        <p className="rounded-xl border border-dashed border-line bg-canvas-subtle px-3.5 py-3 text-sm text-ink-muted">
+                                                            Default selection will be available after the server preference lookup is updated.
+                                                        </p>
+                                                    )}
+                                                </SettingsCard>
+
+                                                {policy.fixedSummary ? (
+                                                    <SettingsCard icon={chartViewIcons[policy.systemDefault]} title="Data setup" description="This widget has one analytically valid grouping and value.">
+                                                        <p className="rounded-xl bg-canvas-subtle px-3.5 py-3 text-sm text-ink-muted">{policy.fixedSummary}</p>
+                                                    </SettingsCard>
+                                                ) : null}
+
+                                                {availableEditors.map((editor) => {
+                                                    const chartTypeName = chart_preferences.key.chart[editor.chartType];
+                                                    const editorAvailable = widgetLookupAvailable && lstChartTypes.some((item) => item.name === chartTypeName);
+                                                    return (
+                                                        <SettingsCard key={`${key}-${editor.view}`} icon={chartViewIcons[editor.view]} title={editor.title} description={editor.description}>
+                                                            {editorAvailable ? (
+                                                                <UserChartPreferenceForm
+                                                                    preferenceKeys={{ widget: policy.widgetName, chartType: chartTypeName }}
+                                                                    preferenceValues={{ groupBy: editor.groupBy, valueSource: editor.valueSource }}
+                                                                />
+                                                            ) : (
+                                                                <p className="rounded-xl border border-dashed border-line bg-canvas-subtle px-3.5 py-3 text-sm text-ink-muted">
+                                                                    This chart configuration will be available after its server lookup records are updated.
+                                                                </p>
+                                                            )}
+                                                        </SettingsCard>
+                                                    );
+                                                })}
+                                            </div>
+                                        ) : (
+                                            <div className="rounded-2xl border border-dashed border-line bg-canvas-subtle p-6 text-sm text-ink-muted">Enable a chart in Preferences to customize it here.</div>
+                                        )}
+                                    </section>
+                                );
+                            })}
+                    </div>
+                )}
                 {activeCategory === 'appearance' && <section className="space-y-4"><SectionHeading title="Appearance" description="Choose the color scheme used across your portfolio editor." /><SettingsCard icon={Palette} title="Theme" description="Switch between light and dark mode. This change is applied immediately."><div className="flex items-center justify-between gap-4 rounded-xl bg-canvas-subtle p-3"><span className="text-sm font-semibold">Change theme</span><ThemeSwitch /></div></SettingsCard></section>}
             </section>
         </div>

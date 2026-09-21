@@ -72,8 +72,22 @@ const userChartPreferenceSlice = createSlice({
             state.loading = true;
             state.error = null;
         })
-        .addCase(editUserChartPreference.fulfilled, (state) => {
+        .addCase(editUserChartPreference.fulfilled, (state, action) => {
             state.loading = false;
+            const widget = state.widget.lstWidgets.find((item) => item.id === action.payload.LKP_WidgetID);
+            const chartType = state.chartType.lstChartTypes.find((item) => item.id === action.payload.LKP_ChartTypeID);
+            if (!widget || !chartType) return;
+
+            const index = state.lstUserChartPreferences.findIndex(
+                (item) => (item.widget?.id === widget.id || item.widget?.name === widget.name)
+                    && (item.chartType?.id === chartType.id || item.chartType?.name === chartType.name),
+            );
+            const savedPreference = { ...action.payload, widget, chartType };
+            if (index === -1) state.lstUserChartPreferences.push(savedPreference);
+            else state.lstUserChartPreferences[index] = {
+                ...state.lstUserChartPreferences[index],
+                ...savedPreference,
+            };
         })
         .addCase(editUserChartPreference.rejected, (state, action) => {
             state.loading = false;

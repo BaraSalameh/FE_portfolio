@@ -8,6 +8,7 @@ export type PaginatedAction = (params: FetchAction) => ThunkAction<unknown, Root
 export type PaginationConfig = { maxLength: number; fetchAction: PaginatedAction; query?: string; children?: ReactNode; className?: string };
 export type ChartEntry = { name: string; value: number };
 export type ChartMeasure = 'count' | 'duration' | 'percentage' | 'proficiency';
+export type ChartViewKey = 'timeline' | 'comparison' | 'composition' | 'matrix' | 'profile';
 export type ChartConfig = {
     title?: string;
     description?: string;
@@ -49,6 +50,7 @@ export interface WidgetCardProps {
     pagination?: PaginationConfig;
     onModalAction?: (id: string) => void | Promise<void>;
     entryPresentation?: EntryPresentation;
+    defaultView?: ChartViewKey;
     className?: string;
 }
 
@@ -60,7 +62,7 @@ export type ChartWidgetProps = {
     metricLabel?: string;
     total?: number;
 };
-export type WidgetChartsProps = { items?: object[]; pie?: ChartConfig; bar?: DurationChartConfig; radar?: ChartConfig; timeline?: TimelineConfig; matrix?: MatrixConfig; kpis?: KpiEntry[] };
+export type WidgetChartsProps = { items?: object[]; pie?: ChartConfig; bar?: DurationChartConfig; radar?: ChartConfig; timeline?: TimelineConfig; matrix?: MatrixConfig; kpis?: KpiEntry[]; defaultView?: ChartViewKey };
 export type WidgetListProps = { items: object[]; list: ListItemConfig[]; onItemClick?: (item: object) => void; className?: string; sort?: { sortable: boolean; onSort?: (ids: string[]) => void | Promise<void> }; pagination?: PaginationConfig; entryPresentation?: EntryPresentation };
 export type WidgetModalProps = { isLoading?: boolean; isOpen: boolean; onClose: () => void; item?: object; update?: WidgetCardProps['update']; del?: WidgetCardProps['del']; details?: ListItemConfig[]; entryPresentation?: EntryPresentation; className?: string; onAction?: (id: string) => void | Promise<void> };
 export type SortableItemProps = { id: string; children: ReactNode; label?: string };
