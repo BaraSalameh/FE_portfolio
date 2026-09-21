@@ -36,9 +36,11 @@
   
   --color-danger: oklch(58.6% 0.253 17.585);
 
-  --color-brand: oklch(60% 0.2 255);
-  --color-brand-strong: oklch(52% 0.22 258);
-  --color-brand-soft: oklch(93% 0.035 255);
+  --color-brand: var(--brand-iris);
+  --color-brand-strong: var(--brand-iris-deep);
+  --color-brand-soft: var(--brand-iris-pale);
+  --color-brand-logo: var(--brand-logo-background);
+  --color-brand-paper: var(--brand-paper);
 
   --color-dark-bg-hover: oklch(37.3% 0.034 259.733);
   --color-light-bg-hover: oklch(85% 0 0);
@@ -60,17 +62,28 @@
 
 @layer base {
   :root {
-    --ds-canvas: oklch(98.2% 0.012 87);
+    /* Folio brand palette: Paper, Ink, Iris, and Amber. */
+    --brand-paper: oklch(98.2% 0.012 87);
+    --brand-ink: oklch(22% 0.04 264);
+    --brand-iris: oklch(56% 0.19 274);
+    --brand-iris-deep: oklch(45% 0.2 274);
+    --brand-iris-light: oklch(72% 0.145 276);
+    --brand-iris-bright: oklch(80% 0.11 276);
+    --brand-iris-pale: oklch(91% 0.045 276);
+    --brand-amber: oklch(76% 0.15 65);
+    --brand-logo-background: #5037c9;
+
+    --ds-canvas: var(--brand-paper);
     --ds-canvas-subtle: oklch(95.5% 0.021 86);
     --ds-surface: oklch(99.5% 0.006 87);
     --ds-surface-raised: oklch(100% 0 0);
-    --ds-ink: oklch(22% 0.04 264);
+    --ds-ink: var(--brand-ink);
     --ds-ink-muted: oklch(47% 0.035 263);
     --ds-line: oklch(86% 0.025 83);
-    --ds-accent: oklch(56% 0.19 274);
-    --ds-accent-strong: oklch(45% 0.2 274);
-    --ds-accent-soft: oklch(91% 0.045 276);
-    --ds-highlight: oklch(76% 0.15 65);
+    --ds-accent: var(--brand-iris);
+    --ds-accent-strong: var(--brand-iris-deep);
+    --ds-accent-soft: var(--brand-iris-pale);
+    --ds-highlight: var(--brand-amber);
     --chart-1: oklch(58% 0.19 274);
     --chart-2: oklch(64% 0.17 38);
     --chart-3: oklch(60% 0.14 164);
@@ -89,10 +102,10 @@
     --ds-ink: oklch(96% 0.009 85);
     --ds-ink-muted: oklch(75% 0.025 264);
     --ds-line: oklch(31% 0.035 264);
-    --ds-accent: oklch(72% 0.145 276);
-    --ds-accent-strong: oklch(80% 0.11 276);
+    --ds-accent: var(--brand-iris-light);
+    --ds-accent-strong: var(--brand-iris-bright);
     --ds-accent-soft: oklch(28% 0.08 274);
-    --ds-highlight: oklch(79% 0.14 69);
+    --ds-highlight: color-mix(in oklab, var(--brand-amber) 88%, white);
     --chart-1: oklch(75% 0.13 276);
     --chart-2: oklch(76% 0.13 45);
     --chart-3: oklch(75% 0.11 164);

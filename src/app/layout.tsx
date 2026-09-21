@@ -6,10 +6,10 @@ import { inter } from "@/lib/fonts";
 
 export const metadata: Metadata = {
     title: {
-        template: '%s | Portfolio',
-        default: 'Portfolio'
+        template: '%s | Folio',
+        default: 'Folio'
     },
-    description: "Create and share a polished portfolio that showcases your professional experience."
+    description: "Build and share a polished portfolio that connects your experience, skills, and projects in one professional story."
 };
 
 export default function RootLayout({children}: Readonly<{children: React.ReactNode;}>) {

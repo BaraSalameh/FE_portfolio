@@ -1,18 +1,51 @@
 <svg
   viewBox="0 0 1600 400"
-  preserveAspectRatio="none"
+  preserveAspectRatio="xMidYMid slice"
   xmlns="http://www.w3.org/2000/svg"
 >
-  <rect width="100%" height="100%" fill="#14532d" />
-  <text
-    x="95%"
-    y="70%"
-    text-anchor="end"
-    fill="white"
-    font-family="Arial, Helvetica, sans-serif"
-    font-size="80"
-    font-weight="bold"
-  >
-    Portfolio
-  </text>
+  <title>Folio default portfolio cover</title>
+  <defs>
+    <linearGradient id="folio-cover-bg" x1="80" y1="20" x2="1520" y2="380" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#30206F"/>
+      <stop offset="0.48" stop-color="#5037C9"/>
+      <stop offset="1" stop-color="#7561E8"/>
+    </linearGradient>
+    <radialGradient id="folio-cover-glow" cx="0" cy="0" r="1" gradientTransform="translate(800 204) rotate(90) scale(255 520)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FAF7EF" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#FAF7EF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="folio-cover-ribbon" x1="104" y1="76" x2="1496" y2="326" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FAF7EF" stop-opacity="0.03"/>
+      <stop offset="0.48" stop-color="#FAF7EF" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#FAF7EF" stop-opacity="0.04"/>
+    </linearGradient>
+    <pattern id="folio-cover-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#FAF7EF" stroke-opacity="0.09"/>
+      <circle cx="0" cy="0" r="2" fill="#FAF7EF" fill-opacity="0.16"/>
+    </pattern>
+    <filter id="folio-cover-blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="34"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="400" fill="url(#folio-cover-bg)"/>
+  <rect width="1600" height="400" fill="url(#folio-cover-grid)"/>
+  <ellipse cx="800" cy="204" rx="520" ry="255" fill="url(#folio-cover-glow)"/>
+  <ellipse cx="310" cy="365" rx="310" ry="90" fill="#F2A44A" fill-opacity="0.16" filter="url(#folio-cover-blur)"/>
+  <ellipse cx="1380" cy="30" rx="260" ry="100" fill="#A996FF" fill-opacity="0.2" filter="url(#folio-cover-blur)"/>
+
+  <path d="M-90 330C270 194 472 174 766 226C1063 278 1286 249 1690 82" fill="none" stroke="url(#folio-cover-ribbon)" stroke-width="76" stroke-linecap="round"/>
+  <path d="M-40 362C292 235 510 222 788 263C1063 304 1306 280 1645 151" fill="none" stroke="#FAF7EF" stroke-opacity="0.08" stroke-width="2"/>
+
+  <g fill="none" stroke="#FAF7EF" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" transform="translate(680 80) scale(10)" stroke-width="0.55" stroke-opacity="0.9"/>
+    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" transform="translate(1040 58) scale(3.2)" stroke-width="1.2" stroke-opacity="0.5"/>
+    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" transform="translate(510 240) scale(2.4)" stroke-width="1.35" stroke-opacity="0.38"/>
+    <path d="M1105 280v34M1088 297h34" stroke-width="4" stroke-opacity="0.42"/>
+    <path d="M468 86v22M457 97h22" stroke-width="3" stroke-opacity="0.35"/>
+  </g>
+
+  <circle cx="1170" cy="94" r="5" fill="#FAF7EF" fill-opacity="0.52"/>
+  <circle cx="428" cy="310" r="4" fill="#FAF7EF" fill-opacity="0.38"/>
+  <circle cx="1235" cy="244" r="3" fill="#F2A44A" fill-opacity="0.72"/>
 </svg>

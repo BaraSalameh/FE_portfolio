@@ -29,7 +29,24 @@ const hoverSvgShape = async (page: Page, locator: Locator) => {
 test("Page load", async ({ page }) => {
     const response = await page.goto('/', { waitUntil: 'networkidle'});
     expect(response?.ok()).toBe(true);
-    await expect(page).toHaveTitle(/portfolio/i);
+    await expect(page).toHaveTitle(/^Folio$/);
+    const brandLink = page.getByRole('link', { name: 'Folio home' });
+    await expect(brandLink).toBeVisible();
+    await expect(brandLink).toHaveText('folio.');
+    await expect(brandLink.locator('svg')).toHaveCount(1);
+    await expect(brandLink.locator('.bg-brand-logo')).toBeVisible();
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+        'content',
+        'Build and share a polished portfolio that connects your experience, skills, and projects in one professional story.',
+    );
+
+    const icon = page.locator('link[rel="icon"]');
+    const appleIcon = page.locator('link[rel="apple-touch-icon"]');
+    await expect(page.getByRole('img', { name: 'A published portfolio with profile, experience, and project sections' }))
+        .toHaveAttribute('src', /folio-responsive-devices\.png/);
+    await expect(icon).toHaveAttribute('href', /\/icon\.svg/);
+    await expect(icon).toHaveAttribute('type', 'image/svg+xml');
+    await expect(appleIcon).toHaveAttribute('href', /\/apple-icon/);
 });
 
 test("Theme toggle", async ({ page }) => {
@@ -194,6 +211,7 @@ test('public dashboard is responsive and its contact dialog supports Escape', as
     await page.goto('/client/demo/dashboard');
 
     await expect(page.getByRole('heading', { name: 'Demo Portfolio' })).toBeVisible();
+    await expect(page.getByRole('img', { name: 'Portfolio cover' })).toHaveAttribute('src', /Default-CoverPhoto\.svg/);
     for (const heading of ['Education', 'Experience', 'Projects', 'Skills', 'Certificates', 'Languages']) {
         await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
     }

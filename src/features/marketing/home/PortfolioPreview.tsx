@@ -16,7 +16,7 @@ export function PortfolioPreview() {
                     <span className="ml-2 h-2.5 w-24 rounded-full bg-line/70" />
                 </div>
                 <Image
-                    src="/hero-desktop.png"
+                    src="/folio-responsive-devices.png"
                     alt="A published portfolio with profile, experience, and project sections"
                     width={1600}
                     height={800}
