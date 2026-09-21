@@ -9,6 +9,7 @@ import { SortableItem } from './SortableItem';
 import { WidgetListProps } from '@/features/dashboard/types.presentation';
 import { extractPathValue } from '@/lib/utils';
 import { ControlledInfiniteScroll } from './ControlledInfiniteScroll';
+import { WidgetEntryPresentation } from './WidgetEntryPresentation';
 
 const hasDisplayValue = (value: unknown) => {
     if (value === null || value === undefined) return false;
@@ -23,7 +24,8 @@ export const WidgetList = ({
     onItemClick,
     sort,
     pagination,
-    className
+    className,
+    entryPresentation,
 }: WidgetListProps) => {
 
     const [sortedState, setSortedState] = useState<{ source: object[]; rows: object[] }>({ source: items, rows: items });
@@ -61,9 +63,12 @@ export const WidgetList = ({
     };
 
     const renderList = () => rows.map((item, idx) => {
-        const listItem = (
+        const listItem = entryPresentation ? (
+            <div className={cn(getIsRead(item) && 'opacity-55')}>
+                <WidgetEntryPresentation item={item} presentation={entryPresentation} onClick={onItemClick} />
+            </div>
+        ) : (
             <div
-                key={getItemId(item) ?? idx}
                 className={cn(
                     'space-y-2 rounded-xl border border-line/70 bg-canvas-subtle/55 px-3.5 py-3 text-sm text-ink-muted transition',
                     getIsRead(item) && 'opacity-55',

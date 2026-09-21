@@ -22,7 +22,7 @@ export const DashboardWidget = memo(function DashboardWidget(props: WidgetCardPr
     const update = isOwner ? props.update : undefined;
     const del = isOwner ? props.del : undefined;
     const onSort = isOwner ? props.onSort : undefined;
-    const { isLoading, error, header, items, emptyState, list, pie, bar, radar, timeline, matrix, kpis, details, pagination, onModalAction, className } = props;
+    const { isLoading, error, header, items, emptyState, list, pie, bar, radar, timeline, matrix, kpis, details, pagination, onModalAction, entryPresentation, defaultView, className } = props;
     const HeaderIcon = header?.icon;
     const [sortable, setSortable] = useState(false);
     const [entriesExpanded, setEntriesExpanded] = useState(false);
@@ -88,7 +88,7 @@ export const DashboardWidget = memo(function DashboardWidget(props: WidgetCardPr
                 )}
                 {!isEmpty && (pie || bar || radar || timeline || matrix || kpis) && (
                     <div className="px-3 py-5 sm:px-5">
-                        <WidgetCharts items={items} pie={pie} bar={bar} radar={radar} timeline={timeline} matrix={matrix} kpis={kpis} />
+                        <WidgetCharts items={items} pie={pie} bar={bar} radar={radar} timeline={timeline} matrix={matrix} kpis={kpis} defaultView={defaultView} />
                     </div>
                 )}
                 {!isEmpty && list && hasVisualization && !isReordering && (
@@ -113,7 +113,8 @@ export const DashboardWidget = memo(function DashboardWidget(props: WidgetCardPr
                             onItemClick={isReordering ? undefined : openDetails}
                             sort={{ sortable: isReordering, onSort }}
                             pagination={pagination}
-                            className="rounded-xl border border-transparent bg-canvas-subtle/65 px-3.5 py-3 text-sm transition hover:border-accent/20 hover:bg-accent-soft/45"
+                            entryPresentation={entryPresentation}
+                            className={entryPresentation ? undefined : 'rounded-xl border border-transparent bg-canvas-subtle/65 px-3.5 py-3 text-sm transition hover:border-accent/20 hover:bg-accent-soft/45'}
                         />
                     </div>
                 )}
@@ -127,6 +128,7 @@ export const DashboardWidget = memo(function DashboardWidget(props: WidgetCardPr
                 update={update}
                 del={del}
                 details={details}
+                entryPresentation={entryPresentation}
                 onAction={onModalAction}
             />
         </>

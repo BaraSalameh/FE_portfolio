@@ -50,6 +50,15 @@ export const widget_preferences = {
         show_certificate_bar_chart: 'show-certificate-bar-chart',
         show_certificate_pie_chart: 'show-certificate-pie-chart',
         show_certificate_radar_chart: 'show-certificate-radar-chart',
+
+        // default chart views
+        default_overview_chart: 'default-overview-chart',
+        default_education_chart: 'default-education-chart',
+        default_experience_chart: 'default-experience-chart',
+        default_project_chart: 'default-project-chart',
+        default_skill_chart: 'default-skill-chart',
+        default_language_chart: 'default-language-chart',
+        default_certificate_chart: 'default-certificate-chart',
     },
     value: {
         toggle: [

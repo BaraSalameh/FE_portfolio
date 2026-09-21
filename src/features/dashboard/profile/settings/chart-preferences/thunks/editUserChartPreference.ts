@@ -16,7 +16,7 @@ export const editUserChartPreference = createAsyncThunk(
                 withCredentials: true
             });
             
-            return;
+            return payload;
 
         } catch (error) {
             return thunkAPI.rejectWithValue(getApiErrorPayload(error));

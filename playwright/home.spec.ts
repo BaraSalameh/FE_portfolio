@@ -1,4 +1,4 @@
-import { test, expect, Page } from "@playwright/test";
+import { test, expect, Locator, Page } from "@playwright/test";
 
 const getHtml = (page: Page) => page.locator("html");
 
@@ -6,6 +6,25 @@ const isDarkTheme = async (page: Page) => {
     const html = getHtml(page);
     return await html.evaluate(el => el.classList.contains('dark'));
 }
+
+const hoverSvgShape = async (page: Page, locator: Locator) => {
+    const point = await locator.evaluate((element) => {
+        const shape = element as SVGGeometryElement;
+        const bounds = shape.getBoundingClientRect();
+        const matrix = shape.getScreenCTM();
+        if (!matrix) return { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 };
+
+        for (let y = bounds.top + 2; y < bounds.bottom; y += Math.max(2, bounds.height / 12)) {
+            for (let x = bounds.left + 2; x < bounds.right; x += Math.max(2, bounds.width / 12)) {
+                const localPoint = new DOMPoint(x, y).matrixTransform(matrix.inverse());
+                if (shape.isPointInFill(localPoint)) return { x, y };
+            }
+        }
+
+        return { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 };
+    });
+    await page.mouse.move(point.x, point.y);
+};
 
 test("Page load", async ({ page }) => {
     const response = await page.goto('/', { waitUntil: 'networkidle'});
@@ -287,6 +306,50 @@ test('owner settings open as a dedicated responsive page with clear categories',
     expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
 });
 
+test('chart preferences persist a public default and expose guided widget options', async ({ context, page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
+    await page.goto('/owner/demo/settings');
+    await page.getByRole('button', { name: /Chart preferences/ }).click();
+
+    for (const heading of ['Overview', 'Education', 'Experience', 'Projects', 'Skills', 'Languages', 'Certificates']) {
+        await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
+    }
+
+    const overviewSection = page.getByRole('heading', { name: 'Overview', exact: true }).locator('xpath=ancestor::section[1]');
+    await expect(overviewSection.getByText('Grouped by portfolio section and measured by entry count.')).toBeVisible();
+    const defaultChart = overviewSection.getByRole('combobox', { name: 'Default chart' });
+    await defaultChart.fill('Composition');
+    await page.getByRole('option', { name: 'Composition', exact: true }).click();
+    await overviewSection.getByRole('button', { name: 'Update', exact: true }).click();
+    await expect(overviewSection.getByText('Preference saved.')).toBeVisible();
+
+    const educationSection = page.getByRole('heading', { name: 'Education', exact: true }).locator('xpath=ancestor::section[1]');
+    await expect(educationSection.getByRole('combobox', { name: 'Group by' })).toBeVisible();
+    await expect(educationSection.getByRole('combobox', { name: 'Value source' })).toBeVisible();
+
+    const skillsSection = page.getByRole('heading', { name: 'Skills', exact: true }).locator('xpath=ancestor::section[1]');
+    await expect(skillsSection.getByText('Grouping: Evidence source')).toBeVisible();
+    await expect(skillsSection.getByRole('combobox', { name: 'Value source' })).toBeVisible();
+
+    await context.clearCookies();
+    await page.goto('/client/demo/dashboard');
+    const overviewWidget = page.getByRole('region', { name: 'Overview' });
+    await expect(overviewWidget.getByRole('tab', { name: 'Composition' })).toHaveAttribute('aria-selected', 'true');
+    await expect(overviewWidget.getByRole('heading', { name: 'Portfolio composition' })).toBeVisible();
+
+    // Restore the system default so this server-backed fixture remains isolated for later tests.
+    await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
+    await page.goto('/owner/demo/settings');
+    await page.getByRole('button', { name: /Chart preferences/ }).click();
+    const restoredOverview = page.getByRole('heading', { name: 'Overview', exact: true }).locator('xpath=ancestor::section[1]');
+    const restoredDefault = restoredOverview.getByRole('combobox', { name: 'Default chart' });
+    await restoredDefault.fill('Section comparison');
+    await page.getByRole('option', { name: 'Section comparison', exact: true }).click();
+    await restoredOverview.getByRole('button', { name: 'Update', exact: true }).click();
+    await expect(restoredOverview.getByText('Preference saved.')).toBeVisible();
+});
+
 test('profile and settings toolbars stay visible and settings navigation clears the toolbar', async ({ context, page }) => {
     await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
     await page.setViewportSize({ width: 1440, height: 500 });
@@ -379,8 +442,8 @@ test('widget update modal keeps its action visible without covering fields and m
 
     const education = page.getByRole('region', { name: 'Education' });
     await education.getByRole('button', { name: 'Show entries (1)' }).click();
-    await education.getByRole('button', { name: 'View item details' }).click();
-    await page.getByRole('dialog', { name: 'Entry details' }).getByRole('button', { name: 'Edit' }).click();
+    await education.getByRole('button', { name: /View education details/ }).click();
+    await page.getByRole('dialog', { name: 'Education details' }).getByRole('button', { name: 'Edit' }).click();
 
     const dialog = page.getByRole('dialog', { name: 'Update Education' });
     const updateButton = dialog.getByRole('button', { name: 'Update' });
@@ -492,6 +555,65 @@ test('portfolio charts use guided responsive and accessible views', async ({ pag
     expect(hydrationErrors).toEqual([]);
 });
 
+test('chart tooltips are solid and explain bar, donut, and radar values', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/client/demo/dashboard');
+    await page.evaluate(() => {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
+    });
+
+    const overview = page.getByRole('region', { name: 'Overview' });
+    const bars = overview.locator('.recharts-bar-rectangle .recharts-rectangle');
+    await bars.first().hover();
+
+    const barTooltip = overview.getByTestId('chart-tooltip');
+    await expect(barTooltip).toBeVisible();
+    await expect(barTooltip).toContainText(/Portfolio entries: \d+ items/);
+    await expect(barTooltip).toContainText(/Accounts for \d+% of the portfolio entries shown in this chart\./);
+    await expect(barTooltip).toHaveClass(/bg-surface-raised/);
+    await expect(barTooltip).toHaveClass(/opacity-100/);
+
+    await bars.nth(2).hover();
+    await expect(barTooltip).toContainText('Portfolio entries: 1 item');
+
+    await overview.getByRole('tab', { name: 'Composition' }).click();
+    const firstSector = overview.locator('.recharts-pie-sector .recharts-sector').first();
+    await hoverSvgShape(page, firstSector);
+
+    const donutTooltip = overview.getByTestId('chart-tooltip');
+    await expect(donutTooltip).toBeVisible();
+    await expect(donutTooltip).toContainText(/Portfolio entries: \d+ items/);
+    await expect(donutTooltip).toContainText(/Accounts for \d+% of the portfolio entries shown in this chart\./);
+    const lightBackground = await donutTooltip.evaluate((element) => getComputedStyle(element).backgroundColor);
+    expect(lightBackground).not.toBe('transparent');
+    expect(lightBackground).not.toBe('rgba(0, 0, 0, 0)');
+
+    await page.evaluate(() => {
+        document.documentElement.classList.remove('light');
+        document.documentElement.classList.add('dark');
+    });
+    await hoverSvgShape(page, firstSector);
+    await expect(donutTooltip).toBeVisible();
+    const darkBackground = await donutTooltip.evaluate((element) => getComputedStyle(element).backgroundColor);
+    expect(darkBackground).not.toBe('transparent');
+    expect(darkBackground).not.toBe('rgba(0, 0, 0, 0)');
+    expect(darkBackground).not.toBe(lightBackground);
+
+    const languages = page.getByRole('region', { name: 'Languages' });
+    await languages.getByRole('tab', { name: 'Profile' }).click();
+    const radar = languages.locator('.recharts-radar-polygon .recharts-polygon');
+    await hoverSvgShape(page, radar);
+
+    const radarTooltip = languages.getByTestId('chart-tooltip');
+    await expect(radarTooltip).toBeVisible();
+    await expect(radarTooltip).toContainText('Proficiency: 80%');
+    await expect(radarTooltip).toContainText('Self-reported proficiency on a 0–100 scale.');
+    await expect(radarTooltip).not.toContainText('Accounts for');
+
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
+});
+
 test('portfolio widgets prioritize visualizations and disclose entry cards independently', async ({ page }) => {
     await page.goto('/client/demo/dashboard');
 
@@ -501,18 +623,18 @@ test('portfolio widgets prioritize visualizations and disclose entry cards indep
     const experienceToggle = experience.getByRole('button', { name: 'Show entries (1)' });
 
     await expect(education.getByRole('heading', { name: 'Education timeline' })).toBeVisible();
-    await expect(education.getByText('BSc at Design University')).toHaveCount(0);
+    await expect(education.getByRole('button', { name: /View education details: Bachelor of Science/ })).toHaveCount(0);
     await expect(educationToggle).toHaveAttribute('aria-expanded', 'false');
     await educationToggle.focus();
     await page.keyboard.press('Enter');
 
-    await expect(education.getByText('BSc at Design University')).toBeVisible();
+    await expect(education.getByRole('button', { name: /View education details: Bachelor of Science/ })).toBeVisible();
     await expect(education.getByRole('button', { name: 'Hide entries (1)' })).toHaveAttribute('aria-expanded', 'true');
-    await expect(experience.getByText('Frontend Developer at Example Studio')).toHaveCount(0);
+    await expect(experience.getByRole('button', { name: /View experience details: Frontend Developer/ })).toHaveCount(0);
     await expect(experienceToggle).toHaveAttribute('aria-expanded', 'false');
 
     await education.getByRole('button', { name: 'Hide entries (1)' }).click();
-    await expect(education.getByText('BSc at Design University')).toHaveCount(0);
+    await expect(education.getByRole('button', { name: /View education details: Bachelor of Science/ })).toHaveCount(0);
 });
 
 test('widgets show entry cards automatically when visualizations are disabled', async ({ context, page }) => {
@@ -524,8 +646,64 @@ test('widgets show entry cards automatically when visualizations are disabled', 
     await page.goto('/owner/demo/dashboard');
 
     const education = page.getByRole('region', { name: 'Education' });
-    await expect(education.getByText('BSc at Design University')).toBeVisible();
+    await expect(education.getByRole('button', { name: /View education details: Bachelor of Science/ })).toBeVisible();
     await expect(education.getByRole('button', { name: /entries/ })).toHaveCount(0);
+});
+
+test('semantic entry cards expose distinct content and opaque contextual details', async ({ context, page }) => {
+    await context.addCookies([
+        { name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' },
+        { name: 'WidgetFixture', value: 'populated', domain: 'localhost', path: '/' },
+        { name: 'HideVisualizations', value: 'true', domain: 'localhost', path: '/' },
+    ]);
+    await page.goto('/owner/demo/dashboard');
+
+    const education = page.getByRole('region', { name: 'Education' });
+    const experience = page.getByRole('region', { name: 'Experience' });
+    const projects = page.getByRole('region', { name: 'Projects' });
+    const certificates = page.getByRole('region', { name: 'Certificates' });
+    const skills = page.getByRole('region', { name: 'Skills' });
+    const languages = page.getByRole('region', { name: 'Languages' });
+
+    await expect(education.getByRole('button', { name: /View education details: Bachelor of Science/ })).toContainText('Design University');
+    await expect(experience.getByRole('button', { name: /View experience details: Frontend Developer/ })).toContainText('Current');
+    await expect(certificates.getByRole('button', { name: /View certificate details: Web Accessibility/ })).toContainText('No expiration');
+    await expect(skills.getByText('TypeScript', { exact: true })).toBeVisible();
+    await expect(languages.getByRole('progressbar', { name: 'English proficiency' })).toHaveAttribute('aria-valuenow', '80');
+
+    const projectCard = projects.getByRole('button', { name: /View project details: Portfolio Platform/ });
+    const projectImage = projectCard.getByRole('img', { name: 'Portfolio Platform preview' });
+    await expect(projectImage).toBeVisible();
+    const projectWithoutImage = projects.getByRole('button', { name: /View project details: API Playground/ });
+    await expect(projectWithoutImage.getByTestId('project-image-fallback')).toBeVisible();
+
+    await projectCard.focus();
+    await page.keyboard.press('Enter');
+    const projectDialog = page.getByRole('dialog', { name: 'Project details' });
+    await expect(projectDialog).toBeVisible();
+    const lightBackground = await projectDialog.evaluate((element) => getComputedStyle(element).backgroundColor);
+    expect(lightBackground).not.toBe('transparent');
+    expect(lightBackground).not.toBe('rgba(0, 0, 0, 0)');
+    await page.keyboard.press('Escape');
+    await expect(projectDialog).toBeHidden();
+    await expect(projectCard).toBeFocused();
+
+    await page.evaluate(() => document.documentElement.classList.add('dark'));
+    await projectCard.click();
+    const darkDialog = page.getByRole('dialog', { name: 'Project details' });
+    const darkBackground = await darkDialog.evaluate((element) => getComputedStyle(element).backgroundColor);
+    expect(darkBackground).not.toBe('transparent');
+    expect(darkBackground).not.toBe('rgba(0, 0, 0, 0)');
+    await page.mouse.click(2, 2);
+    await expect(darkDialog).toBeHidden();
+
+    const experienceCard = experience.getByRole('button', { name: /View experience details: Frontend Developer/ });
+    await experienceCard.focus();
+    await page.keyboard.press('Space');
+    await expect(page.getByRole('dialog', { name: 'Experience details' })).toBeVisible();
+    await page.keyboard.press('Escape');
+
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
 });
 
 test('owner reordering expands collapsed entry cards and leaves them open', async ({ context, page }) => {
@@ -536,11 +714,11 @@ test('owner reordering expands collapsed entry cards and leaves them open', asyn
     await page.goto('/owner/demo/dashboard');
 
     const education = page.getByRole('region', { name: 'Education' });
-    await expect(education.getByText('BSc at Design University')).toHaveCount(0);
+    await expect(education.getByText('Bachelor of Science')).toHaveCount(0);
     await education.getByRole('button', { name: 'Reorder items' }).click();
-    await expect(education.getByText('BSc at Design University')).toBeVisible();
+    await expect(education.getByText('Bachelor of Science')).toBeVisible();
     await education.getByRole('button', { name: 'Finish reordering' }).click();
-    await expect(education.getByText('BSc at Design University')).toBeVisible();
+    await expect(education.getByText('Bachelor of Science')).toBeVisible();
     await expect(education.getByRole('button', { name: 'Hide entries (2)' })).toHaveAttribute('aria-expanded', 'true');
 });
 

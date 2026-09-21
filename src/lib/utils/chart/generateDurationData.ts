@@ -17,7 +17,8 @@ export const generateDurationData = (
         const end = endDate ? dayjs(String(endDate)) : dayjs();
         const value = start?.isValid() && end.isValid() ? Math.max(0, end.diff(start, unit)) : null;
 
-        const names = normalizeFieldValue(extractPathValue(item, nameKey ?? '')) || ['Unknown'];
+        const normalizedNames = normalizeFieldValue(extractPathValue(item, nameKey ?? ''));
+        const names = normalizedNames.length ? normalizedNames : ['Unknown'];
 
         if (value === null) return;
 

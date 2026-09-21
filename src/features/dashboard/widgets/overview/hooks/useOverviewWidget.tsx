@@ -3,6 +3,7 @@ import { widget_preferences } from "@/lib/utils";
 import { useAppSelector } from "@/lib/store/hooks";
 import { checkWidgetPreferences } from "@/lib/utils";
 import { BarChart3 } from "lucide-react";
+import { getWidgetDefaultView } from '@/features/dashboard/chartPolicies';
 
 export const useOverviewWidget = (): WidgetCardProps => {
 
@@ -33,11 +34,11 @@ export const useOverviewWidget = (): WidgetCardProps => {
     }
 
     const barData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_overview_bar_chart)
-    ?   { title: 'Portfolio entries by section', description: 'A count of published entries in each visible portfolio section.', customData, measure: 'count' as const, unit: 'items' as const }
+    ?   { title: 'Portfolio entries by section', description: 'A count of published entries in each visible portfolio section.', metricLabel: 'Portfolio entries', customData, measure: 'count' as const, unit: 'items' as const }
     :   undefined;
 
     const pieData = checkWidgetPreferences(lstUserPreferences, widget_preferences.key.show_overview_pie_chart)
-    ?   { title: 'Portfolio composition', description: 'How visible portfolio entries are distributed across sections.', customData, measure: 'count' as const, unit: 'items' as const }
+    ?   { title: 'Portfolio composition', description: 'How visible portfolio entries are distributed across sections.', metricLabel: 'Portfolio entries', customData, measure: 'count' as const, unit: 'items' as const }
     :   undefined;
 
     return {
@@ -46,5 +47,6 @@ export const useOverviewWidget = (): WidgetCardProps => {
         bar: barData,
         pie: pieData,
         kpis: customData.map((item) => ({ label: item.name, value: item.value })),
+        defaultView: getWidgetDefaultView(lstUserPreferences, 'overview'),
     }
 }

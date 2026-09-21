@@ -54,8 +54,19 @@ const userWidgetPreferenceSlice = createSlice({
             state.loading = true;
             state.error = null;
         })
-        .addCase(editUserWidgetPreference.fulfilled, (state) => {
+        .addCase(editUserWidgetPreference.fulfilled, (state, action) => {
             state.loading = false;
+            const preference = state.preference.lstPreferences.find(
+                (item) => item.id === action.payload.LKP_PreferenceID,
+            );
+            if (!preference) return;
+
+            const index = state.lstUserPreferences.findIndex(
+                (item) => item.preference?.id === preference.id || item.preference?.name === preference.name,
+            );
+            const savedPreference = { ...action.payload, preference };
+            if (index === -1) state.lstUserPreferences.push(savedPreference);
+            else state.lstUserPreferences[index] = { ...state.lstUserPreferences[index], ...savedPreference };
         })
         .addCase(editUserWidgetPreference.rejected, (state, action) => {
             state.loading = false;

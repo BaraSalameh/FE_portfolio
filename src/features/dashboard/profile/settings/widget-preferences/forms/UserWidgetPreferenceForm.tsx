@@ -12,7 +12,7 @@ import { FormItem } from '@/features/dashboard/forms/types.forms';
 import { Eye, EyeOff, LoaderCircle } from 'lucide-react';
 import { Toast } from '@/design-system';
 
-export const UserWidgetPreferenceForm = ({ onClose, preferenceKey, preferenceValues, compact = false, defaultValue } : UserPreferenceProps) => {
+export const UserWidgetPreferenceForm = ({ onClose, preferenceKey, preferenceValues, compact = false, defaultValue, label = 'Value' } : UserPreferenceProps) => {
 
     const { lstUserPreferences, preference } = useAppSelector((state) => state.userWidgetPreference);
     const { lstPreferences, loading: isPreferenceLoading } = preference;
@@ -30,8 +30,8 @@ export const UserWidgetPreferenceForm = ({ onClose, preferenceKey, preferenceVal
 
     const items = useMemo<FormItem<typeof userWidgetPreferenceSchema>[]>(() => [
         {as: 'Input', name: 'LKP_PreferenceID', type: 'hidden', config: ['Disabled']},
-        {as: 'Dropdown', name: 'value', options: valueOptions, label: 'Value'}
-    ], [valueOptions]);
+        {as: 'Dropdown', name: 'value', options: valueOptions, label}
+    ], [label, valueOptions]);
 
     const isToggle = !preferenceValues || preferenceValues === 'toggle';
     const displayedValue = pendingValue ?? resetItems.value;

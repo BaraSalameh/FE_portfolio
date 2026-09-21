@@ -6,6 +6,7 @@ import {chart_preferences, widget_preferences} from "@/lib/utils";
 import { EducationForm } from "../forms";
 import { useHandleEducationDelete } from "./useHandleEducationDelete";
 import { useDebouncedSortEducation } from "./useDebouncedSortEducation";
+import { getChartOption, getWidgetDefaultView } from '@/features/dashboard/chartPolicies';
 
 export const useEducationWidget = (): WidgetCardProps => {
  
@@ -21,14 +22,17 @@ export const useEducationWidget = (): WidgetCardProps => {
         lstUserChartPreferences,
         { widget: chart_preferences.key.widget.education, chartType: chart_preferences.key.chart.pie }
     );
-    const groupBy = comparisonPreference?.groupBy ?? chart_preferences.values.education.pie[0].value;
-    const comparisonIsCount = comparisonPreference?.valueSource === 'count';
+    const groupOption = getChartOption('education', 'comparison', 'groupBy', comparisonPreference?.groupBy);
+    const valueOption = getChartOption('education', 'comparison', 'valueSource', comparisonPreference?.valueSource);
+    const groupLabel = groupOption.label.toLowerCase();
+    const comparisonIsCount = valueOption.value === 'count';
 
     const barData = showComparison
     ?   { 
-            title: comparisonIsCount ? 'Education entries by qualification' : 'Study duration by qualification',
+            title: comparisonIsCount ? `Education entries by ${groupLabel}` : `Study duration by ${groupLabel}`,
             description: comparisonIsCount ? 'Number of education entries for each selected grouping.' : 'Total recorded study duration for each selected grouping.',
-            groupBy, measure: comparisonIsCount ? 'count' as const : 'duration' as const, unit: comparisonIsCount ? 'items' as const : 'months' as const }
+            metricLabel: comparisonIsCount ? 'Education entries' : 'Study duration',
+            groupBy: groupOption.value, measure: comparisonIsCount ? 'count' as const : 'duration' as const, unit: comparisonIsCount ? 'items' as const : 'months' as const }
     :   undefined;
     const timeline = showTimeline ? {
         title: 'Education timeline',
@@ -39,10 +43,12 @@ export const useEducationWidget = (): WidgetCardProps => {
         isLoading: educationLoading,
         error,
         items: lstEducations,
+        entryPresentation: { variant: 'education', singularLabel: 'Education' },
         header: { title: 'Education', icon: GraduationCap, description: 'Academic background and areas of study' },
         emptyState: { title: 'No education added', description: 'Add a school, degree, and study period to introduce your academic background.' },
         bar: barData,
         timeline,
+        defaultView: getWidgetDefaultView(lstUserPreferences, 'education'),
         list: [
             { leftKey: 'degree.abbreviation', between: 'at', rightKey: 'institution.name', size: 'lg' },
             { leftKey: 'fieldOfStudy.name', icon: GraduationCap },

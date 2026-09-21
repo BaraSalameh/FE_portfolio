@@ -16,9 +16,13 @@ export const mapPreferenceToForm = (
 
     const storedValue = userOption?.value.toLowerCase();
     const normalizedValue = storedValue === 'true' ? 'show' : storedValue === 'false' ? 'hide' : userOption?.value;
+    const validInitialValue = preferenceValue.some((option) => option.value === initialValue) ? initialValue : undefined;
+    const selectedValue = preferenceValue.some((option) => option.value === normalizedValue)
+        ? normalizedValue
+        : validInitialValue ?? defaultValue?.value;
 
     return {
         LKP_PreferenceID: defaultOption?.id ?? '',
-        value: normalizedValue ?? initialValue ?? defaultValue?.value
+        value: selectedValue ?? ''
     };
 }

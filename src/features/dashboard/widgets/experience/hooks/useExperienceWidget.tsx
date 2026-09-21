@@ -6,6 +6,7 @@ import {chart_preferences, widget_preferences} from "@/lib/utils";
 import { ExperienceForm } from "../forms";
 import { useHandleExperienceDelete } from "./useHandleExperienceDelete";
 import { useDebouncedSortExperience } from "./useDebouncedSortExperience";
+import { getChartOption, getWidgetDefaultView } from '@/features/dashboard/chartPolicies';
 
 export const useExperienceWidget = (): WidgetCardProps => {
 
@@ -21,13 +22,16 @@ export const useExperienceWidget = (): WidgetCardProps => {
         lstUserChartPreferences,
         { widget: chart_preferences.key.widget.experience, chartType: chart_preferences.key.chart.pie }
     );
-    const groupBy = comparisonPreference?.groupBy ?? chart_preferences.values.experience.pie[0].value;
-    const comparisonIsCount = comparisonPreference?.valueSource === 'count';
+    const groupOption = getChartOption('experience', 'comparison', 'groupBy', comparisonPreference?.groupBy);
+    const valueOption = getChartOption('experience', 'comparison', 'valueSource', comparisonPreference?.valueSource);
+    const groupLabel = groupOption.label.toLowerCase();
+    const comparisonIsCount = valueOption.value === 'count';
     const barData = showComparison
         ?   { 
-                title: comparisonIsCount ? 'Experience entries by role' : 'Experience duration by role',
+                title: comparisonIsCount ? `Experience entries by ${groupLabel}` : `Experience duration by ${groupLabel}`,
                 description: comparisonIsCount ? 'Number of experience entries for each selected grouping.' : 'Total recorded duration for each selected grouping.',
-                groupBy, measure: comparisonIsCount ? 'count' as const : 'duration' as const, unit: comparisonIsCount ? 'items' as const : 'months' as const }
+                metricLabel: comparisonIsCount ? 'Experience entries' : 'Career duration',
+                groupBy: groupOption.value, measure: comparisonIsCount ? 'count' as const : 'duration' as const, unit: comparisonIsCount ? 'items' as const : 'months' as const }
         :   undefined;
     const timeline = showTimeline ? {
         title: 'Career timeline',
@@ -38,10 +42,12 @@ export const useExperienceWidget = (): WidgetCardProps => {
         isLoading: experienceLoading,
         error,
         items: lstExperiences,
+        entryPresentation: { variant: 'experience', singularLabel: 'Experience' },
         header: { title: 'Experience', icon: Briefcase, description: 'Roles, responsibilities, and career history' },
         emptyState: { title: 'No experience added', description: 'Add a role to highlight where you worked and what you accomplished.' },
         bar: barData,
         timeline,
+        defaultView: getWidgetDefaultView(lstUserPreferences, 'experience'),
         list: [
             { leftKey: 'jobTitle', between: 'at', rightKey: 'companyName', size: 'lg' },
             { leftKey: 'location', icon: LocationEdit },

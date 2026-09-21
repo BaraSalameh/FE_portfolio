@@ -8,7 +8,10 @@ import { ChartWidgetProps } from '@/features/dashboard/types.presentation';
 export const BarChartWidget = ({
     data,
     colorMap,
-    unit
+    unit,
+    measure,
+    metricLabel,
+    total
 }: ChartWidgetProps) => {
     const internalColorMap = colorMap ?? generateColorMap(data);
 
@@ -18,7 +21,7 @@ export const BarChartWidget = ({
                 <CartesianGrid stroke="var(--chart-grid)" horizontal={false} />
                 <XAxis type="number" domain={[0, unit === 'percent' ? 100 : 'auto']} tick={{ fill: 'var(--chart-axis)', fontSize: 11 }} axisLine={false} tickLine={false} />
                 <YAxis type="category" dataKey="name" width={96} tick={{ fill: 'var(--chart-axis)', fontSize: 11 }} axisLine={false} tickLine={false} />
-                <Tooltip content={<ChartTooltip unit={unit} />} cursor={{ fill: 'var(--ds-accent-soft)', opacity: 0.45 }} />
+                <Tooltip content={<ChartTooltip unit={unit} measure={measure} metricLabel={metricLabel} total={total} />} cursor={{ fill: 'var(--ds-accent-soft)', opacity: 0.45 }} />
                 <Bar
                     dataKey="value"
                     radius={[0, 8, 8, 0]}
