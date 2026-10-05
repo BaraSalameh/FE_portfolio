@@ -16,7 +16,7 @@ export const editProfile = createAsyncThunk(
                 withCredentials: true
             });
 
-            return;
+            return request;
 
         } catch (error) {
             return thunkAPI.rejectWithValue(getApiErrorPayload(error));

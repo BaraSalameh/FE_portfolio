@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { dashboardHydrated } from '../dashboard.hydration';
-import { userInfoQuery } from "../profile/thunks";
+import { editProfile, userInfoQuery } from "../profile/thunks";
 import type { ProfileImageField, ProfileState } from "./types.profile";
 
 const initialState: ProfileState = {
@@ -25,6 +25,18 @@ const profileSlice = createSlice({
         .addCase(dashboardHydrated, (state, action) => {
             state.loading = false;
             state.user = action.payload.user;
+        })
+        .addCase(editProfile.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        })
+        .addCase(editProfile.fulfilled, (state, action) => {
+            state.loading = false;
+            state.user = state.user ? { ...state.user, ...action.payload } : action.payload;
+        })
+        .addCase(editProfile.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload as string;
         })
         .addCase(userInfoQuery.pending, (state) => {
             state.loading = true;

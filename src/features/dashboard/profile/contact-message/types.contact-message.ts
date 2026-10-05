@@ -4,6 +4,8 @@ import { ContactMessageFormData } from "./schema";
 export interface ContactMessageProps {
     id?: string;
     onClose?: () => void;
+    recipientEmail?: string;
+    recipientName?: string;
 }
 
 // slice

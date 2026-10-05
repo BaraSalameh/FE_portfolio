@@ -1,16 +1,12 @@
 'use client';
 
-import { useAppSelector } from "@/lib/store/hooks";
 import { ControlledForm } from '@/features/dashboard/forms';
 import { ContactMessageProps } from "../types.contact-message";
 import { contactMessageSchema } from "../schema";
 import { useHandleSubmit } from "../hooks";
 
-export const ContactMessageForm = ({onClose} : ContactMessageProps) => {
-
-    const { loading, error, user } = useAppSelector((state) => state.profile);
-
-    const messagePlaceholder = `Dear ${user?.firstname} ${user?.lastname}...`;
+export const ContactMessageForm = ({ onClose, recipientEmail = '', recipientName = '' }: ContactMessageProps) => {
+    const messagePlaceholder = `Dear ${recipientName || 'portfolio owner'}...`;
 
     const onSubmit = useHandleSubmit({ onClose });
 
@@ -25,9 +21,7 @@ export const ContactMessageForm = ({onClose} : ContactMessageProps) => {
                 {as: 'Input', name: 'subject', label: 'Subject', placeholder: 'Job oppurtunity'},
                 {as: 'Input', name: 'message', label: 'Body', placeholder: messagePlaceholder, type: 'Textarea'}
             ]}
-            error={error}
-            loading={loading}
-            defaultValues={{emailTo: user?.email ?? '', message: `${messagePlaceholder}\n\n`}}
+            defaultValues={{ emailTo: recipientEmail, message: `${messagePlaceholder}\n\n` }}
             indicator={{when: 'Send', while: 'Sending...'}}
         />
     );

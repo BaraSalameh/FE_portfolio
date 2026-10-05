@@ -20,12 +20,13 @@ export const TimelineChart = ({ config }: { config: TimelineConfig }) => {
         <figure className="rounded-2xl border border-line bg-canvas-subtle/45 p-4">
             <figcaption><h3 className="text-sm font-bold text-ink">{config.title}</h3><p className="mt-1 text-xs leading-5 text-ink-muted">{config.description ?? 'Chronological range from start to end; ongoing entries extend through today.'}</p></figcaption>
             <ol className="mt-5 space-y-4">
-                {valid.sort((a, b) => dayjs(b.start).valueOf() - dayjs(a.start).valueOf()).map((item) => {
+                {valid.sort((a, b) => dayjs(b.start).valueOf() - dayjs(a.start).valueOf()).map((item, index) => {
                     const start = dayjs(item.start).valueOf();
                     const end = dayjs(item.end).isValid() ? dayjs(item.end).valueOf() : today;
                     const left = ((start - min) / span) * 100;
                     const width = Math.max(2, ((end - start) / span) * 100);
-                    return <li key={item.id} className="grid gap-2 sm:grid-cols-[minmax(8rem,12rem)_1fr] sm:items-center"><div><p className="truncate text-sm font-semibold text-ink">{item.name}</p>{item.detail && <p className="truncate text-xs text-ink-muted">{item.detail}</p>}</div><div><div className="relative h-3 rounded-full bg-line/60"><span className="absolute h-3 rounded-full bg-accent" style={{ left: percent(left), width: percent(Math.min(width, 100 - left)) }} /></div><p className="mt-1 text-[0.7rem] text-ink-muted">{dayjs(item.start).format('MMM YYYY')} – {item.ongoing || !item.end ? 'Present' : dayjs(item.end).format('MMM YYYY')}</p></div></li>;
+                    const itemKey = JSON.stringify([item.id ?? null, item.name, item.detail ?? null, item.start, item.end ?? null, index]);
+                    return <li key={itemKey} className="grid gap-2 sm:grid-cols-[minmax(8rem,12rem)_1fr] sm:items-center"><div><p className="truncate text-sm font-semibold text-ink">{item.name}</p>{item.detail && <p className="truncate text-xs text-ink-muted">{item.detail}</p>}</div><div><div className="relative h-3 rounded-full bg-line/60"><span className="absolute h-3 rounded-full bg-accent" style={{ left: percent(left), width: percent(Math.min(width, 100 - left)) }} /></div><p className="mt-1 text-[0.7rem] text-ink-muted">{dayjs(item.start).format('MMM YYYY')} – {item.ongoing || !item.end ? 'Present' : dayjs(item.end).format('MMM YYYY')}</p></div></li>;
                 })}
             </ol>
         </figure>

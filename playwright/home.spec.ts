@@ -206,7 +206,7 @@ test('login rejects short and incorrect passwords without redirecting to email',
     await expect(page).toHaveURL(/\/auth\/login$/);
 });
 
-test('public dashboard is responsive and its contact dialog supports Escape', async ({ page }) => {
+test('public dashboard is responsive and its contact dialog addresses the viewed portfolio', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/client/demo/dashboard');
 
@@ -225,9 +225,57 @@ test('public dashboard is responsive and its contact dialog supports Escape', as
     await sendMessageButton.click();
     const dialog = page.getByRole('dialog', { name: 'Send Message' });
     await expect(dialog).toBeVisible();
+    await expect(dialog.getByLabel('To')).toHaveValue('demo@example.com');
+    await expect(dialog.getByLabel('To')).toBeDisabled();
     await expect(dialog.getByLabel('Full name')).toBeVisible();
     await page.keyboard.press('Escape');
     await expect(dialog).toBeHidden();
+
+    await sendMessageButton.click();
+    await expect(dialog).toBeVisible();
+    await dialog.getByLabel('Full name').fill('Guest Visitor');
+    await dialog.getByLabel('Email', { exact: true }).fill('guest@example.com');
+    await dialog.getByLabel('Subject').fill('Hello');
+    await dialog.getByRole('button', { name: 'Send', exact: true }).click();
+    await expect(dialog).toBeHidden();
+});
+
+test('overview excludes empty portfolio sections', async ({ page }) => {
+    const keyWarnings: string[] = [];
+    page.on('console', (message) => {
+        if (message.type() === 'error' && /unique ["']key["'] prop/i.test(message.text())) keyWarnings.push(message.text());
+    });
+    await page.goto('/client/mixed/dashboard');
+
+    const overview = page.getByRole('region', { name: 'Overview' });
+    await expect(overview.getByText('Education', { exact: true }).first()).toBeVisible();
+    await expect(overview.getByText('Experience', { exact: true }).first()).toBeVisible();
+    await expect(overview.getByText('Language', { exact: true }).first()).toBeVisible();
+    await expect(overview.getByText('Project', { exact: true })).toHaveCount(0);
+    await expect(overview.getByText('Skills', { exact: true })).toHaveCount(0);
+
+    await overview.getByText('View chart data').click();
+    await expect(overview.getByRole('table').getByText('Project', { exact: true })).toHaveCount(0);
+    await expect(overview.getByRole('table').getByText('Skills', { exact: true })).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Education timeline' })).toBeVisible();
+    expect(keyWarnings).toEqual([]);
+});
+
+test('updating profile information shows a success message', async ({ context, page }) => {
+    await context.addCookies([{ name: 'AccessToken', value: 'test-access-token', domain: 'localhost', path: '/' }]);
+    const profileRequests: string[] = [];
+    page.on('request', (request) => {
+        const pathname = new URL(request.url()).pathname;
+        if (pathname === '/api/Owner/EditProfile' || pathname === '/api/Owner/UserInfo') profileRequests.push(pathname);
+    });
+    await page.goto('/owner/demo/profile');
+
+    await page.getByLabel('First name').fill('Updated');
+    await page.getByRole('button', { name: 'Update', exact: true }).click();
+
+    await expect(page.getByRole('status').filter({ hasText: 'Profile updated.' })).toBeVisible();
+    await expect(page.getByLabel('First name')).toHaveValue('Updated');
+    expect(profileRequests).toEqual(['/api/Owner/EditProfile']);
 });
 
 test('profile picture opens an accessible lightbox for guests and owners', async ({ context, page }) => {

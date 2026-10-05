@@ -20,7 +20,7 @@ export type ChartConfig = {
     maxItems?: number;
 };
 export type DurationChartConfig = ChartConfig & { durationKeys?: { start?: string; end?: string } };
-export type TimelineEntry = { id: string; name: string; detail?: string; start: string; end?: string; ongoing?: boolean };
+export type TimelineEntry = { id?: string | null; name: string; detail?: string; start: string; end?: string; ongoing?: boolean };
 export type TimelineConfig = { title: string; description?: string; data: TimelineEntry[] };
 export type MatrixRow = { name: string; projects: number; experience: number; education: number; certificates: number };
 export type MatrixConfig = { title: string; description?: string; rows: MatrixRow[] };

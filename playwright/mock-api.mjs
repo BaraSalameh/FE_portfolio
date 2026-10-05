@@ -253,6 +253,36 @@ const server = createServer((request, response) => {
             return;
         }
 
+        if (request.url === '/api/Client/UserByUsername?Username=mixed') {
+            const savedChartDefaults = userPreferences.filter((item) => item.preference.name.startsWith('default-'));
+            response.end(JSON.stringify(dashboardFixture([...publicPreferences, ...savedChartDefaults], {
+                lstEducations: [
+                    { ...populatedWidgets.lstEducations[0], id: null },
+                    {
+                        ...populatedWidgets.lstEducations[0],
+                        id: null,
+                        degree: { ...populatedWidgets.lstEducations[0].degree, name: 'Master of Science', abbreviation: 'MSc' },
+                        startDate: '2022-09-01',
+                        endDate: '2024-06-01',
+                    },
+                ],
+                lstExperiences: populatedWidgets.lstExperiences,
+                lstUserLanguages: populatedWidgets.lstUserLanguages,
+            })));
+            return;
+        }
+
+        if (request.url === '/api/Client/SendEmail' && request.method === 'POST') {
+            const payload = parseJsonBody(body);
+            if (payload.emailTo !== 'demo@example.com') {
+                response.statusCode = 400;
+                response.end(JSON.stringify({ title: 'Receiver is required', status: 400 }));
+                return;
+            }
+            response.end(JSON.stringify({}));
+            return;
+        }
+
         if (request.url === '/api/Owner/UserFullInfo') {
             if (!request.headers.cookie?.includes('AccessToken=') || request.headers.cookie?.includes('RejectAccess=true')) {
                 response.statusCode = 401;
@@ -267,6 +297,11 @@ const server = createServer((request, response) => {
                     ? reorderableWidgets
                     : widgetFixture === 'populated' ? populatedWidgets : {},
             )));
+            return;
+        }
+
+        if (request.url === '/api/Owner/EditProfile' && request.method === 'POST') {
+            response.end(JSON.stringify({}));
             return;
         }
 

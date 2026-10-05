@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionDialog } from '@/design-system';
+import { ActionDialog, Toast } from '@/design-system';
 import { ControlledForm, ImageUploader } from '@/features/dashboard/forms';
 import type { FormItem } from '@/features/dashboard/forms/types.forms';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
@@ -62,7 +62,7 @@ function ProfileImageFields() {
 
 export const ProfileForm = ({ onClose }: { onClose?: () => void }) => {
     const { loading, error, user } = useAppSelector((state) => state.profile);
-    const onSubmit = useHandleSubmit({ onClose });
+    const { onSubmit, saved, dismissSaved } = useHandleSubmit({ onClose });
     const items = useMemo<FormItem<typeof profileSchema>[]>(() => [
         { as: 'Input', name: 'firstname', label: 'First name', placeholder: 'John' },
         { as: 'Input', name: 'lastname', label: 'Last name', placeholder: 'Doe' },
@@ -77,5 +77,6 @@ export const ProfileForm = ({ onClose }: { onClose?: () => void }) => {
 
     return <ControlledForm schema={profileSchema} onSubmit={onSubmit} items={items} error={error} loading={loading} resetItems={user ? { ...user, gender: user.gender?.toString() } : undefined} indicator={{ when: 'Update', while: 'Updating...' }}>
         <ProfileImageFields />
+        {saved ? <Toast message="Profile updated." onDismiss={dismissSaved} /> : null}
     </ControlledForm>;
 };
