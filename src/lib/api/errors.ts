@@ -9,7 +9,6 @@ export const getApiErrorMessage = (data: unknown, fallback: string) => {
 
     const problem = data as Record<string, unknown>;
     if (typeof problem.message === 'string' && problem.message.trim()) return problem.message;
-    if (typeof problem.title === 'string' && problem.title.trim()) return problem.title;
 
     const list = problem.lstError;
     if (Array.isArray(list) && list.every(item => typeof item === 'string')) {
@@ -23,6 +22,8 @@ export const getApiErrorMessage = (data: unknown, fallback: string) => {
             .filter((value): value is string => typeof value === 'string');
         if (messages.length) return messages.join(' ');
     }
+
+    if (typeof problem.title === 'string' && problem.title.trim()) return problem.title;
 
     return fallback;
 };
