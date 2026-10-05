@@ -2,10 +2,7 @@ import { ContactMessageFormData } from "./schema";
 
 // form
 export interface ContactMessageProps {
-    id?: string;
     onClose?: () => void;
-    recipientEmail?: string;
-    recipientName?: string;
 }
 
 // slice

@@ -240,6 +240,14 @@ test('public dashboard is responsive and its contact dialog addresses the viewed
     await expect(dialog).toBeHidden();
 });
 
+test('hiding the public email removes guest messaging', async ({ page }) => {
+    await page.goto('/client/hidden-email/dashboard');
+
+    const portfolioActions = page.getByRole('group', { name: 'Portfolio actions' });
+    await expect(portfolioActions.getByRole('button', { name: 'Send Message' })).toHaveCount(0);
+    await expect(page.getByRole('dialog', { name: 'Send Message' })).toHaveCount(0);
+});
+
 test('overview excludes empty portfolio sections', async ({ page }) => {
     const keyWarnings: string[] = [];
     page.on('console', (message) => {
@@ -346,6 +354,7 @@ test('owner settings open as a dedicated responsive page with clear categories',
     await expect(categoryDropdown).toHaveValue('');
     await expect(page.getByText('Preferences', { exact: true }).first()).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Profile' })).toBeVisible();
+    await expect(page.getByText('Hiding your email disables guest messages.')).toBeVisible();
     const genderToggle = page.getByRole('switch', { name: /(?:Hide|Show) gender/ });
     await expect(genderToggle).toBeEnabled();
     await genderToggle.click();

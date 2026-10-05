@@ -253,6 +253,19 @@ const server = createServer((request, response) => {
             return;
         }
 
+        if (request.url === '/api/Client/UserByUsername?Username=hidden-email') {
+            const hiddenEmailPreferences = [
+                ...publicPreferences.filter((item) => item.preference.name !== 'show-email-address'),
+                { preference: preference('44444444-4444-4444-8444-444444444441', 'show-email-address'), value: 'hide' },
+            ];
+            const dashboard = dashboardFixture(hiddenEmailPreferences, populatedWidgets);
+            response.end(JSON.stringify({
+                ...dashboard,
+                user: { ...dashboard.user, username: 'hidden-email', email: null },
+            }));
+            return;
+        }
+
         if (request.url === '/api/Client/UserByUsername?Username=mixed') {
             const savedChartDefaults = userPreferences.filter((item) => item.preference.name.startsWith('default-'));
             response.end(JSON.stringify(dashboardFixture([...publicPreferences, ...savedChartDefaults], {

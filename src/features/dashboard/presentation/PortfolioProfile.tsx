@@ -35,7 +35,7 @@ export function PortfolioProfile({ user, unreadContactMessageCount = 0, socialLi
                 <div role="group" aria-label="Portfolio actions" className="absolute left-4 top-4 flex gap-2 sm:left-6 sm:top-6">
                     <Link href="/" className={iconButton} aria-label="Go to home page"><Home className="size-4" aria-hidden="true" /></Link>
                     {role === 'client' && <ThemeSwitch className="rounded-xl" />}
-                    {role !== 'owner' ? <ActionDialog subTitle="Send Message" icon={MessageCircle} triggerClassName={`${iconButton} !size-10 !p-0`}><ContactMessageForm recipientEmail={user.email ?? ''} recipientName={`${user.firstname} ${user.lastname}`.trim()} /></ActionDialog> : null}
+                    {role !== 'owner' && user.email ? <ActionDialog subTitle="Send Message" icon={MessageCircle} triggerClassName={`${iconButton} !size-10 !p-0`}><ContactMessageForm /></ActionDialog> : null}
                 </div>
                 {role === 'owner' && (
                     <OwnerHeaderActions user={user} unreadMessageCount={unreadContactMessageCount} inverted className="absolute right-4 top-4 sm:right-6 sm:top-6" />

@@ -18,7 +18,7 @@ import { widgetChartPolicies, type ChartWidgetKey } from '@/features/dashboard/c
 import type { ChartViewKey } from '@/features/dashboard/types.presentation';
 
 type Category = 'preferences' | 'charts' | 'appearance';
-type PreferenceItem = { key: string; title: string; icon: LucideIcon; parent?: string; defaultValue?: 'show' | 'hide' };
+type PreferenceItem = { key: string; title: string; description?: string; icon: LucideIcon; parent?: string; defaultValue?: 'show' | 'hide' };
 
 const categories: Array<{ id: Category; label: string; description: string; icon: LucideIcon }> = [
     { id: 'preferences', label: 'Preferences', description: 'Choose what visitors see.', icon: SlidersHorizontal },
@@ -35,7 +35,7 @@ const preferenceSections: Array<{ title: string; description: string; icon: Luci
         items: [
             { key: widget_preferences.key.show_gender, title: 'Gender', icon: Mars },
             { key: widget_preferences.key.show_birthdate, title: 'Birthdate', icon: Calendar },
-            { key: widget_preferences.key.show_email_address, title: 'Email address', icon: Mail },
+            { key: widget_preferences.key.show_email_address, title: 'Email address', description: 'Hiding your email disables guest messages.', icon: Mail },
             { key: widget_preferences.key.show_phone_number, title: 'Phone number', icon: Phone },
             { key: widget_preferences.key.show_whatsapp, title: 'WhatsApp', icon: MessageCircle, defaultValue: 'hide' },
             { key: widget_preferences.key.show_site_links, title: 'Site links', icon: LinkIcon, defaultValue: 'hide' },
@@ -156,7 +156,7 @@ export const SettingsPage = () => {
 
             <section className="mt-6 min-w-0 lg:mt-0" aria-labelledby={`${activeCategory}-heading`}>
                 <div className="mb-6"><p className="text-xs font-bold uppercase tracking-[0.16em] text-accent">Settings category</p><h2 id={`${activeCategory}-heading`} className="mt-1 text-2xl font-bold tracking-[-0.04em]">{currentCategory.label}</h2><p className="mt-1 text-sm text-ink-muted">{currentCategory.description}</p></div>
-                {activeCategory === 'preferences' && <div className="space-y-5">{preferenceSections.map((section) => { const visibleItems = section.items.filter((item) => !item.parent || checkWidgetPreferences(lstUserPreferences, item.parent)); return <SettingsCard key={section.title} icon={section.icon} title={section.title} description={section.description}><div className="divide-y divide-line">{visibleItems.map((item) => { const Icon = item.icon; return <div key={item.key} className="flex min-h-16 items-center justify-between gap-4 py-3 first:pt-0 last:pb-0"><div className="flex min-w-0 items-center gap-3"><span className="grid size-9 shrink-0 place-items-center rounded-lg bg-canvas-subtle text-ink-muted"><Icon className="size-4" aria-hidden="true" /></span><h3 className="truncate text-sm font-bold tracking-[-0.01em] sm:text-base">{item.title}</h3></div><UserWidgetPreferenceForm preferenceKey={item.key} compact defaultValue={item.defaultValue} /></div>; })}</div></SettingsCard>; })}</div>}
+                {activeCategory === 'preferences' && <div className="space-y-5">{preferenceSections.map((section) => { const visibleItems = section.items.filter((item) => !item.parent || checkWidgetPreferences(lstUserPreferences, item.parent)); return <SettingsCard key={section.title} icon={section.icon} title={section.title} description={section.description}><div className="divide-y divide-line">{visibleItems.map((item) => { const Icon = item.icon; return <div key={item.key} className="flex min-h-16 items-center justify-between gap-4 py-3 first:pt-0 last:pb-0"><div className="flex min-w-0 items-start gap-3"><span className="grid size-9 shrink-0 place-items-center rounded-lg bg-canvas-subtle text-ink-muted"><Icon className="size-4" aria-hidden="true" /></span><div className="min-w-0"><h3 className="text-sm font-bold tracking-[-0.01em] sm:text-base">{item.title}</h3>{item.description ? <p className="mt-1 max-w-xl text-xs leading-5 text-ink-muted">{item.description}</p> : null}</div></div><UserWidgetPreferenceForm preferenceKey={item.key} compact defaultValue={item.defaultValue} /></div>; })}</div></SettingsCard>; })}</div>}
                 {activeCategory === 'charts' && (
                     <div className="space-y-9">
                         {(Object.entries(widgetChartPolicies) as Array<[ChartWidgetKey, (typeof widgetChartPolicies)[ChartWidgetKey]]>)
